@@ -1,13 +1,13 @@
 # .vue 檔撰寫規範
 
-## 基本架構
+## 1. 基本架構
 
-參照以下基本格式，可將下列格式新增至 **++User Snippets++**，即可使用快捷鍵快速初始。
-**_三大主要標籤_**中間，使用 **_空白行_**做分隔。
+參照以下基本格式，可將下列格式新增至 **User Snippets**，即可使用快捷鍵快速初始。
+**三大主要標籤**中間，使用 **空白行**做分隔。
 
-參考 .vscode/vue.code-snippets
+參考檔案 **.vscode/vue.code-snippets**
 
-## script 程式碼順序
+## 2. script 程式碼順序
 
 1. import
 2. type
@@ -20,15 +20,17 @@
 9. 非響應式變數
 10. [子組件 ref](https://cn.vuejs.org/guide/essentials/template-refs.html#template-refs)
 11. [ref 變數](https://cn.vuejs.org/api/reactivity-core.html#ref)
-    ~~12. [reactive 變數](https://cn.vuejs.org/api/reactivity-core.html#reactive) //全部使用 ref ~~
+12. ~~[reactive 變數](https://cn.vuejs.org/api/reactivity-core.html#reactive)~~ //全部使用 ref 
 12. [computed](https://cn.vuejs.org/api/reactivity-core.html#computed)
 13. function
 14. async/await function
 15. [defineExpose](https://vuejs.org/api/sfc-script-setup.html#defineexpose)
-    ~~17. [watch](https://cn.vuejs.org/api/reactivity-core.html#watch) //禁用~~
-16. [生命週期 (Lifecycle hooks)](https://cn.vuejs.org/api/composition-api-lifecycle.html)
+16. ~~[watch](https://cn.vuejs.org/api/reactivity-core.html#watch)~~ //為了效能避免使用
+17. [生命週期 (Lifecycle hooks)](https://cn.vuejs.org/api/composition-api-lifecycle.html)
 
-## 說明 & 範例
+## 3. 說明 & 範例
+
+待補充。
 
 #### 1. import
 

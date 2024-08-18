@@ -1,74 +1,63 @@
 # Git Commit 規範
 
-[TOC]
+以 what, why, how 為 git commit 基準。
+- 這個提交版本做了什麼事情（What）
+- 為什麼要做這件事情（Why）
+- 用什麼方法做到的（How）
 
-## 規範說明
+## 1. 規範說明
 
-1. 使用 commitizen + husky + commitlint 來執行 commit message。
-2. 使用 standard-version 來執行版本發佈。
-
-規範依循[conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)
+1. 使用 **commitizen + husky + commitlint** 來執行 commit message。
+2. 使用 **standard-version** 來執行版本發佈。
+3. 規範依循[conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)
 
 - `commitizen`：使用 git cz 取代 git commit，目的：引導填寫符合規範的 commit message。
 - `husky + commitlint`：在 git commit 時，檢驗 commit message，不符合規範，則不能提交。
 - `standard-version`：自動升級本版號，自動打 tag，自動生成 changelog。
-
+- `conventional commits`: 
 
 ## 提交類型說明
 
-### 基本
-1. 不使用句號
-2. 內容盡量解釋 what and why vs. how
+### 1.選擇提交類型 Type (必填)
 
-### 1.選擇提交類型(必填)
+`Select the type of change that you're committing: (Use arrow keys)`
 
-Select the type of change that you're committing: (Use arrow keys)
-
-Type | Description
---- | ---
-feat |     A new feature 
-fix |    A bug fix 
-docs |    Documentation only changes 
-style |    Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc) 
-refactor | A code change that neither fixes a bug nor adds a feature 
-perf |     A code change that improves performance 
-test |    Adding missing tests or correcting existing tests 
-build |    Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm) 
-ci |       Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs) 
-chore |    Other changes that don't modify src or test files 
-revert |   Reverts a previous commit 
-
-
-類型 | 說明 | 程式碼改動
---- | ---
-feat |     新功能  |     有
-fix |    錯誤修正 |     有
-docs |    更新文件，如 README.md |     沒有
-style |    不影響程式碼的格式調整(空格, formatting, 缺少分號, 等等...)  |     沒有
-refactor | 重構。針對已上線的功能程式碼調整與優化，且不改變記有邏輯。 |     有
-perf |     提升效能  |     
-test |    測試。新增測試、重構測試等 |     
-build |    Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)  |     
-ci |       改變 CI 配置檔案或 script (example scopes: Travis, Circle, BrowserStack, SauceLabs)  |     
-chore |    Other changes that don't modify src or test files  |     沒有
-revert |   Reverts a previous commit  |     有
+| Type 類型 | Description 說明                                                            |
+|----------|-----------------------------------------------------------------------------|
+| feat     | A new feature 新功能                                                        |
+| fix      | A bug fix 錯誤修正                                                           |
+| docs     | Documentation only changes 更新文件                                                   |
+| style    | Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc) 不影響程式碼的格式調整(空格, formatting, 缺少分號, 等等...) |
+| refactor | A code change that neither fixes a bug nor adds a feature 重構。針對已上線的功能程式碼調整與優化，且不改變記有邏輯                  |
+| perf     | A code change that improves performance 提升效能的程式碼修改                                    |
+| test     | Adding missing tests or correcting existing tests 測試。新增測試、重構測試等                           |
+| build    | Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm) |
+| ci       | Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs) 改變 CI 配置檔案或 script  |
+| chore    | Other changes that don't modify src or test files 不影響程式碼運行，建構程序或輔助工具的變動，不修改src或測試檔案                          |
+| revert   | Reverts a previous commit 撤銷回覆先前的 commit                                                  |
 
 ### 2.選擇 scope 範圍名(選填)
-What is the scope of this change (e.g. component or file name): (press enter to skip) 
+`What is the scope of this change (e.g. component or file name): (press enter to skip) `
+
+commit 影響的範圍，如：資料庫、控制層、模板層等，視專案不同改變
 
 ### 3.填寫標題Header Subject(必填)
-Write a short, imperative tense description of the change (max 86 chars):
+`Write a short, imperative tense description of the change (max 86 chars):`
+
+commit 的簡短描述，不超過 50 個字元，結尾不加句號，盡量讓 Commit 單一化，一次只更動一個主題。
 
 ### 4.填寫補充內容Body(選填)
-Provide a longer description of the change: (press enter to skip) 
+`Provide a longer description of the change: (press enter to skip) `
 
 ### 5.是否有破壞性更新(默認為：no)
-Are there any breaking changes?
+`Are there any breaking changes?`
+
+記錄不相容的變動。
 
 **破壞性更新為跟上一版有衝突的變動**
 
 ### 6.是否關係到為 open 狀態的 issue(默認為：no)
-Does this change affect any open issues?
+`Does this change affect any open issues?`
 
 可以關閉 github issue，**但注意 commit message 的末尾也要加 '(#issue編號)'**，方便在 github 中查找
 
@@ -96,40 +85,37 @@ git cz # 提交
 
 ## 套件工具說明 
 
-### Commitizen
+說明各套件如何安裝及設置。
 
-**commitizen**
+### commitizen + cz-conventional-changelog
 
-[commitizen](https://github.com/commitizen)
+- [commitizen](https://github.com/commitizen)
 建立符合規範的 commit message。
-
-**cz-conventional-changelog**
-
-[cz-conventional-changelog](https://github.com/commitizen/cz-conventional-changelog)
+- [cz-conventional-changelog](https://github.com/commitizen/cz-conventional-changelog)
 commitizen 家族出的適配器。
 遵循 Conventional Commits 的規範格式編寫 commit message，方便自動生成語意化版本號和更新日誌。
 
-- 安裝(本地)
+安裝(本地)
 ```bash
 npx commitizen init cz-conventional-changelog --save-dev --save-exact
 ```
 
-- 安裝(全域)
+安裝(全域)
 ```bash
 npm install -g commitizen cz-conventional-changelog
 ```
 
-- 配置
+配置
 ```bash
 echo '{"path": "cz-conventional-changelog"}' > ~/.czrc 
 ```
 
-- 未來建立 commit 的方式
-[Tab]如果沒有全域安裝，需要使用 npx 指令。
+未來建立 commit 的方式<br>
+如果沒有全域安裝，需要使用 npx 指令。
 ```bash
 npx cz | npx git-cz
 ```
-[Tab]或是在 package.json 的"script"中設置
+或是在 package.json 的"script"中設置
 ```json
 {
   "script":{
@@ -138,44 +124,42 @@ npx cz | npx git-cz
 }
 ```
 
-### CommitLint
+---
+
+### commitLint + config-conventional
 Commitlint + config-conventional + husky 可以在 git commit 時檢驗 commit message 是否符合 conventional commits 規範
 
-**@commitlint/cli**
-
-[@commitlint/cli](https://github.com/marionebl/commitlint) 
+- [@commitlint/cli](https://github.com/marionebl/commitlint) 
 檢查 commit message 的 linter 工具。
 可以搭配不同的規範 (convention)。
-
-**@commitlint/config-conventional**
-
-[@commitlint/config-conventional](https://github.com/conventional-changelog/commitlint/tree/master/@commitlint/config-conventional)
+- [@commitlint/config-conventional](https://github.com/conventional-changelog/commitlint/tree/master/@commitlint/config-conventional)
 是根據 conventional commit 建立的規範
+- [husky]
 
-- 安裝 commitlint-cli 和 config-conventional
-- 建立 commitlint.config.js 檔案並設定配置
+安裝 commitlint-cli 和 config-conventional<br>
+建立 commitlint.config.js 檔案並設定配置
 ```bash
 npm install --save-dev @commitlint/config-conventional @commitlint/cli
 echo "export default {extends: ['@commitlint/config-conventional']};" > commitlint.config.js
 ```
-**husky**
 
-在不同的 git hook 執行不同的動作。
+在不同的 git hook 執行不同的動作。<br>
 例如：建立 commit(pre-commit) 前執行 commit message 的檢查。
 
-- 自動 安裝 husky 和設定 git hook(和手動擇一)
+
+自動 安裝 husky 和設定 git hook(和手動擇一)
 ```bash
 npm install && npx husky-init
 ```
 
-- 手動 安裝 husky 和設定 git hook(和自動擇一)
+手動 安裝 husky 和設定 git hook(和自動擇一)
 ```bash
 npx husky install
 npm run prepare
 ```
 
-- 使用 husky 在 git hook 中新增 commit-msg
-- 在建立 commit message 時，自動使用 commitlint 進行檢查，如果不符合規範的話，就無法成功建立 commit：
+使用 husky 在 git hook 中新增 commit-msg<br>
+在建立 commit message 時，自動使用 commitlint 進行檢查，如果不符合規範的話，就無法成功建立 commit：
 ```bash
 npx husky add .husky/commit-msg 'npx --no-install commitlint --edit $1'
 ```
@@ -184,12 +168,12 @@ npx husky add .husky/commit-msg 'npx --no-install commitlint --edit $1'
 可以有 npm run version 的功能，且符合 commitizen 的規範格式
 並且會自動生成 changelog、 自動打 tag，自動 commit
 
-- 安裝
+安裝
 ```bash
 npm install standard-version --save-dev
 ```
 
-- package.json 設置
+package.json 設置
 ```json
 {
   "script":{
@@ -229,19 +213,5 @@ npm run release # 2.1.3-alpha.1 to 2.2.0
 ```
 
 
-## 其他
 
-**cz-emoji**
-
-[cz-emoji](https://www.npmjs.com/package/cz-emoji)
-
-
-- 安裝
-```bash
-npm install --save-dev cz-emoji
-```
-- 配置
-```bash
-echo '{ "path": "cz-emoji" }' > ~/.czrc
-```
 
