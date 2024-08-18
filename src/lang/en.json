@@ -1,0 +1,13 @@
+{
+  "Common": {
+    "Button": {
+      "Add": "Add",
+      "Edit": "Edit",
+      "Save": "Save",
+      "Delete": "Delete"
+    }
+  },
+  "HomeView":{
+    
+  }
+}

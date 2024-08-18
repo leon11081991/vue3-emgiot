@@ -1,0 +1,13 @@
+{
+  "Common": {
+    "Button": {
+      "Add": "新增",
+      "Edit": "編輯",
+      "Save": "儲存",
+      "Delete": "刪除"
+    }
+  },
+  "HomeView":{
+    
+  }
+}
