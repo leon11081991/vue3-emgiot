@@ -1,0 +1,17 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit" // 文件定義的 ESLint 錯誤或規則才自動修復
+  },
+  "editor.formatOnSave": true, // 存檔時自動 format
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode" // 預設 format 使用 prettier
+  },
+  "[markdown]": {
+    "editor.formatOnSave": false, // 禁用 Markdown 文件的自動格式化
+    "editor.defaultFormatter": null // Markdown 文件使用 Prettier 作为默认格式化工具
+  },
+  "vue.autoInsert.dotValue": true, // 使用 ref 自動補全
+  "editor.tabCompletion": "on", // 啟用自訂程式碼樣版
+  "editor.snippetSuggestions": "top", // 若有裝其他的 Snippet，可以將編輯器的權重提高
+  "cSpell.words": [] // 新增自定義拼寫
+}

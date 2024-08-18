@@ -1,0 +1,21 @@
+{
+  // .vue 檔基本模板 => 輸入 !vue + tab 即可自動生成代碼
+  "Vue TypeScript Setup Scss": {
+    "prefix": "!vue",
+    "body": [
+      "<script setup lang=\"ts\">",
+      "  $1",
+      "</script>",
+      "",
+      "<template>",
+      "  <div>",
+      "    $2",
+      "  </div>",
+      "</template>",
+      "",
+      "<style lang=\"scss\" scoped>",
+      "  $3",
+      "</style>"
+    ]
+  }
+}
