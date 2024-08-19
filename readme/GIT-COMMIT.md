@@ -39,15 +39,23 @@
 ### 2.選擇 scope 範圍名(選填)
 `What is the scope of this change (e.g. component or file name): (press enter to skip) `
 
-commit 影響的範圍，如：資料庫、控制層、模板層等，視專案不同改變
+1. commit 影響的範圍，如：資料庫、控制層、模板層等，視專案不同改變。
+2. 不需加＄符號，以小寫標註。
+
+例如：login-page, user-services, base-button...
 
 ### 3.填寫標題Header Subject(必填)
 `Write a short, imperative tense description of the change (max 86 chars):`
 
-commit 的簡短描述，不超過 50 個字元，結尾不加句號，盡量讓 Commit 單一化，一次只更動一個主題。
+1. commit 的簡短描述，不超過 50 個字元。
+2. 結尾不加句號。
+3. 盡量讓 Commit 單一化，**一次只更動一個主題**。
 
 ### 4.填寫補充內容Body(選填)
 `Provide a longer description of the change: (press enter to skip) `
+
+1. 條列式說明改變了"什麼"和"為什麼"改變
+2. 換行需加上 **\n** 才可換行
 
 ### 5.是否有破壞性更新(默認為：no)
 `Are there any breaking changes?`
