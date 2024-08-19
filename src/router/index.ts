@@ -3,17 +3,26 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import { layoutMiddleware } from '@/router/middlewares/layoutMiddleware'
 
-import IndexView from '@/views/IndexPage.vue'
+import IndexPage from '@/views/IndexPage.vue'
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: IndexView,
+    component: IndexPage,
     meta: {
       layout: 'LayoutDefault',
       middleware: [layoutMiddleware]
-    },
+    }
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: () => import('@/views/DashboardPage.vue'),
+    meta: {
+      layout: 'LayoutDefault',
+      middleware: [layoutMiddleware]
+    }
   }
 ]
 
