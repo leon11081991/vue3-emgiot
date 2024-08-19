@@ -6,6 +6,8 @@ import App from './App.vue'
 import i18n from '@/plugins/i18n';
 import versionPlugin from '@/plugins/version';
 
+import '@/assets/normalize.css';
+
 const { router } = createAppRouter();
 const pinia = createPinia();
 const app = createApp(App)
