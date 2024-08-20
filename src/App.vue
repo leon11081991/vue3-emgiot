@@ -12,4 +12,9 @@ const route = useRoute()
   </component>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.main-page {
+  position: relative;
+  min-height: 100dvh;
+}
+</style>
