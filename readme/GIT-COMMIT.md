@@ -39,15 +39,23 @@
 ### 2.選擇 scope 範圍名(選填)
 `What is the scope of this change (e.g. component or file name): (press enter to skip) `
 
-commit 影響的範圍，如：資料庫、控制層、模板層等，視專案不同改變
+1. commit 影響的範圍，如：資料庫、控制層、模板層等，視專案不同改變。
+2. 不需加＄符號，以小寫標註。
+
+例如：login-page, user-services, base-button...
 
 ### 3.填寫標題Header Subject(必填)
 `Write a short, imperative tense description of the change (max 86 chars):`
 
-commit 的簡短描述，不超過 50 個字元，結尾不加句號，盡量讓 Commit 單一化，一次只更動一個主題。
+1. commit 的簡短描述，不超過 50 個字元。
+2. 結尾不加句號。
+3. 盡量讓 Commit 單一化，**一次只更動一個主題**。
 
 ### 4.填寫補充內容Body(選填)
 `Provide a longer description of the change: (press enter to skip) `
+
+1. 條列式說明改變了"什麼"和"為什麼"改變
+2. 換行需加上 **\n** 才可換行
 
 ### 5.是否有破壞性更新(默認為：no)
 `Are there any breaking changes?`
@@ -212,6 +220,17 @@ npm run release -- --release-as 2.1.3-alpha.1 # 2.0.0-0 to 2.1.3-alpha.1
 npm run release # 2.1.3-alpha.1 to 2.2.0
 ```
 
+#### 版本號補充
+
+版本號皆為遞增。
+
+-版本格式：
+**主版本號.次版本號.修訂版本號**
+
+規則：
+- 主版本號：修改或新增不兼容的功能。
+- 次版本號：新增向下兼容的功能。
+- 修訂版本號：修正向下兼容的問題。
 
 
 

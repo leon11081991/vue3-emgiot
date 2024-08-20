@@ -1,15 +1,27 @@
 import type { RouteLocationNormalized } from 'vue-router';
 import { createRouter, createWebHistory } from 'vue-router'
 
-import IndexView from '@/views/IndexView.vue'
+import { layoutMiddleware } from '@/router/middlewares/layoutMiddleware'
+
+import IndexPage from '@/views/IndexPage.vue'
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: IndexView,
+    component: IndexPage,
     meta: {
-      middleware: [],
+      layout: 'LayoutDefault',
+      middleware: [layoutMiddleware]
+    }
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: () => import('@/views/DashboardPage.vue'),
+    meta: {
+      layout: 'LayoutDefault',
+      middleware: [layoutMiddleware]
     }
   }
 ]
@@ -46,6 +58,7 @@ export const createAppRouter = () => {
     const middleware = Array.isArray(to.meta.middleware)
       ? to.meta.middleware
       : [to.meta.middleware];
+    console.log("middleware", middleware);
     const context = { to, from, next };
     let idx = 0; // 初始化中間件索引
 

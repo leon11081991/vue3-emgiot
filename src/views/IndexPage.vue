@@ -1,7 +1,9 @@
 <script setup lang="ts"></script>
 
 <template>
-  <main>
+  <div class="index-page">
     <h1>Home</h1>
-  </main>
+  </div>
 </template>
+
+<style lang="scss" scoped></style>
