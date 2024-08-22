@@ -352,3 +352,10 @@ template {
 [hidden] {
   display: none;
 }
+
+/**
+ * 額外增加
+ */
+p {
+  margin: 0;
+}
