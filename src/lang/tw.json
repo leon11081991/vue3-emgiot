@@ -7,8 +7,8 @@
       "Delete": "刪除"
     }
   },
-  "HomeView": {},
-  "LoginView": {
+  "HomePage": {},
+  "LoginPage": {
     "Login": {
       "TabLabel": "登入",
       "TextMessage": "歡迎回來",
@@ -32,6 +32,10 @@
       "RegisterSuccess": "註冊成功",
       "RegisterFailed": "註冊失敗",
       "RegisterValidateMessages": "請填寫"
+    },
+    "ForgotPassword": {
+      "Title": "忘記密碼",
+      "UserAccount": "手機號碼"
     }
   }
 }

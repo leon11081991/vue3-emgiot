@@ -2,12 +2,21 @@
 export const createLoginFormConfig = ($t: any) => ({
   userAccount: {
     name: 'userAccount',
-    placeholder: $t('LoginView.Login.UserAccount'),
+    placeholder: $t('LoginPage.Login.UserAccount'),
     rules: [{ required: true }]
   },
   password: {
     name: 'password',
-    placeholder: $t('LoginView.Login.Password'),
+    placeholder: $t('LoginPage.Login.Password'),
+    rules: [{ required: true }]
+  }
+})
+
+export const createForgotPasswordModalConfig = ($t: any) => ({
+  title: $t('LoginPage.ForgotPassword.Title'),
+  userAccount: {
+    name: 'userAccount',
+    placeholder: $t('LoginPage.ForgotPassword.UserAccount'),
     rules: [{ required: true }]
   }
 })

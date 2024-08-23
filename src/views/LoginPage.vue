@@ -2,7 +2,14 @@
 import { ref } from 'vue'
 import { Form } from 'ant-design-vue'
 import { useI18n } from 'vue-i18n'
-import { createLoginFormConfig, formValidateMsgsConfig } from '@/constants/configs/login.config'
+import {
+  createLoginFormConfig,
+  createForgotPasswordModalConfig,
+  formValidateMsgsConfig
+} from '@/constants/configs/login.config'
+import { useModal } from '@/composables/useModal'
+
+const { showModal, openModal, closeModal } = useModal()
 
 type TabKey = 'login' | 'register'
 
@@ -21,6 +28,18 @@ const registerFormModel = ref({
 const loginForm = Form.useForm(loginFormModel.value)
 const registerForm = Form.useForm(registerFormModel.value)
 const loginFormConfig = createLoginFormConfig($t)
+const forgotPasswordModalConfig = createForgotPasswordModalConfig($t)
+
+const showForgotPasswordModal = ref(false)
+
+// Modal handlers
+const openForgotPasswordModal = () => {
+  showForgotPasswordModal.value = true
+}
+
+const closeForgotPasswordModal = () => {
+  showForgotPasswordModal.value = false
+}
 
 // TODO: type 修正
 const onLoginFinish = (values: any) => {
@@ -41,8 +60,8 @@ const onRegisterFinish = (values: any) => {
       <a-card class="login-register-card">
         <a-tabs v-model:activeKey="activeKey" centered size="large">
           <!-- Login -->
-          <a-tab-pane key="login" :tab="$t('LoginView.Login.TabLabel')">
-            <p class="text-message">{{ $t('LoginView.Login.TextMessage') }}</p>
+          <a-tab-pane key="login" :tab="$t('LoginPage.Login.TabLabel')">
+            <p class="text-message">{{ $t('LoginPage.Login.TextMessage') }}</p>
             <a-form
               :model="loginFormModel"
               :name="'login_form'"
@@ -53,7 +72,7 @@ const onRegisterFinish = (values: any) => {
             >
               <a-form-item
                 :name="loginFormConfig.userAccount.name"
-                :label="$t('LoginView.Login.UserAccount')"
+                :label="$t('LoginPage.Login.UserAccount')"
                 :rules="loginFormConfig.userAccount.rules"
               >
                 <a-input
@@ -65,7 +84,7 @@ const onRegisterFinish = (values: any) => {
 
               <a-form-item
                 :name="loginFormConfig.password.name"
-                :label="$t('LoginView.Login.Password')"
+                :label="$t('LoginPage.Login.Password')"
                 :rules="loginFormConfig.password.rules"
               >
                 <a-input-password
@@ -78,29 +97,29 @@ const onRegisterFinish = (values: any) => {
 
               <div class="actions-container">
                 <a-checkbox v-model:checked="loginFormModel.rememberMe">
-                  {{ $t('LoginView.Login.RememberMe') }}
+                  {{ $t('LoginPage.Login.RememberMe') }}
                 </a-checkbox>
 
-                <span class="forget">忘記密碼</span>
+                <span class="forgot-password" @click="openModal">忘記密碼</span>
               </div>
 
               <a-form-item>
                 <a-button class="login-btn" type="primary" html-type="submit">
-                  {{ $t('LoginView.Login.Submit') }}
+                  {{ $t('LoginPage.Login.Submit') }}
                 </a-button>
               </a-form-item>
             </a-form>
 
             <div class="other-message">
-              <span class="other-message-text">{{ $t('LoginView.Login.OtherMessage') }}</span>
+              <span class="other-message-text">{{ $t('LoginPage.Login.OtherMessage') }}</span>
             </div>
 
             <a-button class="google-btn" type="primary"> Google </a-button>
           </a-tab-pane>
 
           <!-- Register -->
-          <a-tab-pane key="register" :tab="$t('LoginView.Register.TabLabel')">
-            <p class="text-message">{{ $t('LoginView.Register.TextMessage') }}</p>
+          <a-tab-pane key="register" :tab="$t('LoginPage.Register.TabLabel')">
+            <p class="text-message">{{ $t('LoginPage.Register.TextMessage') }}</p>
             <a-form
               :model="registerFormModel"
               :name="'register_form'"
@@ -110,21 +129,23 @@ const onRegisterFinish = (values: any) => {
             >
               <a-form-item
                 :name="loginFormConfig.userAccount.name"
-                :label="$t('LoginView.Register.UserAccount')"
+                :label="$t('LoginPage.Register.UserAccount')"
               >
                 <a-input-group compact>
                   <a-input
                     v-model:value="registerFormModel.userAccount"
                     :placeholder="loginFormConfig.userAccount.placeholder"
-                    style="width: calc(100% - 100px)"
+                    class="validate-input"
                   />
-                  <a-button type="primary">{{ $t('LoginView.Register.Validate') }}</a-button>
+                  <a-button type="primary" class="validate-btn">
+                    {{ $t('LoginPage.Register.Validate') }}
+                  </a-button>
                 </a-input-group>
               </a-form-item>
 
               <a-form-item>
                 <a-button class="register-btn" type="primary" html-type="submit">
-                  {{ $t('LoginView.Register.Submit') }}
+                  {{ $t('LoginPage.Register.Submit') }}
                 </a-button>
               </a-form-item>
             </a-form>
@@ -132,6 +153,20 @@ const onRegisterFinish = (values: any) => {
         </a-tabs>
       </a-card>
     </div>
+
+    <!-- Forgot Password Modal -->
+    <a-modal
+      class="forgot-password-modal"
+      v-model:visible="showModal"
+      :title="forgotPasswordModalConfig.title"
+      @cancel="closeModal"
+    >
+      <a-form :layout="'vertical'">
+        <a-form-item :label="$t('LoginPage.ForgotPassword.UserAccount')">
+          <a-input :placeholder="$t('LoginPage.ForgotPassword.UserAccount')" />
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </div>
 </template>
 
@@ -165,6 +200,14 @@ const onRegisterFinish = (values: any) => {
   height: auto;
 }
 
+.validate-input {
+  width: 70%;
+}
+.validate-btn {
+  width: 30%;
+  height: 100%;
+}
+
 .text-message {
   margin-bottom: 1rem;
   text-align: center;
@@ -177,7 +220,7 @@ const onRegisterFinish = (values: any) => {
   justify-content: space-between;
   margin-bottom: 1rem;
 
-  .forget {
+  .forgot-password {
     color: $--color-gray-600;
     transition: all 0.2s ease-in-out;
 
@@ -220,5 +263,9 @@ const onRegisterFinish = (values: any) => {
     height: 1px;
     background-color: $--color-gray-500;
   }
+}
+
+:global(.forgot-password-modal) {
+  top: 200px;
 }
 </style>
