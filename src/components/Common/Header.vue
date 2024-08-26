@@ -8,6 +8,10 @@ const commonStore = useCommonStore()
 const goPrevPage = () => {
   router.go(-1)
 }
+
+const handleOpenSidebar = () => {
+  commonStore.isSidebarOpen = true
+}
 </script>
 
 <template>
@@ -17,7 +21,7 @@ const goPrevPage = () => {
       <img src="/src/assets/icons/left-arrow.svg" alt="go-prev-page" />
     </div>
     <h2 class="header-title">{{ commonStore.headerTitle }}</h2>
-    <div class="menu">
+    <div class="menu" @click="handleOpenSidebar">
       <img src="/src/assets/icons/menu.svg" alt="menu" />
     </div>
   </header>
@@ -25,7 +29,7 @@ const goPrevPage = () => {
 
 <style lang="scss" scoped>
 .header {
-  height: $header-height;
+  height: $--header-height;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -42,7 +46,7 @@ const goPrevPage = () => {
   .menu {
     @include base-transition;
     cursor: pointer;
-    border-radius: $border-radius;
+    border-radius: $--border-radius-base;
 
     &:hover {
       background-color: rgba(0, 0, 0, 0.1);
