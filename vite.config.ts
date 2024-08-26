@@ -23,6 +23,14 @@ export default defineConfig(({ mode }) => {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url))
       }
+    },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: `@import "./src/assets/variables.scss";
+          @import "./src/assets/scss/mixin.scss";`
+        }
+      }
     }
   }
 })
