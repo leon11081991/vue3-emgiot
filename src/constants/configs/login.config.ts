@@ -1,4 +1,9 @@
 // ant 登入元件設定
+
+export const loginPageTabBarStyleConfig = {
+  "display": "none"
+}
+
 export const createLoginFormConfig = ($t: any) => ({
   userAccount: {
     name: 'userAccount',

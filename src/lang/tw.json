@@ -15,7 +15,7 @@
       "UserAccount": "手機號碼",
       "Password": "密碼",
       "RememberMe": "記住我",
-      "OtherMessage": "或使用其他方式登入?",
+      "OtherMessage": "使用其他方式登入",
       "Forget": "忘記密碼",
       "Submit": "登入",
       "LoginSuccess": "登入成功",
@@ -24,8 +24,8 @@
       "LoginValidateMessages": "請填寫"
     },
     "Register": {
-      "TabLabel": "註冊",
-      "TextMessage": "歡迎加入",
+      "TabLabel": "帳號認證",
+      "TextMessage": "使用手機認證以保障帳號安全",
       "UserAccount": "手機號碼",
       "Validate": "驗證",
       "Submit": "註冊",
