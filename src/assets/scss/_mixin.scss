@@ -1,3 +1,11 @@
 @mixin base-transition {
   transition: all 0.3s cubic-bezier(0.55, 0, 0.1, 1);
 }
+
+@mixin ellipsisText($max-width: 100%) {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: $max-width;
+  display: inline-block;
+}
