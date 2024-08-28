@@ -34,6 +34,7 @@ const classes = computed(() => {
   justify-content: center;
   align-items: center;
   color: $--color-primary;
+  pointer-events: none;
 
   &.sm {
     width: $--icon-width--sm;

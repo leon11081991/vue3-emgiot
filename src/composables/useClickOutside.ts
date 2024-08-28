@@ -1,17 +1,21 @@
-import { onMounted, onBeforeUnmount, type Ref } from 'vue';
+import { type Ref, onMounted, onBeforeUnmount } from 'vue';
 
-export const useClickOutside = (elementRef: Ref<HTMLElement | null>, callback: () => void) => {
+export const useClickOutside = (
+  elementRef: Ref<HTMLElement | null>,
+  callback: (event: MouseEvent) => void
+) => {
   const clickOutsideHandler = (event: MouseEvent) => {
+    event.stopPropagation()
     if (elementRef.value && !elementRef.value.contains(event.target as Node)) {
-      callback();
+      callback(event)
     }
   };
 
   onMounted(() => {
-    document.addEventListener('click', clickOutsideHandler);
-  });
+    document.addEventListener('click', clickOutsideHandler)
+  })
 
   onBeforeUnmount(() => {
-    document.removeEventListener('click', clickOutsideHandler);
-  });
+    document.removeEventListener('click', clickOutsideHandler)
+  })
 }

@@ -1,19 +1,17 @@
 <script setup lang="ts">
-import { type Ref, ref } from 'vue'
+import { ref } from 'vue'
+import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import { useRouter } from 'vue-router'
 import { useCommonStore } from '@/stores/common'
 
+import { useSidebar } from '@/composables/useSidebar'
+
 const router = useRouter()
 const commonStore = useCommonStore()
-
-const menuRef = ref<HTMLElement | null>(null)
+const { handleOpenSidebar } = useSidebar()
 
 const goPrevPage = () => {
   router.go(-1)
-}
-
-const handleOpenSidebar = () => {
-  commonStore.isSidebarOpen = true
 }
 </script>
 
@@ -24,8 +22,8 @@ const handleOpenSidebar = () => {
       <img src="/src/assets/icons/left-arrow.svg" alt="go-prev-page" />
     </div>
     <h2 class="header-title">{{ commonStore.headerTitle }}</h2>
-    <div ref="menuRef" class="menu" @click="handleOpenSidebar">
-      <img src="/src/assets/icons/menu.svg" alt="menu" />
+    <div class="menu" @click="handleOpenSidebar">
+      <BaseSvgIcon iconName="menu" />
     </div>
   </header>
 </template>

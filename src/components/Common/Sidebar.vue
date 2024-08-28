@@ -1,37 +1,43 @@
 <script setup lang="ts">
-import { type Ref, ref } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import MaskOverlay from '@/components/Base/MaskOverlay.vue'
-import { useClickOutside } from '@/composables/useClickOutside'
+
+import { useSidebar } from '@/composables/useSidebar'
+import { useDeviceWidth } from '@/composables/useDeviceWidth'
+import { useAvatar } from '@/composables/useAvatar'
+import { useRandomColor } from '@/composables/useRandomColor'
+
 import { useCommonStore } from '@/stores/common'
 
 import { navigationList } from '@/constants/common.const'
+import { widthMapping } from '@/constants/mappings/width.mapping'
 
 const commonStore = useCommonStore()
+const { sidebarRef, handleCloseSidebar } = useSidebar()
+const { width } = useDeviceWidth()
+const { getRandomHex } = useRandomColor()
 
-const sidebarRef = ref<HTMLElement | null>(null)
-
-const handleCloseSidebar = () => {
-  commonStore.isSidebarOpen = false
-}
-
-// useClickOutside(sidebarRef, handleCloseSidebar)
+const avatarBg = getRandomHex()
 </script>
 
 <template>
   <aside ref="sidebarRef" class="sidebar" :class="{ 'is-open': commonStore.isSidebarOpen }">
     <div class="close" @click="handleCloseSidebar">
-      <img src="/src/assets/icons/cross.svg" alt="close" />
+      <BaseSvgIcon iconName="cross" />
     </div>
 
     <div class="user-info">
       <div class="user-container">
-        <div class="user-avatar"></div>
-        <h5 class="user-name">雲小二</h5>
+        <div class="user-avatar" :style="{ backgroundColor: avatarBg }">
+          {{ useAvatar('雲小二') }}
+        </div>
+        <h5 class="user-name">雲小二雲小二雲小二雲小二</h5>
         <div class="user-level">1級</div>
       </div>
-      <div class="message">
-        <BaseSvgIcon iconName="mail" />
+      <div class="message-container">
+        <RouterLink :to="{ name: 'Message' }" class="message-link">
+          <BaseSvgIcon iconName="mail" />
+        </RouterLink>
       </div>
     </div>
 
@@ -56,7 +62,11 @@ const handleCloseSidebar = () => {
     </div>
   </aside>
   <transition name="fade">
-    <MaskOverlay :isVisible="commonStore.isSidebarOpen" @click="handleCloseSidebar" />
+    <MaskOverlay
+      v-if="width <= widthMapping['md']"
+      :isVisible="commonStore.isSidebarOpen"
+      @click="handleCloseSidebar"
+    />
   </transition>
 </template>
 
@@ -73,7 +83,7 @@ aside.sidebar {
   width: $--sidebar-width;
   height: $--sidebar-height;
   background-color: $--sidebar-bg-color;
-  box-shadow: $--box-shadow-base;
+  box-shadow: $--box-shadow-dark;
   z-index: $--sidebar-z-index;
 
   &.is-open {
@@ -81,7 +91,7 @@ aside.sidebar {
   }
 
   .close {
-    // @extend .base-transition;
+    @include base-transition;
     position: absolute;
     top: 1rem;
     right: 1.5rem;
@@ -94,6 +104,9 @@ aside.sidebar {
   }
 
   .user-info {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    column-gap: 1rem;
     .user-container {
       display: grid;
       grid-template-areas:
@@ -103,31 +116,45 @@ aside.sidebar {
       column-gap: 0.5rem;
     }
     .user-avatar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       width: 3rem;
       height: 3rem;
       grid-area: avatar;
+      border: 1px solid $--color-gray-400;
       border-radius: $--border-radius-circle;
+      font-size: 1.5rem;
+      color: $--color-white;
     }
     .user-name {
+      @include ellipsisText;
       grid-area: name;
       margin: 0;
       color: $--color-primary;
+      font-size: 1rem;
     }
     .user-level {
       grid-area: level;
     }
 
-    .message {
+    .message-container {
       display: flex;
       align-items: center;
-      justify-content: center;
-      width: 1.75rem;
-      height: 1.75rem;
-      cursor: pointer;
 
-      &:hover {
-        background-color: rgba(#000000, 0.1);
+      .message-link {
+        @include base-transition;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.75rem;
+        height: 1.75rem;
         border-radius: $--border-radius-base;
+        cursor: pointer;
+
+        &:hover {
+          background-color: rgba(#000000, 0.1);
+        }
       }
     }
   }
