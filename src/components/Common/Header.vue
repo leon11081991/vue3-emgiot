@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import { type Ref, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCommonStore } from '@/stores/common'
 
 const router = useRouter()
 const commonStore = useCommonStore()
+
+const menuRef = ref<HTMLElement | null>(null)
 
 const goPrevPage = () => {
   router.go(-1)
@@ -21,7 +24,7 @@ const handleOpenSidebar = () => {
       <img src="/src/assets/icons/left-arrow.svg" alt="go-prev-page" />
     </div>
     <h2 class="header-title">{{ commonStore.headerTitle }}</h2>
-    <div class="menu" @click="handleOpenSidebar">
+    <div ref="menuRef" class="menu" @click="handleOpenSidebar">
       <img src="/src/assets/icons/menu.svg" alt="menu" />
     </div>
   </header>
@@ -34,7 +37,7 @@ const handleOpenSidebar = () => {
   align-items: center;
   gap: 0.5rem;
   margin-inline: 1.5rem;
-  z-index: 10;
+  z-index: $--header-z-index;
 
   .header-title {
     margin: 0;

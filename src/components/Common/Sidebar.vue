@@ -1,42 +1,25 @@
 <script setup lang="ts">
+import { type Ref, ref } from 'vue'
+import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
+import MaskOverlay from '@/components/Base/MaskOverlay.vue'
+import { useClickOutside } from '@/composables/useClickOutside'
 import { useCommonStore } from '@/stores/common'
 
+import { navigationList } from '@/constants/common.const'
+
 const commonStore = useCommonStore()
-const navigationList = [
-  {
-    label: '首頁',
-    name: 'Home',
-    'header-title': ''
-  },
-  {
-    label: '個人資料',
-    name: 'Profile',
-    'header-title': '個人資料'
-  },
-  {
-    label: '成員管理',
-    name: 'Member',
-    'header-title': '成員管理'
-  },
-  {
-    label: '自訂分類',
-    name: 'GroupEdit',
-    'header-title': '編輯自訂分類'
-  },
-  {
-    label: '商品管理',
-    name: 'Product',
-    'header-title': '商品列表'
-  }
-]
+
+const sidebarRef = ref<HTMLElement | null>(null)
 
 const handleCloseSidebar = () => {
   commonStore.isSidebarOpen = false
 }
+
+// useClickOutside(sidebarRef, handleCloseSidebar)
 </script>
 
 <template>
-  <aside class="sidebar" :class="{ 'is-open': commonStore.isSidebarOpen }">
+  <aside ref="sidebarRef" class="sidebar" :class="{ 'is-open': commonStore.isSidebarOpen }">
     <div class="close" @click="handleCloseSidebar">
       <img src="/src/assets/icons/cross.svg" alt="close" />
     </div>
@@ -48,7 +31,7 @@ const handleCloseSidebar = () => {
         <div class="user-level">1級</div>
       </div>
       <div class="message">
-        <img src="/src/assets/icons/mail.svg" alt="message" />
+        <BaseSvgIcon iconName="mail" />
       </div>
     </div>
 
@@ -61,6 +44,7 @@ const handleCloseSidebar = () => {
             class="nav-link"
             @click="handleCloseSidebar"
           >
+            <BaseSvgIcon :iconName="item.iconName" />
             <div class="nav-link-label">{{ item.label }}</div>
           </RouterLink>
         </li>
@@ -71,6 +55,9 @@ const handleCloseSidebar = () => {
       <a-button type="primary" class="logout-btn">登出</a-button>
     </div>
   </aside>
+  <transition name="fade">
+    <MaskOverlay :isVisible="commonStore.isSidebarOpen" @click="handleCloseSidebar" />
+  </transition>
 </template>
 
 <style lang="scss" scoped>
@@ -87,7 +74,7 @@ aside.sidebar {
   height: $--sidebar-height;
   background-color: $--sidebar-bg-color;
   box-shadow: $--box-shadow-base;
-  z-index: 10;
+  z-index: $--sidebar-z-index;
 
   &.is-open {
     right: 0;
@@ -156,7 +143,9 @@ aside.sidebar {
   }
 
   .nav-link {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     padding-block: 0.5rem;
     text-decoration: none;
     color: $--color-gray-700;
