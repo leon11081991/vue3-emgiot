@@ -23,6 +23,60 @@ const routes = [
       layout: 'LayoutDefault',
       middleware: [layoutMiddleware]
     }
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: () => import('@/views/ProfilePage.vue'),
+    meta: {
+      layout: 'LayoutDefault',
+      middleware: [layoutMiddleware]
+    }
+  },
+  {
+    path: '/member',
+    name: 'Member',
+    component: () => import('@/views/MemberPage.vue'),
+    meta: {
+      layout: 'LayoutDefault',
+      middleware: [layoutMiddleware]
+    }
+  },
+  {
+    path: '/notepad',
+    name: 'Notepad',
+    component: () => import('@/views/NotepadPage.vue'),
+    meta: {
+      layout: 'LayoutDefault',
+      middleware: [layoutMiddleware]
+    }
+  },
+  {
+    path: '/group-edit',
+    name: 'GroupEdit',
+    component: () => import('@/views/GroupEditPage.vue'),
+    meta: {
+      layout: 'LayoutDefault',
+      middleware: [layoutMiddleware]
+    }
+  },
+  {
+    path: '/product',
+    name: 'Product',
+    component: () => import('@/views/ProductPage.vue'),
+    meta: {
+      layout: 'LayoutDefault',
+      middleware: [layoutMiddleware]
+    }
+  },
+  {
+    path: '/message',
+    name: 'Message',
+    component: () => import('@/views/MessagePage.vue'),
+    meta: {
+      layout: 'LayoutDefault',
+      middleware: [layoutMiddleware]
+    }
   }
 ]
 
