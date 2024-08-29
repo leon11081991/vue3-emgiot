@@ -352,26 +352,3 @@ template {
 [hidden] {
   display: none;
 }
-
-/**
- * 額外增加
- */
-
-* {
-  box-sizing: border-box;
-}
-
-html {
-  padding: 0;
-  margin: 0;
-  scroll-behavior: smooth;
-}
-
-body {
-  margin: 0;
-  letter-spacing: 0.5px;
-}
-
-p {
-  margin: 0;
-}

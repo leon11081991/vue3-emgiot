@@ -12,8 +12,4 @@ export class UtilCommon {
   static normalDeepClone<T>(obj: T): T {
     return JSON.parse(JSON.stringify(obj))
   }
-  /** 文字超過特定字數以刪節號顯示 */
-  static ellipsisText(text: string, limit: number): string {
-    return text.length > limit ? text.slice(0, limit) + '...' : text
-  }
 }
