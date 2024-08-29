@@ -1,25 +1,26 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
-import { useRouter } from 'vue-router'
-import { useCommonStore } from '@/stores/common'
 
+import { useHeader } from '@/composables/useHeader'
 import { useSidebar } from '@/composables/useSidebar'
 
-const router = useRouter()
-const commonStore = useCommonStore()
-const { handleOpenSidebar } = useSidebar()
+import { useCommonStore } from '@/stores/common'
 
-const goPrevPage = () => {
-  router.go(-1)
-}
+const commonStore = useCommonStore()
+
+// const { headerTitle, showGoBack, goPrevPage } = useHeader()
+const { showGoBack, goPrevPage } = useHeader()
+const { handleOpenSidebar } = useSidebar()
 </script>
 
 <template>
   <header class="header">
-    <div class="logo">雲端</div>
-    <div class="go-prev-page" @click="goPrevPage">
-      <img src="/src/assets/icons/left-arrow.svg" alt="go-prev-page" />
+    <div v-if="!showGoBack" class="logo">
+      <!-- TODO: 需更新為公司logo -->
+      雲端
+    </div>
+    <div v-else class="go-prev-page" @click="goPrevPage">
+      <BaseSvgIcon iconName="left-arrow" />
     </div>
     <h2 class="header-title">{{ commonStore.headerTitle }}</h2>
     <div id="menu" class="menu" @click="handleOpenSidebar">
@@ -34,13 +35,16 @@ const goPrevPage = () => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-inline: 1.5rem;
+  padding-inline: 1.5rem;
+  background-color: $--header-bg-color;
   z-index: $--header-z-index;
 
   .header-title {
     margin: 0;
     flex: 1;
     text-align: center;
+    color: $--color-primary;
+    font-weight: 900;
   }
 
   .go-prev-page,
