@@ -10,7 +10,7 @@ export const useSidebar = () => {
 
   const handleCloseSidebar = (event: MouseEvent) => {
     event.stopPropagation()
-    const menu = document.querySelector('.menu')
+    const menu = document.getElementById('menu')
     if (event.target == menu || event.target == sidebarRef.value) return
     commonStore.isSidebarOpen = false
   }

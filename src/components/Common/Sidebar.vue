@@ -15,9 +15,7 @@ import { widthMapping } from '@/constants/mappings/width.mapping'
 const commonStore = useCommonStore()
 const { sidebarRef, handleCloseSidebar } = useSidebar()
 const { width } = useDeviceWidth()
-const { getRandomHex } = useRandomColor()
-
-const avatarBg = getRandomHex()
+const { colorHex } = useRandomColor()
 </script>
 
 <template>
@@ -28,7 +26,7 @@ const avatarBg = getRandomHex()
 
     <div class="user-info">
       <div class="user-container">
-        <div class="user-avatar" :style="{ backgroundColor: avatarBg }">
+        <div class="user-avatar" :style="{ backgroundColor: colorHex }">
           {{ useAvatar('雲小二') }}
         </div>
         <h5 class="user-name">雲小二雲小二雲小二雲小二</h5>
@@ -107,6 +105,9 @@ aside.sidebar {
     display: grid;
     grid-template-columns: 1.5fr 1fr;
     column-gap: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid $--color-gray-500;
+
     .user-container {
       display: grid;
       grid-template-areas:
@@ -124,7 +125,7 @@ aside.sidebar {
       grid-area: avatar;
       border: 1px solid $--color-gray-400;
       border-radius: $--border-radius-circle;
-      font-size: 1.5rem;
+      font-size: 2rem;
       color: $--color-white;
     }
     .user-name {

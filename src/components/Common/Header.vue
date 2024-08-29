@@ -22,7 +22,7 @@ const goPrevPage = () => {
       <img src="/src/assets/icons/left-arrow.svg" alt="go-prev-page" />
     </div>
     <h2 class="header-title">{{ commonStore.headerTitle }}</h2>
-    <div class="menu" @click="handleOpenSidebar">
+    <div id="menu" class="menu" @click="handleOpenSidebar">
       <BaseSvgIcon iconName="menu" />
     </div>
   </header>
