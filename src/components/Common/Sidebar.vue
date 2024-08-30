@@ -1,21 +1,16 @@
 <script setup lang="ts">
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import MaskOverlay from '@/components/Base/MaskOverlay.vue'
-
+import AvatarDisplay from '@/components/Base/AvatarDisplay.vue'
 import { useSidebar } from '@/composables/useSidebar'
 import { useDeviceWidth } from '@/composables/useDeviceWidth'
-import { useAvatar } from '@/composables/useAvatar'
-import { useRandomColor } from '@/composables/useRandomColor'
-
 import { useCommonStore } from '@/stores/common'
-
 import { navigationList } from '@/constants/common.const'
 import { widthMapping } from '@/constants/mappings/width.mapping'
 
 const commonStore = useCommonStore()
 const { sidebarRef, handleCloseSidebar } = useSidebar()
 const { width } = useDeviceWidth()
-const { colorHex } = useRandomColor()
 </script>
 
 <template>
@@ -26,9 +21,7 @@ const { colorHex } = useRandomColor()
 
     <div class="user-info">
       <div class="user-container">
-        <div class="user-avatar" :style="{ backgroundColor: colorHex }">
-          {{ useAvatar('雲小二') }}
-        </div>
+        <AvatarDisplay name="雲小二" />
         <h5 class="user-name">雲小二雲小二雲小二雲小二</h5>
         <div class="user-level">1級</div>
       </div>
@@ -77,7 +70,8 @@ aside.sidebar {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: 3rem 1rem 2rem 1rem;
+  padding-inline: $--sidebar-padding-x;
+  padding-block: $--sidebar-padding-y;
   width: $--sidebar-width;
   height: $--sidebar-height;
   background-color: $--sidebar-bg-color;
