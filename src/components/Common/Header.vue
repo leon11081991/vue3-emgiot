@@ -34,7 +34,8 @@ const goPrevPage = () => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-inline: 1.5rem;
+  padding-inline: $--header-padding-x;
+  background-color: $--header-bg-color;
   z-index: $--header-z-index;
 
   .header-title {
