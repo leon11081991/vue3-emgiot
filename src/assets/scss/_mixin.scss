@@ -2,10 +2,12 @@
   transition: all 0.3s cubic-bezier(0.55, 0, 0.1, 1);
 }
 
-@mixin ellipsisText($max-width: 100%) {
-  white-space: nowrap;
-  overflow: hidden;
+@mixin ellipsisText($max-width: 100%, $max-lines: 1, $line-height: 1.5) {
   text-overflow: ellipsis;
   max-width: $max-width;
   display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  line-height: $line-height;
+  max-height: $max-lines * $line-height * 1rem;
 }
