@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 
 export const useCommonStore = defineStore('common', () => {
   /** header */
-  const headerTitle = ref<string>('雲端掌櫃')
+  const headerTitle = ref<string>('')
   /** sidebar */
   const isSidebarOpen = ref<boolean>(false)
 

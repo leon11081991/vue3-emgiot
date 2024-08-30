@@ -1,21 +1,16 @@
 <script setup lang="ts">
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import MaskOverlay from '@/components/Base/MaskOverlay.vue'
-
+import AvatarDisplay from '@/components/Base/AvatarDisplay.vue'
 import { useSidebar } from '@/composables/useSidebar'
 import { useDeviceWidth } from '@/composables/useDeviceWidth'
-import { useAvatar } from '@/composables/useAvatar'
-import { useRandomColor } from '@/composables/useRandomColor'
-
 import { useCommonStore } from '@/stores/common'
-
 import { navigationList } from '@/constants/common.const'
 import { widthMapping } from '@/constants/mappings/width.mapping'
 
 const commonStore = useCommonStore()
 const { sidebarRef, handleCloseSidebar } = useSidebar()
 const { width } = useDeviceWidth()
-const { colorHex } = useRandomColor()
 </script>
 
 <template>
@@ -26,11 +21,11 @@ const { colorHex } = useRandomColor()
 
     <div class="user-info">
       <div class="user-container">
-        <div class="user-avatar" :style="{ backgroundColor: colorHex }">
-          {{ useAvatar('雲小二') }}
+        <AvatarDisplay name="雲小二" />
+        <div class="user-wrap">
+          <h5 class="user-name">雲小二雲小二雲小二雲小二</h5>
+          <div class="user-level">1級</div>
         </div>
-        <h5 class="user-name">雲小二雲小二雲小二雲小二</h5>
-        <div class="user-level">1級</div>
       </div>
       <div class="message-container">
         <RouterLink :to="{ name: 'Message' }" class="message-link">
@@ -77,7 +72,8 @@ aside.sidebar {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: 3rem 1rem 2rem 1rem;
+  padding-inline: $--sidebar-padding-x;
+  padding-block: $--sidebar-padding-y;
   width: $--sidebar-width;
   height: $--sidebar-height;
   background-color: $--sidebar-bg-color;
@@ -103,18 +99,15 @@ aside.sidebar {
 
   .user-info {
     display: grid;
-    grid-template-columns: 1.5fr 1fr;
+    grid-template-columns: 1fr 1fr;
     column-gap: 1rem;
+
     padding-bottom: 0.5rem;
     border-bottom: 1px solid $--color-gray-500;
 
     .user-container {
-      display: grid;
-      grid-template-areas:
-        'avatar name'
-        'avatar level';
-      grid-template-columns: 3rem 1fr;
-      column-gap: 0.5rem;
+      display: flex;
+      gap: 0.5rem;
     }
     .user-avatar {
       display: flex;
@@ -122,24 +115,28 @@ aside.sidebar {
       justify-content: center;
       width: 3rem;
       height: 3rem;
-      grid-area: avatar;
       border: 1px solid $--color-gray-400;
       border-radius: $--border-radius-circle;
       font-size: 2rem;
       color: $--color-white;
     }
+    .user-wrap {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 120px;
+    }
     .user-name {
       @include ellipsisText;
-      grid-area: name;
       margin: 0;
       color: $--color-primary;
       font-size: 1rem;
     }
     .user-level {
-      grid-area: level;
     }
 
     .message-container {
+      width: 100%;
       display: flex;
       align-items: center;
 
@@ -175,6 +172,7 @@ aside.sidebar {
     align-items: center;
     gap: 0.5rem;
     padding-block: 0.5rem;
+    padding-left: 0.5rem;
     text-decoration: none;
     color: $--color-gray-700;
     border-radius: $--border-radius-base;
@@ -186,8 +184,21 @@ aside.sidebar {
   }
 
   .nav-item {
+    font-weight: 400;
+    transition:
+      text-shadow 0.5s ease,
+      letter-spacing 0.5s ease;
+    border-radius: $--border-radius-base;
+
     &:not(:last-child) {
       margin-bottom: 0.5rem;
+    }
+
+    &:has(.router-link-active) {
+      background-color: rgba($--color-primary, 0.2);
+      font-weight: 700;
+      text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.3);
+      letter-spacing: 0.5px;
     }
   }
 
