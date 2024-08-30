@@ -48,6 +48,7 @@ $--sidebar-width: 300px;
 
 $--header-bg-color: $--background-color-base;
 $--sidebar-bg-color: $--background-color-base;
+$--page-bg-color: $--background-color-base;
 
 $--header-z-index: 100;
 $--sidebar-z-index: 100;
@@ -73,3 +74,9 @@ $--icon-height--lg: 32px;
 $--icon-width--lg: 32px;
 $--icon-height--xl: 48px;
 $--icon-width--xl: 48px;
+
+$--header-padding-x: 1.5rem;
+$--sidebar-padding-x: 1rem;
+$--sidebar-padding-y: 3rem 2rem;
+$--page-padding-x: 1.5rem;
+$--page-padding-y: 3rem;
