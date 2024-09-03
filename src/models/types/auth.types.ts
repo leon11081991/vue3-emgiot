@@ -1,9 +1,15 @@
-export type SignInReqType = {
+export type LoginReqType = {
   userAccount: string
   password: string
 }
-export type ForgetPasswordReqType = Omit<SignInReqType, 'password'>
-export type PasswordChangeReqType = SignInReqType
+export type GoogleLoginReqType = {
+  userAccount: string
+  accessToken: string
+}
+
+export type SignUpReqType = LoginReqType
+export type ForgetPasswordReqType = Omit<SignUpReqType, 'password'>
+export type PasswordChangeReqType = SignUpReqType
 export type AccountDisableReqType = {
   userId: string
 }

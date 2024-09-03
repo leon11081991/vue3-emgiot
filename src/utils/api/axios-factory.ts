@@ -23,7 +23,7 @@ export class ApiFactory {
   /** POST 方法 */
   protected post<Body, Response = ApiResponse>(
     url: string,
-    body: Body,
+    body?: Body,
     config?: AxiosRequestConfig
   ): Promise<Response> {
     console.log("[POST] method: ", url, body, config)

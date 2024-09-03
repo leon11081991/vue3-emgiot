@@ -1,6 +1,6 @@
 import { type ApiResponse, ApiFactory } from '@/utils/api'
-import type { SignInReqType, ForgetPasswordReqType, PasswordChangeReqType, AccountDisableReqType } from '@/models/types/auth.types'
-import { SignInEnum } from '@/constants/enums/services.enums'
+import type { LoginReqType, GoogleLoginReqType, SignUpReqType, ForgetPasswordReqType, PasswordChangeReqType, AccountDisableReqType } from '@/models/types/auth.types'
+import { LoginEnum, SignInEnum } from '@/constants/enums/auth.enums'
 
 /** 系統登入、註冊 */
 export class AuthServices extends ApiFactory {
@@ -9,14 +9,23 @@ export class AuthServices extends ApiFactory {
   }
 
   /** 系統登入 */
+  login = async (loginData: LoginReqType) => {
+    return await this.post<LoginReqType, ApiResponse>(LoginEnum.login, loginData)
+  }
 
   /** Google登入 */
+  googleLogIn = async (googleLoginData: GoogleLoginReqType) => {
+    return await this.post<GoogleLoginReqType, ApiResponse>(LoginEnum.googleLogIn, googleLoginData)
+  }
 
   /** 系統登出 */
+  logOut = async () => {
+    return await this.post<unknown, ApiResponse>(LoginEnum.logOut)
+  }
 
   /** 註冊新帳號 */
-  signIn = async (signInData: SignInReqType): Promise<ApiResponse> => {
-    return await this.post<SignInReqType, ApiResponse>(SignInEnum.signIn, signInData)
+  signIn = async (signInData: SignUpReqType): Promise<ApiResponse> => {
+    return await this.post<SignUpReqType, ApiResponse>(SignInEnum.signIn, signInData)
   }
 
   /** 忘記密碼 */
