@@ -1,8 +1,3 @@
-export const inputStyleConfig = {
-  style: { cursor: 'default', backgroundColor: '#f3f3f3' },
-}
-
-
 export const modalStyleConfig = {
   cancelButtonProps: { style: { display: 'none' } }, // 隱藏取消按鈕
   okButtonProps: {

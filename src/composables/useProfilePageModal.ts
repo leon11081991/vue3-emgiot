@@ -7,7 +7,6 @@ export const useProfilePageModal = () => {
 
   const modalVisible = ref<boolean>(false)
   const modalType = ref<'username' | 'password'>('username')
-
   const modalTitle = ref({
     username: $t('ProfilePage.Modal.UserNameField.Title'),
     password: $t('ProfilePage.Modal.PasswordField.Title')

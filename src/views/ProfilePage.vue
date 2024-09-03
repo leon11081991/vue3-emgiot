@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import AvatarDisplay from '@/components/Base/AvatarDisplay.vue'
 import SvgIcon from '@/components/Base/SvgIcon.vue'
 import { useProfilePageModal } from '@/composables/useProfilePageModal'
-import { inputStyleConfig, modalStyleConfig } from '@/constants/configs/profile.config'
+import { modalStyleConfig } from '@/constants/configs/profile.config'
 
 const { t: $t } = useI18n()
 const { modalVisible, modalType, modalTitle, openModal, closeModal } = useProfilePageModal()
@@ -48,13 +48,7 @@ const mockUserData = {
           <span class="input-label">
             {{ $t('ProfilePage.EditableContainer.UserNameField.Title') }}
           </span>
-          <a-input
-            v-model:value="mockUserData.name"
-            size="large"
-            readonly
-            class="input-field"
-            :style="inputStyleConfig.style"
-          >
+          <a-input v-model:value="mockUserData.name" size="large" readonly class="input-field">
             <template #prefix>
               <SvgIcon iconName="cross" />
             </template>
@@ -69,6 +63,7 @@ const mockUserData = {
             <a-input-password
               v-model:value="mockUserData.password"
               :visibility-toggle="false"
+              size="large"
               readonly
               :placeholder="$t('ProfilePage.EditableContainer.PasswordField.Placeholder')"
               class="input-field"
@@ -99,19 +94,23 @@ const mockUserData = {
       <span class="modal-title">{{ modalTitle[modalType] }}</span>
     </template>
 
-    <div v-if="modalType === 'username'" class="modal-content">
-      <a-input v-model:value="newUserData.username" size="large" class="input-field"></a-input>
+    <div v-if="modalType === 'username'" class="modal-content username">
+      <a-input v-model:value="newUserData.username" class="input-field" size="large"></a-input>
       <div class="count-nums">/10</div>
     </div>
 
-    <div v-if="modalType === 'password'" class="modal-content">
+    <div v-if="modalType === 'password'" class="modal-content password">
       <div class="input-container password-input">
         <span class="input-label"> 新密碼 </span>
 
         <a-input-password v-model:value="newUserData.password" size="large" class="input-field">
           <template #iconRender="v">
-            <EyeTwoTone v-if="v"></EyeTwoTone>
-            <EyeInvisibleOutlined v-else></EyeInvisibleOutlined>
+            <div class="password-visible" v-if="v">
+              <SvgIcon iconName="home" />
+            </div>
+            <div class="password-invisible" v-else>
+              <SvgIcon iconName="cross" />
+            </div>
           </template>
         </a-input-password>
       </div>
@@ -123,9 +122,13 @@ const mockUserData = {
           size="large"
           class="input-field"
         >
-          <template #iconRender="v">
-            <EyeTwoTone v-if="v"></EyeTwoTone>
-            <EyeInvisibleOutlined v-else></EyeInvisibleOutlined>
+          <template #iconRender="x">
+            <div class="password-visible" v-if="x">
+              <SvgIcon iconName="home" />
+            </div>
+            <div class="password-invisible" v-else>
+              <SvgIcon iconName="cross" />
+            </div>
           </template>
         </a-input-password>
       </div>
@@ -172,7 +175,7 @@ const mockUserData = {
       position: absolute;
       top: 0;
       left: 1rem;
-      padding-inline: 2px;
+      padding-inline: 5px;
       font-size: 0.75rem;
       background-color: $--background-color-base;
       z-index: 2;
@@ -181,6 +184,13 @@ const mockUserData = {
     .input-field {
       padding: 0.75rem 1rem;
       background-color: $--background-color-base;
+      &:hover {
+        border-color: none;
+      }
+
+      :deep(.ant-input) {
+        background-color: $--background-color-base;
+      }
     }
 
     .change-button {
@@ -191,13 +201,27 @@ const mockUserData = {
       z-index: 2;
     }
   }
+
+  .password-input {
+    .ant-input-affix-wrapper {
+      border-start-end-radius: 8px;
+      border-end-end-radius: 8px;
+    }
+  }
 }
 
 .profile-modal {
   .modal-content {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+
+    &.username {
+      gap: 0.5rem;
+    }
+
+    &.password {
+      gap: 1.5rem;
+    }
   }
 
   .input-container {
@@ -207,19 +231,23 @@ const mockUserData = {
       position: absolute;
       top: 2px;
       left: 1rem;
+      font-size: 0.75rem;
       z-index: 2;
     }
 
     .input-field {
       padding: 1.5rem 1rem 0.75rem 1rem;
-      // background-color: $--background-color-base;
     }
   }
-}
 
-.ant-modal .ant-modal-content {
-  background-color: #f0f0f0; /* 修改背景色 */
-  border-radius: 10px; /* 修改圆角 */
-  padding: 20px; /* 内边距 */
+  .modal-title {
+    color: $--color-white;
+  }
+
+  .modal-content {
+    .count-nums {
+      text-align: right;
+    }
+  }
 }
 </style>
