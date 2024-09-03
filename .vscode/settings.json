@@ -10,6 +10,9 @@
     "editor.formatOnSave": false, // 禁用 Markdown 文件的自動格式化
     "editor.defaultFormatter": null // Markdown 文件使用 Prettier 作为默认格式化工具
   },
+  "editor.rulers": [100, 120], // 設定一行程式碼長度限制
+  "editor.wordWrap": "wordWrapColumn", // 自動摺行
+  "editor.wordWrapColumn": 120, // 自動摺行長度
   "vue.autoInsert.dotValue": true, // 使用 ref 自動補全
   "editor.tabCompletion": "on", // 啟用自訂程式碼樣版
   "editor.snippetSuggestions": "top", // 若有裝其他的 Snippet，可以將編輯器的權重提高
