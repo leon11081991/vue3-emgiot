@@ -3,7 +3,7 @@ import { env } from '@/env'
 
 export class TestService extends ApiFactory {
   constructor() {
-    super(env.apiBaseUrl)
+    super(`${env.apiBaseUrl}/${env.apiVersion}`)
   }
 
   testGet = async (url: string, params: Record<string, any>) => {

@@ -3,8 +3,9 @@ import type { ApiResponse } from '@/utils/api/models/api-response'
 import axios from '@/utils/api/axios-instance'
 
 export class ApiFactory {
-  protected apiUrl: string
 
+  /** 提供可覆蓋的 apiUrl */
+  protected apiUrl: string
   constructor(apiUrl: string) {
     this.apiUrl = apiUrl
   }

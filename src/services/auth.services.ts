@@ -1,12 +1,11 @@
 import { type ApiResponse, ApiFactory } from '@/utils/api'
 import type { SignInReqType, ForgetPasswordReqType, PasswordChangeReqType, AccountDisableReqType } from '@/models/types/auth.types'
-import { env } from '@/env'
 import { SignInEnum } from '@/constants/enums/services.enums'
 
 /** 系統登入、註冊 */
 export class AuthServices extends ApiFactory {
   constructor() {
-    super(`${env.apiBaseUrl}/${env.apiVersion}`)
+    super('')
   }
 
   /** 系統登入 */

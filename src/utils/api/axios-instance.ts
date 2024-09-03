@@ -5,7 +5,7 @@ import { useUserStore } from '@/stores/user'
 
 /** 創建實例 */
 const axiosInstance = axios.create({
-  baseURL: env.apiBaseUrl,
+  baseURL: `${env.apiBaseUrl}${env.apiVersion}/`,
   timeout: 10000
 })
 
