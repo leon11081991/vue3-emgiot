@@ -14,8 +14,9 @@ const route = useRoute()
 
 <style lang="scss">
 .main-page {
-  height: calc(100vh - $--header-height);
+  min-height: calc(100vh - $--header-height);
   padding-inline: $--page-padding-x;
+  padding-block: $--page-padding-top $--page-padding-bottom;
   background-color: $--page-bg-color;
 }
 
