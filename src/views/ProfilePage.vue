@@ -3,11 +3,27 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AvatarDisplay from '@/components/Base/AvatarDisplay.vue'
 import SvgIcon from '@/components/Base/SvgIcon.vue'
-import { useProfilePageModal } from '@/composables/useProfilePageModal'
+import { useModal } from '@/composables/useModal'
 import { modalStyleConfig } from '@/constants/configs/profile.config'
 
+type ModalType = 'username' | 'password'
+
 const { t: $t } = useI18n()
-const { modalVisible, modalType, modalTitle, openModal, closeModal } = useProfilePageModal()
+const { modalVisible, openModal, closeModal } = useModal()
+
+const modalType = ref<ModalType>('username')
+const modalTitle = ref({
+  username: $t('ProfilePage.Modal.UserNameField.Title'),
+  password: $t('ProfilePage.Modal.PasswordField.Title')
+})
+
+const changeModalField = (field: ModalType): void => {
+  modalType.value = field
+}
+
+const handleOpenModal = (field: ModalType): void => {
+  openModal(() => changeModalField(field))
+}
 
 const handleConfirmClick = (field: 'username' | 'password'): void => {
   console.log('[handleConfirmClick]', field)
@@ -38,7 +54,7 @@ const mockUserData = {
         <AvatarDisplay :name="mockUserData.username" size="lg" />
         <div class="user-name-container">
           <p class="user-name-display">{{ mockUserData.name }}</p>
-          <div class="name-edit-button" @click="openModal('username')">
+          <div class="name-edit-button" @click="handleOpenModal('username')">
             <SvgIcon iconName="cross" />
           </div>
         </div>
@@ -72,7 +88,7 @@ const mockUserData = {
                 <SvgIcon iconName="cross" />
               </template>
             </a-input-password>
-            <a-button type="primary" class="change-button" @click="openModal('password')">
+            <a-button type="primary" class="change-button" @click="handleOpenModal('password')">
               {{ $t('ProfilePage.EditableContainer.PasswordField.ChangeButton') }}
             </a-button>
           </a-input-group>
