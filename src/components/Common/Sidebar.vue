@@ -28,7 +28,7 @@ const { width } = useDeviceWidth()
         </div>
       </div>
       <div class="message-container">
-        <RouterLink :to="{ name: 'Message' }" class="message-link">
+        <RouterLink :to="{ name: 'Message' }" class="message-link" @click="handleCloseSidebar">
           <BaseSvgIcon iconName="mail" />
         </RouterLink>
       </div>
