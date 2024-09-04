@@ -16,6 +16,7 @@ export default defineConfig(({ mode }) => {
       'process.env': env
     },
     server: {
+      host: '0.0.0.0', // 讓伺服器監聽所有 IP 地址
       port: Number(env.VITE_APP_PORT),
     },
     plugins: [
