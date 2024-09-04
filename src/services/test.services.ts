@@ -3,11 +3,11 @@ import { env } from '@/env'
 
 export class TestService extends ApiFactory {
   constructor() {
-    super(`${env.apiBaseUrl}/${env.apiVersion}`)
+    super(`https://newapi.funday.asia/api/v1`)
   }
 
-  testGet = async (url: string, params: Record<string, any>) => {
-    const res = await this.post<unknown, ApiResponse>(url, params)
+  testLogin = async (params: Record<string, any>) => {
+    const res = await this.post<unknown, ApiResponse>('Auth/Login', params)
     console.log("res", res);
   }
 }

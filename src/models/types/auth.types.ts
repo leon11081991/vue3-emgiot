@@ -1,5 +1,5 @@
 export type LoginReqType = {
-  userAccount: string
+  userId: string
   password: string
 }
 export type GoogleLoginReqType = {

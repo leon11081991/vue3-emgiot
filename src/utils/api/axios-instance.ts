@@ -15,6 +15,7 @@ const beforeRequest = (config: InternalAxiosRequestConfig) => {
 
   // config.headers.Authorization = `Bearer ${localStorage.getItem('token')}` // 假設 token 存在於 local storage
   config.headers.Authorization = `Bearer ${userStore.token}` // 假設 token 存在於 user store
+  config.headers['Content-Type'] = 'application/json;charset=UTF-8'
 
   return config
 }
