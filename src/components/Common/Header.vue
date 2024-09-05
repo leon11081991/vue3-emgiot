@@ -4,7 +4,7 @@ import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import { useHeader } from '@/composables/useHeader'
 import { useSidebar } from '@/composables/useSidebar'
 
-import { useCommonStore } from '@/stores/common'
+import { useCommonStore } from '@/stores/common.stores'
 
 const commonStore = useCommonStore()
 

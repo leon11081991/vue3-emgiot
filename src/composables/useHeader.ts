@@ -1,6 +1,6 @@
 import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useCommonStore } from '@/stores/common'
+import { useCommonStore } from '@/stores/common.stores'
 import { navigationList } from '@/constants/common.const'
 
 /** header 相關邏輯 */

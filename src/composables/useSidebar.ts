@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { useClickOutside } from '@/composables/useClickOutside'
-import { useCommonStore } from '@/stores/common'
+import { useCommonStore } from '@/stores/common.stores'
 
 export const useSidebar = () => {
 

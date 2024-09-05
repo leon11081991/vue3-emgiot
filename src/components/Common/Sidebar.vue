@@ -4,7 +4,7 @@ import MaskOverlay from '@/components/Base/MaskOverlay.vue'
 import AvatarDisplay from '@/components/Base/AvatarDisplay.vue'
 import { useSidebar } from '@/composables/useSidebar'
 import { useDeviceWidth } from '@/composables/useDeviceWidth'
-import { useCommonStore } from '@/stores/common'
+import { useCommonStore } from '@/stores/common.stores'
 import { navigationList } from '@/constants/common.const'
 import { widthMapping } from '@/constants/mappings/width.mapping'
 
