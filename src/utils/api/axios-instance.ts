@@ -1,12 +1,18 @@
 import type { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios'
 import axios from 'axios'
 import { env } from '@/env'
-import { useUserStore } from '@/stores/user'
+import { useI18n } from 'vue-i18n'
+import { useMessage } from '@/composables/useMessage'
+import { useUserStore } from '@/stores/user.stores'
+import { UtilCommon } from '@/utils/utilCommon'
+
+const { t: $t } = useI18n()
+const { openMessage } = useMessage()
 
 /** 創建實例 */
 const axiosInstance = axios.create({
   baseURL: `${env.apiBaseUrl}${env.apiVersion}/`,
-  timeout: 10000
+  timeout: 10000 // 請求超時時間
 })
 
 /** 處理請求發送前 */
@@ -27,29 +33,32 @@ const requestFailed = (error: AxiosError) => {
 
 /** 處理回傳成功: 狀態碼為 2xx 都在此處理 */
 const responseSuccess = (response: AxiosResponse) => {
-  console.log('[responseSuccess]');
   return response.data
 }
 
 /** 處理回傳失敗: 狀態碼為非 2xx 都在此處理 */
 const responseFailed = (error: AxiosError) => {
-  const { response } = error
-  console.log("error", error)
 
-  // TODO: 處理 401
+  const { t: $t } = useI18n()
+  const userStore = useUserStore()
+
+  console.log("error", error)
+  const { response } = error
+
   if (response) {
-    // 處理 401
-    if (response.status === 401) {
-      // 重新登入
-      console.log("401!!!!")
+    // 處理 401 未授權
+    if (response.status === 401 && userStore.token) {
+      openMessage('warning', $t('Common.Response.Unauthorized'), {}, () => UtilCommon.goPage('/login'))
+      // TODO: 初始化 token 和 user資料 及重新登入
+
+      return Promise.reject(new Error($t('Common.Response.Unauthorized')))
     }
   }
 
-  // TODO:處理沒有網路連線
   if (!window.navigator.onLine) {
-    // 顯示沒有網路連線
-
-    return Promise.reject(new Error('Please check your network connection'))
+    // 處理沒有網路連線
+    openMessage('error', $t('Common.Response.NoNetwork'))
+    return Promise.reject(new Error($t('Common.Response.NoNetwork')))
   }
 
   console.log(error)
@@ -60,6 +69,5 @@ const responseFailed = (error: AxiosError) => {
 axiosInstance.interceptors.request.use(beforeRequest, requestFailed)
 /** 回傳攔截器 */
 axiosInstance.interceptors.response.use(responseSuccess, responseFailed)
-
 
 export default axiosInstance

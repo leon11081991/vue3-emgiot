@@ -1,5 +1,9 @@
 {
   "Common": {
+    "Response": {
+      "Unauthorized": "未授權，請重新登入",
+      "NoNetwork": "請檢查網路連線狀態"
+    },
     "Button": {
       "Add": "新增",
       "Edit": "編輯",

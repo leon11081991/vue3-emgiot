@@ -1,5 +1,9 @@
 /** 通用工具類及其靜態方法 */
 export class UtilCommon {
+  /** 返回特定頁面 */
+  static goPage(path: string): void {
+    window.location.href = path
+  }
   /** 滾動至頂部 */
   static scrollToTop(): void {
     window.scrollTo({ top: 0, behavior: 'smooth' })
