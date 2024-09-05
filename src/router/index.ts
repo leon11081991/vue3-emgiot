@@ -1,7 +1,8 @@
 import type { RouteLocationNormalized } from 'vue-router';
 import { createRouter, createWebHistory } from 'vue-router'
 
-import { layoutMiddleware } from '@/router/middlewares/layoutMiddleware'
+import { authMiddleware } from '@/router/middlewares/auth.middleware'
+import { layoutMiddleware } from '@/router/middlewares/layout.middleware'
 
 import IndexPage from '@/views/IndexPage.vue'
 
@@ -12,7 +13,7 @@ const routes = [
     component: IndexPage,
     meta: {
       layout: 'LayoutDefault',
-      middleware: [layoutMiddleware]
+      middleware: [authMiddleware, layoutMiddleware]
     }
   },
   {
@@ -21,7 +22,7 @@ const routes = [
     component: () => import('@/views/DashboardPage.vue'),
     meta: {
       layout: 'LayoutDefault',
-      middleware: [layoutMiddleware]
+      middleware: [authMiddleware, layoutMiddleware]
     }
   },
   {
@@ -30,7 +31,7 @@ const routes = [
     component: () => import('@/views/ProfilePage.vue'),
     meta: {
       layout: 'LayoutDefault',
-      middleware: [layoutMiddleware]
+      middleware: [authMiddleware, layoutMiddleware]
     }
   },
   {
@@ -39,7 +40,7 @@ const routes = [
     component: () => import('@/views/MemberPage.vue'),
     meta: {
       layout: 'LayoutDefault',
-      middleware: [layoutMiddleware]
+      middleware: [authMiddleware, layoutMiddleware]
     }
   },
   {
@@ -48,7 +49,7 @@ const routes = [
     component: () => import('@/views/NotepadPage.vue'),
     meta: {
       layout: 'LayoutDefault',
-      middleware: [layoutMiddleware]
+      middleware: [authMiddleware, layoutMiddleware]
     }
   },
   {
@@ -57,7 +58,7 @@ const routes = [
     component: () => import('@/views/GroupEditPage.vue'),
     meta: {
       layout: 'LayoutDefault',
-      middleware: [layoutMiddleware]
+      middleware: [authMiddleware, layoutMiddleware]
     }
   },
   {
@@ -66,7 +67,7 @@ const routes = [
     component: () => import('@/views/ProductPage.vue'),
     meta: {
       layout: 'LayoutDefault',
-      middleware: [layoutMiddleware]
+      middleware: [authMiddleware, layoutMiddleware]
     }
   },
   {
@@ -75,7 +76,7 @@ const routes = [
     component: () => import('@/views/MessagePage.vue'),
     meta: {
       layout: 'LayoutDefault',
-      middleware: [layoutMiddleware]
+      middleware: [authMiddleware, layoutMiddleware]
     }
   }
 ]
@@ -86,9 +87,10 @@ const scrollBehavior = (
   savedPosition: any
 ) => {
   if (savedPosition) {
-    return savedPosition;
+    console.log("savedPosition", savedPosition)
+    return savedPosition
   } else {
-    return { top: 0 };
+    return { top: 0 }
   }
 };
 
@@ -111,10 +113,10 @@ export const createAppRouter = () => {
 
     const middleware = Array.isArray(to.meta.middleware)
       ? to.meta.middleware
-      : [to.meta.middleware];
-    console.log("middleware", middleware);
-    const context = { to, from, next };
-    let idx = 0; // 初始化中間件索引
+      : [to.meta.middleware]
+
+    const context = { to, from, next }
+    let idx = 0 // 初始化中間件索引
 
     // 定義執行中間件的函數
     const run = () => {
@@ -123,15 +125,15 @@ export const createAppRouter = () => {
         mw({
           ...context,
           next: () => {
-            idx++; // 移動到下一個中間件
-            run(); // 繼續執行下一個中間件
+            idx++ // 移動到下一個中間件
+            run() // 繼續執行下一個中間件
           }
-        });
+        })
       } else {
-        next(); // 所有中間件執行完畢，繼續路由導航
+        next() // 所有中間件執行完畢，繼續路由導航
       }
-    };
-    run(); // 開始執行中間件
+    }
+    run() // 開始執行中間件
   })
 
   return { router }
