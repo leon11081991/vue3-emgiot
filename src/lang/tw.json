@@ -44,5 +44,27 @@
       "Title": "忘記密碼",
       "UserAccount": "手機號碼"
     }
+  },
+  "ProfilePage": {
+    "EditableContainer": {
+      "UserNameField": {
+        "Title": "真實姓名"
+      },
+      "PasswordField": {
+        "Title": "密碼",
+        "Placeholder": "尚未設定密碼",
+        "ChangeButton": "變更"
+      }
+    },
+    "Modal": {
+      "UserNameField": {
+        "Title": "修改個人資料",
+        "Button": "確認"
+      },
+      "PasswordField": {
+        "Title": "修改密碼",
+        "Button": "變更"
+      }
+    }
   }
 }

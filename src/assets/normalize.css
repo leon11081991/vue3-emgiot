@@ -86,10 +86,3 @@ h6,
 p {
   margin: unset;
 }
-
-/**
- * 額外增加
- */
-p {
-  margin: 0;
-}

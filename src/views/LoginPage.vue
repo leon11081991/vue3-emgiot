@@ -10,7 +10,7 @@ import {
 } from '@/constants/configs/login.config'
 import { useModal } from '@/composables/useModal'
 
-const { showModal, openModal, closeModal } = useModal()
+const { modalVisible, openModal, closeModal } = useModal()
 
 type TabKey = 'login' | 'register'
 
@@ -94,7 +94,7 @@ const onRegisterFinish = (values: any) => {
                 {{ $t('LoginPage.Login.RememberMe') }}
               </a-checkbox>
 
-              <span class="forgot-password" @click="openModal">忘記密碼</span>
+              <span class="forgot-password" @click="openModal()">忘記密碼</span>
             </div>
 
             <a-form-item>
@@ -170,7 +170,7 @@ const onRegisterFinish = (values: any) => {
     <!-- Forgot Password Modal -->
     <a-modal
       class="forgot-password-modal"
-      v-model:open="showModal"
+      v-model:open="modalVisible"
       :title="forgotPasswordModalConfig.title"
       @cancel="closeModal"
     >

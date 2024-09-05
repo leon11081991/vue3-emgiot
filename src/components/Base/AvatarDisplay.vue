@@ -5,14 +5,13 @@ import { useRandomColor } from '@/composables/useRandomColor'
 
 const props = withDefaults(
   defineProps<{
-    name?: string
+    name: string
     charNum?: number
     isGoogleMember?: boolean
     googleAvatarUrl?: string
     size?: 'sm' | 'md' | 'lg'
   }>(),
   {
-    name: '',
     charNum: 1,
     isGoogleMember: false,
     size: 'md'
@@ -46,7 +45,7 @@ const avatarSize = computed(() => {
     <div
       v-else
       :class="['avatar', { 'two-letters': avatarLetters.length === 2 }]"
-      :style="{ backgroundColor: colorHex }"
+      :style="{ backgroundColor: colorHex, width: `${avatarSize}px`, height: `${avatarSize}px` }"
     >
       <span
         v-for="(letter, index) in avatarLetters"
