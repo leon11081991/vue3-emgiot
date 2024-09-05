@@ -8,7 +8,6 @@ import { useCommonStore } from '@/stores/common.stores'
 
 const commonStore = useCommonStore()
 
-// const { headerTitle, showGoBack, goPrevPage } = useHeader()
 const { showGoBack, goPrevPage } = useHeader()
 const { handleOpenSidebar } = useSidebar()
 </script>
