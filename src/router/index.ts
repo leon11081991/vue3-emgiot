@@ -22,7 +22,7 @@ const routes = [
     component: () => import('@/views/LoginPage.vue'),
     meta: {
       layout: 'LayoutBlank',
-      middleware: [layoutMiddleware]
+      middleware: [authMiddleware, layoutMiddleware]
     }
   },
   {
