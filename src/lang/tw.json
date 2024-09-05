@@ -14,5 +14,35 @@
   "HomePage": {},
   "DashboardPage": {
     "HeaderTitle": "雲端掌櫃 - "
+  },
+  "LoginPage": {
+    "Login": {
+      "TabLabel": "登入",
+      "TextMessage": "歡迎回來",
+      "UserAccount": "手機號碼",
+      "Password": "密碼",
+      "RememberMe": "記住我",
+      "OtherMessage": "使用其他方式登入",
+      "Forget": "忘記密碼",
+      "Submit": "登入",
+      "LoginSuccess": "登入成功",
+      "LoginFailed": "登入失敗",
+
+      "LoginValidateMessages": "請填寫"
+    },
+    "Register": {
+      "TabLabel": "帳號認證",
+      "TextMessage": "使用手機認證以保障帳號安全",
+      "UserAccount": "手機號碼",
+      "Validate": "驗證",
+      "Submit": "註冊",
+      "RegisterSuccess": "註冊成功",
+      "RegisterFailed": "註冊失敗",
+      "RegisterValidateMessages": "請填寫"
+    },
+    "ForgotPassword": {
+      "Title": "忘記密碼",
+      "UserAccount": "手機號碼"
+    }
   }
 }

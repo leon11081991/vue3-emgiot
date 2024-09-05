@@ -17,6 +17,15 @@ const routes = [
     }
   },
   {
+    path: '/login',
+    name: 'Login',
+    component: () => import('@/views/LoginPage.vue'),
+    meta: {
+      layout: 'LayoutBlank',
+      middleware: [layoutMiddleware]
+    }
+  },
+  {
     path: '/dashboard',
     name: 'Dashboard',
     component: () => import('@/views/DashboardPage.vue'),
