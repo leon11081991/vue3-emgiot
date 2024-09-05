@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import SvgIcon from '@/components/Base/SvgIcon.vue'
+import TabFilter from '@/components/Base/TabFilter.vue'
 import { useHeader } from '@/composables/useHeader'
-
 import { useI18n } from 'vue-i18n'
 
 const { t: $t } = useI18n()
 const { updateHeaderTitle } = useHeader()
 
 const storeName = ref('')
-const activeKey = ref<'claw' | 'coin'>('claw')
+const selectedTab = ref<'claw' | 'coin'>('claw')
+const clawActiveKey = ref([])
 
 onMounted(() => {
   storeName.value = '大寮光華店'
-
   updateHeaderTitle($t('DashboardPage.HeaderTitle') + storeName.value) // 設定動態 header title
 })
 
@@ -27,8 +27,6 @@ const tabs = [
     label: '兌幣機'
   }
 ]
-
-const selectedTab = ref('claw')
 </script>
 
 <template>
@@ -46,22 +44,97 @@ const selectedTab = ref('claw')
       </div>
     </div>
 
-    <div class="tabs-container">
-      <label
-        v-for="tab in tabs"
-        :key="tab.key"
-        class="tab-title"
-        :class="{ active: tab.key === selectedTab }"
-      >
-        <input
-          class="hidden-input"
-          type="radio"
-          name="tabs"
-          :value="tab.key"
-          v-model="selectedTab"
-        />
-        {{ tab.label }}
-      </label>
+    <TabFilter :tabs="tabs" v-model:modalValue="selectedTab" />
+
+    <div class="list-container">
+      <div class="list-header claw">
+        <div class="header-item pcbName">機台</div>
+        <div class="header-item averagePrizeWinCount">平均出貨金額</div>
+        <div class="header-item revenue">營收</div>
+        <div class="header-item prizeWinCount">出貨</div>
+      </div>
+
+      <div class="list-body">
+        <a-collapse class="list-collapse" v-model:activeKey="clawActiveKey" :bordered="false">
+          <a-collapse-panel class="list-collapse-panel" key="1">
+            <template #header>
+              <div class="item-main-content claw">
+                <div class="item-section">
+                  <span>南部食品機</span>
+                  <span>W208_01</span>
+                </div>
+                <div class="item-section">
+                  <span>義美小泡芙(巧克力)</span>
+                  <span>$100</span>
+                </div>
+                <div class="item-section">$800</div>
+                <div class="item-section">12</div>
+              </div>
+            </template>
+            <div class="item-action-content claw">
+              <div class="item-section">
+                <span>$800</span>
+                <span>錢箱累積</span>
+              </div>
+              <div class="item-section">
+                <span>$110</span>
+                <span>累保金額</span>
+              </div>
+              <div class="item-section">
+                <SvgIcon iconName="cross" size="lg" />
+                <span>帳務查詢</span>
+              </div>
+              <div class="item-section">
+                <SvgIcon iconName="cross" size="lg" />
+                <span>遠端補幣</span>
+              </div>
+              <div class="item-section">
+                <SvgIcon iconName="cross" size="lg" />
+                <span>其他操作</span>
+              </div>
+            </div>
+          </a-collapse-panel>
+
+          <a-collapse-panel class="list-collapse-panel" key="2">
+            <template #header>
+              <div class="item-main-content claw">
+                <div class="item-section">
+                  <span>南部食品機</span>
+                  <span>W208_01</span>
+                </div>
+                <div class="item-section">
+                  <span>義美小泡芙(巧克力)</span>
+                  <span>$100</span>
+                </div>
+                <div class="item-section">$800</div>
+                <div class="item-section">12</div>
+              </div>
+            </template>
+            <div class="item-action-content claw">
+              <div class="item-section">
+                <span>$800</span>
+                <span>錢箱累積</span>
+              </div>
+              <div class="item-section">
+                <span>$110</span>
+                <span>累保金額</span>
+              </div>
+              <div class="item-section">
+                <SvgIcon iconName="cross" size="lg" />
+                <span>帳務查詢</span>
+              </div>
+              <div class="item-section">
+                <SvgIcon iconName="cross" size="lg" />
+                <span>遠端補幣</span>
+              </div>
+              <div class="item-section">
+                <SvgIcon iconName="cross" size="lg" />
+                <span>其他操作</span>
+              </div>
+            </div>
+          </a-collapse-panel>
+        </a-collapse>
+      </div>
     </div>
   </div>
 </template>
@@ -83,34 +156,73 @@ const selectedTab = ref('claw')
   }
 }
 
-.tabs-container {
-  width: 100%;
-  display: flex;
-  outline: 2px solid $--color-primary--dark;
-  border-radius: $--border-radius-middle;
-  background-color: $--color-primary--dark;
-
-  .tab-title {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
+.list-container {
+  margin-top: 3rem;
+  .list-header {
+    display: grid;
     padding: 0.5rem;
-    border-radius: $--border-radius-middle;
-    color: $--color-primary--dark;
-    background-color: $--color-white;
-    cursor: pointer;
+    background-color: $--color-primary;
+    border-top-left-radius: $--border-radius-middle;
+    border-top-right-radius: $--border-radius-middle;
 
-    &.active {
+    .header-item {
+      flex: 1;
       color: $--color-white;
-      background-color: $--color-primary--dark;
+      text-align: center;
     }
   }
-}
 
-.hidden-input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none; /* 防止用户意外点击到隐藏的input */
+  .list-collapse {
+    background-color: $--background-color-base;
+  }
+
+  .list-collapse-panel {
+    :deep(.ant-collapse-expand-icon) {
+      display: none;
+    }
+
+    :deep(.ant-collapse-header) {
+      padding: 0.5rem;
+    }
+
+    :deep(.ant-collapse-content),
+    :deep(.ant-collapse-content-box) {
+      padding: 0;
+    }
+
+    .item-main-content {
+      display: grid;
+
+      & > .item-section {
+        color: $--color-primary;
+      }
+    }
+
+    .item-action-content {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      padding: 0.5rem;
+
+      & > .item-section {
+        flex: 1;
+        color: $--color-gray-600;
+      }
+    }
+
+    .item-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  .claw {
+    grid-template-columns: 1fr 1fr 0.5fr 0.5fr;
+  }
+
+  .coin {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
 }
 </style>
