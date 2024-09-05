@@ -2,6 +2,8 @@
 
 ## 專案架構(待調整)
 
+各資料夾中容易有重複的檔案名稱，因此子資料夾中的檔案，附檔名前請再加上所在資料夾的前綴。
+
 ```bash
 .
 ├── .git                     # Git 版本控制目錄
@@ -52,20 +54,21 @@
 │   ├── router               # 路由設定
 │   │   ├── index.ts         #
 │   │   └──middleware        # 中間件，用於頁面或路由的前置處理
-│   │        ├── authMiddleware.ts     # 處理登入 token
-│   │        └── layoutMiddleware.ts   # 處理頁面布局
+│   │        ├── auth.middleware.ts     # 處理登入 token
+│   │        └── layout.middleware.ts   # 處理頁面布局
 │   │
 │   ├── services             # API Services
-│   │   ├── xxxView.ts       # 頁面使用到的API
-│   │   └── xxx.ts           # 功能分類的API
+│   │   ├── xxxView.services.ts         # 頁面使用到的API
+│   │   └── xxx.services.ts             # 功能分類的API
 │   │
 │   ├── stores               # 狀態管理
-│   │   ├── user.ts
-│   │   └── ...
+│   │   ├── user.stores.ts
+│   │   └── xxx.stores.ts
 │   │
 │   ├── utils                # 共用工具
 │   ├── views                # 頁面組件
 │   │   └── xxxView.vue      # 各頁面組件
+│   │   └── xxxPage.vue      # 各頁面組件
 │   │
 │   ├── App.vue              # 根組件
 │   ├── env.ts               # 全域型別
