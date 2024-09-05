@@ -258,27 +258,6 @@ const onRegisterFinish = (values: any) => {
 .other-message-text {
   position: relative;
   padding-inline: 0.5rem;
-
-  // &:before {
-  //   position: absolute;
-  //   top: 50%;
-  //   left: 100%;
-  //   content: '';
-  //   display: block;
-  //   width: calc(100% - 1.5rem);
-  //   height: 1px;
-  //   background-color: $--color-gray-500;
-  // }
-  // &:after {
-  //   position: absolute;
-  //   top: 50%;
-  //   right: 100%;
-  //   content: '';
-  //   display: block;
-  //   width: calc(100% - 1.5rem);
-  //   height: 1px;
-  //   background-color: $--color-gray-500;
-  // }
 }
 
 .to-register,
