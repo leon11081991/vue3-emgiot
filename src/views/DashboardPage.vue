@@ -51,13 +51,17 @@ onMounted(() => {
       </div>
 
       <div class="list-body">
-        <a-collapse class="list-collapse" v-model:activeKey="clawActiveKey" :bordered="false">
+        <a-collapse
+          class="list-collapse claw-list"
+          v-model:activeKey="clawActiveKey"
+          :bordered="false"
+        >
           <a-collapse-panel class="list-collapse-panel" key="1">
             <template #header>
               <div class="item-main-content claw">
                 <div class="item-section">
-                  <span>南部食品機</span>
-                  <span>W208_01</span>
+                  <span class="item-category">南部食品機</span>
+                  <span class="item-id">W208_01</span>
                 </div>
                 <div class="item-section">
                   <span>義美小泡芙(巧克力)</span>
@@ -95,8 +99,8 @@ onMounted(() => {
             <template #header>
               <div class="item-main-content claw">
                 <div class="item-section">
-                  <span>南部食品機</span>
-                  <span>W208_01</span>
+                  <span class="item-category">南部食品機</span>
+                  <span class="item-id">W208_01</span>
                 </div>
                 <div class="item-section">
                   <span>義美小泡芙(巧克力)</span>
@@ -116,15 +120,15 @@ onMounted(() => {
                 <span>累保金額</span>
               </div>
               <div class="item-section">
-                <SvgIcon iconName="cross" size="lg" />
+                <BaseSvgIcon iconName="accounts" size="lg" />
                 <span>帳務查詢</span>
               </div>
               <div class="item-section">
-                <SvgIcon iconName="cross" size="lg" />
+                <BaseSvgIcon iconName="replenish-coins" size="lg" />
                 <span>遠端補幣</span>
               </div>
               <div class="item-section">
-                <SvgIcon iconName="cross" size="lg" />
+                <BaseSvgIcon iconName="more-actions" size="lg" />
                 <span>其他操作</span>
               </div>
             </div>
@@ -197,6 +201,29 @@ onMounted(() => {
 
       & > .item-section {
         color: $--color-primary;
+      }
+
+      .item-category {
+        padding: 0.25rem 0.5rem;
+        background-color: $--color-primary;
+        color: $--color-white;
+        border-radius: $--border-radius-middle;
+      }
+
+      .item-id {
+        position: relative;
+        &:before {
+          position: absolute;
+          content: '';
+          width: 0.3rem;
+          height: 0.3rem;
+          border-radius: $--border-radius-circle;
+          background-color: $--color-secondary;
+
+          top: 50%;
+          left: -0.5rem;
+          transform: translateY(-50%);
+        }
       }
     }
 
