@@ -13,7 +13,11 @@
   },
   "HomePage": {},
   "DashboardPage": {
-    "HeaderTitle": "雲端掌櫃 - "
+    "HeaderTitle": "雲端掌櫃 - ",
+    "Tabs": {
+      "Claw": "選物販賣機",
+      "Coin": "兌幣機"
+    }
   },
   "LoginPage": {
     "Login": {

@@ -4,29 +4,23 @@ import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import TabFilter from '@/components/Base/TabFilter.vue'
 import { useHeader } from '@/composables/useHeader'
 import { useI18n } from 'vue-i18n'
+import { createDashboardTabs } from '@/constants/dashboard.const'
+
+type DashboardTabType = 'claw' | 'coin'
 
 const { t: $t } = useI18n()
 const { updateHeaderTitle } = useHeader()
 
+const dashboardTabs = createDashboardTabs($t)
 const storeName = ref('')
-const selectedTab = ref<'claw' | 'coin'>('claw')
+const selectedTab = ref<DashboardTabType>('claw')
 const clawActiveKey = ref([])
+const coinActiveKey = ref([])
 
 onMounted(() => {
   storeName.value = '大寮光華店'
   updateHeaderTitle($t('DashboardPage.HeaderTitle') + storeName.value) // 設定動態 header title
 })
-
-const tabs = [
-  {
-    key: 'claw',
-    label: '選物販賣機'
-  },
-  {
-    key: 'coin',
-    label: '兌幣機'
-  }
-]
 </script>
 
 <template>
@@ -46,7 +40,7 @@ const tabs = [
       </div>
     </div>
 
-    <TabFilter :tabs="tabs" v-model:modalValue="selectedTab" />
+    <TabFilter :tabs="dashboardTabs" v-model:modalValue="selectedTab" />
 
     <div class="list-container">
       <div class="list-header claw">
