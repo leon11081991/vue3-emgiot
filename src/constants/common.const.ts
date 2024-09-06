@@ -10,7 +10,7 @@ export const navigationList = [
     label: '個人資料',
     name: 'Profile',
     'header-title': '個人資料',
-    iconName: 'user'
+    iconName: 'profile'
   },
   {
     label: '成員管理',
@@ -22,7 +22,7 @@ export const navigationList = [
     label: '自訂分類',
     name: 'GroupEdit',
     'header-title': '編輯自訂分類',
-    iconName: 'category'
+    iconName: 'custom-category'
   },
   {
     label: '商品管理',
