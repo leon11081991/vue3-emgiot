@@ -20,7 +20,7 @@ const { handleOpenSidebar } = useSidebar()
       雲端
     </div>
     <div v-else class="go-prev-page" @click="goPrevPage">
-      <BaseSvgIcon iconName="left-arrow" />
+      <BaseSvgIcon iconName="prev-arrow" />
     </div>
     <h2 class="header-title">{{ commonStore.headerTitle }}</h2>
     <div id="menu" class="menu" @click="handleOpenSidebar">
