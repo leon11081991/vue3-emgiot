@@ -18,6 +18,10 @@ const route = useRoute()
   padding-inline: $--page-padding-x;
   padding-block: $--page-padding-top $--page-padding-bottom;
   background-color: $--page-bg-color;
+
+  @include media-breakpoint-down(md) {
+    padding-inline: $--page-padding-x-mobile;
+  }
 }
 
 .ant-modal {

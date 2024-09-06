@@ -68,20 +68,34 @@ $--box-shadow-dark:
   0 0 6px rgba(0, 0, 0, 0.04);
 $--box-shadow-darker: 0 2px 12px 0 rgba(0, 0, 0, 0.3);
 
-$--icon-height: 16px;
-$--icon-width: 16px;
-$--icon-height--sm: 16px;
-$--icon-width--sm: 16px;
-$--icon-height--md: 24px;
-$--icon-width--md: 24px;
-$--icon-height--lg: 32px;
-$--icon-width--lg: 32px;
+$--icon-height: 32px;
+$--icon-width: 32px;
+$--icon-height--sm: 24px;
+$--icon-width--sm: 24px;
+$--icon-height--md: 32px;
+$--icon-width--md: 32px;
+$--icon-height--lg: 40px;
+$--icon-width--lg: 40px;
 $--icon-height--xl: 48px;
 $--icon-width--xl: 48px;
 
 $--header-padding-x: 1.5rem;
+$--header-padding-x-mobile: 0.75rem;
 $--sidebar-padding-x: 1rem;
 $--sidebar-padding-y: 3rem 2rem;
 $--page-padding-x: 1.5rem;
+$--page-padding-x-mobile: 0.75rem;
 $--page-padding-top: 2rem;
 $--page-padding-bottom: 2rem;
+
+$grid-breakpoints: (
+  xxs: 375px,
+  xs: 390px,
+  sm: 576px,
+  md: 768px,
+  lg: 960px,
+  xl: 1200px,
+  2xl: 1440px,
+  3xl: 1680px,
+  4xl: 1920px
+);
