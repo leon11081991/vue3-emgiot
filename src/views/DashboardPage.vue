@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import SvgIcon from '@/components/Base/SvgIcon.vue'
+import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import TabFilter from '@/components/Base/TabFilter.vue'
 import { useHeader } from '@/composables/useHeader'
 import { useI18n } from 'vue-i18n'
@@ -35,11 +35,13 @@ const tabs = [
 
     <div class="update-container">
       <div class="update-detail">
-        更新時間
-        <span class="update-date">2021-11-11</span>
-        <span class="update-time">11:11:11</span>
+        <div class="update-time">
+          <span>更新時間</span>
+          <span class="date">2021-11-11</span>
+          <span class="time">11:11:11</span>
+        </div>
         <div class="update-button">
-          <SvgIcon iconName="cross" />
+          <BaseSvgIcon iconName="refresh" color="secondary" />
         </div>
       </div>
     </div>
@@ -81,15 +83,15 @@ const tabs = [
                 <span>累保金額</span>
               </div>
               <div class="item-section">
-                <SvgIcon iconName="cross" size="lg" />
+                <BaseSvgIcon iconName="accounts" size="lg" />
                 <span>帳務查詢</span>
               </div>
               <div class="item-section">
-                <SvgIcon iconName="cross" size="lg" />
+                <BaseSvgIcon iconName="replenish-coins" size="lg" />
                 <span>遠端補幣</span>
               </div>
               <div class="item-section">
-                <SvgIcon iconName="cross" size="lg" />
+                <BaseSvgIcon iconName="more-actions" size="lg" />
                 <span>其他操作</span>
               </div>
             </div>
@@ -152,7 +154,12 @@ const tabs = [
   .update-detail {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+  }
+
+  .update-time {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
   }
 }
 
@@ -167,6 +174,7 @@ const tabs = [
 
     .header-item {
       flex: 1;
+      font-size: 0.875rem;
       color: $--color-white;
       text-align: center;
     }

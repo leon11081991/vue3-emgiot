@@ -24,12 +24,14 @@ const { width } = useDeviceWidth()
         <AvatarDisplay name="雲小二" />
         <div class="user-wrap">
           <h5 class="user-name">雲小二雲小二雲小二雲小二</h5>
-          <div class="user-level">1級</div>
+          <div class="user-level">
+            <span class="user-level-text">1級</span>
+          </div>
         </div>
       </div>
       <div class="message-container">
         <RouterLink :to="{ name: 'Message' }" class="message-link" @click="handleCloseSidebar">
-          <BaseSvgIcon iconName="mail" />
+          <BaseSvgIcon iconName="bell-on" />
         </RouterLink>
       </div>
     </div>
@@ -145,8 +147,6 @@ aside.sidebar {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 1.75rem;
-        height: 1.75rem;
         border-radius: $--border-radius-base;
         cursor: pointer;
 

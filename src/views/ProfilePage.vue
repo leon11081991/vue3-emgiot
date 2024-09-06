@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AvatarDisplay from '@/components/Base/AvatarDisplay.vue'
-import SvgIcon from '@/components/Base/SvgIcon.vue'
+import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import { useModal } from '@/composables/useModal'
 import { modalStyleConfig } from '@/constants/configs/profile.config'
 
@@ -55,7 +55,7 @@ const mockUserData = {
         <div class="user-name-container">
           <p class="user-name-display">{{ mockUserData.name }}</p>
           <div class="name-edit-button" @click="handleOpenModal('username')">
-            <SvgIcon iconName="cross" />
+            <BaseSvgIcon iconName="edit" />
           </div>
         </div>
       </div>
@@ -66,7 +66,7 @@ const mockUserData = {
           </span>
           <a-input v-model:value="mockUserData.name" size="large" readonly class="input-field">
             <template #prefix>
-              <SvgIcon iconName="cross" />
+              <BaseSvgIcon iconName="username" />
             </template>
           </a-input>
         </div>
@@ -85,7 +85,7 @@ const mockUserData = {
               class="input-field"
             >
               <template #prefix>
-                <SvgIcon iconName="cross" />
+                <BaseSvgIcon iconName="lock" />
               </template>
             </a-input-password>
             <a-button type="primary" class="change-button" @click="handleOpenModal('password')">
