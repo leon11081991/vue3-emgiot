@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { type Tab } from '@/models/interfaces/tab.interface'
 
 const tabFilterProps = defineProps<{
@@ -10,25 +11,42 @@ const tabFilterEmit = defineEmits<{
   (e: 'update:modalValue', value: string): void
 }>()
 
+const filterValue = ref(tabFilterProps.modalValue)
+
 const updateValue = (value: string) => {
+  filterValue.value = value
   tabFilterEmit('update:modalValue', value)
 }
 </script>
 
 <template>
   <div class="tab-filter">
-    <label
+    <!-- <label
       v-for="tab in tabs"
       :key="tab.key"
       class="tab-title"
       :class="{ active: tab.key === tabFilterProps.modalValue }"
+    > -->
+    <label
+      v-for="tab in tabs"
+      :key="tab.key"
+      class="tab-title"
+      :class="{ active: tab.key === filterValue }"
     >
-      <input
+      <!-- <input
         class="hidden-input"
         type="radio"
         name="tabs"
         :value="tab.key"
         v-model="tabFilterProps.modalValue"
+        @change="updateValue(tab.key)"
+      /> -->
+      <input
+        class="hidden-input"
+        type="radio"
+        name="tabs"
+        :value="tab.key"
+        v-model="filterValue"
         @change="updateValue(tab.key)"
       />
       {{ tab.label }}

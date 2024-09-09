@@ -96,7 +96,6 @@ const scrollBehavior = (
   savedPosition: any
 ) => {
   if (savedPosition) {
-    console.log("savedPosition", savedPosition)
     return savedPosition
   } else {
     return { top: 0 }

@@ -16,4 +16,11 @@ export class UtilCommon {
   static ellipsisText(text: string, limit: number): string {
     return text.length > limit ? text.slice(0, limit) + '...' : text
   }
+  /**  根據當前tab在tabList的位置，确定过渡方向。 */
+  static determineTransitionDirection(tabs: string[], currentTab: string): string {
+    if (tabs.indexOf(currentTab) !== tabs.length - 1) {
+      return 'right'
+    }
+    return 'left'
+  }
 }

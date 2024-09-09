@@ -1,3 +1,7 @@
+export const dashboardTabsList = [
+  'claw', 'coin'
+]
+
 export const createDashboardTabs = ($t: any) => ([
   {
     key: 'claw',
