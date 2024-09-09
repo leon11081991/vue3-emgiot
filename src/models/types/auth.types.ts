@@ -13,3 +13,9 @@ export type PasswordChangeReqType = SignUpReqType
 export type AccountDisableReqType = {
   userId: string
 }
+
+export type UserInfoType = {
+  token: string
+  userId: string
+  photoUrl: string
+}

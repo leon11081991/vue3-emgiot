@@ -20,7 +20,7 @@ const beforeRequest = (config: InternalAxiosRequestConfig) => {
   const userStore = useUserStore()
 
   // config.headers.Authorization = `Bearer ${localStorage.getItem('token')}` // 假設 token 存在於 local storage
-  config.headers.Authorization = `Bearer ${userStore.token}` // 假設 token 存在於 user store
+  config.headers.Authorization = `Bearer ${userStore.userInfo.token}` // 假設 token 存在於 user store
   config.headers['Content-Type'] = 'application/json;charset=UTF-8'
 
   return config
@@ -47,7 +47,7 @@ const responseFailed = (error: AxiosError) => {
 
   if (response) {
     // 處理 401 未授權
-    if (response.status === 401 && userStore.token) {
+    if (response.status === 401 && userStore.userInfo.token) {
       openMessage('warning', $t('Common.Response.Unauthorized'), {}, () => UtilCommon.goPage('/login'))
       // TODO: 初始化 token 和 user資料 及重新登入
 
