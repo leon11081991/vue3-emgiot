@@ -6,7 +6,7 @@ const route = useRoute()
 
 <template>
   <component :is="route.meta.layoutComponent || 'div'">
-    <main class="main-page">
+    <main class="main-page" :class="route.name">
       <RouterView />
     </main>
   </component>
@@ -19,8 +19,23 @@ const route = useRoute()
   padding-block: $--page-padding-top $--page-padding-bottom;
   background-color: $--page-bg-color;
 
+  &.Login {
+    min-height: 100vh;
+  }
+
   @include media-breakpoint-down(md) {
     padding-inline: $--page-padding-x-mobile;
+  }
+}
+
+.ant-btn {
+  &.ant-btn-primary {
+    @include base-transition;
+    background-color: $--color-primary;
+
+    &:hover {
+      background-color: darken($--color-primary, 10%);
+    }
   }
 }
 
