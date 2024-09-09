@@ -23,7 +23,7 @@
     "Login": {
       "TabLabel": "登入",
       "TextMessage": "歡迎回來",
-      "UserAccount": "手機號碼",
+      "UserAccount": "電子信箱",
       "Password": "密碼",
       "RememberMe": "記住我",
       "OtherMessage": "使用其他方式登入",

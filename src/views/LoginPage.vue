@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { Form } from 'ant-design-vue'
 import { useI18n } from 'vue-i18n'
+import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import {
   loginPageTabBarStyleConfig,
   createLoginFormConfig,
@@ -69,11 +70,17 @@ const onRegisterFinish = (values: any) => {
               :label="$t('LoginPage.Login.UserAccount')"
               :rules="loginFormConfig.userAccount.rules"
             >
-              <a-input
-                class="base-input"
-                :placeholder="loginFormConfig.userAccount.placeholder"
-                v-model:value="loginFormModel.userAccount"
-              />
+              <div class="input-container userAccount-input">
+                <a-input
+                  class="base-input"
+                  :placeholder="loginFormConfig.userAccount.placeholder"
+                  v-model:value="loginFormModel.userAccount"
+                >
+                  <template #prefix>
+                    <BaseSvgIcon iconName="mail" />
+                  </template>
+                </a-input>
+              </div>
             </a-form-item>
 
             <a-form-item
@@ -86,11 +93,15 @@ const onRegisterFinish = (values: any) => {
                 autocomplete="current-password"
                 :placeholder="loginFormConfig.password.placeholder"
                 v-model:value="loginFormModel.password"
-              />
+              >
+                <template #prefix>
+                  <BaseSvgIcon iconName="lock" />
+                </template>
+              </a-input-password>
             </a-form-item>
 
             <div class="actions-container">
-              <a-checkbox v-model:checked="loginFormModel.rememberMe">
+              <a-checkbox class="remember-me" v-model:checked="loginFormModel.rememberMe">
                 {{ $t('LoginPage.Login.RememberMe') }}
               </a-checkbox>
 
@@ -189,7 +200,7 @@ const onRegisterFinish = (values: any) => {
 }
 .login-register-container {
   position: absolute;
-  top: 100px;
+  top: $--header-height;
   left: 50%;
   transform: translateX(-50%);
 
@@ -236,12 +247,18 @@ const onRegisterFinish = (values: any) => {
   justify-content: space-between;
   margin-bottom: 1rem;
 
+  .remember-me {
+    color: $--color-primary;
+  }
+
   .forgot-password {
-    color: $--color-gray-600;
-    transition: all 0.2s ease-in-out;
+    @include base-transition;
+    padding-inline: 0.75rem;
+    color: $--color-primary;
+    border: 1px solid $--color-gray-500;
 
     &:hover {
-      color: $--color-gray-900;
+      color: darken($--color-primary, 10%);
       cursor: pointer;
     }
   }
