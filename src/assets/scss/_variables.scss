@@ -17,7 +17,10 @@
 
 /** 主題色 */
 $--color-primary: #0064c8;
-$--color-primary--hover: #66b1ff;
+$--color-primary--hover: darken($--color-primary, 10%);
+$--color-primary--light: #587898;
+$--color-primary--light--hover: darken($--color-primary--light, 10%);
+$--color-primary--light--disabled: #a0b2c4;
 $--color-primary--dark: #463c96;
 $--color-secondary: #00b450;
 $--color-tertiary: #463c96;
@@ -48,6 +51,9 @@ $--border-radius-middle: 6px;
 $--border-radius-large: 8px;
 $--border-radius-circle: 50%;
 
+$--border-color-base: #d9d9d9;
+$--border-color--disabled: #eae9e9;
+
 $--header-height: 60px;
 $--sidebar-height: 100dvh;
 $--sidebar-width: 300px;
@@ -72,14 +78,14 @@ $--box-shadow-darker: 0 2px 12px 0 rgba(0, 0, 0, 0.3);
 
 $--icon-height: 32px;
 $--icon-width: 32px;
-$--icon-height--sm: 24px;
-$--icon-width--sm: 24px;
-$--icon-height--md: 32px;
-$--icon-width--md: 32px;
-$--icon-height--lg: 40px;
-$--icon-width--lg: 40px;
-$--icon-height--xl: 48px;
-$--icon-width--xl: 48px;
+$--icon-height-sm: 24px;
+$--icon-width-sm: 24px;
+$--icon-height-md: 32px;
+$--icon-width-md: 32px;
+$--icon-height-lg: 40px;
+$--icon-width-lg: 40px;
+$--icon-height-xl: 48px;
+$--icon-width-xl: 48px;
 
 $--header-padding-x: 1.5rem;
 $--header-padding-x-mobile: 0.75rem;

@@ -53,23 +53,23 @@ const color = computed(() => {
   pointer-events: none;
 
   &.sm {
-    width: $--icon-width--sm;
-    height: $--icon-height--sm;
+    width: $--icon-width-sm;
+    height: $--icon-height-sm;
   }
 
   &.md {
-    width: $--icon-width--md;
-    height: $--icon-height--md;
+    width: $--icon-width-md;
+    height: $--icon-height-md;
   }
 
   &.lg {
-    width: $--icon-width--lg;
-    height: $--icon-height--lg;
+    width: $--icon-width-lg;
+    height: $--icon-height-lg;
   }
 
   &.xl {
-    width: $--icon-width--xl;
-    height: $--icon-height--xl;
+    width: $--icon-width-xl;
+    height: $--icon-height-xl;
   }
 
   &.logo {

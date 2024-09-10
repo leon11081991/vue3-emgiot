@@ -19,7 +19,8 @@ const route = useRoute()
   padding-block: $--page-padding-top $--page-padding-bottom;
   background-color: $--page-bg-color;
 
-  &.Login {
+  &.Login,
+  &.SignUp {
     min-height: 100vh;
   }
 
@@ -43,12 +44,17 @@ const route = useRoute()
   & .ant-modal-content {
     padding: 0;
     padding-bottom: 1rem;
+    background-color: $--background-color-base;
   }
 
   & .ant-modal-header {
     padding: 1rem;
     margin: 0;
-    background-color: $--color-primary;
+    background-color: $--background-color-base;
+
+    .ant-modal-title {
+      color: $--color-primary;
+    }
   }
 
   & .ant-modal-body {
@@ -63,7 +69,7 @@ const route = useRoute()
     display: flex;
     align-items: center;
     justify-content: center;
-    color: $--color-white;
+    color: $--color-primary;
   }
 }
 </style>
