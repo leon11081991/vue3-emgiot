@@ -6,21 +6,25 @@ import { useMessage } from '@/composables/useMessage'
 import { useUserStore } from '@/stores/user.stores'
 import { UtilCommon } from '@/utils/utilCommon'
 
-const { t: $t } = useI18n()
 const { openMessage } = useMessage()
 
 /** 創建實例 */
 const axiosInstance = axios.create({
-  baseURL: `${env.apiBaseUrl}${env.apiVersion}/`,
+  baseURL: `${env.apiBaseUrl}${env.apiVersion}`,
   timeout: 10000 // 請求超時時間
 })
 
 /** 處理請求發送前 */
 const beforeRequest = (config: InternalAxiosRequestConfig) => {
   const userStore = useUserStore()
+  const loginApiPath = '/LogIn/LogIn'
 
-  // config.headers.Authorization = `Bearer ${localStorage.getItem('token')}` // 假設 token 存在於 local storage
-  config.headers.Authorization = `Bearer ${userStore.userInfo.token}` // 假設 token 存在於 user store
+  if (!config.url?.includes(loginApiPath)) {
+    // config.headers.Authorization = `Bearer ${localStorage.getItem('token')}` // 假設 token 存在於 local storage
+    config.headers.Authorization = `Bearer ${userStore.userInfo.token}` // 假設 token 存在於 user store
+  }
+
+
   config.headers['Content-Type'] = 'application/json;charset=UTF-8'
 
   return config
