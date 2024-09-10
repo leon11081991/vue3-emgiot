@@ -5,9 +5,9 @@ export const loginPageTabBarStyleConfig = {
 }
 
 export const createLoginFormConfig = ($t: any) => ({
-  userAccount: {
-    name: 'userAccount',
-    placeholder: $t('LoginPage.Login.UserAccount'),
+  userId: {
+    name: 'userId',
+    placeholder: $t('LoginPage.Login.UserId'),
     rules: [{ required: true }]
   },
   password: {
@@ -19,9 +19,9 @@ export const createLoginFormConfig = ($t: any) => ({
 
 export const createForgotPasswordModalConfig = ($t: any) => ({
   title: $t('LoginPage.ForgotPassword.Title'),
-  userAccount: {
+  userId: {
     name: 'userAccount',
-    placeholder: $t('LoginPage.ForgotPassword.UserAccount'),
+    placeholder: $t('LoginPage.ForgotPassword.UserId'),
     rules: [{ required: true }]
   }
 })

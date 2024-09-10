@@ -9,28 +9,29 @@ import {
   createForgotPasswordModalConfig,
   formValidateMsgsConfig
 } from '@/constants/configs/login.config'
+import { useAuth } from '@/composables/useAuth'
 import { useModal } from '@/composables/useModal'
-
-const { modalVisible, openModal, closeModal } = useModal()
-
 type TabKey = 'login' | 'register'
 
+const { modalVisible, openModal, closeModal } = useModal()
+const { fnLogin } = useAuth()
 const { t: $t } = useI18n()
+
+const loginFormConfig = createLoginFormConfig($t)
+const forgotPasswordModalConfig = createForgotPasswordModalConfig($t)
 
 const activeKey = ref<TabKey>('login')
 const loginFormModel = ref({
-  userAccount: '',
+  userId: '',
   password: '',
   rememberMe: false
 })
 const registerFormModel = ref({
-  userAccount: ''
+  userId: ''
 })
 
 const loginForm = Form.useForm(loginFormModel.value)
 const registerForm = Form.useForm(registerFormModel.value)
-const loginFormConfig = createLoginFormConfig($t)
-const forgotPasswordModalConfig = createForgotPasswordModalConfig($t)
 
 const handleGoTo = (key: TabKey) => {
   activeKey.value = key
@@ -40,6 +41,11 @@ const handleGoTo = (key: TabKey) => {
 const onLoginFinish = (values: any) => {
   console.log('登入資料:', values)
   // 在這裡處理登入邏輯
+
+  fnLogin({
+    userId: values.userAccount,
+    password: values.password
+  })
 }
 
 // TODO: type 修正
@@ -57,6 +63,8 @@ const onRegisterFinish = (values: any) => {
         <a-tab-pane key="login">
           <h2 class="tab-label">{{ $t('LoginPage.Login.TabLabel') }}</h2>
           <p class="text-message">{{ $t('LoginPage.Login.TextMessage') }}</p>
+
+          <!-- Login Form -->
           <a-form
             :model="loginFormModel"
             :name="'login_form'"
@@ -65,16 +73,13 @@ const onRegisterFinish = (values: any) => {
             :validate-messages="formValidateMsgsConfig"
             @finish="onLoginFinish"
           >
-            <a-form-item
-              :name="loginFormConfig.userAccount.name"
-              :label="$t('LoginPage.Login.UserAccount')"
-              :rules="loginFormConfig.userAccount.rules"
-            >
-              <div class="input-container userAccount-input">
+            <!-- Email -->
+            <a-form-item :name="loginFormConfig.userId.name" :rules="loginFormConfig.userId.rules">
+              <div class="input-container userId-input">
                 <a-input
                   class="base-input"
-                  :placeholder="loginFormConfig.userAccount.placeholder"
-                  v-model:value="loginFormModel.userAccount"
+                  :placeholder="loginFormConfig.userId.placeholder"
+                  v-model:value="loginFormModel.userId"
                 >
                   <template #prefix>
                     <BaseSvgIcon iconName="mail" />
@@ -83,9 +88,9 @@ const onRegisterFinish = (values: any) => {
               </div>
             </a-form-item>
 
+            <!-- Password -->
             <a-form-item
               :name="loginFormConfig.password.name"
-              :label="$t('LoginPage.Login.Password')"
               :rules="loginFormConfig.password.rules"
             >
               <a-input-password
@@ -101,11 +106,14 @@ const onRegisterFinish = (values: any) => {
             </a-form-item>
 
             <div class="actions-container">
+              <!-- Remember Me -->
               <a-checkbox class="remember-me" v-model:checked="loginFormModel.rememberMe">
                 {{ $t('LoginPage.Login.RememberMe') }}
               </a-checkbox>
-
-              <span class="forgot-password" @click="openModal()">忘記密碼</span>
+              <!-- Forgot Password -->
+              <span class="forgot-password" @click="openModal()">
+                {{ $t('LoginPage.Login.ForgotPassword') }}</span
+              >
             </div>
 
             <a-form-item>
@@ -116,13 +124,13 @@ const onRegisterFinish = (values: any) => {
           </a-form>
 
           <div class="other-message">
-            <span class="other-message-text">{{ $t('LoginPage.Login.OtherMessage') }}</span>
+            <span class="other-message-text">{{ $t('LoginPage.OtherText.UseOtherMethods') }}</span>
           </div>
 
           <a-button class="google-btn" type="primary"> Google </a-button>
 
           <div class="to-register">
-            <span>沒有帳號?</span>
+            <span>{{ $t('LoginPage.OtherText.HasNoAccount') }}</span>
             <span class="to-register-btn" @click="handleGoTo('register')">註冊帳號</span>
           </div>
         </a-tab-pane>
@@ -139,28 +147,76 @@ const onRegisterFinish = (values: any) => {
             @finish="onRegisterFinish"
           >
             <a-form-item
-              :name="loginFormConfig.userAccount.name"
+              :name="loginFormConfig.userId.name"
               :label="$t('LoginPage.Register.UserAccount')"
             >
               <a-input-group compact>
-                <a-input
+                <div class="input-container userAccount-input">
+                  <a-input
+                    class="base-input"
+                    :placeholder="loginFormConfig.userId.placeholder"
+                    v-model:value="loginFormModel.userId"
+                  >
+                    <template #prefix>
+                      <BaseSvgIcon iconName="mail" />
+                    </template>
+                  </a-input>
+                </div>
+                <!-- <a-input
                   v-model:value="registerFormModel.userAccount"
                   :placeholder="loginFormConfig.userAccount.placeholder"
                   class="validate-input"
-                />
+                /> -->
                 <a-button type="primary" class="validate-btn">
                   {{ $t('LoginPage.Register.Validate') }}
                 </a-button>
               </a-input-group>
             </a-form-item>
 
-            <a-form-item :name="'驗證'" :label="'驗證'">
-              <a-input
+            <a-form-item
+              :name="loginFormConfig.password.name"
+              :rules="loginFormConfig.password.rules"
+            >
+              <a-input-password
                 class="base-input"
-                :placeholder="'驗證'"
-                v-model:value="loginFormModel.userAccount"
-              />
-              <p>簡訊驗證碼十分鐘內有效，秒後可再次發送</p>
+                autocomplete="current-password"
+                :placeholder="loginFormConfig.password.placeholder"
+                v-model:value="loginFormModel.password"
+              >
+                <template #prefix>
+                  <BaseSvgIcon iconName="lock" />
+                </template>
+              </a-input-password>
+            </a-form-item>
+
+            <a-form-item
+              :name="loginFormConfig.password.name"
+              :rules="loginFormConfig.password.rules"
+            >
+              <a-input-password
+                class="base-input"
+                autocomplete="current-password"
+                :placeholder="loginFormConfig.password.placeholder"
+                v-model:value="loginFormModel.password"
+              >
+                <template #prefix>
+                  <BaseSvgIcon iconName="lock" />
+                </template>
+              </a-input-password>
+            </a-form-item>
+
+            <a-form-item :name="loginFormConfig.userId.name" :rules="loginFormConfig.userId.rules">
+              <div class="input-container userId-input">
+                <a-input
+                  class="base-input"
+                  :placeholder="loginFormConfig.userId.placeholder"
+                  v-model:value="loginFormModel.userId"
+                >
+                  <template #prefix>
+                    <BaseSvgIcon iconName="profile" />
+                  </template>
+                </a-input>
+              </div>
             </a-form-item>
 
             <a-form-item>
