@@ -8,6 +8,11 @@ const validationRules = [
     errorMessage: '信箱格式不正確'
   },
   {
+    key: ValidationTypeEnums.Password,
+    value: /^[A-Za-z0-9]{6,}$/,
+    errorMessage: '密碼需為6位以上字母或數字'
+  },
+  {
     key: ValidationTypeEnums.Phone,
     value: /^09\d{8}$/,
     errorMessage: '手機格式不正確'
