@@ -28,20 +28,20 @@ const onSignupFinish = (values: any) => {
       <h2 class="heading-text">{{ $t('SignUpPage.HeadingText') }}</h2>
 
       <a-form
-        :model="signUpFormModel"
-        :name="'signUp_form'"
-        :layout="'vertical'"
-        :form="registerForm"
         class="signup-form"
+        name="signUp_form"
+        layout="vertical"
+        :form="registerForm"
+        :model="signUpFormModel"
         @finish="onSignupFinish"
       >
-        <a-form-item :name="signUpFormConfig.userId.name">
+        <a-form-item name="userId">
           <a-input-group>
             <div class="input-container validate-input">
               <a-input
                 class="base-input"
                 readonly
-                :placeholder="signUpFormConfig.userId.placeholder"
+                :placeholder="$t('SignUpPage.SignUp.UserId')"
                 v-model:value="signUpFormModel.userId"
               >
                 <template #prefix>
@@ -56,14 +56,11 @@ const onSignupFinish = (values: any) => {
           </a-input-group>
         </a-form-item>
 
-        <a-form-item
-          :name="signUpFormConfig.password.name"
-          :rules="signUpFormConfig.password.rules"
-        >
+        <a-form-item name="password" :rules="signUpFormConfig.password.rules">
           <a-input-password
             class="base-input"
             autocomplete="current-password"
-            :placeholder="signUpFormConfig.password.placeholder"
+            :placeholder="$t('SignUpPage.SignUp.Password')"
             v-model:value="signUpFormModel.password"
           >
             <template #prefix>
@@ -78,8 +75,8 @@ const onSignupFinish = (values: any) => {
         >
           <a-input-password
             class="base-input"
-            autocomplete="current-password"
-            :placeholder="signUpFormConfig.verifyPassword.placeholder"
+            autocomplete="none"
+            :placeholder="$t('SignUpPage.SignUp.VerifyPassword')"
             v-model:value="signUpFormModel.verifyPassword"
           >
             <template #prefix>
@@ -88,14 +85,11 @@ const onSignupFinish = (values: any) => {
           </a-input-password>
         </a-form-item>
 
-        <a-form-item
-          :name="signUpFormConfig.userInfo.name"
-          :rules="signUpFormConfig.userInfo.rules"
-        >
+        <a-form-item name="userInfo" :rules="signUpFormConfig.userInfo.rules">
           <div class="input-container userInfo-input">
             <a-input
               class="base-input"
-              :placeholder="signUpFormConfig.userInfo.placeholder"
+              :placeholder="$t('SignUpPage.SignUp.UserInfo')"
               v-model:value="signUpFormModel.userInfo"
             >
               <template #prefix>
@@ -103,6 +97,12 @@ const onSignupFinish = (values: any) => {
               </template>
             </a-input>
           </div>
+        </a-form-item>
+
+        <a-form-item class="signup-btn-container">
+          <a-button class="signup-btn" type="primary" size="large" html-type="submit">
+            {{ $t('SignUpPage.SignUp.Submit') }}
+          </a-button>
         </a-form-item>
       </a-form>
     </div>
@@ -121,6 +121,10 @@ const onSignupFinish = (values: any) => {
   width: 90%;
   max-width: 400px;
 
+  display: flex;
+  flex-direction: column;
+  height: calc(100dvh - $--login-top);
+
   @include media-breakpoint-down(sm) {
     top: $--login-top-mobile;
   }
@@ -133,6 +137,20 @@ const onSignupFinish = (values: any) => {
 
   .signup-form {
     margin-top: 2rem;
+
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    .signup-btn-container {
+      margin-top: auto;
+
+      .signup-btn {
+        width: 100%;
+        padding-block: 0.75rem;
+        height: auto;
+      }
+    }
   }
 
   .validate-input {
@@ -184,17 +202,4 @@ const onSignupFinish = (values: any) => {
     background-color: $--background-color-base;
   }
 }
-
-// .validate-input {
-//   :deep(.ant-input-affix-wrapper) {
-//     border-radius: $--border-radius-middle;
-//   }
-
-//   :deep(.ant-input-affix-wrapper:hover, .ant-input:focus) {
-//     border-width: 1px;
-//     border-color: $--border-color-base; // 去除邊框色
-//     box-shadow: none; // 去除陰影效果
-//     outline: none; // 去除 outline
-//   }
-// }
 </style>
