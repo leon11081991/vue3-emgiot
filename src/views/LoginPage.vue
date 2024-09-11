@@ -60,7 +60,7 @@ const onRegisterFinish = (values: any) => {
     <div class="login-register-container">
       <a-tabs v-model:activeKey="activeKey" :tabBarStyle="loginPageTabBarStyleConfig">
         <!-- Login -->
-        <a-tab-pane key="login">
+        <a-tab-pane class="login-tab-field" key="login">
           <h2 class="tab-label">{{ $t('LoginPage.Login.TabLabel') }}</h2>
           <p class="text-message">{{ $t('LoginPage.Login.TextMessage') }}</p>
 
@@ -136,7 +136,7 @@ const onRegisterFinish = (values: any) => {
         </a-tab-pane>
 
         <!-- Register -->
-        <a-tab-pane key="register">
+        <a-tab-pane class="register-tab-field" key="register">
           <h2 class="tab-label">{{ $t('LoginPage.Register.TabLabel') }}</h2>
           <p class="text-message">{{ $t('LoginPage.Register.TextMessage') }}</p>
           <a-form
@@ -146,12 +146,9 @@ const onRegisterFinish = (values: any) => {
             :form="registerForm"
             @finish="onRegisterFinish"
           >
-            <a-form-item
-              :name="loginFormConfig.userId.name"
-              :label="$t('LoginPage.Register.UserAccount')"
-            >
-              <a-input-group compact>
-                <div class="input-container userAccount-input">
+            <a-form-item :name="loginFormConfig.userId.name">
+              <a-input-group>
+                <div class="input-container validate-input">
                   <a-input
                     class="base-input"
                     :placeholder="loginFormConfig.userId.placeholder"
@@ -161,19 +158,15 @@ const onRegisterFinish = (values: any) => {
                       <BaseSvgIcon iconName="mail" />
                     </template>
                   </a-input>
+
+                  <a-button type="primary" class="validate-btn">
+                    {{ $t('LoginPage.Register.Validate') }}
+                  </a-button>
                 </div>
-                <!-- <a-input
-                  v-model:value="registerFormModel.userAccount"
-                  :placeholder="loginFormConfig.userAccount.placeholder"
-                  class="validate-input"
-                /> -->
-                <a-button type="primary" class="validate-btn">
-                  {{ $t('LoginPage.Register.Validate') }}
-                </a-button>
               </a-input-group>
             </a-form-item>
 
-            <a-form-item
+            <!-- <a-form-item
               :name="loginFormConfig.password.name"
               :rules="loginFormConfig.password.rules"
             >
@@ -187,9 +180,9 @@ const onRegisterFinish = (values: any) => {
                   <BaseSvgIcon iconName="lock" />
                 </template>
               </a-input-password>
-            </a-form-item>
+            </a-form-item> -->
 
-            <a-form-item
+            <!-- <a-form-item
               :name="loginFormConfig.password.name"
               :rules="loginFormConfig.password.rules"
             >
@@ -203,9 +196,9 @@ const onRegisterFinish = (values: any) => {
                   <BaseSvgIcon iconName="lock" />
                 </template>
               </a-input-password>
-            </a-form-item>
+            </a-form-item> -->
 
-            <a-form-item :name="loginFormConfig.userId.name" :rules="loginFormConfig.userId.rules">
+            <!-- <a-form-item :name="loginFormConfig.userId.name" :rules="loginFormConfig.userId.rules">
               <div class="input-container userId-input">
                 <a-input
                   class="base-input"
@@ -217,7 +210,7 @@ const onRegisterFinish = (values: any) => {
                   </template>
                 </a-input>
               </div>
-            </a-form-item>
+            </a-form-item> -->
 
             <a-form-item>
               <a-button class="register-btn" type="primary" html-type="submit">
@@ -242,8 +235,18 @@ const onRegisterFinish = (values: any) => {
       @cancel="closeModal"
     >
       <a-form :layout="'vertical'">
-        <a-form-item :label="$t('LoginPage.ForgotPassword.UserAccount')">
-          <a-input :placeholder="$t('LoginPage.ForgotPassword.UserAccount')" />
+        <a-form-item :name="loginFormConfig.userId.name" :rules="loginFormConfig.userId.rules">
+          <div class="input-container email-input">
+            <a-input
+              class="base-input"
+              :placeholder="loginFormConfig.userId.placeholder"
+              v-model:value="loginFormModel.userId"
+            >
+              <template #prefix>
+                <BaseSvgIcon iconName="mail" />
+              </template>
+            </a-input>
+          </div>
         </a-form-item>
       </a-form>
     </a-modal>
@@ -265,7 +268,6 @@ const onRegisterFinish = (values: any) => {
 }
 
 .tab-label {
-  margin-bottom: 1rem;
   text-align: center;
   font-size: 2.5rem;
   color: $--color-primary;
@@ -273,6 +275,11 @@ const onRegisterFinish = (values: any) => {
 
 .base-input {
   padding-block: 0.5rem;
+  background-color: $--background-color-base;
+
+  :deep(.ant-input) {
+    background-color: $--background-color-base;
+  }
 }
 
 .login-btn,
@@ -283,18 +290,31 @@ const onRegisterFinish = (values: any) => {
   height: auto;
 }
 
-.validate-input {
-  width: 70%;
-}
-.validate-btn {
-  width: 30%;
-  height: 100%;
-}
+.register-tab-field {
+  .validate-input {
+    position: relative;
 
+    :deep(.ant-input-affix-wrapper) {
+      border-radius: $--border-radius-middle;
+    }
+  }
+  .validate-btn {
+    position: absolute;
+    top: 50%;
+    right: 0.5rem;
+    transform: translateY(-50%);
+    height: 80%;
+    background-color: $--color-primary--light;
+    z-index: 1;
+
+    &:hover {
+      background-color: $--color-primary--light--hover;
+    }
+  }
+}
 .text-message {
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   text-align: center;
-  font-size: 0.75rem;
   color: $--color-gray-600;
 }
 
