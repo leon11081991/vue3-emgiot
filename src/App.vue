@@ -29,6 +29,7 @@ const route = useRoute()
   }
 }
 
+/** Ant Design Button */
 .ant-btn {
   &.ant-btn-primary {
     @include base-transition;
@@ -40,6 +41,7 @@ const route = useRoute()
   }
 }
 
+/** Ant Design Modal */
 .ant-modal {
   & .ant-modal-content {
     padding: 0;
