@@ -1,5 +1,7 @@
 :root {
   --color-primary: #0064c8;
+  --color-secondary: #00b450;
+
   --color-success: #67c23a;
   --color-warning: #e6a23c;
   --color-danger: #f56c6c;
@@ -15,10 +17,22 @@
 
 /** 主題色 */
 $--color-primary: #0064c8;
-$--color-primary--hover: #66b1ff;
-$--color-primary--dark: #463c96;
+$--color-primary--hover: darken($--color-primary, 5%);
+$--color-primary--disabled: rgba($--color-primary, 0.5);
+$--color-primary--light: #587898;
+$--color-primary--light--hover: darken($--color-primary--light, 10%);
+$--color-primary--light--disabled: #a0b2c4;
+
 $--color-secondary: #00b450;
+
 $--color-tertiary: #463c96;
+$--color-tertiary--light: #9b8cc7;
+$--color-tertiary--light--hover: darken($--color-tertiary--light, 10%);
+$--color-tertiary--light--disabled: rgba($--color-tertiary--light, 0.5);
+
+$--color-default: #5d84a6;
+$--color-default--hover: darken($--color-default, 5%);
+$--color-default--disabled: #bcbcbc;
 
 /** 狀態色 */
 $--color-success: #00b450;
@@ -42,7 +56,12 @@ $--font-size-base: 16px;
 
 $--border-radius-base: 4px;
 $--border-radius-small: 2px;
+$--border-radius-middle: 6px;
+$--border-radius-large: 8px;
 $--border-radius-circle: 50%;
+
+$--border-color-base: #d9d9d9;
+$--border-color--disabled: #eae9e9;
 
 $--header-height: 60px;
 $--sidebar-height: 100dvh;
@@ -56,6 +75,9 @@ $--header-z-index: 100;
 $--sidebar-z-index: 100;
 $--mask-overlay-z-index: 99;
 
+$--login-top: 60px;
+$--login-top-mobile: 24px;
+
 $--box-shadow-base:
   0 2px 4px rgba(0, 0, 0, 0.12),
   0 0 6px rgba(0, 0, 0, 0.04);
@@ -66,20 +88,34 @@ $--box-shadow-dark:
   0 0 6px rgba(0, 0, 0, 0.04);
 $--box-shadow-darker: 0 2px 12px 0 rgba(0, 0, 0, 0.3);
 
-$--icon-height: 16px;
-$--icon-width: 16px;
-$--icon-height--sm: 16px;
-$--icon-width--sm: 16px;
-$--icon-height--md: 24px;
-$--icon-width--md: 24px;
-$--icon-height--lg: 32px;
-$--icon-width--lg: 32px;
-$--icon-height--xl: 48px;
-$--icon-width--xl: 48px;
+$--icon-height: 32px;
+$--icon-width: 32px;
+$--icon-height-sm: 24px;
+$--icon-width-sm: 24px;
+$--icon-height-md: 32px;
+$--icon-width-md: 32px;
+$--icon-height-lg: 40px;
+$--icon-width-lg: 40px;
+$--icon-height-xl: 48px;
+$--icon-width-xl: 48px;
 
 $--header-padding-x: 1.5rem;
+$--header-padding-x-mobile: 0.75rem;
 $--sidebar-padding-x: 1rem;
 $--sidebar-padding-y: 3rem 2rem;
 $--page-padding-x: 1.5rem;
+$--page-padding-x-mobile: 0.75rem;
 $--page-padding-top: 2rem;
 $--page-padding-bottom: 2rem;
+
+$grid-breakpoints: (
+  xxs: 375px,
+  xs: 390px,
+  sm: 576px,
+  md: 768px,
+  lg: 960px,
+  xl: 1200px,
+  2xl: 1440px,
+  3xl: 1680px,
+  4xl: 1920px
+);

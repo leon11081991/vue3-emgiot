@@ -26,6 +26,15 @@ const routes = [
     }
   },
   {
+    path: '/sign-up',
+    name: 'SignUp',
+    component: () => import('@/views/SignUpPage.vue'),
+    meta: {
+      layout: 'LayoutBlank',
+      middleware: [layoutMiddleware]
+    }
+  },
+  {
     path: '/dashboard',
     name: 'Dashboard',
     component: () => import('@/views/DashboardPage.vue'),
@@ -96,7 +105,6 @@ const scrollBehavior = (
   savedPosition: any
 ) => {
   if (savedPosition) {
-    console.log("savedPosition", savedPosition)
     return savedPosition
   } else {
     return { top: 0 }

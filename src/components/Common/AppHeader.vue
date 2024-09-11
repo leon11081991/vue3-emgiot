@@ -8,7 +8,6 @@ import { useCommonStore } from '@/stores/common.stores'
 
 const commonStore = useCommonStore()
 
-// const { headerTitle, showGoBack, goPrevPage } = useHeader()
 const { showGoBack, goPrevPage } = useHeader()
 const { handleOpenSidebar } = useSidebar()
 </script>
@@ -20,11 +19,11 @@ const { handleOpenSidebar } = useSidebar()
       雲端
     </div>
     <div v-else class="go-prev-page" @click="goPrevPage">
-      <BaseSvgIcon iconName="prev-arrow" />
+      <BaseSvgIcon iconName="prev-arrow" size="lg" />
     </div>
     <h2 class="header-title">{{ commonStore.headerTitle }}</h2>
     <div id="menu" class="menu" @click="handleOpenSidebar">
-      <BaseSvgIcon iconName="menu" />
+      <BaseSvgIcon iconName="menu" size="lg" />
     </div>
   </header>
 </template>
@@ -38,6 +37,10 @@ const { handleOpenSidebar } = useSidebar()
   padding-inline: $--header-padding-x;
   background-color: $--header-bg-color;
   z-index: $--header-z-index;
+
+  @include media-breakpoint-down(md) {
+    padding-inline: $--header-padding-x-mobile;
+  }
 
   .header-title {
     margin: 0;

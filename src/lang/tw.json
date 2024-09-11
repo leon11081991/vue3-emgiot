@@ -13,17 +13,20 @@
   },
   "HomePage": {},
   "DashboardPage": {
-    "HeaderTitle": "雲端掌櫃 - "
+    "HeaderTitle": "雲端掌櫃 - ",
+    "Tabs": {
+      "Claw": "選物販賣機",
+      "Coin": "兌幣機"
+    }
   },
   "LoginPage": {
     "Login": {
       "TabLabel": "登入",
       "TextMessage": "歡迎回來",
-      "UserAccount": "手機號碼",
+      "UserId": "電子信箱",
       "Password": "密碼",
       "RememberMe": "記住我",
-      "OtherMessage": "使用其他方式登入",
-      "Forget": "忘記密碼",
+      "ForgotPassword": "忘記密碼",
       "Submit": "登入",
       "LoginSuccess": "登入成功",
       "LoginFailed": "登入失敗",
@@ -32,17 +35,35 @@
     },
     "Register": {
       "TabLabel": "帳號認證",
-      "TextMessage": "使用手機認證以保障帳號安全",
-      "UserAccount": "手機號碼",
+      "TextMessage": "使用電子信箱認證以保障帳號安全",
+      "UserId": "電子信箱",
       "Validate": "驗證",
-      "Submit": "註冊",
+      "Submit": "送出",
       "RegisterSuccess": "註冊成功",
       "RegisterFailed": "註冊失敗",
       "RegisterValidateMessages": "請填寫"
     },
     "ForgotPassword": {
       "Title": "忘記密碼",
-      "UserAccount": "手機號碼"
+      "UserId": "電子信箱",
+      "Submit": "送出"
+    },
+    "OtherText": {
+      "UseOtherMethods": "使用其他方式登入",
+      "HasNoAccount": "沒有帳號?",
+      "AlreadyHasAccount": "已有帳號?",
+      "ToggleToRegister": "註冊帳號",
+      "ToggleToLogin": "登入帳號"
+    }
+  },
+  "SignUpPage": {
+    "HeadingText": "帳號設定",
+    "SignUp": {
+      "UserId": "電子信箱",
+      "Password": "密碼",
+      "VerifyPassword": "確認密碼",
+      "UserInfo": "真實姓名",
+      "Submit": "送出"
     }
   },
   "ProfilePage": {

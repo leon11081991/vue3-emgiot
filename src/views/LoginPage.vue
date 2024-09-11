@@ -1,50 +1,98 @@
 <script setup lang="ts">
+import { ValidationTypeEnums } from '@/constants/enums/validator.enums'
 import { ref } from 'vue'
 import { Form } from 'ant-design-vue'
 import { useI18n } from 'vue-i18n'
-import {
-  loginPageTabBarStyleConfig,
-  createLoginFormConfig,
-  createForgotPasswordModalConfig,
-  formValidateMsgsConfig
-} from '@/constants/configs/login.config'
+import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
+import { loginPageTabBarStyleConfig } from '@/constants/configs/login.config'
+import { useAuth } from '@/composables/useAuth'
 import { useModal } from '@/composables/useModal'
-
-const { modalVisible, openModal, closeModal } = useModal()
+import { useValidator } from '@/composables/useValidator'
+import { UtilCommon } from '@/utils/utilCommon'
 
 type TabKey = 'login' | 'register'
 
 const { t: $t } = useI18n()
+const { fnLogin } = useAuth()
+const { modalVisible, openModal, closeModal } = useModal()
+const { validateErrorMessage, validate } = useValidator()
 
 const activeKey = ref<TabKey>('login')
 const loginFormModel = ref({
-  userAccount: '',
+  userId: '',
   password: '',
   rememberMe: false
 })
 const registerFormModel = ref({
-  userAccount: ''
+  userId: ''
+})
+const forgetPasswordFormModel = ref({
+  userId: ''
 })
 
 const loginForm = Form.useForm(loginFormModel.value)
 const registerForm = Form.useForm(registerFormModel.value)
-const loginFormConfig = createLoginFormConfig($t)
-const forgotPasswordModalConfig = createForgotPasswordModalConfig($t)
 
-const handleGoTo = (key: TabKey) => {
+const toggleTab = (key: TabKey) => {
   activeKey.value = key
+}
+
+// 表單輸入項驗證
+const validateFormItem = (
+  type: keyof typeof ValidationTypeEnums,
+  value: string
+): (() => Promise<void>) => {
+  return () => {
+    // 驗證是否必填項為填入
+    if (UtilCommon.checkIsEmpty(value)) {
+      return Promise.reject('必填')
+    }
+    // 驗證規則是否通過
+    const isValid = validate(ValidationTypeEnums[type], value)
+    if (!isValid) {
+      return Promise.reject(validateErrorMessage.value)
+    }
+
+    return Promise.resolve()
+  }
+}
+
+// 輸入值驗證
+const validateValue = (type: keyof typeof ValidationTypeEnums, value: string): boolean => {
+  // 驗證是否必填項為填入
+  if (UtilCommon.checkIsEmpty(value)) {
+    return false
+  }
+
+  // 驗證規則是否通過
+  const isValid = validate(ValidationTypeEnums[type], value)
+  if (!isValid) {
+    return false
+  }
+
+  return true
 }
 
 // TODO: type 修正
 const onLoginFinish = (values: any) => {
   console.log('登入資料:', values)
   // 在這裡處理登入邏輯
+
+  fnLogin({
+    userId: values.userAccount,
+    password: values.password
+  })
 }
 
 // TODO: type 修正
 const onRegisterFinish = (values: any) => {
   console.log('註冊資料:', values)
   // 在這裡處理註冊邏輯
+}
+
+// TODO: type 修正
+const onForgotPasswordFinish = (values: any) => {
+  console.log('忘記密碼資料:', values)
 }
 </script>
 
@@ -53,48 +101,70 @@ const onRegisterFinish = (values: any) => {
     <div class="login-register-container">
       <a-tabs v-model:activeKey="activeKey" :tabBarStyle="loginPageTabBarStyleConfig">
         <!-- Login -->
-        <a-tab-pane key="login">
+        <a-tab-pane class="login-tab-field" key="login">
           <h2 class="tab-label">{{ $t('LoginPage.Login.TabLabel') }}</h2>
           <p class="text-message">{{ $t('LoginPage.Login.TextMessage') }}</p>
+
+          <!-- Login Form -->
           <a-form
+            name="login_form"
+            layout="vertical"
             :model="loginFormModel"
-            :name="'login_form'"
-            :layout="'vertical'"
             :form="loginForm"
-            :validate-messages="formValidateMsgsConfig"
             @finish="onLoginFinish"
           >
+            <!-- Email -->
             <a-form-item
-              :name="loginFormConfig.userAccount.name"
-              :label="$t('LoginPage.Login.UserAccount')"
-              :rules="loginFormConfig.userAccount.rules"
+              name="userId"
+              validateTrigger="blur"
+              :rules="[
+                { required: true, message: '' },
+                { validator: validateFormItem('Email', loginFormModel.userId) }
+              ]"
             >
-              <a-input
-                class="base-input"
-                :placeholder="loginFormConfig.userAccount.placeholder"
-                v-model:value="loginFormModel.userAccount"
-              />
+              <div class="input-container userId-input">
+                <a-input
+                  class="base-input"
+                  :placeholder="$t('LoginPage.Login.UserId')"
+                  v-model:value="loginFormModel.userId"
+                >
+                  <template #prefix>
+                    <BaseSvgIcon iconName="mail" />
+                  </template>
+                </a-input>
+              </div>
             </a-form-item>
 
+            <!-- Password -->
             <a-form-item
-              :name="loginFormConfig.password.name"
-              :label="$t('LoginPage.Login.Password')"
-              :rules="loginFormConfig.password.rules"
+              name="password"
+              validateTrigger="blur"
+              :rules="[
+                { required: true, message: '' },
+                { validator: validateFormItem('Password', loginFormModel.password) }
+              ]"
             >
               <a-input-password
                 class="base-input"
                 autocomplete="current-password"
-                :placeholder="loginFormConfig.password.placeholder"
+                :placeholder="$t('LoginPage.Login.Password')"
                 v-model:value="loginFormModel.password"
-              />
+              >
+                <template #prefix>
+                  <BaseSvgIcon iconName="lock" />
+                </template>
+              </a-input-password>
             </a-form-item>
 
             <div class="actions-container">
-              <a-checkbox v-model:checked="loginFormModel.rememberMe">
+              <!-- Remember Me -->
+              <a-checkbox class="remember-me" v-model:checked="loginFormModel.rememberMe">
                 {{ $t('LoginPage.Login.RememberMe') }}
               </a-checkbox>
-
-              <span class="forgot-password" @click="openModal()">忘記密碼</span>
+              <!-- Forgot Password -->
+              <span class="forgot-password" @click="openModal()">
+                {{ $t('LoginPage.Login.ForgotPassword') }}</span
+              >
             </div>
 
             <a-form-item>
@@ -105,51 +175,51 @@ const onRegisterFinish = (values: any) => {
           </a-form>
 
           <div class="other-message">
-            <span class="other-message-text">{{ $t('LoginPage.Login.OtherMessage') }}</span>
+            <span class="other-message-text">{{ $t('LoginPage.OtherText.UseOtherMethods') }}</span>
           </div>
 
           <a-button class="google-btn" type="primary"> Google </a-button>
 
           <div class="to-register">
-            <span>沒有帳號?</span>
-            <span class="to-register-btn" @click="handleGoTo('register')">註冊帳號</span>
+            <span>{{ $t('LoginPage.OtherText.HasNoAccount') }}</span>
+            <span class="to-register-btn" @click="toggleTab('register')">{{
+              $t('LoginPage.OtherText.ToggleToRegister')
+            }}</span>
           </div>
         </a-tab-pane>
 
         <!-- Register -->
-        <a-tab-pane key="register">
+        <a-tab-pane class="register-tab-field" key="register">
           <h2 class="tab-label">{{ $t('LoginPage.Register.TabLabel') }}</h2>
           <p class="text-message">{{ $t('LoginPage.Register.TextMessage') }}</p>
           <a-form
-            :model="registerFormModel"
-            :name="'register_form'"
-            :layout="'vertical'"
+            name="register_form"
+            layout="vertical"
             :form="registerForm"
+            :model="registerFormModel"
             @finish="onRegisterFinish"
           >
-            <a-form-item
-              :name="loginFormConfig.userAccount.name"
-              :label="$t('LoginPage.Register.UserAccount')"
-            >
-              <a-input-group compact>
-                <a-input
-                  v-model:value="registerFormModel.userAccount"
-                  :placeholder="loginFormConfig.userAccount.placeholder"
-                  class="validate-input"
-                />
-                <a-button type="primary" class="validate-btn">
-                  {{ $t('LoginPage.Register.Validate') }}
-                </a-button>
-              </a-input-group>
-            </a-form-item>
+            <a-form-item name="email">
+              <a-input-group>
+                <div class="input-container validate-input">
+                  <a-input
+                    class="base-input"
+                    :placeholder="$t('LoginPage.Register.UserId')"
+                    v-model:value="registerFormModel.userId"
+                  >
+                    <template #prefix>
+                      <BaseSvgIcon iconName="mail" />
+                    </template>
+                  </a-input>
 
-            <a-form-item :name="'驗證'" :label="'驗證'">
-              <a-input
-                class="base-input"
-                :placeholder="'驗證'"
-                v-model:value="loginFormModel.userAccount"
-              />
-              <p>簡訊驗證碼十分鐘內有效，秒後可再次發送</p>
+                  <a-button
+                    class="validate-btn"
+                    :disabled="!validateValue('Email', registerFormModel.userId)"
+                  >
+                    {{ $t('LoginPage.Register.Validate') }}
+                  </a-button>
+                </div>
+              </a-input-group>
             </a-form-item>
 
             <a-form-item>
@@ -159,8 +229,10 @@ const onRegisterFinish = (values: any) => {
             </a-form-item>
 
             <div class="to-login">
-              <span>已有帳號?</span>
-              <span class="to-login-btn" @click="handleGoTo('login')">登入帳號</span>
+              <span>{{ $t('LoginPage.OtherText.AlreadyHasAccount') }}</span>
+              <span class="to-login-btn" @click="toggleTab('login')">{{
+                $t('LoginPage.OtherText.ToggleToLogin')
+              }}</span>
             </div>
           </a-form>
         </a-tab-pane>
@@ -170,15 +242,37 @@ const onRegisterFinish = (values: any) => {
     <!-- Forgot Password Modal -->
     <a-modal
       class="forgot-password-modal"
+      :title="$t('LoginPage.ForgotPassword.Title')"
       v-model:open="modalVisible"
-      :title="forgotPasswordModalConfig.title"
       @cancel="closeModal"
     >
       <a-form :layout="'vertical'">
-        <a-form-item :label="$t('LoginPage.ForgotPassword.UserAccount')">
-          <a-input :placeholder="$t('LoginPage.ForgotPassword.UserAccount')" />
+        <a-form-item name="email">
+          <div class="input-container email-input">
+            <a-input
+              class="base-input"
+              :placeholder="$t('LoginPage.ForgotPassword.UserId')"
+              v-model:value="forgetPasswordFormModel.userId"
+            >
+              <template #prefix>
+                <BaseSvgIcon iconName="mail" />
+              </template>
+            </a-input>
+          </div>
         </a-form-item>
       </a-form>
+
+      <template #footer>
+        <a-button
+          :disabled="!validateValue('Email', forgetPasswordFormModel.userId)"
+          class="forgot-password-btn"
+          type="primary"
+          size="large"
+          @click="onForgotPasswordFinish"
+        >
+          {{ $t('LoginPage.ForgotPassword.Submit') }}
+        </a-button>
+      </template>
     </a-modal>
   </div>
 </template>
@@ -189,16 +283,19 @@ const onRegisterFinish = (values: any) => {
 }
 .login-register-container {
   position: absolute;
-  top: 100px;
+  top: $--login-top;
   left: 50%;
   transform: translateX(-50%);
 
   width: 90%;
   max-width: 400px;
+
+  @include media-breakpoint-down(sm) {
+    top: $--login-top-mobile;
+  }
 }
 
 .tab-label {
-  margin-bottom: 1rem;
   text-align: center;
   font-size: 2.5rem;
   color: $--color-primary;
@@ -206,6 +303,11 @@ const onRegisterFinish = (values: any) => {
 
 .base-input {
   padding-block: 0.5rem;
+  background-color: $--background-color-base;
+
+  :deep(.ant-input) {
+    background-color: $--background-color-base;
+  }
 }
 
 .login-btn,
@@ -216,18 +318,26 @@ const onRegisterFinish = (values: any) => {
   height: auto;
 }
 
-.validate-input {
-  width: 70%;
-}
-.validate-btn {
-  width: 30%;
-  height: 100%;
-}
+.register-tab-field {
+  .validate-input {
+    position: relative;
 
+    :deep(.ant-input-affix-wrapper) {
+      border-radius: $--border-radius-middle;
+    }
+  }
+  .validate-btn {
+    position: absolute;
+    top: 50%;
+    right: 0.5rem;
+    transform: translateY(-50%);
+    height: 80%;
+    z-index: 1;
+  }
+}
 .text-message {
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   text-align: center;
-  font-size: 0.75rem;
   color: $--color-gray-600;
 }
 
@@ -236,12 +346,18 @@ const onRegisterFinish = (values: any) => {
   justify-content: space-between;
   margin-bottom: 1rem;
 
+  .remember-me {
+    color: $--color-primary;
+  }
+
   .forgot-password {
-    color: $--color-gray-600;
-    transition: all 0.2s ease-in-out;
+    @include base-transition;
+    padding-inline: 0.75rem;
+    color: $--color-primary;
+    border: 1px solid $--color-gray-500;
 
     &:hover {
-      color: $--color-gray-900;
+      color: darken($--color-primary, 10%);
       cursor: pointer;
     }
   }
@@ -251,13 +367,24 @@ const onRegisterFinish = (values: any) => {
   position: relative;
   margin-bottom: 1rem;
   text-align: center;
-  font-size: 0.75rem;
-  color: $--color-gray-600;
-}
+  color: $--color-gray-500;
 
-.other-message-text {
-  position: relative;
-  padding-inline: 0.5rem;
+  &:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 100%;
+    height: 1px;
+    background-color: $--color-gray-500;
+  }
+
+  .other-message-text {
+    position: relative;
+    padding-inline: 0.5rem;
+    background-color: $--background-color-base;
+  }
 }
 
 .to-register,
@@ -278,11 +405,11 @@ const onRegisterFinish = (values: any) => {
   }
 }
 
-:global(.forgot-password-modal) {
+.forgot-password-modal {
   top: 200px;
-}
 
-:global(.ant-tabs-nav) {
-  display: none;
+  .forgot-password-btn {
+    width: 100%;
+  }
 }
 </style>
