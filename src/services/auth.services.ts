@@ -1,6 +1,6 @@
 import { type ApiResponse, ApiFactory } from '@/utils/api'
 import type { LoginReqType, GoogleLoginReqType, SignUpReqType, ForgetPasswordReqType, PasswordChangeReqType, AccountDisableReqType } from '@/models/types/auth.types'
-import { LoginEnum, SignInEnum } from '@/constants/enums/auth.enums'
+import { LoginEnum, SignInEnum } from '@/constants/enums/api/auth.enums'
 
 /** 系統登入、註冊 */
 export class AuthServices extends ApiFactory {
