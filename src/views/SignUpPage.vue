@@ -1,0 +1,183 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Form } from 'ant-design-vue'
+import { useI18n } from 'vue-i18n'
+import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
+import { createSignUpFormConfig } from '@/constants/configs/login.config'
+
+const { t: $t } = useI18n()
+
+const signUpFormModel = ref({
+  userId: '',
+  password: '',
+  verifyPassword: '',
+  userInfo: ''
+})
+
+const registerForm = Form.useForm(signUpFormModel.value)
+const signUpFormConfig = createSignUpFormConfig($t)
+
+const onSignupFinish = () => {}
+</script>
+
+<template>
+  <div class="signup-page">
+    <div class="signup-container">
+      <h2 class="heading-text">{{ $t('SignUpPage.HeadingText') }}</h2>
+
+      <a-form
+        :model="signUpFormModel"
+        :name="'signUp_form'"
+        :layout="'vertical'"
+        :form="registerForm"
+        class="signup-form"
+        @finish="onSignupFinish"
+      >
+        <a-form-item :name="signUpFormConfig.userId.name">
+          <a-input-group>
+            <div class="input-container validate-input">
+              <a-input
+                class="base-input"
+                readonly
+                :placeholder="signUpFormConfig.userId.placeholder"
+                v-model:value="signUpFormModel.userId"
+              >
+                <template #prefix>
+                  <BaseSvgIcon iconName="mail" />
+                </template>
+              </a-input>
+
+              <a-button type="primary" disabled class="validate-btn">
+                {{ $t('LoginPage.Register.Validate') }}
+              </a-button>
+            </div>
+          </a-input-group>
+        </a-form-item>
+
+        <a-form-item
+          :name="signUpFormConfig.password.name"
+          :rules="signUpFormConfig.password.rules"
+        >
+          <a-input-password
+            class="base-input"
+            autocomplete="current-password"
+            :placeholder="signUpFormConfig.password.placeholder"
+            v-model:value="signUpFormModel.password"
+          >
+            <template #prefix>
+              <BaseSvgIcon iconName="lock" />
+            </template>
+          </a-input-password>
+        </a-form-item>
+
+        <a-form-item
+          :name="signUpFormConfig.verifyPassword.name"
+          :rules="signUpFormConfig.verifyPassword.rules"
+        >
+          <a-input-password
+            class="base-input"
+            autocomplete="current-password"
+            :placeholder="signUpFormConfig.verifyPassword.placeholder"
+            v-model:value="signUpFormModel.verifyPassword"
+          >
+            <template #prefix>
+              <BaseSvgIcon iconName="lock" />
+            </template>
+          </a-input-password>
+        </a-form-item>
+
+        <a-form-item
+          :name="signUpFormConfig.userInfo.name"
+          :rules="signUpFormConfig.userInfo.rules"
+        >
+          <div class="input-container userInfo-input">
+            <a-input
+              class="base-input"
+              :placeholder="signUpFormConfig.userInfo.placeholder"
+              v-model:value="signUpFormModel.userInfo"
+            >
+              <template #prefix>
+                <BaseSvgIcon iconName="profile" />
+              </template>
+            </a-input>
+          </div>
+        </a-form-item>
+      </a-form>
+    </div>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.signup-container {
+  position: absolute;
+  top: $--header-height;
+
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 400px;
+
+  .heading-text {
+    text-align: center;
+    font-size: 2.5rem;
+    color: $--color-primary;
+  }
+
+  .signup-form {
+    margin-top: 2rem;
+  }
+
+  .validate-input {
+    position: relative;
+    margin-bottom: 2rem;
+
+    :deep(.ant-input-affix-wrapper) {
+      border-radius: $--border-radius-middle;
+      border-color: $--border-color--disabled;
+    }
+
+    :deep(.ant-input-affix-wrapper:hover, .ant-input:focus, .ant-input-affix-wrapper-focused) {
+      border-width: 1px;
+      border-color: $--border-color--disabled; // 去除邊框色
+      box-shadow: none; // 去除陰影效果
+      outline: none; // 去除 outline
+    }
+
+    :deep(.ant-input) {
+      color: $--color-gray-500;
+    }
+  }
+  .validate-btn {
+    position: absolute;
+    top: 50%;
+    right: 0.5rem;
+    transform: translateY(-50%);
+    height: 80%;
+    background-color: $--color-primary--light--disabled;
+    color: $--color-white;
+    z-index: 1;
+  }
+}
+
+.base-input {
+  padding-block: 0.5rem;
+  background-color: $--background-color-base;
+
+  :deep(.ant-input) {
+    background-color: $--background-color-base;
+  }
+}
+
+// .validate-input {
+//   :deep(.ant-input-affix-wrapper) {
+//     border-radius: $--border-radius-middle;
+//   }
+
+//   :deep(.ant-input-affix-wrapper:hover, .ant-input:focus) {
+//     border-width: 1px;
+//     border-color: $--border-color-base; // 去除邊框色
+//     box-shadow: none; // 去除陰影效果
+//     outline: none; // 去除 outline
+//   }
+// }
+</style>

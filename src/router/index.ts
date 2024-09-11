@@ -26,6 +26,15 @@ const routes = [
     }
   },
   {
+    path: '/sign-up',
+    name: 'SignUp',
+    component: () => import('@/views/SignUpPage.vue'),
+    meta: {
+      layout: 'LayoutBlank',
+      middleware: [layoutMiddleware]
+    }
+  },
+  {
     path: '/dashboard',
     name: 'Dashboard',
     component: () => import('@/views/DashboardPage.vue'),
