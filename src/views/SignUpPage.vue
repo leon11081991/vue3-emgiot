@@ -17,7 +17,9 @@ const signUpFormModel = ref({
 const registerForm = Form.useForm(signUpFormModel.value)
 const signUpFormConfig = createSignUpFormConfig($t)
 
-const onSignupFinish = () => {}
+const onSignupFinish = (values: any) => {
+  console.log('註冊資料:', values)
+}
 </script>
 
 <template>
@@ -108,14 +110,20 @@ const onSignupFinish = () => {}
 </template>
 
 <style lang="scss" scoped>
+.signup-page {
+  position: relative;
+}
 .signup-container {
   position: absolute;
-  top: $--header-height;
-
+  top: $--login-top;
   left: 50%;
   transform: translateX(-50%);
   width: 90%;
   max-width: 400px;
+
+  @include media-breakpoint-down(sm) {
+    top: $--login-top-mobile;
+  }
 
   .heading-text {
     text-align: center;
@@ -136,11 +144,20 @@ const onSignupFinish = () => {}
       border-color: $--border-color--disabled;
     }
 
-    :deep(.ant-input-affix-wrapper:hover, .ant-input:focus, .ant-input-affix-wrapper-focused) {
+    :deep(
+        .ant-input-affix-wrapper:hover,
+        .ant-input:focus,
+        .ant-input-affix-wrapper-focused,
+        .ant-input-affix-wrapper:focus
+      ) {
       border-width: 1px;
       border-color: $--border-color--disabled; // 去除邊框色
       box-shadow: none; // 去除陰影效果
       outline: none; // 去除 outline
+    }
+
+    :deep(.ant-input-affix-wrapper:focus) {
+      box-shadow: none;
     }
 
     :deep(.ant-input) {
