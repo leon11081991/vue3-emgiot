@@ -45,12 +45,15 @@
     },
     "ForgotPassword": {
       "Title": "忘記密碼",
-      "userId": "電子信箱",
+      "UserId": "電子信箱",
       "Submit": "送出"
     },
     "OtherText": {
       "UseOtherMethods": "使用其他方式登入",
-      "HasNoAccount": "沒有帳號?"
+      "HasNoAccount": "沒有帳號?",
+      "AlreadyHasAccount": "已有帳號?",
+      "ToggleToRegister": "註冊帳號",
+      "ToggleToLogin": "登入帳號"
     }
   },
   "SignUpPage": {

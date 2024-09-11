@@ -4,24 +4,18 @@ import { ref } from 'vue'
 import { Form } from 'ant-design-vue'
 import { useI18n } from 'vue-i18n'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
-import {
-  loginPageTabBarStyleConfig,
-  createLoginFormConfig,
-  createForgotPasswordModalConfig,
-  formValidateMsgsConfig
-} from '@/constants/configs/login.config'
+import { loginPageTabBarStyleConfig } from '@/constants/configs/login.config'
 import { useAuth } from '@/composables/useAuth'
 import { useModal } from '@/composables/useModal'
 import { useValidator } from '@/composables/useValidator'
+import { UtilCommon } from '@/utils/utilCommon'
+
 type TabKey = 'login' | 'register'
 
 const { t: $t } = useI18n()
 const { fnLogin } = useAuth()
 const { modalVisible, openModal, closeModal } = useModal()
 const { validateErrorMessage, validate } = useValidator()
-
-const loginFormConfig = createLoginFormConfig($t)
-const forgotPasswordModalConfig = createForgotPasswordModalConfig($t)
 
 const activeKey = ref<TabKey>('login')
 const loginFormModel = ref({
@@ -32,20 +26,30 @@ const loginFormModel = ref({
 const registerFormModel = ref({
   userId: ''
 })
+const forgetPasswordFormModel = ref({
+  userId: ''
+})
 
 const loginForm = Form.useForm(loginFormModel.value)
 const registerForm = Form.useForm(registerFormModel.value)
 
-const handleGoTo = (key: TabKey) => {
+const toggleTab = (key: TabKey) => {
   activeKey.value = key
 }
 
-// 自訂義驗證
-const validator = (type: keyof typeof ValidationTypeEnums, value: string) => {
+// 表單輸入項驗證
+const validateFormItem = (
+  type: keyof typeof ValidationTypeEnums,
+  value: string
+): (() => Promise<void>) => {
   return () => {
-    const result = validate(ValidationTypeEnums[type], value)
-
-    if (!result) {
+    // 驗證是否必填項為填入
+    if (UtilCommon.checkIsEmpty(value)) {
+      return Promise.reject('必填')
+    }
+    // 驗證規則是否通過
+    const isValid = validate(ValidationTypeEnums[type], value)
+    if (!isValid) {
       return Promise.reject(validateErrorMessage.value)
     }
 
@@ -53,21 +57,20 @@ const validator = (type: keyof typeof ValidationTypeEnums, value: string) => {
   }
 }
 
-// TODO: 移轉到共用方法
-const checkIsEmpty = <T,>(value: T | T[]): boolean => {
-  if (Array.isArray(value)) {
-    return value.length === 0
+// 輸入值驗證
+const validateValue = (type: keyof typeof ValidationTypeEnums, value: string): boolean => {
+  // 驗證是否必填項為填入
+  if (UtilCommon.checkIsEmpty(value)) {
+    return false
   }
 
-  if (typeof value === 'object') {
-    return Object.keys(value as object).length === 0
+  // 驗證規則是否通過
+  const isValid = validate(ValidationTypeEnums[type], value)
+  if (!isValid) {
+    return false
   }
 
-  if (value === null) {
-    return true
-  }
-
-  return value === ''
+  return true
 }
 
 // TODO: type 修正
@@ -87,6 +90,7 @@ const onRegisterFinish = (values: any) => {
   // 在這裡處理註冊邏輯
 }
 
+// TODO: type 修正
 const onForgotPasswordFinish = (values: any) => {
   console.log('忘記密碼資料:', values)
 }
@@ -103,26 +107,25 @@ const onForgotPasswordFinish = (values: any) => {
 
           <!-- Login Form -->
           <a-form
+            name="login_form"
+            layout="vertical"
             :model="loginFormModel"
-            :name="'login_form'"
-            :layout="'vertical'"
             :form="loginForm"
-            :validate-messages="formValidateMsgsConfig"
             @finish="onLoginFinish"
           >
             <!-- Email -->
-            <!-- <a-form-item :name="loginFormConfig.userId.name" :rules="loginFormConfig.userId.rules"> -->
             <a-form-item
-              :name="loginFormConfig.userId.name"
+              name="userId"
+              validateTrigger="blur"
               :rules="[
                 { required: true, message: '' },
-                { validator: validator('Email', loginFormModel.userId) }
+                { validator: validateFormItem('Email', loginFormModel.userId) }
               ]"
             >
               <div class="input-container userId-input">
                 <a-input
                   class="base-input"
-                  :placeholder="loginFormConfig.userId.placeholder"
+                  :placeholder="$t('LoginPage.Login.UserId')"
                   v-model:value="loginFormModel.userId"
                 >
                   <template #prefix>
@@ -134,13 +137,17 @@ const onForgotPasswordFinish = (values: any) => {
 
             <!-- Password -->
             <a-form-item
-              :name="loginFormConfig.password.name"
-              :rules="loginFormConfig.password.rules"
+              name="password"
+              validateTrigger="blur"
+              :rules="[
+                { required: true, message: '' },
+                { validator: validateFormItem('Password', loginFormModel.password) }
+              ]"
             >
               <a-input-password
                 class="base-input"
                 autocomplete="current-password"
-                :placeholder="loginFormConfig.password.placeholder"
+                :placeholder="$t('LoginPage.Login.Password')"
                 v-model:value="loginFormModel.password"
               >
                 <template #prefix>
@@ -175,7 +182,9 @@ const onForgotPasswordFinish = (values: any) => {
 
           <div class="to-register">
             <span>{{ $t('LoginPage.OtherText.HasNoAccount') }}</span>
-            <span class="to-register-btn" @click="handleGoTo('register')">註冊帳號</span>
+            <span class="to-register-btn" @click="toggleTab('register')">{{
+              $t('LoginPage.OtherText.ToggleToRegister')
+            }}</span>
           </div>
         </a-tab-pane>
 
@@ -184,26 +193,29 @@ const onForgotPasswordFinish = (values: any) => {
           <h2 class="tab-label">{{ $t('LoginPage.Register.TabLabel') }}</h2>
           <p class="text-message">{{ $t('LoginPage.Register.TextMessage') }}</p>
           <a-form
-            :model="registerFormModel"
-            :name="'register_form'"
-            :layout="'vertical'"
+            name="register_form"
+            layout="vertical"
             :form="registerForm"
+            :model="registerFormModel"
             @finish="onRegisterFinish"
           >
-            <a-form-item :name="loginFormConfig.userId.name">
+            <a-form-item name="email">
               <a-input-group>
                 <div class="input-container validate-input">
                   <a-input
                     class="base-input"
-                    :placeholder="loginFormConfig.userId.placeholder"
-                    v-model:value="loginFormModel.userId"
+                    :placeholder="$t('LoginPage.Register.UserId')"
+                    v-model:value="registerFormModel.userId"
                   >
                     <template #prefix>
                       <BaseSvgIcon iconName="mail" />
                     </template>
                   </a-input>
 
-                  <a-button type="primary" class="validate-btn">
+                  <a-button
+                    class="validate-btn"
+                    :disabled="!validateValue('Email', registerFormModel.userId)"
+                  >
                     {{ $t('LoginPage.Register.Validate') }}
                   </a-button>
                 </div>
@@ -217,8 +229,10 @@ const onForgotPasswordFinish = (values: any) => {
             </a-form-item>
 
             <div class="to-login">
-              <span>已有帳號?</span>
-              <span class="to-login-btn" @click="handleGoTo('login')">登入帳號</span>
+              <span>{{ $t('LoginPage.OtherText.AlreadyHasAccount') }}</span>
+              <span class="to-login-btn" @click="toggleTab('login')">{{
+                $t('LoginPage.OtherText.ToggleToLogin')
+              }}</span>
             </div>
           </a-form>
         </a-tab-pane>
@@ -228,17 +242,17 @@ const onForgotPasswordFinish = (values: any) => {
     <!-- Forgot Password Modal -->
     <a-modal
       class="forgot-password-modal"
+      :title="$t('LoginPage.ForgotPassword.Title')"
       v-model:open="modalVisible"
-      :title="forgotPasswordModalConfig.title"
       @cancel="closeModal"
     >
       <a-form :layout="'vertical'">
-        <a-form-item :name="loginFormConfig.userId.name" :rules="loginFormConfig.userId.rules">
+        <a-form-item name="email">
           <div class="input-container email-input">
             <a-input
               class="base-input"
-              :placeholder="loginFormConfig.userId.placeholder"
-              v-model:value="loginFormModel.userId"
+              :placeholder="$t('LoginPage.ForgotPassword.UserId')"
+              v-model:value="forgetPasswordFormModel.userId"
             >
               <template #prefix>
                 <BaseSvgIcon iconName="mail" />
@@ -249,7 +263,13 @@ const onForgotPasswordFinish = (values: any) => {
       </a-form>
 
       <template #footer>
-        <a-button class="forgot-password-btn" type="primary" @click="onForgotPasswordFinish">
+        <a-button
+          :disabled="!validateValue('Email', forgetPasswordFormModel.userId)"
+          class="forgot-password-btn"
+          type="primary"
+          size="large"
+          @click="onForgotPasswordFinish"
+        >
           {{ $t('LoginPage.ForgotPassword.Submit') }}
         </a-button>
       </template>
@@ -312,12 +332,7 @@ const onForgotPasswordFinish = (values: any) => {
     right: 0.5rem;
     transform: translateY(-50%);
     height: 80%;
-    background-color: $--color-primary--light;
     z-index: 1;
-
-    &:hover {
-      background-color: $--color-primary--light--hover;
-    }
   }
 }
 .text-message {
@@ -352,13 +367,24 @@ const onForgotPasswordFinish = (values: any) => {
   position: relative;
   margin-bottom: 1rem;
   text-align: center;
-  font-size: 0.75rem;
-  color: $--color-gray-600;
-}
+  color: $--color-gray-500;
 
-.other-message-text {
-  position: relative;
-  padding-inline: 0.5rem;
+  &:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 100%;
+    height: 1px;
+    background-color: $--color-gray-500;
+  }
+
+  .other-message-text {
+    position: relative;
+    padding-inline: 0.5rem;
+    background-color: $--background-color-base;
+  }
 }
 
 .to-register,
@@ -379,11 +405,11 @@ const onForgotPasswordFinish = (values: any) => {
   }
 }
 
-:global(.forgot-password-modal) {
+.forgot-password-modal {
   top: 200px;
-}
 
-:global(.ant-tabs-nav) {
-  display: none;
+  .forgot-password-btn {
+    width: 100%;
+  }
 }
 </style>
