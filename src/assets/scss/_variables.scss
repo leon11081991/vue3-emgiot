@@ -17,13 +17,22 @@
 
 /** 主題色 */
 $--color-primary: #0064c8;
-$--color-primary--hover: darken($--color-primary, 10%);
+$--color-primary--hover: darken($--color-primary, 5%);
+$--color-primary--disabled: rgba($--color-primary, 0.5);
 $--color-primary--light: #587898;
 $--color-primary--light--hover: darken($--color-primary--light, 10%);
 $--color-primary--light--disabled: #a0b2c4;
-$--color-primary--dark: #463c96;
+
 $--color-secondary: #00b450;
+
 $--color-tertiary: #463c96;
+$--color-tertiary--light: #9b8cc7;
+$--color-tertiary--light--hover: darken($--color-tertiary--light, 10%);
+$--color-tertiary--light--disabled: rgba($--color-tertiary--light, 0.5);
+
+$--color-default: #5d84a6;
+$--color-default--hover: darken($--color-default, 5%);
+$--color-default--disabled: #bcbcbc;
 
 /** 狀態色 */
 $--color-success: #00b450;

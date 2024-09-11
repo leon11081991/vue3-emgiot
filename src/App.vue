@@ -31,12 +31,32 @@ const route = useRoute()
 
 /** Ant Design Button */
 .ant-btn {
+  &.ant-btn-default {
+    @include base-transition;
+    background-color: $--color-default;
+    color: $--color-white;
+    border: none;
+
+    &:hover {
+      background-color: $--color-default--hover;
+      color: $--color-white;
+    }
+
+    &[disabled] {
+      background-color: $--color-default--disabled;
+    }
+  }
+
   &.ant-btn-primary {
     @include base-transition;
     background-color: $--color-primary;
 
     &:hover {
-      background-color: darken($--color-primary, 10%);
+      background-color: $--color-primary--hover;
+    }
+
+    &[disabled] {
+      background-color: $--color-primary--disabled;
     }
   }
 }
@@ -45,12 +65,13 @@ const route = useRoute()
 .ant-modal {
   & .ant-modal-content {
     padding: 0;
-    padding-bottom: 1rem;
+    padding-bottom: 0.75rem;
     background-color: $--background-color-base;
+    border-radius: $--border-radius-middle;
   }
 
   & .ant-modal-header {
-    padding: 1rem;
+    padding: 0.75rem;
     margin: 0;
     background-color: $--background-color-base;
 
@@ -60,11 +81,17 @@ const route = useRoute()
   }
 
   & .ant-modal-body {
-    margin: 1rem;
+    margin-inline: 0.75rem;
+    margin-block: 0.5rem;
   }
 
   & .ant-modal-footer {
-    margin-inline: 1rem;
+    margin-inline: 0.75rem;
+  }
+
+  & .ant-modal-close {
+    top: 0.75rem;
+    inset-inline-end: 0.75rem;
   }
 
   & .ant-modal-close-x {

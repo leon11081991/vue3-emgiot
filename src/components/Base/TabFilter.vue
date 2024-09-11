@@ -58,9 +58,9 @@ const updateValue = (value: string) => {
 .tab-filter {
   width: 100%;
   display: flex;
-  outline: 2px solid $--color-primary--dark;
+  outline: 2px solid $--color-tertiary;
   border-radius: $--border-radius-middle;
-  background-color: $--color-primary--dark;
+  background-color: $--color-tertiary;
 
   .tab-title {
     display: flex;
@@ -69,13 +69,13 @@ const updateValue = (value: string) => {
     flex: 1;
     padding: 0.5rem;
     border-radius: $--border-radius-middle;
-    color: $--color-primary--dark;
+    color: $--color-tertiary;
     background-color: $--color-white;
     cursor: pointer;
 
     &.active {
       color: $--color-white;
-      background-color: $--color-primary--dark;
+      background-color: $--color-tertiary;
     }
   }
 
