@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ValidationTypeEnums } from '@/constants/enums/validator.enums'
 import { ref } from 'vue'
 import { Form } from 'ant-design-vue'
 import { useI18n } from 'vue-i18n'
@@ -11,11 +12,13 @@ import {
 } from '@/constants/configs/login.config'
 import { useAuth } from '@/composables/useAuth'
 import { useModal } from '@/composables/useModal'
+import { useValidator } from '@/composables/useValidator'
 type TabKey = 'login' | 'register'
 
-const { modalVisible, openModal, closeModal } = useModal()
-const { fnLogin } = useAuth()
 const { t: $t } = useI18n()
+const { fnLogin } = useAuth()
+const { modalVisible, openModal, closeModal } = useModal()
+const { validateErrorMessage, validate } = useValidator()
 
 const loginFormConfig = createLoginFormConfig($t)
 const forgotPasswordModalConfig = createForgotPasswordModalConfig($t)
@@ -37,6 +40,36 @@ const handleGoTo = (key: TabKey) => {
   activeKey.value = key
 }
 
+// 自訂義驗證
+const validator = (type: keyof typeof ValidationTypeEnums, value: string) => {
+  return () => {
+    const result = validate(ValidationTypeEnums[type], value)
+
+    if (!result) {
+      return Promise.reject(validateErrorMessage.value)
+    }
+
+    return Promise.resolve()
+  }
+}
+
+// TODO: 移轉到共用方法
+const checkIsEmpty = <T,>(value: T | T[]): boolean => {
+  if (Array.isArray(value)) {
+    return value.length === 0
+  }
+
+  if (typeof value === 'object') {
+    return Object.keys(value as object).length === 0
+  }
+
+  if (value === null) {
+    return true
+  }
+
+  return value === ''
+}
+
 // TODO: type 修正
 const onLoginFinish = (values: any) => {
   console.log('登入資料:', values)
@@ -52,6 +85,10 @@ const onLoginFinish = (values: any) => {
 const onRegisterFinish = (values: any) => {
   console.log('註冊資料:', values)
   // 在這裡處理註冊邏輯
+}
+
+const onForgotPasswordFinish = (values: any) => {
+  console.log('忘記密碼資料:', values)
 }
 </script>
 
@@ -74,7 +111,14 @@ const onRegisterFinish = (values: any) => {
             @finish="onLoginFinish"
           >
             <!-- Email -->
-            <a-form-item :name="loginFormConfig.userId.name" :rules="loginFormConfig.userId.rules">
+            <!-- <a-form-item :name="loginFormConfig.userId.name" :rules="loginFormConfig.userId.rules"> -->
+            <a-form-item
+              :name="loginFormConfig.userId.name"
+              :rules="[
+                { required: true, message: '' },
+                { validator: validator('Email', loginFormModel.userId) }
+              ]"
+            >
               <div class="input-container userId-input">
                 <a-input
                   class="base-input"
@@ -166,52 +210,6 @@ const onRegisterFinish = (values: any) => {
               </a-input-group>
             </a-form-item>
 
-            <!-- <a-form-item
-              :name="loginFormConfig.password.name"
-              :rules="loginFormConfig.password.rules"
-            >
-              <a-input-password
-                class="base-input"
-                autocomplete="current-password"
-                :placeholder="loginFormConfig.password.placeholder"
-                v-model:value="loginFormModel.password"
-              >
-                <template #prefix>
-                  <BaseSvgIcon iconName="lock" />
-                </template>
-              </a-input-password>
-            </a-form-item> -->
-
-            <!-- <a-form-item
-              :name="loginFormConfig.password.name"
-              :rules="loginFormConfig.password.rules"
-            >
-              <a-input-password
-                class="base-input"
-                autocomplete="current-password"
-                :placeholder="loginFormConfig.password.placeholder"
-                v-model:value="loginFormModel.password"
-              >
-                <template #prefix>
-                  <BaseSvgIcon iconName="lock" />
-                </template>
-              </a-input-password>
-            </a-form-item> -->
-
-            <!-- <a-form-item :name="loginFormConfig.userId.name" :rules="loginFormConfig.userId.rules">
-              <div class="input-container userId-input">
-                <a-input
-                  class="base-input"
-                  :placeholder="loginFormConfig.userId.placeholder"
-                  v-model:value="loginFormModel.userId"
-                >
-                  <template #prefix>
-                    <BaseSvgIcon iconName="profile" />
-                  </template>
-                </a-input>
-              </div>
-            </a-form-item> -->
-
             <a-form-item>
               <a-button class="register-btn" type="primary" html-type="submit">
                 {{ $t('LoginPage.Register.Submit') }}
@@ -249,6 +247,12 @@ const onRegisterFinish = (values: any) => {
           </div>
         </a-form-item>
       </a-form>
+
+      <template #footer>
+        <a-button class="forgot-password-btn" type="primary" @click="onForgotPasswordFinish">
+          {{ $t('LoginPage.ForgotPassword.Submit') }}
+        </a-button>
+      </template>
     </a-modal>
   </div>
 </template>
@@ -259,12 +263,16 @@ const onRegisterFinish = (values: any) => {
 }
 .login-register-container {
   position: absolute;
-  top: $--header-height;
+  top: $--login-top;
   left: 50%;
   transform: translateX(-50%);
 
   width: 90%;
   max-width: 400px;
+
+  @include media-breakpoint-down(sm) {
+    top: $--login-top-mobile;
+  }
 }
 
 .tab-label {

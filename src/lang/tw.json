@@ -45,7 +45,8 @@
     },
     "ForgotPassword": {
       "Title": "忘記密碼",
-      "userId": "電子信箱"
+      "userId": "電子信箱",
+      "Submit": "送出"
     },
     "OtherText": {
       "UseOtherMethods": "使用其他方式登入",
