@@ -2,6 +2,8 @@
 import { type DefineComponent, ref, onMounted, defineAsyncComponent } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import TabFilter from '@/components/Base/TabFilter.vue'
+import FilteredTag from '@/components/DashboardPage/FilteredTag.vue'
+import UpdateRecord from '@/components/DashboardPage/UpdateRecord.vue'
 import ClawTabList from '@/components/DashboardPage/ClawTabList.vue'
 import { useHeader } from '@/composables/useHeader'
 import { useI18n } from 'vue-i18n'
@@ -58,24 +60,21 @@ onMounted(() => {
   <div class="dashboard-page">
     <div class="bar-chart-container">Bar Chart Here</div>
 
-    <div class="update-container">
-      <div class="update-detail">
-        <div class="update-time">
-          <span>更新時間</span>
-          <span class="date">2021-11-11</span>
-          <span class="time">11:11:11</span>
-        </div>
-        <div class="update-button">
-          <BaseSvgIcon iconName="refresh" color="secondary" />
-        </div>
-      </div>
-    </div>
-
+    <UpdateRecord :date="'2021-11-11'" :time="'11:11:11'" />
     <TabFilter :tabs="dashboardTabs" v-model:modalValue="selectedTab" @change="switchTab" />
 
     <div class="actions-container">
-      <a-button type="primary" ghost>批量退幣</a-button>
-      <a-button type="secondary" size="large" class="action-button">批量退幣</a-button>
+      <div class="action-button">
+        <a-button ghost type="secondary">批量退幣</a-button>
+      </div>
+
+      <div class="filtered-tags-container">
+        <FilteredTag v-for="i in 3" text="大寮光華店" @close="() => console.log('test close')" />
+      </div>
+
+      <div class="filter-button">
+        <BaseSvgIcon iconName="filter-menu" />
+      </div>
     </div>
 
     <div class="list-container">
@@ -92,29 +91,26 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-.update-container {
+.actions-container {
+  margin-block: 0.5rem;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-block: 1rem;
-  font-size: 0.875rem;
-  color: $--color-gray-600;
+  gap: 0.5rem;
 
-  .update-detail {
+  .filtered-tags-container {
+    flex: 1;
     display: flex;
     align-items: center;
+    justify-content: end;
+    flex-wrap: wrap;
   }
 
-  .update-time {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
+  .filter-button {
+    cursor: pointer;
   }
 }
 
 .list-container {
-  margin-top: 3rem;
   overflow: hidden;
 }
 </style>
