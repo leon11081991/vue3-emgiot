@@ -11,9 +11,7 @@ export const authMiddleware = async ({
   from: RouteLocationNormalized
   next: NavigationGuardNext
 }) => {
-  console.log("[authMiddleware]");
-  console.log("to", to);
-  console.log("from", from);
+  console.log("[authMiddleware]", to, from)
 
   const router = useRouter()
   const userStore = useUserStore()
