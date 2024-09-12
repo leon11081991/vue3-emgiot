@@ -112,18 +112,19 @@ const onSignupFinish = (values: any) => {
 <style lang="scss" scoped>
 .signup-page {
   position: relative;
+  display: flex;
+  justify-content: center;
+  height: calc(100dvh - $--page-padding-x - $--heading-font-size);
+
+  @include media-breakpoint-down(sm) {
+    height: calc(100dvh - --page-padding-x-mobile);
+  }
 }
 .signup-container {
-  position: absolute;
-  top: $--login-top;
-  left: 50%;
-  transform: translateX(-50%);
   width: 90%;
   max-width: 400px;
-
   display: flex;
   flex-direction: column;
-  height: calc(100dvh - $--login-top);
 
   @include media-breakpoint-down(sm) {
     top: $--login-top-mobile;
@@ -131,8 +132,12 @@ const onSignupFinish = (values: any) => {
 
   .heading-text {
     text-align: center;
-    font-size: 2.5rem;
+    font-size: $--heading-font-size;
     color: $--color-primary;
+
+    @include media-breakpoint-down(sm) {
+      font-size: $--heading-font-size-mobile;
+    }
   }
 
   .signup-form {
