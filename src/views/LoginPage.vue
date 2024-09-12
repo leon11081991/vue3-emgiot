@@ -178,7 +178,21 @@ const onForgotPasswordFinish = (values: any) => {
             <span class="other-message-text">{{ $t('LoginPage.OtherText.UseOtherMethods') }}</span>
           </div>
 
-          <a-button class="google-btn" type="primary"> Google </a-button>
+          <!-- Third Party Login -->
+          <div class="third-party-login-container">
+            <a-button class="third-party-btn" type="third-party">
+              <template #icon>
+                <BaseSvgIcon iconName="logo-google" size="lg" />
+              </template>
+              <span class="text">使用 Google 登入</span>
+            </a-button>
+            <a-button class="third-party-btn" type="third-party">
+              <template #icon>
+                <BaseSvgIcon iconName="logo-apple" size="lg" />
+              </template>
+              <span class="text">使用 Apple 登入</span>
+            </a-button>
+          </div>
 
           <div class="to-register">
             <span>{{ $t('LoginPage.OtherText.HasNoAccount') }}</span>
@@ -280,13 +294,10 @@ const onForgotPasswordFinish = (values: any) => {
 <style lang="scss" scoped>
 .login-page {
   position: relative;
+  display: flex;
+  justify-content: center;
 }
 .login-register-container {
-  position: absolute;
-  top: $--login-top;
-  left: 50%;
-  transform: translateX(-50%);
-
   width: 90%;
   max-width: 400px;
 
@@ -310,12 +321,23 @@ const onForgotPasswordFinish = (values: any) => {
   }
 }
 
+.third-party-login-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 .login-btn,
 .register-btn,
-.google-btn {
+.third-party-btn {
   width: 100%;
-  padding-block: 0.75rem;
   height: auto;
+}
+
+.third-party-btn {
+  :deep(.text) {
+    flex: 1;
+  }
 }
 
 .register-tab-field {
