@@ -107,6 +107,7 @@ const onForgotPasswordFinish = (values: any) => {
 
           <!-- Login Form -->
           <a-form
+            class="login-form"
             name="login_form"
             layout="vertical"
             :model="loginFormModel"
@@ -178,7 +179,21 @@ const onForgotPasswordFinish = (values: any) => {
             <span class="other-message-text">{{ $t('LoginPage.OtherText.UseOtherMethods') }}</span>
           </div>
 
-          <a-button class="google-btn" type="primary"> Google </a-button>
+          <!-- Third Party Login -->
+          <div class="third-party-login-container">
+            <a-button class="third-party-btn" type="third-party">
+              <template #icon>
+                <BaseSvgIcon iconName="logo-google" size="lg" />
+              </template>
+              <span class="text">使用 Google 登入</span>
+            </a-button>
+            <a-button class="third-party-btn" type="third-party">
+              <template #icon>
+                <BaseSvgIcon iconName="logo-apple" size="lg" />
+              </template>
+              <span class="text">使用 Apple 登入</span>
+            </a-button>
+          </div>
 
           <div class="to-register">
             <span>{{ $t('LoginPage.OtherText.HasNoAccount') }}</span>
@@ -193,6 +208,7 @@ const onForgotPasswordFinish = (values: any) => {
           <h2 class="tab-label">{{ $t('LoginPage.Register.TabLabel') }}</h2>
           <p class="text-message">{{ $t('LoginPage.Register.TextMessage') }}</p>
           <a-form
+            class="register-form"
             name="register_form"
             layout="vertical"
             :form="registerForm"
@@ -280,13 +296,10 @@ const onForgotPasswordFinish = (values: any) => {
 <style lang="scss" scoped>
 .login-page {
   position: relative;
+  display: flex;
+  justify-content: center;
 }
 .login-register-container {
-  position: absolute;
-  top: $--login-top;
-  left: 50%;
-  transform: translateX(-50%);
-
   width: 90%;
   max-width: 400px;
 
@@ -297,8 +310,12 @@ const onForgotPasswordFinish = (values: any) => {
 
 .tab-label {
   text-align: center;
-  font-size: 2.5rem;
+  font-size: $--heading-font-size;
   color: $--color-primary;
+
+  @include media-breakpoint-down(sm) {
+    font-size: $--heading-font-size-mobile;
+  }
 }
 
 .base-input {
@@ -310,12 +327,23 @@ const onForgotPasswordFinish = (values: any) => {
   }
 }
 
+.third-party-login-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 .login-btn,
 .register-btn,
-.google-btn {
+.third-party-btn {
   width: 100%;
-  padding-block: 0.75rem;
   height: auto;
+}
+
+.third-party-btn {
+  :deep(.text) {
+    flex: 1;
+  }
 }
 
 .register-tab-field {
@@ -357,7 +385,7 @@ const onForgotPasswordFinish = (values: any) => {
     border: 1px solid $--color-gray-500;
 
     &:hover {
-      color: darken($--color-primary, 10%);
+      color: $--color-primary--hover;
       cursor: pointer;
     }
   }
@@ -367,7 +395,7 @@ const onForgotPasswordFinish = (values: any) => {
   position: relative;
   margin-bottom: 1rem;
   text-align: center;
-  color: $--color-gray-500;
+  color: $--color-gray-600;
 
   &:before {
     content: '';
@@ -377,7 +405,7 @@ const onForgotPasswordFinish = (values: any) => {
     transform: translateY(-50%);
     width: 100%;
     height: 1px;
-    background-color: $--color-gray-500;
+    background-color: $--color-gray-600;
   }
 
   .other-message-text {
@@ -393,6 +421,7 @@ const onForgotPasswordFinish = (values: any) => {
   display: flex;
   justify-content: center;
   gap: 0.5rem;
+  color: $--color-gray-600;
 
   .to-register-btn,
   .to-login-btn {
