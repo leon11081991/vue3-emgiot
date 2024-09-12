@@ -18,7 +18,8 @@
 /** 主題色 */
 $--color-primary: #0064c8;
 $--color-primary--hover: darken($--color-primary, 5%);
-$--color-primary--disabled: rgba($--color-primary, 0.5);
+// $--color-primary--disabled: rgba($--color-primary, 0.5);
+$--color-primary--disabled: #6e96b4;
 $--color-primary--light: #587898;
 $--color-primary--light--hover: darken($--color-primary--light, 10%);
 $--color-primary--light--disabled: #a0b2c4;

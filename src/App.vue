@@ -40,6 +40,7 @@ const route = useRoute()
     &:hover {
       background-color: $--color-default--hover;
       color: $--color-white;
+      box-shadow: $--box-shadow-light;
     }
 
     &[disabled] {
@@ -49,14 +50,32 @@ const route = useRoute()
 
   &.ant-btn-primary {
     @include base-transition;
+    padding-block: 0.75rem;
     background-color: $--color-primary;
+    color: $--color-white;
+    border: none;
 
     &:hover {
       background-color: $--color-primary--hover;
+      box-shadow: $--box-shadow-light;
     }
 
     &[disabled] {
       background-color: $--color-primary--disabled;
+    }
+  }
+
+  &.ant-btn-third-party {
+    @include base-transition;
+    display: flex;
+    align-items: center;
+    background-color: $--color-white;
+    border: 1px solid $--color-gray-400;
+    color: $--color-primary;
+    padding-block: 0.25rem;
+
+    &:hover {
+      box-shadow: $--box-shadow-light;
     }
   }
 }
