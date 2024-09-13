@@ -7,6 +7,7 @@ import UpdateRecord from '@/components/DashboardPage/UpdateRecord.vue'
 import ClawTabList from '@/components/DashboardPage/ClawTabList.vue'
 import { useHeader } from '@/composables/useHeader'
 import { useI18n } from 'vue-i18n'
+import { useFetchDashboard } from '@/composables/useFetchDashboard'
 import { dashboardTabsList, createDashboardTabs } from '@/constants/dashboard.const'
 import { UtilCommon } from '@/utils/utilCommon'
 
@@ -15,6 +16,7 @@ type TabCompType = DefineComponent<{ activeKey: string[] }, {}, any>
 
 const { t: $t } = useI18n()
 const { updateHeaderTitle } = useHeader()
+const { fetchClawOperationsInfo } = useFetchDashboard()
 
 const tabComps: Record<DashboardTabType, TabCompType> = {
   claw: ClawTabList,
@@ -53,6 +55,11 @@ const switchTab = async (tabValue: Event): Promise<void> => {
 onMounted(() => {
   storeName.value = '大寮光華店'
   updateHeaderTitle($t('DashboardPage.HeaderTitle') + storeName.value) // 設定動態 header title
+
+  fetchClawOperationsInfo({
+    startDate: '2021-11-11',
+    endDate: '2021-11-11'
+  })
 })
 </script>
 
@@ -65,7 +72,8 @@ onMounted(() => {
 
     <div class="actions-container">
       <div class="action-button">
-        <a-button ghost type="secondary">批量退幣</a-button>
+        <a-button v-if="selectedTab === 'claw'" ghost type="secondary">批量補幣</a-button>
+        <a-button v-if="selectedTab === 'coin'" ghost type="secondary">批量退幣</a-button>
       </div>
 
       <div class="filtered-tags-container">
