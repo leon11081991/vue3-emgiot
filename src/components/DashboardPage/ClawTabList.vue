@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import type { ClawOperationsInfoResType } from '@/models/types/dashboard.types'
 import { ref } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 
 const props = defineProps<{
   activeKey: string[]
+  data: ClawOperationsInfoResType[]
 }>()
 
 const emit = defineEmits<{
@@ -29,28 +31,39 @@ const updateValue = (value: string[]) => {
 
     <div class="list-body">
       <a-collapse class="list-collapse" v-model:activeKey="clawActiveKey" :bordered="false">
-        <a-collapse-panel class="list-collapse-panel" key="1" @change="updateValue">
+        <a-collapse-panel
+          class="list-collapse-panel"
+          v-for="item in data"
+          :key="item.pcbId"
+          @change="updateValue"
+        >
           <template #header>
             <div class="item-main-content claw">
               <div class="item-section">
-                <span class="item-category">南部食品機</span>
-                <span class="item-id">W208_01</span>
+                <span class="item-category">{{ item?.pcbName }}</span>
+                <div class="item-id">
+                  <span
+                    class="status"
+                    :class="item?.connectionStatus === 1 ? 'online' : 'offline'"
+                  ></span>
+                  {{ item?.pcbId }}
+                </div>
               </div>
               <div class="item-section">
-                <span>義美小泡芙(巧克力)</span>
+                <span>{{ item?.goodsName }}</span>
                 <span>$100</span>
               </div>
-              <div class="item-section">$800</div>
-              <div class="item-section">12</div>
+              <div class="item-section">${{ item?.revenue }}</div>
+              <div class="item-section">{{ item?.prizeWinCount }}</div>
             </div>
           </template>
           <div class="item-action-content claw">
             <div class="item-section">
-              <span>$800</span>
+              <span>${{ item?.cashboxAmount }}</span>
               <span>錢箱累積</span>
             </div>
             <div class="item-section">
-              <span>$110</span>
+              <span>${{ item?.cumulativeAmount }}</span>
               <span>累保金額</span>
             </div>
             <div class="item-section action-button">
@@ -123,7 +136,21 @@ const updateValue = (value: string[]) => {
 
       .item-id {
         position: relative;
-        &:before {
+
+        .offline {
+          position: absolute;
+          content: '';
+          width: 0.3rem;
+          height: 0.3rem;
+          border-radius: $--border-radius-circle;
+          background-color: $--color-error;
+
+          top: 50%;
+          left: -0.5rem;
+          transform: translateY(-50%);
+        }
+
+        .online {
           position: absolute;
           content: '';
           width: 0.3rem;
@@ -135,6 +162,18 @@ const updateValue = (value: string[]) => {
           left: -0.5rem;
           transform: translateY(-50%);
         }
+        // &:before {
+        //   position: absolute;
+        //   content: '';
+        //   width: 0.3rem;
+        //   height: 0.3rem;
+        //   border-radius: $--border-radius-circle;
+        //   background-color: $--color-secondary;
+
+        //   top: 50%;
+        //   left: -0.5rem;
+        //   transform: translateY(-50%);
+        // }
       }
     }
 

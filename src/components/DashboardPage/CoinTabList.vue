@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import type { CoinOperationsInfoResType } from '@/models/types/dashboard.types'
 import { ref } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 
 const props = defineProps<{
   activeKey: string[]
+  data: CoinOperationsInfoResType[]
 }>()
 
 const emit = defineEmits<{

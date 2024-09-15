@@ -13,7 +13,7 @@ export const useMessage = () => {
     callback?: () => void
   ) => {
 
-    const { customClass = '', duration = 2, key } = options
+    const { customClass = '', duration = 3, key } = options
 
     const config = {
       content,

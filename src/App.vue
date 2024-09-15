@@ -136,4 +136,50 @@ const route = useRoute()
     color: $--color-primary;
   }
 }
+
+/** Ant Design Segmented */
+.ant-segmented {
+  background-color: $--color-tertiary;
+  border-radius: 4px;
+
+  .ant-segmented-thumb {
+    background-color: $--color-tertiary;
+    z-index: 1;
+  }
+
+  .ant-segmented-item {
+    background-color: $--color-white;
+    border-radius: 2px;
+
+    .svg-icon {
+      padding: 2px;
+      color: $--color-tertiary;
+    }
+
+    .tab-label {
+      color: $--color-tertiary;
+    }
+  }
+
+  .ant-segmented-item-selected {
+    background-color: $--color-tertiary;
+    .svg-icon {
+      color: $--color-white;
+    }
+
+    .tab-label {
+      color: $--color-white;
+    }
+  }
+
+  .ant-segmented-item-label {
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+    .tab-label {
+      flex: 1;
+    }
+  }
+}
 </style>
