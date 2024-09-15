@@ -1,24 +1,39 @@
 <script setup lang="ts">
 import { type DefineComponent, ref, onMounted, defineAsyncComponent } from 'vue'
+import type { Tab } from '@/models/interfaces/tab.interface'
+import type {
+  DashboardTabType,
+  ClawOperationsInfoResType,
+  CoinOperationsInfoResType
+} from '@/models/types/dashboard.types'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
-import TabFilter from '@/components/Base/TabFilter.vue'
 import FilteredTag from '@/components/DashboardPage/FilteredTag.vue'
 import UpdateRecord from '@/components/DashboardPage/UpdateRecord.vue'
+import BaseSegmentedButton from '@/components/Base/SegmentedTab.vue'
 import ClawTabList from '@/components/DashboardPage/ClawTabList.vue'
-import { useHeader } from '@/composables/useHeader'
 import { useI18n } from 'vue-i18n'
+import { useHeader } from '@/composables/useHeader'
+import { useDate } from '@/composables/useDate'
 import { useFetchDashboard } from '@/composables/useFetchDashboard'
-import { dashboardTabsList, createDashboardTabs } from '@/constants/dashboard.const'
-import { UtilCommon } from '@/utils/utilCommon'
+import { createDashboardTabs } from '@/constants/dashboard.const'
 
-type DashboardTabType = 'claw' | 'coin'
-type TabCompType = DefineComponent<{ activeKey: string[] }, {}, any>
+type ClawTabCompType = DefineComponent<
+  { activeKey: string[]; data: ClawOperationsInfoResType[] },
+  {},
+  any
+>
+type CoinTabCompType = DefineComponent<
+  { activeKey: string[]; data: CoinOperationsInfoResType[] },
+  {},
+  any
+>
 
 const { t: $t } = useI18n()
 const { updateHeaderTitle } = useHeader()
-const { fetchClawOperationsInfo } = useFetchDashboard()
+const { today } = useDate()
+const { clawOperationsInfo, fetchClawOperationsInfo } = useFetchDashboard()
 
-const tabComps: Record<DashboardTabType, TabCompType> = {
+const tabComps: Record<DashboardTabType, ClawTabCompType | CoinTabCompType> = {
   claw: ClawTabList,
   coin: defineAsyncComponent({
     loader: () => import('@/components/DashboardPage/CoinTabList.vue'),
@@ -29,36 +44,21 @@ const tabComps: Record<DashboardTabType, TabCompType> = {
 }
 
 const storeName = ref('')
-const dashboardTabs = createDashboardTabs($t)
-const selectedTab = ref<DashboardTabType>('claw')
+
+const tabOptions = ref<Tab<DashboardTabType>[]>(createDashboardTabs($t))
+const selectedTab = ref<DashboardTabType>(tabOptions.value[0].value)
 const transitionName = ref('slide-right')
 
 const clawActiveKey = ref([])
 const coinActiveKey = ref([])
-
-const switchTab = async (tabValue: Event): Promise<void> => {
-  if (!tabValue) return
-  const tabName = (tabValue.target as HTMLSelectElement).value as DashboardTabType
-
-  if (tabName === 'claw') {
-    transitionName.value = `slide-${UtilCommon.determineTransitionDirection(dashboardTabsList, 'claw')}`
-    selectedTab.value = 'claw'
-    return
-  }
-  if (tabName === 'coin') {
-    transitionName.value = `slide-${UtilCommon.determineTransitionDirection(dashboardTabsList, 'coin')}`
-    selectedTab.value = 'coin'
-    return
-  }
-}
 
 onMounted(() => {
   storeName.value = '大寮光華店'
   updateHeaderTitle($t('DashboardPage.HeaderTitle') + storeName.value) // 設定動態 header title
 
   fetchClawOperationsInfo({
-    startDate: '2021-11-11',
-    endDate: '2021-11-11'
+    startDate: today(),
+    endDate: today()
   })
 })
 </script>
@@ -68,7 +68,16 @@ onMounted(() => {
     <div class="bar-chart-container">Bar Chart Here</div>
 
     <UpdateRecord :date="'2021-11-11'" :time="'11:11:11'" />
-    <TabFilter :tabs="dashboardTabs" v-model:modalValue="selectedTab" @change="switchTab" />
+
+    <!-- <BaseSegmentedButton v-model:value="selectedTab" :tabOptions="tabOptions" /> -->
+    <a-segmented class="tab-filter" v-model:value="selectedTab" block :options="tabOptions">
+      <template #label="{ title, payload }">
+        <template v-if="payload.icon">
+          <BaseSvgIcon :iconName="payload.icon" />
+          <div class="tab-label">{{ title }}</div>
+        </template>
+      </template>
+    </a-segmented>
 
     <div class="actions-container">
       <div class="action-button">
@@ -91,6 +100,7 @@ onMounted(() => {
           <component
             :is="tabComps[selectedTab]"
             :active-key="selectedTab === 'claw' ? clawActiveKey : coinActiveKey"
+            :data="clawOperationsInfo.data"
           />
         </KeepAlive>
       </transition>
