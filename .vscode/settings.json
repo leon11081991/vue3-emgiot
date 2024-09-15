@@ -24,6 +24,7 @@
     "editor.formatOnSave": false, // 禁用 Markdown 文件的自動格式化
     "editor.defaultFormatter": null // Markdown 文件使用 Prettier 作為預設格式化工具
   },
+  
   "vue.autoInsert.dotValue": true, // 使用 ref 自動補全
   "cSpell.words": [], // 新增自定義拼寫
 }
