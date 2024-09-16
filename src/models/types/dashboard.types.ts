@@ -31,8 +31,8 @@ export type GetOperationChartReqType = BaseOperationsInfoReqType & {
 }
 
 export type OperationChartResType = BaseOperationsInfoResType & {
-  clawMachine: Array<ClawMachineResType>,
-  coinMachine: Array<CoinMachineResType>,
+  clawMachine: Array<ClawMachineResType>
+  coinMachine: Array<CoinMachineResType>
 }
 
 export type GetClawOperationsInfoReqType = BaseOperationsInfoReqType & {
@@ -50,7 +50,7 @@ export type ClawOperationsInfoResType = BaseOperationsInfoResType & {
 export type GetCoinOperationsInfoReqType = BaseOperationsInfoReqType
 
 export type CoinOperationsInfoResType = BaseOperationsInfoResType & {
-  exchangedCount: number, // 兌幣量
-  coinExchanged: number, // 已兌
+  exchangedCount: number // 兌幣量
+  coinExchanged: number // 已兌
   coinRemaining: number // 剩餘
 }
