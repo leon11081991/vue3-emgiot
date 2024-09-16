@@ -23,8 +23,14 @@ const updateClick = () => {
         <span class="date">{{ updateRecordProps.date }}</span>
         <span class="time">{{ updateRecordProps.time }}</span>
       </div>
-      <div class="update-button" @click="updateClick">
-        <BaseSvgIcon iconName="refresh" color="secondary" />
+      <div
+        class="update-button"
+        @click="updateClick"
+      >
+        <BaseSvgIcon
+          iconName="refresh"
+          color="secondary"
+        />
       </div>
     </div>
   </div>

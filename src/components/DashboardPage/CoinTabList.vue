@@ -29,8 +29,16 @@ const updateValue = (value: string[]) => {
     </div>
 
     <div class="list-body">
-      <a-collapse class="list-collapse" v-model:activeKey="coinActiveKey" :bordered="false">
-        <a-collapse-panel class="list-collapse-panel" key="1" @change="updateValue">
+      <a-collapse
+        class="list-collapse"
+        v-model:activeKey="coinActiveKey"
+        :bordered="false"
+      >
+        <a-collapse-panel
+          class="list-collapse-panel"
+          key="1"
+          @change="updateValue"
+        >
           <template #header>
             <div class="item-main-content coin">
               <div class="item-section">
@@ -56,19 +64,31 @@ const updateValue = (value: string[]) => {
           </template>
           <div class="item-action-content coin">
             <div class="item-section action-button">
-              <BaseSvgIcon iconName="accounts" size="lg" />
+              <BaseSvgIcon
+                iconName="accounts"
+                size="lg"
+              />
               <span>帳務查詢</span>
             </div>
             <div class="item-section action-button">
-              <BaseSvgIcon iconName="lock" size="lg" />
+              <BaseSvgIcon
+                iconName="lock"
+                size="lg"
+              />
               <span>關閉</span>
             </div>
             <div class="item-section action-button">
-              <BaseSvgIcon iconName="replenish-coins" size="lg" />
+              <BaseSvgIcon
+                iconName="replenish-coins"
+                size="lg"
+              />
               <span>遠端補幣</span>
             </div>
             <div class="item-section action-button">
-              <BaseSvgIcon iconName="more-actions" size="lg" />
+              <BaseSvgIcon
+                iconName="more-actions"
+                size="lg"
+              />
               <span>其他操作</span>
             </div>
           </div>

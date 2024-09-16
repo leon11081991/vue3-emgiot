@@ -39,7 +39,11 @@ const color = computed(() => {
 </script>
 
 <template>
-  <svg class="svg-icon" :class="classes" v-bind="$attrs">
+  <svg
+    class="svg-icon"
+    :class="classes"
+    v-bind="$attrs"
+  >
     <use :href="iconName" />
   </svg>
 </template>

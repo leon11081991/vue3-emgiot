@@ -24,7 +24,12 @@ const handleClose = () => {
 </script>
 
 <template>
-  <a-tag class="filtered-tag" :bordered="false" closable @close="handleClose">
+  <a-tag
+    class="filtered-tag"
+    :bordered="false"
+    closable
+    @close="handleClose"
+  >
     <template #closeIcon>
       <BaseSvgIcon iconName="close-gray" />
     </template>

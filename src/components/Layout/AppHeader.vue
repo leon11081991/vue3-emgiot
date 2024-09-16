@@ -14,16 +14,33 @@ const { handleOpenSidebar } = useSidebar()
 
 <template>
   <header class="header">
-    <div v-if="!showGoBack" class="logo">
+    <div
+      v-if="!showGoBack"
+      class="logo"
+    >
       <!-- TODO: 需更新為公司logo -->
       雲端
     </div>
-    <div v-else class="go-prev-page" @click="goPrevPage">
-      <BaseSvgIcon iconName="prev-arrow" size="lg" />
+    <div
+      v-else
+      class="go-prev-page"
+      @click="goPrevPage"
+    >
+      <BaseSvgIcon
+        iconName="prev-arrow"
+        size="lg"
+      />
     </div>
     <h2 class="header-title">{{ commonStore.headerTitle }}</h2>
-    <div id="menu" class="menu" @click="handleOpenSidebar">
-      <BaseSvgIcon iconName="menu" size="lg" />
+    <div
+      id="menu"
+      class="menu"
+      @click="handleOpenSidebar"
+    >
+      <BaseSvgIcon
+        iconName="menu"
+        size="lg"
+      />
     </div>
   </header>
 </template>

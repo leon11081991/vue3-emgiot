@@ -14,8 +14,15 @@ const { width } = useDeviceWidth()
 </script>
 
 <template>
-  <aside ref="sidebarRef" class="sidebar" :class="{ 'is-open': commonStore.isSidebarOpen }">
-    <div class="close" @click="handleCloseSidebar">
+  <aside
+    ref="sidebarRef"
+    class="sidebar"
+    :class="{ 'is-open': commonStore.isSidebarOpen }"
+  >
+    <div
+      class="close"
+      @click="handleCloseSidebar"
+    >
       <BaseSvgIcon iconName="cross" />
     </div>
 
@@ -30,7 +37,11 @@ const { width } = useDeviceWidth()
         </div>
       </div>
       <div class="message-container">
-        <RouterLink :to="{ name: 'Message' }" class="message-link" @click="handleCloseSidebar">
+        <RouterLink
+          :to="{ name: 'Message' }"
+          class="message-link"
+          @click="handleCloseSidebar"
+        >
           <BaseSvgIcon iconName="bell-on" />
         </RouterLink>
       </div>
@@ -38,7 +49,11 @@ const { width } = useDeviceWidth()
 
     <nav class="navigation">
       <ul class="nav-list">
-        <li v-for="item in navigationList" :key="item.name" class="nav-item">
+        <li
+          v-for="item in navigationList"
+          :key="item.name"
+          class="nav-item"
+        >
           <RouterLink
             :key="item.name"
             :to="{ name: item.name }"
@@ -53,7 +68,11 @@ const { width } = useDeviceWidth()
     </nav>
 
     <div class="logout">
-      <a-button type="primary" class="logout-btn">登出</a-button>
+      <a-button
+        type="primary"
+        class="logout-btn"
+        >登出</a-button
+      >
     </div>
   </aside>
   <transition name="fade">
