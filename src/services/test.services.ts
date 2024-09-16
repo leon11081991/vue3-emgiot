@@ -8,6 +8,6 @@ export class TestService extends ApiFactory {
 
   testLogin = async (params: Record<string, any>) => {
     const res = await this.post<unknown, ApiResponse>('Auth/Login', params)
-    console.log("res", res);
+    console.log('res', res)
   }
 }
