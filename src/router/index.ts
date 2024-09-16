@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized } from 'vue-router';
+import type { RouteLocationNormalized } from 'vue-router'
 import { createRouter, createWebHistory } from 'vue-router'
 
 import { authMiddleware } from '@/router/middlewares/auth.middleware'
@@ -109,11 +109,9 @@ const scrollBehavior = (
   } else {
     return { top: 0 }
   }
-};
-
+}
 
 export const createAppRouter = () => {
-
   const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes,
@@ -122,15 +120,12 @@ export const createAppRouter = () => {
 
   // 設置middleware
   router.beforeEach((to, from, next) => {
-
     if (!to.meta.middleware) {
       // 沒有設定middleware，允許路由繼續
       return next()
     }
 
-    const middleware = Array.isArray(to.meta.middleware)
-      ? to.meta.middleware
-      : [to.meta.middleware]
+    const middleware = Array.isArray(to.meta.middleware) ? to.meta.middleware : [to.meta.middleware]
 
     const context = { to, from, next }
     let idx = 0 // 初始化中間件索引
@@ -138,7 +133,7 @@ export const createAppRouter = () => {
     // 定義執行中間件的函數
     const run = () => {
       if (idx < middleware.length) {
-        const mw = middleware[idx]; // 獲取當前中間件
+        const mw = middleware[idx] // 獲取當前中間件
         mw({
           ...context,
           next: () => {
