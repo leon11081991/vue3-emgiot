@@ -21,7 +21,7 @@ export class UtilCommon {
   }
 
   /** 檢查是否為空 */
-  static checkIsEmpty = <T,>(value: T | T[]): boolean => {
+  static checkIsEmpty = <T>(value: T | T[]): boolean => {
     if (Array.isArray(value)) {
       return value.length === 0
     }
