@@ -5,7 +5,10 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div v-if="props.isVisible" class="mask-overlay"></div>
+  <div
+    v-if="props.isVisible"
+    class="mask-overlay"
+  ></div>
 </template>
 
 <style lang="scss" scoped>

@@ -6,7 +6,9 @@ export const useDeviceWidth = () => {
   const width = ref<number>(window.innerWidth)
 
   const currentBreakpoint = computed(() => {
-    return (Object.keys(widthMapping) as widthType[]).find((key: widthType) => widthMapping[key] >= width.value)
+    return (Object.keys(widthMapping) as widthType[]).find(
+      (key: widthType) => widthMapping[key] >= width.value
+    )
   })
 
   const updateWidth = () => {

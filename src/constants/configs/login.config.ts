@@ -1,6 +1,6 @@
 // (ant design) tab bar 樣式設定
 export const loginPageTabBarStyleConfig = {
-  "display": "none"
+  display: 'none'
 }
 
 export const createSignUpFormConfig = ($t: any) => ({

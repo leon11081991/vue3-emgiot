@@ -50,7 +50,11 @@ const chartOptions = ref<ChartOptions<'bar'>>({
 
 <template>
   <div class="chartPage">
-    <Bar id="my-chart-id" :options="chartOptions" :data="chartData" />
+    <Bar
+      id="my-chart-id"
+      :options="chartOptions"
+      :data="chartData"
+    />
   </div>
 </template>
 

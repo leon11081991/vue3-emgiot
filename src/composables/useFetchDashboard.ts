@@ -1,4 +1,7 @@
-import type { ClawOperationsInfoResType, GetClawOperationsInfoReqType } from '@/models/types/dashboard.types'
+import type {
+  ClawOperationsInfoResType,
+  GetClawOperationsInfoReqType
+} from '@/models/types/dashboard.types'
 import { ref } from 'vue'
 import { api } from '@/services'
 
@@ -27,7 +30,6 @@ export const useFetchDashboard = () => {
     } finally {
       clawOperationsInfo.value.isLoading = false
     }
-
   }
 
   return {

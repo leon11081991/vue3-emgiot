@@ -1,25 +1,23 @@
-import { message } from 'ant-design-vue';
+import { message } from 'ant-design-vue'
 
 export const useMessage = () => {
-
   const openMessage = (
     type: 'success' | 'error' | 'warning' | 'info' | 'loading',
     content: string,
     options: {
-      customClass?: string,
-      duration?: number,
+      customClass?: string
+      duration?: number
       key?: string
     } = {},
     callback?: () => void
   ) => {
-
     const { customClass = '', duration = 3, key } = options
 
     const config = {
       content,
       class: customClass,
       duration,
-      key,
+      key
     }
 
     message[type](config)

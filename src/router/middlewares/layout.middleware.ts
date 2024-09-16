@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, NavigationGuardNext, Router } from 'vue-router';
+import type { RouteLocationNormalized, NavigationGuardNext, Router } from 'vue-router'
 
 export const layoutMiddleware = async ({
   to,
@@ -9,14 +9,14 @@ export const layoutMiddleware = async ({
   from: RouteLocationNormalized
   next: NavigationGuardNext
 }) => {
-  const layout = to.meta.layout || 'LayoutDefault';
+  const layout = to.meta.layout || 'LayoutDefault'
 
   // 加載layout
   try {
-    const layoutComponent = await import(`@/layouts/${layout}.vue`);
-    to.meta.layoutComponent = layoutComponent.default;
+    const layoutComponent = await import(`@/layouts/${layout}.vue`)
+    to.meta.layoutComponent = layoutComponent.default
   } catch (error) {
-    console.log("layoutComponent error", error);
+    console.log('layoutComponent error', error)
   }
 
   next()

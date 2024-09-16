@@ -4,6 +4,5 @@ export const modalStyleConfig = {
     style: { width: '100%', margin: 0 },
     class: 'confirm-button'
   }, // 自定義確認按鈕
-  okText: '確認',
+  okText: '確認'
 }
-

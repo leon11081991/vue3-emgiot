@@ -1,5 +1,12 @@
 import { type ApiResponse, ApiFactory } from '@/utils/api'
-import type { LoginReqType, GoogleLoginReqType, SignUpReqType, ForgetPasswordReqType, PasswordChangeReqType, AccountDisableReqType } from '@/models/types/auth.types'
+import type {
+  LoginReqType,
+  GoogleLoginReqType,
+  SignUpReqType,
+  ForgetPasswordReqType,
+  PasswordChangeReqType,
+  AccountDisableReqType
+} from '@/models/types/auth.types'
 import { LoginEnum, SignInEnum } from '@/constants/enums/api/auth.enums'
 
 /** 系統登入、註冊 */
@@ -30,16 +37,25 @@ export class AuthServices extends ApiFactory {
 
   /** 忘記密碼 */
   forgetPassword = async (userAccountData: ForgetPasswordReqType): Promise<ApiResponse> => {
-    return await this.put<ForgetPasswordReqType, ApiResponse>(SignInEnum.forgetPassword, userAccountData)
+    return await this.put<ForgetPasswordReqType, ApiResponse>(
+      SignInEnum.forgetPassword,
+      userAccountData
+    )
   }
 
   /** 變更密碼 */
   passwordChange = async (passwordChangeData: PasswordChangeReqType): Promise<ApiResponse> => {
-    return await this.put<PasswordChangeReqType, ApiResponse>(SignInEnum.passwordChange, passwordChangeData)
+    return await this.put<PasswordChangeReqType, ApiResponse>(
+      SignInEnum.passwordChange,
+      passwordChangeData
+    )
   }
 
   /** 帳號停用 */
   accountDisable = async (accountDisableData: AccountDisableReqType): Promise<ApiResponse> => {
-    return await this.put<AccountDisableReqType, ApiResponse>(SignInEnum.accountDisable, accountDisableData)
+    return await this.put<AccountDisableReqType, ApiResponse>(
+      SignInEnum.accountDisable,
+      accountDisableData
+    )
   }
 }

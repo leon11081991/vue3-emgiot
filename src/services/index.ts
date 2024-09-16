@@ -1,5 +1,5 @@
-import { TestService } from "@/services/test.services"
-import { AuthServices } from "@/services/auth.services"
+import { TestService } from '@/services/test.services'
+import { AuthServices } from '@/services/auth.services'
 import { DashboardServices } from '@/services/dashboard.services'
 
 const api = {

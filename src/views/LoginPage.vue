@@ -99,9 +99,15 @@ const onForgotPasswordFinish = (values: any) => {
 <template>
   <div class="login-page">
     <div class="login-register-container">
-      <a-tabs v-model:activeKey="activeKey" :tabBarStyle="loginPageTabBarStyleConfig">
+      <a-tabs
+        v-model:activeKey="activeKey"
+        :tabBarStyle="loginPageTabBarStyleConfig"
+      >
         <!-- Login -->
-        <a-tab-pane class="login-tab-field" key="login">
+        <a-tab-pane
+          class="login-tab-field"
+          key="login"
+        >
           <h2 class="tab-label">{{ $t('LoginPage.Login.TabLabel') }}</h2>
           <p class="text-message">{{ $t('LoginPage.Login.TextMessage') }}</p>
 
@@ -159,17 +165,27 @@ const onForgotPasswordFinish = (values: any) => {
 
             <div class="actions-container">
               <!-- Remember Me -->
-              <a-checkbox class="remember-me" v-model:checked="loginFormModel.rememberMe">
+              <a-checkbox
+                class="remember-me"
+                v-model:checked="loginFormModel.rememberMe"
+              >
                 {{ $t('LoginPage.Login.RememberMe') }}
               </a-checkbox>
               <!-- Forgot Password -->
-              <span class="forgot-password" @click="openModal()">
+              <span
+                class="forgot-password"
+                @click="openModal()"
+              >
                 {{ $t('LoginPage.Login.ForgotPassword') }}</span
               >
             </div>
 
             <a-form-item>
-              <a-button class="login-btn" type="primary" html-type="submit">
+              <a-button
+                class="login-btn"
+                type="primary"
+                html-type="submit"
+              >
                 {{ $t('LoginPage.Login.Submit') }}
               </a-button>
             </a-form-item>
@@ -181,15 +197,27 @@ const onForgotPasswordFinish = (values: any) => {
 
           <!-- Third Party Login -->
           <div class="third-party-login-container">
-            <a-button class="third-party-btn" type="third-party">
+            <a-button
+              class="third-party-btn"
+              type="third-party"
+            >
               <template #icon>
-                <BaseSvgIcon iconName="logo-google" size="lg" />
+                <BaseSvgIcon
+                  iconName="logo-google"
+                  size="lg"
+                />
               </template>
               <span class="text">使用 Google 登入</span>
             </a-button>
-            <a-button class="third-party-btn" type="third-party">
+            <a-button
+              class="third-party-btn"
+              type="third-party"
+            >
               <template #icon>
-                <BaseSvgIcon iconName="logo-apple" size="lg" />
+                <BaseSvgIcon
+                  iconName="logo-apple"
+                  size="lg"
+                />
               </template>
               <span class="text">使用 Apple 登入</span>
             </a-button>
@@ -197,14 +225,19 @@ const onForgotPasswordFinish = (values: any) => {
 
           <div class="to-register">
             <span>{{ $t('LoginPage.OtherText.HasNoAccount') }}</span>
-            <span class="to-register-btn" @click="toggleTab('register')">{{
-              $t('LoginPage.OtherText.ToggleToRegister')
-            }}</span>
+            <span
+              class="to-register-btn"
+              @click="toggleTab('register')"
+              >{{ $t('LoginPage.OtherText.ToggleToRegister') }}</span
+            >
           </div>
         </a-tab-pane>
 
         <!-- Register -->
-        <a-tab-pane class="register-tab-field" key="register">
+        <a-tab-pane
+          class="register-tab-field"
+          key="register"
+        >
           <h2 class="tab-label">{{ $t('LoginPage.Register.TabLabel') }}</h2>
           <p class="text-message">{{ $t('LoginPage.Register.TextMessage') }}</p>
           <a-form
@@ -239,16 +272,22 @@ const onForgotPasswordFinish = (values: any) => {
             </a-form-item>
 
             <a-form-item>
-              <a-button class="register-btn" type="primary" html-type="submit">
+              <a-button
+                class="register-btn"
+                type="primary"
+                html-type="submit"
+              >
                 {{ $t('LoginPage.Register.Submit') }}
               </a-button>
             </a-form-item>
 
             <div class="to-login">
               <span>{{ $t('LoginPage.OtherText.AlreadyHasAccount') }}</span>
-              <span class="to-login-btn" @click="toggleTab('login')">{{
-                $t('LoginPage.OtherText.ToggleToLogin')
-              }}</span>
+              <span
+                class="to-login-btn"
+                @click="toggleTab('login')"
+                >{{ $t('LoginPage.OtherText.ToggleToLogin') }}</span
+              >
             </div>
           </a-form>
         </a-tab-pane>
