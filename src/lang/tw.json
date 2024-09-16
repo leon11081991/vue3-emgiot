@@ -1,5 +1,13 @@
 {
   "Common": {
+    "Response": {
+      "Unauthorized": "未授權，請重新登入",
+      "BadRequest": "請求錯誤",
+      "Forbidden": "拒絕存取",
+      "NotFound": "找不到資源",
+      "InternalError": "內部錯誤",
+      "NoNetwork": "請檢查網路連線狀態"
+    },
     "Button": {
       "Add": "新增",
       "Edit": "編輯",
@@ -7,7 +15,81 @@
       "Delete": "刪除"
     }
   },
-  "HomeView":{
-    
+  "HomePage": {},
+  "DashboardPage": {
+    "HeaderTitle": "雲端掌櫃 - ",
+    "Tabs": {
+      "Claw": "選物販賣機",
+      "Coin": "兌幣機"
+    }
+  },
+  "LoginPage": {
+    "Login": {
+      "TabLabel": "登入",
+      "TextMessage": "歡迎回來",
+      "UserId": "電子信箱",
+      "Password": "密碼",
+      "RememberMe": "記住我",
+      "ForgotPassword": "忘記密碼",
+      "Submit": "登入",
+      "LoginSuccess": "登入成功",
+      "LoginFailed": "登入失敗",
+
+      "LoginValidateMessages": "請填寫"
+    },
+    "Register": {
+      "TabLabel": "帳號認證",
+      "TextMessage": "使用電子信箱認證以保障帳號安全",
+      "UserId": "電子信箱",
+      "Validate": "驗證",
+      "Submit": "送出",
+      "RegisterSuccess": "註冊成功",
+      "RegisterFailed": "註冊失敗",
+      "RegisterValidateMessages": "請填寫"
+    },
+    "ForgotPassword": {
+      "Title": "忘記密碼",
+      "UserId": "電子信箱",
+      "Submit": "送出"
+    },
+    "OtherText": {
+      "UseOtherMethods": "使用其他方式登入",
+      "HasNoAccount": "沒有帳號?",
+      "AlreadyHasAccount": "已有帳號?",
+      "ToggleToRegister": "註冊帳號",
+      "ToggleToLogin": "登入帳號"
+    }
+  },
+  "SignUpPage": {
+    "HeadingText": "帳號設定",
+    "SignUp": {
+      "UserId": "電子信箱",
+      "Password": "密碼",
+      "VerifyPassword": "確認密碼",
+      "UserInfo": "真實姓名",
+      "Submit": "送出"
+    }
+  },
+  "ProfilePage": {
+    "EditableContainer": {
+      "UserNameField": {
+        "Title": "真實姓名"
+      },
+      "PasswordField": {
+        "Title": "密碼",
+        "Placeholder": "尚未設定密碼",
+        "ChangeButton": "變更"
+      }
+    },
+    "Modal": {
+      "UserNameField": {
+        "Title": "修改個人資料",
+        "Button": "確認"
+      },
+      "PasswordField": {
+        "Title": "修改密碼",
+        "Button": "變更"
+      }
+    }
   }
 }

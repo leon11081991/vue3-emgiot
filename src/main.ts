@@ -6,6 +6,7 @@ import App from './App.vue'
 import Antd from 'ant-design-vue'
 import i18n from '@/plugins/i18n'
 import versionPlugin from '@/plugins/version'
+import 'virtual:svg-icons-register'
 
 import 'ant-design-vue/dist/reset.css'
 import '@/assets/normalize.css'

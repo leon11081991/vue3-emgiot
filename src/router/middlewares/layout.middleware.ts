@@ -3,13 +3,11 @@ import type { RouteLocationNormalized, NavigationGuardNext, Router } from 'vue-r
 export const layoutMiddleware = async ({
   to,
   from,
-  next,
-  router
+  next
 }: {
-  to: RouteLocationNormalized;
-  from: RouteLocationNormalized;
-  next: NavigationGuardNext;
-  router: Router;
+  to: RouteLocationNormalized
+  from: RouteLocationNormalized
+  next: NavigationGuardNext
 }) => {
   const layout = to.meta.layout || 'LayoutDefault';
 

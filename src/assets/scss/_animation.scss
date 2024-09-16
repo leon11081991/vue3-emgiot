@@ -1,0 +1,31 @@
+/** fade */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/** slide */
+.slide-left-enter-active,
+.slide-left-leave-active {
+  transition: transform 0.5s ease;
+  // transition: transform 5s ease;
+}
+
+.slide-left-enter, .slide-left-leave-to /* .slide-left-leave-active in <2.1.8 */ {
+  transform: translateX(100%);
+}
+
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: transform 0.5s ease;
+  // transition: transform 5s ease;
+}
+
+.slide-right-enter, .slide-right-leave-to /* .slide-right-leave-active in <2.1.8 */ {
+  transform: translateX(-100%);
+}

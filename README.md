@@ -20,9 +20,11 @@ EmgIot system
 
 ***UI FLOW***
 
+[UI Flow chart](https://overflow.io/s/KH44MLMA/?node=e76d6eb6)
+
 | Password    |
 |-------------|
-| 0935471701  |
+| Egm123Team  |
 
 ### 安裝依賴套件與依賴文檔
 
@@ -30,7 +32,7 @@ EmgIot system
 
 - [sass]
 - [vue-i18n](https://vue-i18n.intlify.dev/guide/installation.html) - 多國語系
-
+- [Ant Design Vue](https://antdv.com/)
 
 
 ***

@@ -1,0 +1,444 @@
+<script setup lang="ts">
+import { ValidationTypeEnums } from '@/constants/enums/validator.enums'
+import { ref } from 'vue'
+import { Form } from 'ant-design-vue'
+import { useI18n } from 'vue-i18n'
+import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
+import { loginPageTabBarStyleConfig } from '@/constants/configs/login.config'
+import { useAuth } from '@/composables/useAuth'
+import { useModal } from '@/composables/useModal'
+import { useValidator } from '@/composables/useValidator'
+import { UtilCommon } from '@/utils/utilCommon'
+
+type TabKey = 'login' | 'register'
+
+const { t: $t } = useI18n()
+const { fnLogin } = useAuth()
+const { modalVisible, openModal, closeModal } = useModal()
+const { validateErrorMessage, validate } = useValidator()
+
+const activeKey = ref<TabKey>('login')
+const loginFormModel = ref({
+  userId: '',
+  password: '',
+  rememberMe: false
+})
+const registerFormModel = ref({
+  userId: ''
+})
+const forgetPasswordFormModel = ref({
+  userId: ''
+})
+
+const loginForm = Form.useForm(loginFormModel.value)
+const registerForm = Form.useForm(registerFormModel.value)
+
+const toggleTab = (key: TabKey) => {
+  activeKey.value = key
+}
+
+// 表單輸入項驗證
+const validateFormItem = (
+  type: keyof typeof ValidationTypeEnums,
+  value: string
+): (() => Promise<void>) => {
+  return () => {
+    // 驗證是否必填項為填入
+    if (UtilCommon.checkIsEmpty(value)) {
+      return Promise.reject('必填')
+    }
+    // 驗證規則是否通過
+    const isValid = validate(ValidationTypeEnums[type], value)
+    if (!isValid) {
+      return Promise.reject(validateErrorMessage.value)
+    }
+
+    return Promise.resolve()
+  }
+}
+
+// 輸入值驗證
+const validateValue = (type: keyof typeof ValidationTypeEnums, value: string): boolean => {
+  // 驗證是否必填項為填入
+  if (UtilCommon.checkIsEmpty(value)) {
+    return false
+  }
+
+  // 驗證規則是否通過
+  const isValid = validate(ValidationTypeEnums[type], value)
+  if (!isValid) {
+    return false
+  }
+
+  return true
+}
+
+// TODO: type 修正
+const onLoginFinish = (values: any) => {
+  console.log('登入資料:', values)
+  // 在這裡處理登入邏輯
+
+  fnLogin({
+    userId: values.userAccount,
+    password: values.password
+  })
+}
+
+// TODO: type 修正
+const onRegisterFinish = (values: any) => {
+  console.log('註冊資料:', values)
+  // 在這裡處理註冊邏輯
+}
+
+// TODO: type 修正
+const onForgotPasswordFinish = (values: any) => {
+  console.log('忘記密碼資料:', values)
+}
+</script>
+
+<template>
+  <div class="login-page">
+    <div class="login-register-container">
+      <a-tabs v-model:activeKey="activeKey" :tabBarStyle="loginPageTabBarStyleConfig">
+        <!-- Login -->
+        <a-tab-pane class="login-tab-field" key="login">
+          <h2 class="tab-label">{{ $t('LoginPage.Login.TabLabel') }}</h2>
+          <p class="text-message">{{ $t('LoginPage.Login.TextMessage') }}</p>
+
+          <!-- Login Form -->
+          <a-form
+            class="login-form"
+            name="login_form"
+            layout="vertical"
+            :model="loginFormModel"
+            :form="loginForm"
+            @finish="onLoginFinish"
+          >
+            <!-- Email -->
+            <a-form-item
+              name="userId"
+              validateTrigger="blur"
+              :rules="[
+                { required: true, message: '' },
+                { validator: validateFormItem('Email', loginFormModel.userId) }
+              ]"
+            >
+              <div class="input-container userId-input">
+                <a-input
+                  class="base-input"
+                  :placeholder="$t('LoginPage.Login.UserId')"
+                  v-model:value="loginFormModel.userId"
+                >
+                  <template #prefix>
+                    <BaseSvgIcon iconName="mail" />
+                  </template>
+                </a-input>
+              </div>
+            </a-form-item>
+
+            <!-- Password -->
+            <a-form-item
+              name="password"
+              validateTrigger="blur"
+              :rules="[
+                { required: true, message: '' },
+                { validator: validateFormItem('Password', loginFormModel.password) }
+              ]"
+            >
+              <a-input-password
+                class="base-input"
+                autocomplete="current-password"
+                :placeholder="$t('LoginPage.Login.Password')"
+                v-model:value="loginFormModel.password"
+              >
+                <template #prefix>
+                  <BaseSvgIcon iconName="lock" />
+                </template>
+              </a-input-password>
+            </a-form-item>
+
+            <div class="actions-container">
+              <!-- Remember Me -->
+              <a-checkbox class="remember-me" v-model:checked="loginFormModel.rememberMe">
+                {{ $t('LoginPage.Login.RememberMe') }}
+              </a-checkbox>
+              <!-- Forgot Password -->
+              <span class="forgot-password" @click="openModal()">
+                {{ $t('LoginPage.Login.ForgotPassword') }}</span
+              >
+            </div>
+
+            <a-form-item>
+              <a-button class="login-btn" type="primary" html-type="submit">
+                {{ $t('LoginPage.Login.Submit') }}
+              </a-button>
+            </a-form-item>
+          </a-form>
+
+          <div class="other-message">
+            <span class="other-message-text">{{ $t('LoginPage.OtherText.UseOtherMethods') }}</span>
+          </div>
+
+          <!-- Third Party Login -->
+          <div class="third-party-login-container">
+            <a-button class="third-party-btn" type="third-party">
+              <template #icon>
+                <BaseSvgIcon iconName="logo-google" size="lg" />
+              </template>
+              <span class="text">使用 Google 登入</span>
+            </a-button>
+            <a-button class="third-party-btn" type="third-party">
+              <template #icon>
+                <BaseSvgIcon iconName="logo-apple" size="lg" />
+              </template>
+              <span class="text">使用 Apple 登入</span>
+            </a-button>
+          </div>
+
+          <div class="to-register">
+            <span>{{ $t('LoginPage.OtherText.HasNoAccount') }}</span>
+            <span class="to-register-btn" @click="toggleTab('register')">{{
+              $t('LoginPage.OtherText.ToggleToRegister')
+            }}</span>
+          </div>
+        </a-tab-pane>
+
+        <!-- Register -->
+        <a-tab-pane class="register-tab-field" key="register">
+          <h2 class="tab-label">{{ $t('LoginPage.Register.TabLabel') }}</h2>
+          <p class="text-message">{{ $t('LoginPage.Register.TextMessage') }}</p>
+          <a-form
+            class="register-form"
+            name="register_form"
+            layout="vertical"
+            :form="registerForm"
+            :model="registerFormModel"
+            @finish="onRegisterFinish"
+          >
+            <a-form-item name="email">
+              <a-input-group>
+                <div class="input-container validate-input">
+                  <a-input
+                    class="base-input"
+                    :placeholder="$t('LoginPage.Register.UserId')"
+                    v-model:value="registerFormModel.userId"
+                  >
+                    <template #prefix>
+                      <BaseSvgIcon iconName="mail" />
+                    </template>
+                  </a-input>
+
+                  <a-button
+                    class="validate-btn"
+                    :disabled="!validateValue('Email', registerFormModel.userId)"
+                  >
+                    {{ $t('LoginPage.Register.Validate') }}
+                  </a-button>
+                </div>
+              </a-input-group>
+            </a-form-item>
+
+            <a-form-item>
+              <a-button class="register-btn" type="primary" html-type="submit">
+                {{ $t('LoginPage.Register.Submit') }}
+              </a-button>
+            </a-form-item>
+
+            <div class="to-login">
+              <span>{{ $t('LoginPage.OtherText.AlreadyHasAccount') }}</span>
+              <span class="to-login-btn" @click="toggleTab('login')">{{
+                $t('LoginPage.OtherText.ToggleToLogin')
+              }}</span>
+            </div>
+          </a-form>
+        </a-tab-pane>
+      </a-tabs>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <a-modal
+      class="forgot-password-modal"
+      :title="$t('LoginPage.ForgotPassword.Title')"
+      v-model:open="modalVisible"
+      @cancel="closeModal"
+    >
+      <a-form :layout="'vertical'">
+        <a-form-item name="email">
+          <div class="input-container email-input">
+            <a-input
+              class="base-input"
+              :placeholder="$t('LoginPage.ForgotPassword.UserId')"
+              v-model:value="forgetPasswordFormModel.userId"
+            >
+              <template #prefix>
+                <BaseSvgIcon iconName="mail" />
+              </template>
+            </a-input>
+          </div>
+        </a-form-item>
+      </a-form>
+
+      <template #footer>
+        <a-button
+          :disabled="!validateValue('Email', forgetPasswordFormModel.userId)"
+          class="forgot-password-btn"
+          type="primary"
+          size="large"
+          @click="onForgotPasswordFinish"
+        >
+          {{ $t('LoginPage.ForgotPassword.Submit') }}
+        </a-button>
+      </template>
+    </a-modal>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.login-page {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+.login-register-container {
+  width: 90%;
+  max-width: 400px;
+
+  @include media-breakpoint-down(sm) {
+    top: $--login-top-mobile;
+  }
+}
+
+.tab-label {
+  text-align: center;
+  font-size: $--heading-font-size;
+  color: $--color-primary;
+
+  @include media-breakpoint-down(sm) {
+    font-size: $--heading-font-size-mobile;
+  }
+}
+
+.base-input {
+  padding-block: 0.5rem;
+  background-color: $--background-color-base;
+
+  :deep(.ant-input) {
+    background-color: $--background-color-base;
+  }
+}
+
+.third-party-login-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.login-btn,
+.register-btn,
+.third-party-btn {
+  width: 100%;
+  height: auto;
+}
+
+.third-party-btn {
+  :deep(.text) {
+    flex: 1;
+  }
+}
+
+.register-tab-field {
+  .validate-input {
+    position: relative;
+
+    :deep(.ant-input-affix-wrapper) {
+      border-radius: $--border-radius-middle;
+    }
+  }
+  .validate-btn {
+    position: absolute;
+    top: 50%;
+    right: 0.5rem;
+    transform: translateY(-50%);
+    height: 80%;
+    z-index: 1;
+  }
+}
+.text-message {
+  margin-bottom: 2rem;
+  text-align: center;
+  color: $--color-gray-600;
+}
+
+.actions-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+
+  .remember-me {
+    color: $--color-primary;
+  }
+
+  .forgot-password {
+    @include base-transition;
+    padding-inline: 0.75rem;
+    color: $--color-primary;
+    border: 1px solid $--color-gray-500;
+
+    &:hover {
+      color: $--color-primary--hover;
+      cursor: pointer;
+    }
+  }
+}
+
+.other-message {
+  position: relative;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: $--color-gray-600;
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 100%;
+    height: 1px;
+    background-color: $--color-gray-600;
+  }
+
+  .other-message-text {
+    position: relative;
+    padding-inline: 0.5rem;
+    background-color: $--background-color-base;
+  }
+}
+
+.to-register,
+.to-login {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  color: $--color-gray-600;
+
+  .to-register-btn,
+  .to-login-btn {
+    cursor: pointer;
+    color: $--color-primary;
+    transition: all 0.2s ease-in-out;
+    &:hover {
+      color: $--color-primary--hover;
+    }
+  }
+}
+
+.forgot-password-modal {
+  top: 200px;
+
+  .forgot-password-btn {
+    width: 100%;
+  }
+}
+</style>

@@ -1,7 +1,8 @@
 import type { RouteLocationNormalized } from 'vue-router'
 import { createRouter, createWebHistory } from 'vue-router'
 
-import { layoutMiddleware } from '@/router/middlewares/layoutMiddleware'
+import { authMiddleware } from '@/router/middlewares/auth.middleware'
+import { layoutMiddleware } from '@/router/middlewares/layout.middleware'
 
 import IndexPage from '@/views/IndexPage.vue'
 
@@ -12,6 +13,24 @@ const routes = [
     component: IndexPage,
     meta: {
       layout: 'LayoutDefault',
+      middleware: [authMiddleware, layoutMiddleware]
+    }
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('@/views/LoginPage.vue'),
+    meta: {
+      layout: 'LayoutBlank',
+      middleware: [authMiddleware, layoutMiddleware]
+    }
+  },
+  {
+    path: '/sign-up',
+    name: 'SignUp',
+    component: () => import('@/views/SignUpPage.vue'),
+    meta: {
+      layout: 'LayoutBlank',
       middleware: [layoutMiddleware]
     }
   },
@@ -21,7 +40,7 @@ const routes = [
     component: () => import('@/views/DashboardPage.vue'),
     meta: {
       layout: 'LayoutDefault',
-      middleware: [layoutMiddleware]
+      middleware: [authMiddleware, layoutMiddleware]
     }
   },
   {
@@ -30,7 +49,7 @@ const routes = [
     component: () => import('@/views/ProfilePage.vue'),
     meta: {
       layout: 'LayoutDefault',
-      middleware: [layoutMiddleware]
+      middleware: [authMiddleware, layoutMiddleware]
     }
   },
   {
@@ -39,7 +58,7 @@ const routes = [
     component: () => import('@/views/MemberPage.vue'),
     meta: {
       layout: 'LayoutDefault',
-      middleware: [layoutMiddleware]
+      middleware: [authMiddleware, layoutMiddleware]
     }
   },
   {
@@ -48,7 +67,7 @@ const routes = [
     component: () => import('@/views/NotepadPage.vue'),
     meta: {
       layout: 'LayoutDefault',
-      middleware: [layoutMiddleware]
+      middleware: [authMiddleware, layoutMiddleware]
     }
   },
   {
@@ -57,7 +76,7 @@ const routes = [
     component: () => import('@/views/GroupEditPage.vue'),
     meta: {
       layout: 'LayoutDefault',
-      middleware: [layoutMiddleware]
+      middleware: [authMiddleware, layoutMiddleware]
     }
   },
   {
@@ -66,7 +85,7 @@ const routes = [
     component: () => import('@/views/ProductPage.vue'),
     meta: {
       layout: 'LayoutDefault',
-      middleware: [layoutMiddleware]
+      middleware: [authMiddleware, layoutMiddleware]
     }
   },
   {
@@ -75,16 +94,7 @@ const routes = [
     component: () => import('@/views/MessagePage.vue'),
     meta: {
       layout: 'LayoutDefault',
-      middleware: [layoutMiddleware]
-    }
-  },
-  {
-    path: '/chartTemp',
-    name: 'ChartTemp',
-    component: () => import('@/views/ChartTemp.vue'),
-    meta: {
-      layout: 'LayoutDefault',
-      middleware: [layoutMiddleware]
+      middleware: [authMiddleware, layoutMiddleware]
     }
   }
 ]
@@ -116,7 +126,7 @@ export const createAppRouter = () => {
     }
 
     const middleware = Array.isArray(to.meta.middleware) ? to.meta.middleware : [to.meta.middleware]
-    console.log('middleware', middleware)
+
     const context = { to, from, next }
     let idx = 0 // 初始化中間件索引
 
