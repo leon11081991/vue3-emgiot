@@ -27,7 +27,7 @@ const validationRules = [
     value: /^[\s\S]+$/,
     errorMessage: '請輸入簡訊驗證碼'
   }
-];
+]
 
 export type ValidatorReturnType = {
   success: boolean
@@ -35,7 +35,6 @@ export type ValidatorReturnType = {
 }
 
 export const useValidator = () => {
-
   const validateErrorMessage = ref<string>('')
 
   const validate = (type: ValidationTypeEnums, value: string): boolean => {

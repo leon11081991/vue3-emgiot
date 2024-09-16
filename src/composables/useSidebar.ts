@@ -3,7 +3,6 @@ import { useClickOutside } from '@/composables/useClickOutside'
 import { useCommonStore } from '@/stores/common.stores'
 
 export const useSidebar = () => {
-
   const commonStore = useCommonStore()
 
   const sidebarRef = ref<HTMLElement | null>(null)
