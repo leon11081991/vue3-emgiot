@@ -40,6 +40,7 @@
     "eslint-plugin-vue": "^9.23.0",
     "husky": "^8.0.0",
     "jwt-decode": "^4.0.0",
+    "lint-staged": "^15.2.10",
     "npm-run-all2": "^6.2.0",
     "prettier": "^3.2.5",
     "sass": "^1.77.8",
@@ -55,5 +56,11 @@
       "path": "./node_modules/cz-conventional-changelog",
       "pathEmoji": true
     }
+  },
+  "lint-staged": {
+    "*.{js,ts,vue}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   }
 }
