@@ -11,12 +11,11 @@ export const authMiddleware = async ({
   from: RouteLocationNormalized
   next: NavigationGuardNext
 }) => {
-  console.log("[authMiddleware]", to, from)
+  console.log('[authMiddleware]', to, from)
 
   const router = useRouter()
   const userStore = useUserStore()
   const token = userStore.userInfo.token
-
 
   if (to.path === '/login' || !!token) {
     return next()
