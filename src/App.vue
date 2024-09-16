@@ -6,7 +6,10 @@ const route = useRoute()
 
 <template>
   <component :is="route.meta.layoutComponent || 'div'">
-    <main class="main-page" :class="route.name">
+    <main
+      class="main-page"
+      :class="route.name"
+    >
       <RouterView />
     </main>
   </component>

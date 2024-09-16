@@ -51,10 +51,16 @@ const mockUserData = {
   <div class="profile-page">
     <div class="profile-content">
       <div class="display-container">
-        <AvatarDisplay :name="mockUserData.username" size="lg" />
+        <AvatarDisplay
+          :name="mockUserData.username"
+          size="lg"
+        />
         <div class="user-name-container">
           <p class="user-name-display">{{ mockUserData.name }}</p>
-          <div class="name-edit-button" @click="handleOpenModal('username')">
+          <div
+            class="name-edit-button"
+            @click="handleOpenModal('username')"
+          >
             <BaseSvgIcon iconName="edit" />
           </div>
         </div>
@@ -64,7 +70,12 @@ const mockUserData = {
           <span class="input-label">
             {{ $t('ProfilePage.EditableContainer.UserNameField.Title') }}
           </span>
-          <a-input v-model:value="mockUserData.name" size="large" readonly class="input-field">
+          <a-input
+            v-model:value="mockUserData.name"
+            size="large"
+            readonly
+            class="input-field"
+          >
             <template #prefix>
               <BaseSvgIcon iconName="username" />
             </template>
@@ -88,7 +99,11 @@ const mockUserData = {
                 <BaseSvgIcon iconName="lock" />
               </template>
             </a-input-password>
-            <a-button type="primary" class="change-button" @click="handleOpenModal('password')">
+            <a-button
+              type="primary"
+              class="change-button"
+              @click="handleOpenModal('password')"
+            >
               {{ $t('ProfilePage.EditableContainer.PasswordField.ChangeButton') }}
             </a-button>
           </a-input-group>
@@ -110,21 +125,41 @@ const mockUserData = {
       <span class="modal-title">{{ modalTitle[modalType] }}</span>
     </template>
 
-    <div v-if="modalType === 'username'" class="modal-content username">
-      <a-input v-model:value="newUserData.username" class="input-field" size="large"></a-input>
+    <div
+      v-if="modalType === 'username'"
+      class="modal-content username"
+    >
+      <a-input
+        v-model:value="newUserData.username"
+        class="input-field"
+        size="large"
+      ></a-input>
       <div class="count-nums">/10</div>
     </div>
 
-    <div v-if="modalType === 'password'" class="modal-content password">
+    <div
+      v-if="modalType === 'password'"
+      class="modal-content password"
+    >
       <div class="input-container password-input">
         <span class="input-label"> 新密碼 </span>
 
-        <a-input-password v-model:value="newUserData.password" size="large" class="input-field">
+        <a-input-password
+          v-model:value="newUserData.password"
+          size="large"
+          class="input-field"
+        >
           <template #iconRender="v">
-            <div class="password-visible" v-if="v">
+            <div
+              class="password-visible"
+              v-if="v"
+            >
               <SvgIcon iconName="home" />
             </div>
-            <div class="password-invisible" v-else>
+            <div
+              class="password-invisible"
+              v-else
+            >
               <SvgIcon iconName="cross" />
             </div>
           </template>
@@ -139,10 +174,16 @@ const mockUserData = {
           class="input-field"
         >
           <template #iconRender="x">
-            <div class="password-visible" v-if="x">
+            <div
+              class="password-visible"
+              v-if="x"
+            >
               <SvgIcon iconName="home" />
             </div>
-            <div class="password-invisible" v-else>
+            <div
+              class="password-invisible"
+              v-else
+            >
               <SvgIcon iconName="cross" />
             </div>
           </template>

@@ -49,14 +49,21 @@ const onSignupFinish = (values: any) => {
                 </template>
               </a-input>
 
-              <a-button type="primary" disabled class="validate-btn">
+              <a-button
+                type="primary"
+                disabled
+                class="validate-btn"
+              >
                 {{ $t('LoginPage.Register.Validate') }}
               </a-button>
             </div>
           </a-input-group>
         </a-form-item>
 
-        <a-form-item name="password" :rules="signUpFormConfig.password.rules">
+        <a-form-item
+          name="password"
+          :rules="signUpFormConfig.password.rules"
+        >
           <a-input-password
             class="base-input"
             autocomplete="current-password"
@@ -85,7 +92,10 @@ const onSignupFinish = (values: any) => {
           </a-input-password>
         </a-form-item>
 
-        <a-form-item name="userInfo" :rules="signUpFormConfig.userInfo.rules">
+        <a-form-item
+          name="userInfo"
+          :rules="signUpFormConfig.userInfo.rules"
+        >
           <div class="input-container userInfo-input">
             <a-input
               class="base-input"
@@ -100,7 +110,12 @@ const onSignupFinish = (values: any) => {
         </a-form-item>
 
         <a-form-item class="signup-btn-container">
-          <a-button class="signup-btn" type="primary" size="large" html-type="submit">
+          <a-button
+            class="signup-btn"
+            type="primary"
+            size="large"
+            html-type="submit"
+          >
             {{ $t('SignUpPage.SignUp.Submit') }}
           </a-button>
         </a-form-item>

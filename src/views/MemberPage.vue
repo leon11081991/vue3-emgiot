@@ -40,21 +40,36 @@ const mockData = [
     <div class="collapse-container">
       <a-collapse
         v-for="store in mockData"
+        :key="store.storeId"
         v-model:activeKey="activeKey"
         class="member-collapse"
         collapsible="header"
       >
-        <a-collapse-panel :key="store.storeId" :showArrow="false">
+        <a-collapse-panel
+          :key="store.storeId"
+          :showArrow="false"
+        >
           <template v-slot:header>
             <div class="collapse-header-wrap">
-              <AvatarDisplay size="lg" :name="store.storeName" :charNum="2" />
+              <AvatarDisplay
+                size="lg"
+                :name="store.storeName"
+                :charNum="2"
+              />
               <h4 class="store-name">雲端掌櫃&nbsp;-&nbsp;{{ store.storeName }}</h4>
             </div>
           </template>
 
           <ul class="content-list">
-            <li v-for="member in store.members" class="content-item">
-              <AvatarDisplay size="md" :name="member.name" />
+            <li
+              v-for="member in store.members"
+              :key="member.memberId"
+              class="content-item"
+            >
+              <AvatarDisplay
+                size="md"
+                :name="member.name"
+              />
               <div class="member-wrap">
                 <h6 class="member-name">{{ member.name }}</h6>
                 <div class="member-level">Lv.{{ member.level }}</div>

@@ -9,7 +9,6 @@ import type {
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import FilteredTag from '@/components/DashboardPage/FilteredTag.vue'
 import UpdateRecord from '@/components/DashboardPage/UpdateRecord.vue'
-import BaseSegmentedButton from '@/components/Base/SegmentedTab.vue'
 import ClawTabList from '@/components/DashboardPage/ClawTabList.vue'
 import { useI18n } from 'vue-i18n'
 import { useHeader } from '@/composables/useHeader'
@@ -67,10 +66,18 @@ onMounted(() => {
   <div class="dashboard-page">
     <div class="bar-chart-container">Bar Chart Here</div>
 
-    <UpdateRecord :date="'2021-11-11'" :time="'11:11:11'" />
+    <UpdateRecord
+      :date="'2021-11-11'"
+      :time="'11:11:11'"
+    />
 
     <!-- <BaseSegmentedButton v-model:value="selectedTab" :tabOptions="tabOptions" /> -->
-    <a-segmented class="tab-filter" v-model:value="selectedTab" block :options="tabOptions">
+    <a-segmented
+      class="tab-filter"
+      v-model:value="selectedTab"
+      block
+      :options="tabOptions"
+    >
       <template #label="{ title, payload }">
         <template v-if="payload.icon">
           <BaseSvgIcon :iconName="payload.icon" />
@@ -81,12 +88,27 @@ onMounted(() => {
 
     <div class="actions-container">
       <div class="action-button">
-        <a-button v-if="selectedTab === 'claw'" ghost type="secondary">批量補幣</a-button>
-        <a-button v-if="selectedTab === 'coin'" ghost type="secondary">批量退幣</a-button>
+        <a-button
+          v-if="selectedTab === 'claw'"
+          ghost
+          type="secondary"
+          >批量補幣</a-button
+        >
+        <a-button
+          v-if="selectedTab === 'coin'"
+          ghost
+          type="secondary"
+          >批量退幣</a-button
+        >
       </div>
 
       <div class="filtered-tags-container">
-        <FilteredTag v-for="i in 3" text="大寮光華店" @close="() => console.log('test close')" />
+        <FilteredTag
+          v-for="i in 3"
+          :key="i"
+          text="大寮光華店"
+          @close="() => console.log('test close')"
+        />
       </div>
 
       <div class="filter-button">
@@ -95,7 +117,10 @@ onMounted(() => {
     </div>
 
     <div class="list-container">
-      <transition :name="transitionName" mode="out-in">
+      <transition
+        :name="transitionName"
+        mode="out-in"
+      >
         <KeepAlive>
           <component
             :is="tabComps[selectedTab]"
