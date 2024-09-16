@@ -6,7 +6,6 @@ import { UtilCommon } from '@/utils/utilCommon'
 const { openMessage } = useMessage()
 
 export const errorHandler = (error: AxiosError, userInfo: any) => {
-
   const { response } = error
 
   if (response) {
@@ -14,7 +13,9 @@ export const errorHandler = (error: AxiosError, userInfo: any) => {
 
     if (status === 401 && userInfo.token) {
       // 處理 401 未授權
-      openMessage('error', getI18nTranslate('Common.Response.Unauthorized'), {}, () => UtilCommon.goPage('/login'))
+      openMessage('error', getI18nTranslate('Common.Response.Unauthorized'), {}, () =>
+        UtilCommon.goPage('/login')
+      )
       return Promise.reject(new Error(getI18nTranslate('Common.Response.Unauthorized')))
     }
 
@@ -32,7 +33,6 @@ export const errorHandler = (error: AxiosError, userInfo: any) => {
       openMessage('error', getI18nTranslate('Common.Response.InternalServerError'))
       return Promise.reject(new Error(getI18nTranslate('Common.Response.InternalServerError')))
     }
-
   }
 
   if (!window.navigator.onLine) {
@@ -42,5 +42,4 @@ export const errorHandler = (error: AxiosError, userInfo: any) => {
   }
 
   return Promise.reject(error)
-
 }

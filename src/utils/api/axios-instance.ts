@@ -4,7 +4,6 @@ import { env } from '@/env'
 import { errorHandler } from '@/utils/api/error-handler'
 import { useUserStore } from '@/stores/user.stores'
 
-
 /** 創建實例 */
 const axiosInstance = axios.create({
   baseURL: `${env.apiBaseUrl}${env.apiVersion}`,
@@ -34,13 +33,13 @@ const requestFailed = (error: AxiosError) => {
 
 /** 處理回傳成功: 狀態碼為 2xx 都在此處理 */
 const responseSuccess = (response: AxiosResponse) => {
-  console.log("[responseSuccess] response", response)
+  console.log('[responseSuccess] response', response)
   return response.data
 }
 
 /** 處理回傳失敗: 狀態碼為非 2xx 都在此處理 */
 const responseFailed = (error: AxiosError) => {
-  console.log("[responseFailed] start", error)
+  console.log('[responseFailed] start', error)
 
   const userStore = useUserStore()
   return errorHandler(error, userStore.userInfo)

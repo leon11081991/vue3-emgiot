@@ -3,7 +3,6 @@ import type { ApiResponse } from '@/utils/api/models/api-response'
 import axios from '@/utils/api/axios-instance'
 
 export class ApiFactory {
-
   /** 提供可覆蓋的 apiUrl */
   protected apiUrl: string
   constructor(apiUrl: string) {
@@ -16,7 +15,7 @@ export class ApiFactory {
     params?: Params,
     config?: AxiosRequestConfig
   ): Promise<Response> {
-    console.log("[GET] method: ", url, params, config)
+    console.log('[GET] method: ', url, params, config)
     return axios.get(`${this.apiUrl}/${url}`, { params, ...config })
   }
 
@@ -26,7 +25,7 @@ export class ApiFactory {
     body?: Body,
     config?: AxiosRequestConfig
   ): Promise<Response> {
-    console.log("[POST] method: ", url, body, config)
+    console.log('[POST] method: ', url, body, config)
     return axios.post(`${this.apiUrl}/${url}`, body, config)
   }
 
@@ -36,8 +35,7 @@ export class ApiFactory {
     body: Body,
     config?: AxiosRequestConfig
   ): Promise<Response> {
-    console.log("[PUT] method: ", url, body, config)
+    console.log('[PUT] method: ', url, body, config)
     return axios.put(`${this.apiUrl}/${url}`, body, config)
   }
-
 }
