@@ -1,7 +1,9 @@
 import type { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios'
 import axios from 'axios'
 import { env } from '@/env'
-import { errorHandler } from '@/utils/api/error-handler'
+import { getI18nTranslate } from '@/utils/i18nUtils'
+import { errorCodeHandler, unauthorizedHandler } from '@/utils/api/error-handler'
+import { useMessage } from '@/composables/useMessage'
 import { useUserStore } from '@/stores/user.stores'
 
 /** 創建實例 */
@@ -34,6 +36,12 @@ const requestFailed = (error: AxiosError) => {
 /** 處理回傳成功: 狀態碼為 2xx 都在此處理 */
 const responseSuccess = (response: AxiosResponse) => {
   console.log('[responseSuccess] response', response)
+
+  // TODO: 後端修改完回傳格式後,IsSuccess 修改為 isSuccess
+  if (!response.data.IsSuccess) {
+    return response.data
+  }
+
   return response.data
 }
 
@@ -41,8 +49,23 @@ const responseSuccess = (response: AxiosResponse) => {
 const responseFailed = (error: AxiosError) => {
   console.log('[responseFailed] start', error)
 
-  const userStore = useUserStore()
-  return errorHandler(error, userStore.userInfo)
+  const { openMessage } = useMessage()
+
+  if (!window.navigator.onLine) {
+    // 處理沒有網路連線
+    openMessage('error', getI18nTranslate('Common.Response.NoNetwork'))
+    return Promise.reject(new Error(getI18nTranslate('Common.Response.NoNetwork')))
+  }
+
+  const { response } = error
+  if (response) {
+    const { status } = response
+
+    unauthorizedHandler(status)
+    errorCodeHandler(status)
+  }
+
+  return Promise.reject(error)
 }
 
 /** 請求攔截器 */
