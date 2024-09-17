@@ -15,7 +15,6 @@ export class ApiFactory {
     params?: Params,
     config?: AxiosRequestConfig
   ): Promise<Response> {
-    console.log('[GET] method: ', url, params, config)
     return axios.get(`${this.apiUrl}/${url}`, { params, ...config })
   }
 
@@ -25,7 +24,6 @@ export class ApiFactory {
     body?: Body,
     config?: AxiosRequestConfig
   ): Promise<Response> {
-    console.log('[POST] method: ', url, body, config)
     return axios.post(`${this.apiUrl}/${url}`, body, config)
   }
 
@@ -35,7 +33,6 @@ export class ApiFactory {
     body: Body,
     config?: AxiosRequestConfig
   ): Promise<Response> {
-    console.log('[PUT] method: ', url, body, config)
     return axios.put(`${this.apiUrl}/${url}`, body, config)
   }
 }
