@@ -10,6 +10,7 @@ import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import FilteredTag from '@/components/DashboardPage/FilteredTag.vue'
 import UpdateRecord from '@/components/DashboardPage/UpdateRecord.vue'
 import ClawTabList from '@/components/DashboardPage/ClawTabList.vue'
+import FloatButton from '@/components/Base/FloatButton.vue'
 import { useI18n } from 'vue-i18n'
 import { useHeader } from '@/composables/useHeader'
 import { useDate } from '@/composables/useDate'
@@ -30,7 +31,8 @@ type CoinTabCompType = DefineComponent<
 const { t: $t } = useI18n()
 const { updateHeaderTitle } = useHeader()
 const { today } = useDate()
-const { clawOperationsInfo, fetchClawOperationsInfo } = useFetchDashboard()
+const { clawOperationsInfo, coinOperationsInfo, fetchClawOperationsInfo, fetchCoinOperationsInfo } =
+  useFetchDashboard()
 
 const tabComps: Record<DashboardTabType, ClawTabCompType | CoinTabCompType> = {
   claw: ClawTabList,
@@ -51,14 +53,39 @@ const transitionName = ref('slide-right')
 const clawActiveKey = ref([])
 const coinActiveKey = ref([])
 
-onMounted(() => {
+const listData = ref<ClawOperationsInfoResType[] | CoinOperationsInfoResType[]>([])
+
+const handleToggleTab = async (tab: DashboardTabType): Promise<void> => {
+  if (tab === 'claw') {
+    await fetchClawOperationsInfo({
+      startDate: today(),
+      endDate: today()
+    })
+
+    listData.value = clawOperationsInfo.value.data
+    return
+  }
+
+  if (tab === 'coin') {
+    await fetchCoinOperationsInfo({
+      startDate: today(),
+      endDate: today()
+    })
+    listData.value = coinOperationsInfo.value.data
+    return
+  }
+}
+
+onMounted(async () => {
   storeName.value = '大寮光華店'
   updateHeaderTitle($t('DashboardPage.HeaderTitle') + storeName.value) // 設定動態 header title
 
-  fetchClawOperationsInfo({
+  await fetchClawOperationsInfo({
     startDate: today(),
     endDate: today()
   })
+
+  listData.value = clawOperationsInfo.value.data
 })
 </script>
 
@@ -77,6 +104,7 @@ onMounted(() => {
       v-model:value="selectedTab"
       block
       :options="tabOptions"
+      @change="() => handleToggleTab(selectedTab)"
     >
       <template #label="{ title, payload }">
         <template v-if="payload.icon">
@@ -125,11 +153,13 @@ onMounted(() => {
           <component
             :is="tabComps[selectedTab]"
             :active-key="selectedTab === 'claw' ? clawActiveKey : coinActiveKey"
-            :data="clawOperationsInfo.data"
+            :data="listData"
           />
         </KeepAlive>
       </transition>
     </div>
+
+    <FloatButton />
   </div>
 </template>
 
