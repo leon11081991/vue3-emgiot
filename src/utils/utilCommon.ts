@@ -37,11 +37,25 @@ export class UtilCommon {
     return value === ''
   }
 
-  /**  根據當前tab在tabList的位置，确定过渡方向。 */
+  /** 根據當前tab在tabList的位置，确定过渡方向。 */
   static determineTransitionDirection(tabs: string[], currentTab: string): string {
     if (tabs.indexOf(currentTab) !== tabs.length - 1) {
       return 'right'
     }
     return 'left'
+  }
+
+  /** 取得於localStorage */
+  static getLocalStorage<T>(key: string): T | null {
+    const val = localStorage.getItem(key)
+    if (val) {
+      return JSON.parse(val) as T
+    }
+    return null
+  }
+
+  /** 儲存於localStorage */
+  static setLocalStorage<T>(key: string, val: T): void {
+    localStorage.setItem(key, JSON.stringify(val))
   }
 }

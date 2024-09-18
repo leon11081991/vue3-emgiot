@@ -8,23 +8,26 @@ import type {
 } from '@/models/types/auth.types'
 import { useMessage } from '@/composables/useMessage'
 import { api } from '@/services'
+import { useUserStore } from '@/stores/user.stores'
+import { UtilCommon } from '@/utils/utilCommon'
 
 export const useAuth = () => {
   const { openMessage } = useMessage()
+  const userStore = useUserStore()
 
   const fnLogin = async (params: LoginReqType) => {
     try {
-      const res = await api.auth.login(params)
+      const { result, isSuccess } = await api.auth.login(params)
 
-      if (!res.isSuccess) {
-        console.log('res', res)
-
-        if (res.resultCode === 400) {
-          return openMessage('error', '查無此帳號')
-        }
+      if (!isSuccess) {
+        // TODO: 錯誤處理
+        return
       }
 
       // TODO: 登入成功後的處理
+      userStore.userInfo = result
+      // UtilCommon.setLocalStorage('token', result.token)
+      UtilCommon.goPage('/')
     } catch (e) {
       openMessage('error', '登入失敗')
     }

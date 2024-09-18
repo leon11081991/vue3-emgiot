@@ -79,7 +79,7 @@ const onLoginFinish = (values: any) => {
   // 在這裡處理登入邏輯
 
   fnLogin({
-    userId: values.userAccount,
+    userId: values.userId,
     password: values.password
   })
 }
