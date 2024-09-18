@@ -12,10 +12,12 @@ import UpdateRecord from '@/components/DashboardPage/UpdateRecord.vue'
 import ClawTabList from '@/components/DashboardPage/ClawTabList.vue'
 import FloatButton from '@/components/Base/FloatButton.vue'
 import DashboardBarChart from '@/components/DashboardPage/DashboardBarChart.vue'
+import BatchModal from '@/components/DashboardPage/Modal/BatchModal.vue'
 import { useI18n } from 'vue-i18n'
 import { useHeader } from '@/composables/useHeader'
 import { useDate } from '@/composables/useDate'
 import { useFetchDashboard } from '@/composables/useFetchDashboard'
+import { useModal } from '@/composables/useModal'
 import { createDashboardTabs } from '@/constants/dashboard.const'
 
 type ClawTabCompType = DefineComponent<
@@ -34,6 +36,7 @@ const { updateHeaderTitle } = useHeader()
 const { today } = useDate()
 const { clawOperationsInfo, coinOperationsInfo, fetchClawOperationsInfo, fetchCoinOperationsInfo } =
   useFetchDashboard()
+const { modalVisible, openModal, closeModal } = useModal()
 
 const tabComps: Record<DashboardTabType, ClawTabCompType | CoinTabCompType> = {
   claw: ClawTabList,
@@ -54,6 +57,7 @@ const transitionName = ref('slide-right')
 const clawActiveKey = ref([])
 const coinActiveKey = ref([])
 
+const batchSearchParam = ref<string>('')
 const listData = ref<ClawOperationsInfoResType[] | CoinOperationsInfoResType[]>([])
 
 const handleToggleTab = async (tab: DashboardTabType): Promise<void> => {
@@ -122,6 +126,7 @@ onMounted(async () => {
           v-if="selectedTab === 'claw'"
           ghost
           type="secondary"
+          @click="openModal()"
           >批量補幣</a-button
         >
         <a-button
@@ -163,6 +168,12 @@ onMounted(async () => {
 
     <FloatButton />
   </div>
+
+  <BatchModal
+    :modal-visible="modalVisible"
+    :search-value="batchSearchParam"
+    @close="closeModal"
+  />
 </template>
 
 <style lang="scss" scoped>

@@ -39,6 +39,13 @@ const route = useRoute()
   }
 }
 
+.group-tag {
+  padding: 0.25rem 0.5rem;
+  background-color: $--color-primary;
+  color: $--color-white;
+  border-radius: $--border-radius-middle;
+}
+
 /** Ant Design Button */
 .ant-btn {
   &.ant-btn-default {
@@ -126,16 +133,31 @@ const route = useRoute()
     padding: 0;
     padding-bottom: 0.75rem;
     background-color: $--background-color-base;
-    border-radius: $--border-radius-middle;
   }
 
   & .ant-modal-header {
-    padding: 0.75rem;
+    padding: 0;
     margin: 0;
-    background-color: $--background-color-base;
+    overflow: hidden;
 
-    .ant-modal-title {
-      color: $--color-primary;
+    .modal-header {
+      padding: 0.75rem;
+
+      &-default {
+        background-color: $--background-color-base;
+
+        .modal-title {
+          color: $--color-primary;
+        }
+      }
+
+      &-primary {
+        background-color: $--color-primary;
+
+        .modal-title {
+          color: $--color-white;
+        }
+      }
     }
   }
 
@@ -158,6 +180,12 @@ const route = useRoute()
     align-items: center;
     justify-content: center;
     color: $--color-primary;
+  }
+
+  &.primary {
+    .ant-modal-close-x {
+      color: $--color-white;
+    }
   }
 }
 

@@ -47,7 +47,7 @@ const updateValue = (value: string[]) => {
           <template #header>
             <div class="item-main-content claw">
               <div class="item-section">
-                <span class="item-category">{{ item?.pcbGroupName }}</span>
+                <span class="item-category group-tag">{{ item?.pcbGroupName }}</span>
                 <div class="item-id">
                   <span
                     class="status"
@@ -141,13 +141,6 @@ const updateValue = (value: string[]) => {
 
       & > .item-section {
         color: $--color-primary;
-      }
-
-      .item-category {
-        padding: 0.25rem 0.5rem;
-        background-color: $--color-primary;
-        color: $--color-white;
-        border-radius: $--border-radius-middle;
       }
 
       .item-id {
