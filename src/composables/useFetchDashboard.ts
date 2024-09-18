@@ -2,7 +2,9 @@ import type {
   ClawOperationsInfoResType,
   GetClawOperationsInfoReqType,
   CoinOperationsInfoResType,
-  GetCoinOperationsInfoReqType
+  GetCoinOperationsInfoReqType,
+  GetOperationChartReqType,
+  OperationChartResType
 } from '@/models/types/dashboard.types'
 import { ref } from 'vue'
 import { api } from '@/services'
@@ -10,6 +12,19 @@ import { useMessage } from '@/composables/useMessage'
 
 export const useFetchDashboard = () => {
   const { openMessage } = useMessage()
+
+  // TODO: 待優化
+  /** 首頁運營圖表 */
+  const operationChart = ref<{
+    data: OperationChartResType
+    isLoading: boolean
+  }>({
+    data: {
+      clawMachine: [],
+      coinMachine: []
+    },
+    isLoading: true
+  })
 
   /** 選物機運營清單 */
   const clawOperationsInfo = ref<{
@@ -28,6 +43,24 @@ export const useFetchDashboard = () => {
     data: [],
     isLoading: true
   })
+
+  /** 處理取得首頁運營圖表 */
+  const fetchOperationChart = async (params: GetOperationChartReqType) => {
+    try {
+      const { result, isSuccess } = await api.dashboard.getOperationChart(params)
+
+      if (!isSuccess) {
+        // TODO: 錯誤處理
+        return
+      }
+
+      operationChart.value.data = result
+    } catch (error) {
+      // TODO: 錯誤處理
+    } finally {
+      operationChart.value.isLoading = false
+    }
+  }
 
   // TODO: WIP
   /** 處理取得選物機運營清單 */
@@ -73,9 +106,11 @@ export const useFetchDashboard = () => {
   }
 
   return {
+    operationChart,
     clawOperationsInfo,
     coinOperationsInfo,
     fetchClawOperationsInfo,
-    fetchCoinOperationsInfo
+    fetchCoinOperationsInfo,
+    fetchOperationChart
   }
 }

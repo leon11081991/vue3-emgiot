@@ -5,7 +5,10 @@ const route = useRoute()
 </script>
 
 <template>
-  <component :is="route.meta.layoutComponent || 'div'">
+  <component
+    class="container"
+    :is="route.meta.layoutComponent || 'div'"
+  >
     <main
       class="main-page"
       :class="route.name"
@@ -16,6 +19,10 @@ const route = useRoute()
 </template>
 
 <style lang="scss">
+.container {
+  max-width: map-get($grid-breakpoints, md);
+  margin: 0 auto;
+}
 .main-page {
   min-height: calc(100vh - $--header-height);
   padding-inline: $--page-padding-x;
