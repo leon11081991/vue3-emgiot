@@ -29,16 +29,12 @@ const beforeRequest = (config: InternalAxiosRequestConfig) => {
 }
 /** 處理請求錯誤 */
 const requestFailed = (error: AxiosError) => {
-  console.log('[requestFailed]', error)
   return Promise.reject(error)
 }
 
 /** 處理回傳成功: 狀態碼為 2xx 都在此處理 */
 const responseSuccess = (response: AxiosResponse) => {
-  console.log('[responseSuccess] response', response)
-
-  // TODO: 後端修改完回傳格式後,IsSuccess 修改為 isSuccess
-  if (!response.data.IsSuccess) {
+  if (!response.data.isSuccess) {
     return response.data
   }
 
@@ -47,8 +43,6 @@ const responseSuccess = (response: AxiosResponse) => {
 
 /** 處理回傳失敗: 狀態碼為非 2xx 都在此處理 */
 const responseFailed = (error: AxiosError) => {
-  console.log('[responseFailed] start', error)
-
   const { openMessage } = useMessage()
 
   if (!window.navigator.onLine) {

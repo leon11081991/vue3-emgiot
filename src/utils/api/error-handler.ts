@@ -7,7 +7,7 @@ const { openMessage } = useMessage()
 
 export const errorCodeHandler = (errorCode: number): Promise<Error> => {
   const errorMessages: { [key: number]: string } = {
-    401: 'Common.Response.Unauthorized',
+    // 401: 'Common.Response.Unauthorized',
     400: 'Common.Response.BadRequest',
     404: 'Common.Response.NotFound',
     500: 'Common.Response.ServerError',
@@ -17,7 +17,7 @@ export const errorCodeHandler = (errorCode: number): Promise<Error> => {
   const errorMessageKey = errorMessages[errorCode]
 
   if (errorMessageKey) {
-    console.log(errorCode, errorMessageKey)
+    openMessage('error', getI18nTranslate(errorMessageKey))
     return Promise.reject(new Error(getI18nTranslate(errorMessageKey)))
   }
 
