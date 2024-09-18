@@ -10,6 +10,7 @@ import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import FilteredTag from '@/components/DashboardPage/FilteredTag.vue'
 import UpdateRecord from '@/components/DashboardPage/UpdateRecord.vue'
 import ClawTabList from '@/components/DashboardPage/ClawTabList.vue'
+import DashboardBarChart from '@/components/DashboardPage/DashboardBarChart.vue'
 import { useI18n } from 'vue-i18n'
 import { useHeader } from '@/composables/useHeader'
 import { useDate } from '@/composables/useDate'
@@ -64,7 +65,8 @@ onMounted(() => {
 
 <template>
   <div class="dashboard-page">
-    <div class="bar-chart-container">Bar Chart Here</div>
+    <!-- BarChart -->
+    <DashboardBarChart />
 
     <UpdateRecord
       :date="'2021-11-11'"

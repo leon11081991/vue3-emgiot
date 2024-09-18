@@ -13,6 +13,10 @@
   --color-gray-300: #efefef;
 
   --header-height: 60px;
+
+  --bar-default-color: #84bfff;
+  --bar-target-color: #c89600;
+  --bg-revenue-color: #a39ecb;
 }
 
 /** 主題色 */
@@ -52,12 +56,17 @@ $--color-white: #ffffff;
 
 $--background-color-base: #f3f3f3;
 
+/* BarChart組件顏色  */
+$--color-targetTab-bg: #473c96;
+$--color-Tab-bg: #2cb450;
+
 $--font-size-base: 16px;
 
 $--border-radius-base: 4px;
 $--border-radius-small: 2px;
 $--border-radius-middle: 6px;
 $--border-radius-large: 8px;
+$--border-radius-extraLarge: 12px;
 $--border-radius-circle: 50%;
 
 $--border-color-base: #d9d9d9;

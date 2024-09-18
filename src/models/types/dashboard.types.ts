@@ -30,7 +30,7 @@ export type GetOperationChartReqType = BaseOperationsInfoReqType & {
   goodsId?: string // 選物機商品ID
 }
 
-export type OperationChartResType = BaseOperationsInfoResType & {
+export type OperationChartResType = {
   clawMachine: Array<ClawMachineResType>
   coinMachine: Array<CoinMachineResType>
 }

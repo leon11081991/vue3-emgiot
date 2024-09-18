@@ -32,6 +32,8 @@ const color = computed(() => {
       return '#00b450'
     case 'tertiary':
       return '#463c96'
+    case 'white':
+      return '#fff'
     default:
       return '#0064c8'
   }

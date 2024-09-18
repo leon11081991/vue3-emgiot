@@ -154,13 +154,13 @@ const mockUserData = {
               class="password-visible"
               v-if="v"
             >
-              <SvgIcon iconName="home" />
+              <BaseSvgIcon iconName="home" />
             </div>
             <div
               class="password-invisible"
               v-else
             >
-              <SvgIcon iconName="cross" />
+              <BaseSvgIcon iconName="cross" />
             </div>
           </template>
         </a-input-password>
@@ -178,13 +178,13 @@ const mockUserData = {
               class="password-visible"
               v-if="x"
             >
-              <SvgIcon iconName="home" />
+              <BaseSvgIcon iconName="home" />
             </div>
             <div
               class="password-invisible"
               v-else
             >
-              <SvgIcon iconName="cross" />
+              <BaseSvgIcon iconName="cross" />
             </div>
           </template>
         </a-input-password>
