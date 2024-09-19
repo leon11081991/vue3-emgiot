@@ -1,18 +1,20 @@
 <script setup lang="ts">
 import type { Tab } from '@/models/interfaces/tab.interface'
+import type { DashboardTabType } from '@/models/types/dashboard.types'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 
 const segmentedTabProps = defineProps<{
-  selectedTab: string
-  tabOptions: Tab<any>[]
+  tabOptions: Tab<DashboardTabType>[]
 }>()
 
 const emit = defineEmits<{
-  (e: 'update:selectedTab', value: string): void
+  (e: 'change', value: string): void
 }>()
 
-const updateSelectedTab = (value: string) => {
-  emit('update:selectedTab', value)
+const selectedTab = defineModel<string>('selectedTab')
+
+const handleChange = (value: string) => {
+  emit('change', value)
 }
 </script>
 
@@ -20,8 +22,9 @@ const updateSelectedTab = (value: string) => {
   <a-segmented
     class="segmented-button"
     block
-    :model-value="segmentedTabProps.selectedTab"
+    :model-value="selectedTab"
     :options="segmentedTabProps.tabOptions"
+    @change="handleChange"
   >
     <template #label="{ title, payload }">
       <template v-if="payload.icon">

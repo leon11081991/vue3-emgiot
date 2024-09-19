@@ -52,7 +52,7 @@ const updateValue = (value: string[]) => {
                     class="status"
                     :class="item?.connectionStatus === 1 ? 'online' : 'offline'"
                   ></span>
-                  {{ item?.pcbName }}
+                  {{ UtilCommon.ellipsisText(item?.pcbName, 10) }}
                 </span>
               </div>
               <div class="item-section">

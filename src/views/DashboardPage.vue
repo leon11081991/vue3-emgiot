@@ -7,6 +7,7 @@ import type {
   CoinOperationsInfoResType
 } from '@/models/types/dashboard.types'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
+import SegmentedTab from '@/components/Base/SegmentedTab.vue'
 import FilteredTag from '@/components/DashboardPage/FilteredTag.vue'
 import UpdateRecord from '@/components/DashboardPage/UpdateRecord.vue'
 import ClawTabList from '@/components/DashboardPage/ClawTabList.vue'
@@ -104,21 +105,11 @@ onMounted(async () => {
       :time="'11:11:11'"
     />
 
-    <!-- <BaseSegmentedButton v-model:value="selectedTab" :tabOptions="tabOptions" /> -->
-    <a-segmented
-      class="tab-filter"
+    <SegmentedTab
       v-model:value="selectedTab"
-      block
-      :options="tabOptions"
-      @change="() => handleToggleTab(selectedTab)"
-    >
-      <template #label="{ title, payload }">
-        <template v-if="payload.icon">
-          <BaseSvgIcon :iconName="payload.icon" />
-          <div class="tab-label">{{ title }}</div>
-        </template>
-      </template>
-    </a-segmented>
+      :tabOptions="tabOptions"
+      @change="handleToggleTab(selectedTab)"
+    />
 
     <div class="actions-container">
       <div class="action-button">
