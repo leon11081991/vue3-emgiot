@@ -39,6 +39,13 @@ const route = useRoute()
   }
 }
 
+.group-tag {
+  padding: 0.25rem 0.5rem;
+  background-color: $--color-primary;
+  color: $--color-white;
+  border-radius: $--border-radius-middle;
+}
+
 /** Ant Design Button */
 .ant-btn {
   &.ant-btn-default {
@@ -106,22 +113,51 @@ const route = useRoute()
   }
 }
 
+/** Ant Design Float Button */
+.ant-float-btn {
+  &-primary {
+    .ant-float-btn-body {
+      @include base-transition;
+      background-color: $--color-primary;
+
+      &:hover {
+        background-color: $--color-primary--hover;
+      }
+    }
+  }
+}
+
 /** Ant Design Modal */
 .ant-modal {
   & .ant-modal-content {
     padding: 0;
     padding-bottom: 0.75rem;
     background-color: $--background-color-base;
-    border-radius: $--border-radius-middle;
   }
 
   & .ant-modal-header {
-    padding: 0.75rem;
+    padding: 0;
     margin: 0;
-    background-color: $--background-color-base;
+    overflow: hidden;
 
-    .ant-modal-title {
-      color: $--color-primary;
+    .modal-header {
+      padding: 0.75rem;
+
+      &-default {
+        background-color: $--background-color-base;
+
+        .modal-title {
+          color: $--color-primary;
+        }
+      }
+
+      &-primary {
+        background-color: $--color-primary;
+
+        .modal-title {
+          color: $--color-white;
+        }
+      }
     }
   }
 
@@ -144,6 +180,12 @@ const route = useRoute()
     align-items: center;
     justify-content: center;
     color: $--color-primary;
+  }
+
+  &.primary {
+    .ant-modal-close-x {
+      color: $--color-white;
+    }
   }
 }
 
@@ -191,5 +233,77 @@ const route = useRoute()
       flex: 1;
     }
   }
+}
+
+/** Ant Design Result */
+.ant-result {
+  padding: 0;
+  max-width: 100%; // 確保容器不超出父級容器
+  width: 100%;
+
+  &.status-notification {
+    display: grid;
+    grid-template-areas: 'icon title' 'extra extra';
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+  }
+
+  .ant-result-icon {
+    grid-area: icon;
+    margin-bottom: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .anticon {
+      width: 100%;
+
+      @include media-breakpoint-down(md) {
+        font-size: 50px;
+      }
+    }
+  }
+
+  .ant-result-title {
+    grid-area: title;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    gap: 0.5rem;
+
+    .title {
+      text-align: left;
+      color: $--color-primary;
+    }
+    .sub-title {
+      text-align: left;
+      font-size: 1rem;
+      color: $--color-gray-600;
+      flex: 1;
+    }
+  }
+
+  .ant-result-extra {
+    grid-area: extra;
+    margin-top: 0;
+
+    .notification-button {
+      width: 100%;
+
+      &.error {
+        background-color: $--color-error;
+      }
+
+      &.success {
+        background-color: $--color-success;
+      }
+    }
+  }
+}
+
+/** Ant Design Empty */
+.ant-empty {
+  margin-block: 0.5rem;
 }
 </style>

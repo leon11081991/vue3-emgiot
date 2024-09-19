@@ -2,6 +2,7 @@
 import type { CoinOperationsInfoResType } from '@/models/types/dashboard.types'
 import { ref } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
+import { UtilCommon } from '@/utils/utilCommon'
 
 const props = defineProps<{
   activeKey: string[]
@@ -29,24 +30,33 @@ const updateValue = (value: string[]) => {
     </div>
 
     <div class="list-body">
+      <a-empty v-if="data.length === 0" />
       <a-collapse
+        v-else
         class="list-collapse"
         v-model:activeKey="coinActiveKey"
         :bordered="false"
       >
         <a-collapse-panel
           class="list-collapse-panel"
-          key="1"
+          v-for="item in data"
+          :key="item.pcbId"
           @change="updateValue"
         >
           <template #header>
             <div class="item-main-content coin">
               <div class="item-section">
-                <span class="item-category">南部食品機</span>
-                <span class="item-id">W208_01</span>
+                <span class="item-category">{{ item?.pcbGroupName }}</span>
+                <span class="item-id">
+                  <span
+                    class="status"
+                    :class="item?.connectionStatus === 1 ? 'online' : 'offline'"
+                  ></span>
+                  {{ UtilCommon.ellipsisText(item?.pcbName, 10) }}
+                </span>
               </div>
               <div class="item-section">
-                <span>800</span>
+                <span>{{ item?.exchangedCount }}</span>
               </div>
               <div class="item-section chart-detail">
                 <span class="chart-container">
@@ -54,11 +64,11 @@ const updateValue = (value: string[]) => {
                     class="doughnut-chart"
                     type="circle"
                     strokeColor="var(--color-secondary)"
-                    :percent="40"
+                    :percent="UtilCommon.getPercentage(item?.coinExchanged, item?.coinRemaining)"
                     :size="40"
                   />
                 </span>
-                <span>800/3200</span>
+                <span>{{ item?.coinExchanged }}/{{ item?.coinRemaining }}</span>
               </div>
             </div>
           </template>
@@ -149,7 +159,21 @@ const updateValue = (value: string[]) => {
 
       .item-id {
         position: relative;
-        &:before {
+
+        .offline {
+          position: absolute;
+          content: '';
+          width: 0.3rem;
+          height: 0.3rem;
+          border-radius: $--border-radius-circle;
+          background-color: $--color-error;
+
+          top: 50%;
+          left: -0.5rem;
+          transform: translateY(-50%);
+        }
+
+        .online {
           position: absolute;
           content: '';
           width: 0.3rem;

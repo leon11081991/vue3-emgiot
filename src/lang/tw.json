@@ -1,6 +1,8 @@
 {
   "Common": {
     "Response": {
+      "Success": "成功",
+      "Error": "錯誤",
       "Unauthorized": "未授權，請重新登入",
       "BadRequest": "請求錯誤",
       "Forbidden": "拒絕存取",
@@ -13,6 +15,9 @@
       "Edit": "編輯",
       "Save": "儲存",
       "Delete": "刪除"
+    },
+    "Notification": {
+      "Button": "確認"
     }
   },
   "HomePage": {},

@@ -20,6 +20,11 @@ export class UtilCommon {
     return text.length > limit ? text.slice(0, limit) + '...' : text
   }
 
+  /** 轉換第一個字為大寫 */
+  static firstCapitalize(text: string): string {
+    return text.charAt(0).toUpperCase() + text.slice(1)
+  }
+
   /** 檢查是否為空 */
   static checkIsEmpty = <T>(value: T | T[]): boolean => {
     if (Array.isArray(value)) {
@@ -37,12 +42,20 @@ export class UtilCommon {
     return value === ''
   }
 
-  /** 根據當前tab在tabList的位置，确定过渡方向。 */
-  static determineTransitionDirection(tabs: string[], currentTab: string): string {
-    if (tabs.indexOf(currentTab) !== tabs.length - 1) {
-      return 'right'
+  /** 取得百分比 */
+  static getPercentage(num: number, total: number): number {
+    if (total === 0) {
+      return 0
     }
-    return 'left'
+    return Math.round((num / total) * 100)
+  }
+
+  /** 取得平均值 */
+  static getAveragePrice(total: number, quantity: number): number {
+    if (quantity === 0) {
+      return 0
+    }
+    return Math.round(total / quantity)
   }
 
   /** 取得於localStorage */
