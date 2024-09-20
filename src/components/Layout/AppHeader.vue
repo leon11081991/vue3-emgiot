@@ -18,8 +18,7 @@ const { handleOpenSidebar } = useSidebar()
       v-if="!showGoBack"
       class="logo"
     >
-      <!-- TODO: 需更新為公司logo -->
-      雲端
+      <BaseSvgIcon iconName="LOGO" />
     </div>
     <div
       v-else
@@ -57,6 +56,18 @@ const { handleOpenSidebar } = useSidebar()
 
   @include media-breakpoint-down(md) {
     padding-inline: $--header-padding-x-mobile;
+  }
+
+  .logo {
+    width: 20%;
+    max-width: $--logo-width-max;
+    min-width: $--logo-width-min;
+    height: $--logo-height;
+
+    .svg-icon {
+      width: 100%;
+      height: 100%;
+    }
   }
 
   .header-title {
