@@ -24,7 +24,7 @@ const startDate = today()
 const endDate = calculateDate(startDate, 'backward', 7)
 
 // 獲取數據
-const { operationChart, fetchOperationChart } = useFetchDashboard()
+const { operationChart, fetchOperationClawChart, fetchOperationCoinChart } = useFetchDashboard()
 
 // computed
 const calculateTotal = (key: OperationDataKey) => {
@@ -47,10 +47,17 @@ function fnChangeTab(topic: string) {
   nowTopic.value = topic
 }
 
-fetchOperationChart({
+fetchOperationClawChart({
   startDate: '2024-09-01',
   endDate: '2024-09-07',
-  pcbName: 'TESTING_Claw',
+  // pcbName: 'TESTING_Coin1',
+  pcbGroupId: '3bbca0e6-9166-266c-3a00-e67b123456d3',
+  goodsId: '6d754fe5-e230-4b94-a553-e2cc66dd1fc1'
+})
+fetchOperationCoinChart({
+  startDate: '2024-09-01',
+  endDate: '2024-09-07',
+  // pcbName: 'TESTING_Claw',
   pcbGroupId: '3bbca0e6-9166-266c-3a00-e67b123456d3',
   goodsId: '6d884fe5-e230-4b94-a553-e2cc66dd1fc1'
 })
@@ -84,7 +91,7 @@ fetchOperationChart({
       <div class="chartData-section">
         <BarChart
           class="chart"
-          :isLoading="operationChart.isLoading"
+          :isLoading="operationChart.isLoading.clawMachine || operationChart.isLoading.coinMachine"
           :data="operationChart.data"
         />
         <div class="chartData-container">
@@ -205,4 +212,3 @@ fetchOperationChart({
   }
 }
 </style>
-Ｆ

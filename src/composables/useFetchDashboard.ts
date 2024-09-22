@@ -37,28 +37,52 @@ export const useFetchDashboard = () => {
   // 待優化
   const operationChart = ref<{
     data: OperationChartResType
-    isLoading: boolean
+    isLoading: {
+      clawMachine: boolean
+      coinMachine: boolean
+    }
   }>({
     data: {
       clawMachine: [],
       coinMachine: []
     },
-    isLoading: true
+    isLoading: {
+      clawMachine: true,
+      coinMachine: true
+    }
   })
-  const fetchOperationChart = async (params: GetOperationChartReqType) => {
+
+  const fetchOperationClawChart = async (params: GetOperationChartReqType) => {
     try {
-      const { result, isSuccess } = await api.dashboard.getOperationChart(params)
+      const { result, isSuccess } = await api.dashboard.getOperationClawChart(params)
 
       if (!isSuccess) {
         // TODO: 錯誤處理
         return
       }
 
-      operationChart.value.data = result
+      operationChart.value.data.clawMachine = result
     } catch (error) {
       // TODO: 錯誤處理
     } finally {
-      operationChart.value.isLoading = false
+      operationChart.value.isLoading.clawMachine = false
+    }
+  }
+
+  const fetchOperationCoinChart = async (params: GetOperationChartReqType) => {
+    try {
+      const { result, isSuccess } = await api.dashboard.getOperationCoinChart(params)
+
+      if (!isSuccess) {
+        // TODO: 錯誤處理
+        return
+      }
+
+      operationChart.value.data.coinMachine = result
+    } catch (error) {
+      // TODO: 錯誤處理
+    } finally {
+      operationChart.value.isLoading.coinMachine = false
     }
   }
 
@@ -66,6 +90,7 @@ export const useFetchDashboard = () => {
     clawOperationsInfo,
     operationChart,
     fetchClawOperationsInfo,
-    fetchOperationChart
+    fetchOperationClawChart,
+    fetchOperationCoinChart
   }
 }
