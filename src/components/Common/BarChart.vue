@@ -38,27 +38,23 @@ const chartOptions = ref<ChartOptions<'bar'>>({
       display: false // 隱藏圖例（包括數據集標籤）
     },
     tooltip: {
-      backgroundColor: '#fff', // 設定 tooltip 背景色
-      titleColor: '#646464', // 設定 tooltip 標題顏色
-      bodyColor: '#323232', // 設定 tooltip 內容顏色
-      padding: 10, // 設定 tooltip 內邊距
-      cornerRadius: 8, // 設定 tooltip 圓角
+      backgroundColor: '#fff',
+      titleColor: '#646464',
+      bodyColor: '#323232',
+      padding: 10,
+      cornerRadius: 8,
       callbacks: {
-        // label: (context) => {
-        //   // 自定義 tooltip 的內容
-        //   const label = context.dataset.label || ''
-        //   const value = context.raw
-        //   return `收入: ${value} 元` // 自定義 tooltip 顯示的文字
-        // }
-        // labelColor: (context) => {
-        //   // 返回完整的 TooltipLabelStyle
-        //   return {
-        //     borderColor: context.dataset.backgroundColor as string || '#000', // 使用資料集的顏色或預設顏色
-        //     backgroundColor: context.dataset.backgroundColor as string || '#000', // 使用資料集的顏色或預設顏色
-        //     borderWidth: 1, // 可選:  設置邊框寬度
-        //     borderRadius: 0 // 設置圓角為 50，使色標為圓形
-        //   };
-        // }
+        labelColor: (context) => {
+          // 檢查 context.dataset 是否有定義
+          const backgroundColorArray = context.dataset?.backgroundColor as string[] | undefined
+          const backgroundColor = backgroundColorArray?.[context.dataIndex] || '#000' // 如果未定義則使用預設顏色
+          return {
+            borderColor: 'rgba(255, 255, 255, 0)',
+            backgroundColor: backgroundColor,
+            borderWidth: 0,
+            borderRadius: 5
+          }
+        }
       }
     }
   },
