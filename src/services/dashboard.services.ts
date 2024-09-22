@@ -11,10 +11,18 @@ export class DashboardServices extends ApiFactory {
     super('')
   }
 
-  /** 取得首頁運營圖表 */
-  getOperationChart = async (params: GetOperationChartReqType): Promise<ApiResponse> => {
+  /** 取得首頁選物機圖表 */
+  getOperationClawChart = async (params: GetOperationChartReqType): Promise<ApiResponse> => {
     return await this.get<GetOperationChartReqType, ApiResponse>(
-      DashboardEnum.operationsChart,
+      DashboardEnum.operationsClawChart,
+      params
+    )
+  }
+
+  /** 取得首頁兌幣機圖表 */
+  getOperationCoinChart = async (params: GetOperationChartReqType): Promise<ApiResponse> => {
+    return await this.get<GetOperationChartReqType, ApiResponse>(
+      DashboardEnum.operationsCoinChart,
       params
     )
   }
