@@ -114,7 +114,7 @@ const mockUserData = {
 
   <a-modal
     v-model:open="modalVisible"
-    class="profile-modal"
+    class="profile-modal primary"
     :centered="true"
     :cancel-button-props="modalStyleConfig.cancelButtonProps"
     :ok-button-props="modalStyleConfig.okButtonProps"
@@ -122,7 +122,9 @@ const mockUserData = {
     @ok="handleConfirmClick(modalType)"
   >
     <template #title>
-      <span class="modal-title">{{ modalTitle[modalType] }}</span>
+      <div class="modal-header modal-header-primary">
+        <span class="modal-title">{{ modalTitle[modalType] }}</span>
+      </div>
     </template>
 
     <div
@@ -295,10 +297,6 @@ const mockUserData = {
     .input-field {
       padding: 1.5rem 1rem 0.75rem 1rem;
     }
-  }
-
-  .modal-title {
-    color: $--color-white;
   }
 
   .modal-content {

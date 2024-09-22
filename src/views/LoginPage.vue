@@ -297,10 +297,15 @@ const onForgotPasswordFinish = (values: any) => {
     <!-- Forgot Password Modal -->
     <a-modal
       class="forgot-password-modal"
-      :title="$t('LoginPage.ForgotPassword.Title')"
       v-model:open="modalVisible"
       @cancel="closeModal"
     >
+      <template #title>
+        <div class="modal-header modal-header-default">
+          <span class="modal-title">{{ $t('LoginPage.ForgotPassword.Title') }}</span>
+        </div>
+      </template>
+
       <a-form :layout="'vertical'">
         <a-form-item name="email">
           <div class="input-container email-input">

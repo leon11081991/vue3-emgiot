@@ -7,14 +7,18 @@ import type {
   CoinOperationsInfoResType
 } from '@/models/types/dashboard.types'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
+import SegmentedTab from '@/components/Base/SegmentedTab.vue'
 import FilteredTag from '@/components/DashboardPage/FilteredTag.vue'
 import UpdateRecord from '@/components/DashboardPage/UpdateRecord.vue'
 import ClawTabList from '@/components/DashboardPage/ClawTabList.vue'
+import FloatButton from '@/components/Base/FloatButton.vue'
 import DashboardBarChart from '@/components/DashboardPage/DashboardBarChart.vue'
+import BatchModal from '@/components/DashboardPage/Modal/BatchModal.vue'
 import { useI18n } from 'vue-i18n'
 import { useHeader } from '@/composables/useHeader'
 import { useDate } from '@/composables/useDate'
 import { useFetchDashboard } from '@/composables/useFetchDashboard'
+import { useModal } from '@/composables/useModal'
 import { createDashboardTabs } from '@/constants/dashboard.const'
 
 type ClawTabCompType = DefineComponent<
@@ -31,7 +35,9 @@ type CoinTabCompType = DefineComponent<
 const { t: $t } = useI18n()
 const { updateHeaderTitle } = useHeader()
 const { today } = useDate()
-const { clawOperationsInfo, fetchClawOperationsInfo } = useFetchDashboard()
+const { clawOperationsInfo, coinOperationsInfo, fetchClawOperationsInfo, fetchCoinOperationsInfo } =
+  useFetchDashboard()
+const { modalVisible, openModal, closeModal } = useModal()
 
 const tabComps: Record<DashboardTabType, ClawTabCompType | CoinTabCompType> = {
   claw: ClawTabList,
@@ -52,14 +58,40 @@ const transitionName = ref('slide-right')
 const clawActiveKey = ref([])
 const coinActiveKey = ref([])
 
-onMounted(() => {
+const batchSearchParam = ref<string>('')
+const listData = ref<ClawOperationsInfoResType[] | CoinOperationsInfoResType[]>([])
+
+const handleToggleTab = async (tab: DashboardTabType): Promise<void> => {
+  if (tab === 'claw') {
+    await fetchClawOperationsInfo({
+      startDate: today(),
+      endDate: today()
+    })
+
+    listData.value = clawOperationsInfo.value.data
+    return
+  }
+
+  if (tab === 'coin') {
+    await fetchCoinOperationsInfo({
+      startDate: today(),
+      endDate: today()
+    })
+    listData.value = coinOperationsInfo.value.data
+    return
+  }
+}
+
+onMounted(async () => {
   storeName.value = '大寮光華店'
   updateHeaderTitle($t('DashboardPage.HeaderTitle') + storeName.value) // 設定動態 header title
 
-  fetchClawOperationsInfo({
+  await fetchClawOperationsInfo({
     startDate: today(),
     endDate: today()
   })
+
+  listData.value = clawOperationsInfo.value.data
 })
 </script>
 
@@ -73,20 +105,11 @@ onMounted(() => {
       :time="'11:11:11'"
     />
 
-    <!-- <BaseSegmentedButton v-model:value="selectedTab" :tabOptions="tabOptions" /> -->
-    <a-segmented
-      class="tab-filter"
+    <SegmentedTab
       v-model:value="selectedTab"
-      block
-      :options="tabOptions"
-    >
-      <template #label="{ title, payload }">
-        <template v-if="payload.icon">
-          <BaseSvgIcon :iconName="payload.icon" />
-          <div class="tab-label">{{ title }}</div>
-        </template>
-      </template>
-    </a-segmented>
+      :tabOptions="tabOptions"
+      @change="handleToggleTab(selectedTab)"
+    />
 
     <div class="actions-container">
       <div class="action-button">
@@ -94,6 +117,7 @@ onMounted(() => {
           v-if="selectedTab === 'claw'"
           ghost
           type="secondary"
+          @click="openModal()"
           >批量補幣</a-button
         >
         <a-button
@@ -127,12 +151,20 @@ onMounted(() => {
           <component
             :is="tabComps[selectedTab]"
             :active-key="selectedTab === 'claw' ? clawActiveKey : coinActiveKey"
-            :data="clawOperationsInfo.data"
+            :data="listData"
           />
         </KeepAlive>
       </transition>
     </div>
+
+    <FloatButton />
   </div>
+
+  <BatchModal
+    :modal-visible="modalVisible"
+    :search-value="batchSearchParam"
+    @close="closeModal"
+  />
 </template>
 
 <style lang="scss" scoped>
