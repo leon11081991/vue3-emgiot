@@ -100,14 +100,14 @@ fetchOperationChart({
           </div>
           <div class="data-title">
             <div class="title">
-              {{ nowTopic === TABS.REVENUE ? '盈餘' : '營收' }}
+              盈餘
               <BaseSvgIcon
                 iconName="dropdown"
                 color="white"
               />
             </div>
             <div class="data">
-              {{ nowTopic === TABS.REVENUE ? profit : revenueData }}
+              {{ profit }}
             </div>
           </div>
           <div class="data-title">
