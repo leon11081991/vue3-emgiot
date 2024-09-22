@@ -1,4 +1,7 @@
 {
+  "ErrorMessage": {
+    "UserNotFound": "用戶不存在"
+  },
   "Common": {
     "Response": {
       "Success": "成功",

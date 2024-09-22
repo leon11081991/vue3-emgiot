@@ -26,7 +26,7 @@ export class AuthServices extends ApiFactory {
   }
 
   /** 系統登出 */
-  logOut = async () => {
+  logout = async () => {
     return await this.post<unknown, ApiResponse>(LoginEnum.logOut)
   }
 

@@ -58,7 +58,7 @@ export class UtilCommon {
     return Math.round(total / quantity)
   }
 
-  /** 取得於localStorage */
+  /** 取得localStorage */
   static getLocalStorage<T>(key: string): T | null {
     const val = localStorage.getItem(key)
     if (val) {
@@ -67,8 +67,13 @@ export class UtilCommon {
     return null
   }
 
-  /** 儲存於localStorage */
+  /** 儲存localStorage */
   static setLocalStorage<T>(key: string, val: T): void {
     localStorage.setItem(key, JSON.stringify(val))
+  }
+
+  /** 刪除localStorage */
+  static removeLocalStorage(key: string): void {
+    localStorage.removeItem(key)
   }
 }

@@ -4,7 +4,8 @@ import { env } from '@/env'
 import { getI18nTranslate } from '@/utils/i18nUtils'
 import { errorCodeHandler, unauthorizedHandler } from '@/utils/api/error-handler'
 import { useMessage } from '@/composables/useMessage'
-import { useUserStore } from '@/stores/user.stores'
+// import { useUserStore } from '@/stores/user.stores'
+import { UtilCommon } from '@/utils/utilCommon'
 
 /** 創建實例 */
 const axiosInstance = axios.create({
@@ -14,14 +15,14 @@ const axiosInstance = axios.create({
 
 /** 處理請求發送前 */
 const beforeRequest = (config: InternalAxiosRequestConfig) => {
-  const userStore = useUserStore()
+  // const userStore = useUserStore()
   const loginApiPath = '/LogIn/LogIn'
 
   // TODO: 先請後端將token移除,等待login完成後再開啟
-  // if (!config.url?.includes(loginApiPath)) {
-  //   // config.headers.Authorization = `Bearer ${localStorage.getItem('token')}` // 假設 token 存在於 local storage
-  //   config.headers.Authorization = `Bearer ${userStore.userInfo.token}` // 假設 token 存在於 user store
-  // }
+  if (!config.url?.includes(loginApiPath)) {
+    config.headers.Authorization = `Bearer ${UtilCommon.getLocalStorage<string>('token')}` // token 存在於 local storage
+    //   config.headers.Authorization = `Bearer ${userStore.userInfo.token}` // 假設 token 存在於 user store
+  }
 
   config.headers['Content-Type'] = 'application/json;charset=UTF-8'
 
