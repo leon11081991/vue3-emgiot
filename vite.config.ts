@@ -19,6 +19,12 @@ export default defineConfig(({ mode }) => {
       host: '0.0.0.0', // 讓伺服器監聽所有 IP 地址
       port: Number(env.VITE_APP_PORT)
     },
+    build: {
+      minify: 'esbuild',
+      outDir: 'dist',
+      assetsDir: 'assets',
+      sourcemap: true
+    },
     plugins: [
       vue(),
       vueDevTools(),

@@ -17,9 +17,9 @@ export const authMiddleware = async ({
   const userStore = useUserStore()
   const token = userStore.userInfo.token
 
-  if (to.path === '/login' || !!token) {
-    return next()
-  }
+  // if (to.path === '/login' || !!token) {
+  return next()
+  // }
 
-  router.push('/login')
+  // router.push('/login')
 }
