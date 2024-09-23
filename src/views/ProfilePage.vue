@@ -1,43 +1,80 @@
 <script setup lang="ts">
+import { ValidationTypeEnums } from '@/constants/enums/validator.enums'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AvatarDisplay from '@/components/Base/AvatarDisplay.vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import { useModal } from '@/composables/useModal'
+import { useValidator } from '@/composables/useValidator'
+import { useFetchUser } from '@/composables/useFetchUser'
 import { modalStyleConfig } from '@/constants/configs/profile.config'
+import { UtilCommon } from '@/utils/utilCommon'
 
+// type
 type ModalType = 'username' | 'password'
 
+// composables
 const { t: $t } = useI18n()
 const { modalVisible, openModal, closeModal } = useModal()
+const { validateErrorMessage, validate } = useValidator()
+const { fnUpdateUserInfo } = useFetchUser()
 
-const modalType = ref<ModalType>('username')
-const modalTitle = ref({
-  username: $t('ProfilePage.Modal.UserNameField.Title'),
-  password: $t('ProfilePage.Modal.PasswordField.Title')
-})
-
-const changeModalField = (field: ModalType): void => {
-  modalType.value = field
-}
-
-const handleOpenModal = (field: ModalType): void => {
-  openModal(() => changeModalField(field))
-}
-
-const handleConfirmClick = (field: 'username' | 'password'): void => {
-  console.log('[handleConfirmClick]', field)
-
-  // TODO: api
-
-  closeModal()
-}
-
+// refs
 const newUserData = ref({
   username: '',
   password: '',
   confirmPassword: ''
 })
+const isButtonLoading = ref<boolean>(false)
+const modalType = ref<ModalType>('username')
+const modalTitle = ref({
+  username: $t('ProfilePage.Modal.UserNameField.Title'),
+  password: $t('ProfilePage.Modal.PasswordField.Title')
+})
+const modalErrorMsg = ref<string | null>(null)
+
+// constants
+const maxLength = 10
+
+// functions
+const changeModalField = (field: ModalType): void => {
+  modalType.value = field
+}
+
+const validatePassword = (type: keyof typeof ValidationTypeEnums, value: string): string | null => {
+  // 驗證是否必填項為填入
+  if (UtilCommon.checkIsEmpty(value)) {
+    return '必填'
+  }
+  // 驗證規則是否通過
+  const isValid = validate(ValidationTypeEnums[type], value)
+  if (!isValid) {
+    return validateErrorMessage.value
+  }
+  return null
+}
+
+// handle functions
+const handleOpenModal = (field: ModalType): void => {
+  openModal(() => changeModalField(field))
+}
+
+const handleConfirmClick = async (field: ModalType): Promise<void> => {
+  console.log('[handleConfirmClick]', field)
+  isButtonLoading.value = true
+
+  // TODO: api
+  if (field === 'username') {
+    await fnUpdateUserInfo(newUserData.value.username)
+  }
+
+  if (field === 'password') {
+    // TODO: change password api
+  }
+
+  isButtonLoading.value = false
+  closeModal()
+}
 
 const mockUserData = {
   name: '雲小二',
@@ -117,7 +154,7 @@ const mockUserData = {
     class="profile-modal primary"
     :centered="true"
     :cancel-button-props="modalStyleConfig.cancelButtonProps"
-    :ok-button-props="modalStyleConfig.okButtonProps"
+    :ok-button-props="{ ...modalStyleConfig.okButtonProps, loading: isButtonLoading }"
     :ok-text="modalStyleConfig.okText"
     @ok="handleConfirmClick(modalType)"
   >
@@ -127,6 +164,7 @@ const mockUserData = {
       </div>
     </template>
 
+    <!-- Update Username -->
     <div
       v-if="modalType === 'username'"
       class="modal-content username"
@@ -135,11 +173,76 @@ const mockUserData = {
         v-model:value="newUserData.username"
         class="input-field"
         size="large"
+        :maxlength="maxLength"
       ></a-input>
-      <div class="count-nums">/10</div>
+      <div class="count-nums">{{ newUserData.username.length }}&nbsp;/&nbsp;{{ maxLength }}</div>
     </div>
 
-    <div
+    <!-- Update Password -->
+    <a-form v-if="modalType === 'password'">
+      <a-form-item
+        validateTrigger="blur"
+        :validate-status="modalErrorMsg ? 'error' : ''"
+        :help="modalErrorMsg"
+      >
+        <div class="input-container password-input">
+          <span class="input-label"> 新密碼 </span>
+          <a-input-password
+            v-model:value="newUserData.password"
+            class="input-field"
+            size="large"
+            @blur="modalErrorMsg = validatePassword('Password', newUserData.password)"
+          >
+            <template #iconRender="v">
+              <div
+                class="password-visible"
+                v-if="v"
+              >
+                <BaseSvgIcon iconName="eye-off" />
+              </div>
+              <div
+                class="password-invisible"
+                v-else
+              >
+                <BaseSvgIcon iconName="eye-on" />
+              </div>
+            </template>
+          </a-input-password>
+        </div>
+      </a-form-item>
+
+      <!-- <a-form-item
+        validateTrigger="blur"
+        :validate-status="errorMessage ? 'error' : ''"
+        :help="errorMessage"
+      >
+        <div class="input-container password-input">
+          <span class="input-label"> 確認密碼 </span>
+          <a-input-password
+            v-model:value="newUserData.confirmPassword"
+            size="large"
+            class="input-field"
+          >
+            <template #iconRender="x">
+              <div
+                class="password-visible"
+                v-if="x"
+              >
+                <BaseSvgIcon iconName="eye-off" />
+              </div>
+              <div
+                class="password-invisible"
+                v-else
+              >
+                <BaseSvgIcon iconName="eye-on" />
+              </div>
+            </template>
+          </a-input-password>
+        </div>
+      </a-form-item> -->
+    </a-form>
+
+    <!-- <div
       v-if="modalType === 'password'"
       class="modal-content password"
     >
@@ -148,21 +251,21 @@ const mockUserData = {
 
         <a-input-password
           v-model:value="newUserData.password"
-          size="large"
           class="input-field"
+          size="large"
         >
           <template #iconRender="v">
             <div
               class="password-visible"
               v-if="v"
             >
-              <BaseSvgIcon iconName="home" />
+              <BaseSvgIcon iconName="eye-off" />
             </div>
             <div
               class="password-invisible"
               v-else
             >
-              <BaseSvgIcon iconName="cross" />
+              <BaseSvgIcon iconName="eye-on" />
             </div>
           </template>
         </a-input-password>
@@ -180,18 +283,18 @@ const mockUserData = {
               class="password-visible"
               v-if="x"
             >
-              <BaseSvgIcon iconName="home" />
+              <BaseSvgIcon iconName="eye-off" />
             </div>
             <div
               class="password-invisible"
               v-else
             >
-              <BaseSvgIcon iconName="cross" />
+              <BaseSvgIcon iconName="eye-on" />
             </div>
           </template>
         </a-input-password>
       </div>
-    </div>
+    </div> -->
   </a-modal>
 </template>
 
@@ -218,6 +321,16 @@ const mockUserData = {
       font-size: 1.25rem;
       color: $--color-primary;
     }
+
+    .name-edit-button {
+      @include base-transition;
+      border-radius: $--border-radius-middle;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $--color-gray-400;
+      }
+    }
   }
 }
 
@@ -236,6 +349,7 @@ const mockUserData = {
       left: 1rem;
       padding-inline: 5px;
       font-size: 0.75rem;
+      color: $--color-gray-700;
       background-color: $--background-color-base;
       z-index: 2;
     }
@@ -247,7 +361,12 @@ const mockUserData = {
         border-color: none;
       }
 
+      :deep(.ant-input-prefix) {
+        margin-right: 1rem;
+      }
+
       :deep(.ant-input) {
+        color: $--color-gray-600;
         background-color: $--background-color-base;
       }
     }
@@ -281,6 +400,11 @@ const mockUserData = {
     &.password {
       gap: 1.5rem;
     }
+
+    .count-nums {
+      text-align: right;
+      color: $--color-gray-600;
+    }
   }
 
   .input-container {
@@ -291,17 +415,21 @@ const mockUserData = {
       top: 2px;
       left: 1rem;
       font-size: 0.75rem;
+      color: $--color-gray-600;
       z-index: 2;
     }
 
     .input-field {
-      padding: 1.5rem 1rem 0.75rem 1rem;
+      padding: 1rem 1rem 0.75rem 1rem;
     }
   }
 
-  .modal-content {
-    .count-nums {
-      text-align: right;
+  .ant-input,
+  .ant-input-affix-wrapper {
+    background-color: $--background-color-base;
+
+    :deep(.ant-input) {
+      background-color: $--background-color-base;
     }
   }
 }
