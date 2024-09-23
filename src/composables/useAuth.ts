@@ -7,7 +7,7 @@ import type {
   // AccountDisableReqType
 } from '@/models/types/auth.types'
 import { useI18n } from 'vue-i18n'
-// import { useMessage } from '@/composables/useMessage'
+import { useMessage } from '@/composables/useMessage'
 import { useNotification } from '@/composables/useNotification'
 import { api } from '@/services'
 import { useUserStore } from '@/stores/user.stores'
@@ -16,12 +16,12 @@ import { errorMessagesMapping } from '@/constants/mappings/errorMessages.mapping
 
 export const useAuth = () => {
   const { t: $t } = useI18n()
-  // const { openMessage } = useMessage()
+  const { openMessage } = useMessage()
   const { openNotification } = useNotification()
   const userStore = useUserStore()
 
   // 初始化用戶資訊
-  const initUserInfo = () => {
+  const _initUserInfo = () => {
     return {
       token: '',
       userId: '',
@@ -29,7 +29,7 @@ export const useAuth = () => {
     }
   }
 
-  /** 登入 */
+  /** 處理登入 */
   const fnLogin = async (params: LoginReqType) => {
     try {
       const { result, isSuccess, message, resultCode } = await api.auth.login(params)
@@ -46,10 +46,11 @@ export const useAuth = () => {
         return
       }
 
-      // TODO: 登入成功後的處理
-      userStore.userInfo = result
-      UtilCommon.setLocalStorage<string>('token', result.token)
-      UtilCommon.goPage('/')
+      openMessage('success', '登入成功，即將前往首頁...', {}, () => {
+        userStore.userInfo = result
+        UtilCommon.setLocalStorage<string>('token', result.token)
+        UtilCommon.goPage('/')
+      })
     } catch (e) {
       // TODO: 錯誤處理
       throw new Error('Error')
@@ -62,7 +63,7 @@ export const useAuth = () => {
   //   } catch (error) { }
   // }
 
-  /** 登出 */
+  /** 處理登出 */
   const fnLogOut = async () => {
     try {
       const { isSuccess, message, resultCode } = await api.auth.logout()
@@ -79,10 +80,11 @@ export const useAuth = () => {
         return
       }
 
-      // TODO: 登出成功後的處理
-      userStore.userInfo = initUserInfo()
-      UtilCommon.removeLocalStorage('token')
-      UtilCommon.goPage('/login')
+      openMessage('success', '登出成功', {}, () => {
+        userStore.userInfo = _initUserInfo()
+        UtilCommon.removeLocalStorage('token')
+        UtilCommon.goPage('/login')
+      })
     } catch (e) {
       // TODO: 錯誤處理
       throw new Error('Error')
@@ -90,7 +92,7 @@ export const useAuth = () => {
   }
 
   return {
-    initUserInfo,
+    _initUserInfo,
     fnLogin,
     fnLogOut
   }
