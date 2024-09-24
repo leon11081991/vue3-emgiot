@@ -1,5 +1,6 @@
 import type { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user.stores'
 import { UtilCommon } from '@/utils/utilCommon'
 
 export const authMiddleware = async ({
@@ -14,7 +15,8 @@ export const authMiddleware = async ({
   console.log('[authMiddleware]', to, from)
 
   const router = useRouter()
-  const token = UtilCommon.getLocalStorage<string>('token')
+  const userStore = useUserStore()
+  const token = userStore.token
 
   if (to.path === '/login' || to.path === '/sign-up') {
     // 檢查是否訪問登入頁或是註冊頁

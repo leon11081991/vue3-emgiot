@@ -7,22 +7,20 @@ export const useUserStorage = (context: PiniaPluginContext) => {
   const storeId = store.$id
   if (storeId !== 'user') return
 
-  console.log('useUserStorage store', store.$id)
-
   const key = `storage-${store.$id}`
   store.$persist = key
 
   // 存儲狀態：在瀏覽器關閉時或是刷新頁面時，儲存在 localStorage 中
   window.onbeforeunload = () => {
-    localStorage.setItem(store.$persist, JSON.stringify(store.$state))
+    UtilCommon.setLocalStorage(key, store.$state)
   }
 
   // 取得狀態：
-  const savedState = localStorage.getItem(store.$persist)
+  const savedState = UtilCommon.getLocalStorage<typeof store.$state>(store.$persist)
   if (!savedState) return
   try {
-    store.$patch(JSON.parse(savedState)) // 復原保存的狀態
+    store.$patch(savedState) // 復原保存的狀態
   } catch (e) {
-    console.error(e)
+    console.log(e)
   }
 }

@@ -1,4 +1,5 @@
 import type {
+  UserInfoType,
   LoginReqType
   // GoogleLoginReqType,
   // SignUpReqType
@@ -20,22 +21,51 @@ export const useAuth = () => {
   const { openNotification } = useNotification()
   const userStore = useUserStore()
 
+  // 初始化token
+  const _initToken = (): string => {
+    return ''
+  }
   // 初始化用戶資訊
-  const _initUserInfo = () => {
+  const _initUserInfo = (): UserInfoType => {
     return {
-      token: '',
       userId: '',
       photoUrl: ''
     }
   }
 
+  /** 存儲登入資訊 */
+  const _saveLoginInfo = (loginData: LoginReqType): void => {
+    UtilCommon.setLocalStorage('rememberMe', loginData)
+  }
+
+  /** 讀取記住我資訊 */
+  const loadLoginInfo = () => {
+    const rememberMe = UtilCommon.getLocalStorage<LoginReqType>('rememberMe')
+    if (!rememberMe) return
+    return {
+      userId: rememberMe.userId,
+      password: rememberMe.password,
+      rememberMe: true
+    }
+  }
+
+  /** 處理記住我 */
+  const handleRememberMe = (params: LoginReqType, isRememberMe: boolean): void => {
+    if (!isRememberMe) {
+      return UtilCommon.removeLocalStorage('rememberMe')
+    }
+    _saveLoginInfo(params)
+  }
+
   /** 處理登入 */
-  const fnLogin = async (params: LoginReqType) => {
+  const fnLogin = async (params: LoginReqType, isRememberMe: boolean) => {
     try {
+      handleRememberMe(params, isRememberMe)
+
       const { result, isSuccess, message, resultCode } = await api.auth.login(params)
 
       if (!isSuccess) {
-        // 顯示錯誤訊息提示
+        // 失敗：顯示錯誤訊息提示
         openNotification(
           {
             title: $t('Common.Error'),
@@ -46,9 +76,8 @@ export const useAuth = () => {
         return
       }
 
+      userStore.token = result.token
       openMessage('success', '登入成功，即將前往首頁...', {}, () => {
-        userStore.userInfo = result
-        UtilCommon.setLocalStorage<string>('token', result.token)
         UtilCommon.goPage('/')
       })
     } catch (e) {
@@ -69,7 +98,7 @@ export const useAuth = () => {
       const { isSuccess, message, resultCode } = await api.auth.logout()
 
       if (!isSuccess) {
-        // 顯示錯誤訊息提示
+        // 失敗：顯示錯誤訊息提示
         openNotification(
           {
             title: $t('Common.Error'),
@@ -80,9 +109,10 @@ export const useAuth = () => {
         return
       }
 
+      userStore.token = _initToken()
+      userStore.userInfo = _initUserInfo()
+
       openMessage('success', '登出成功', {}, () => {
-        userStore.userInfo = _initUserInfo()
-        UtilCommon.removeLocalStorage('token')
         UtilCommon.goPage('/login')
       })
     } catch (e) {
@@ -92,7 +122,7 @@ export const useAuth = () => {
   }
 
   return {
-    _initUserInfo,
+    loadLoginInfo,
     fnLogin,
     fnLogOut
   }

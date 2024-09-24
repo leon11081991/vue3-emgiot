@@ -2,6 +2,13 @@ export type LoginReqType = {
   userId: string
   password: string
 }
+
+export type LoginDataType = {
+  userId: string
+  password: string
+  rememberMe: boolean
+}
+
 export type GoogleLoginReqType = {
   userAccount: string
   accessToken: string
@@ -15,7 +22,6 @@ export type AccountDisableReqType = {
 }
 
 export type UserInfoType = {
-  token: string
   userId: string
   photoUrl: string
 }
