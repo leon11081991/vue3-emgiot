@@ -170,6 +170,21 @@ onMounted(() => {
                 <template #prefix>
                   <BaseSvgIcon iconName="lock" />
                 </template>
+
+                <template #iconRender="x">
+                  <div
+                    class="password-visible"
+                    v-if="x"
+                  >
+                    <BaseSvgIcon iconName="eye-off" />
+                  </div>
+                  <div
+                    class="password-invisible"
+                    v-else
+                  >
+                    <BaseSvgIcon iconName="eye-on" />
+                  </div>
+                </template>
               </a-input-password>
             </a-form-item>
 
@@ -383,6 +398,7 @@ onMounted(() => {
 
   :deep(.ant-input) {
     background-color: $--background-color-base;
+    color: $--color-gray-600;
   }
 }
 
