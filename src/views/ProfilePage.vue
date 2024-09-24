@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ValidationTypeEnums } from '@/constants/enums/validator.enums'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AvatarDisplay from '@/components/Base/AvatarDisplay.vue'
@@ -8,6 +7,7 @@ import { useModal } from '@/composables/useModal'
 import { useValidator } from '@/composables/useValidator'
 import { useFetchUser } from '@/composables/useFetchUser'
 import { modalStyleConfig } from '@/constants/configs/profile.config'
+import { ValidationTypeEnums } from '@/constants/enums/validator.enums'
 import { UtilCommon } from '@/utils/utilCommon'
 
 // type
@@ -31,7 +31,10 @@ const modalTitle = ref({
   username: $t('ProfilePage.Modal.UserNameField.Title'),
   password: $t('ProfilePage.Modal.PasswordField.Title')
 })
-const modalErrorMsg = ref<string | null>(null)
+const modalErrorMsg = ref<Record<string, string | null>>({
+  password: null,
+  confirmPassword: null
+})
 
 // constants
 const maxLength = 10
@@ -52,6 +55,38 @@ const validatePassword = (type: keyof typeof ValidationTypeEnums, value: string)
     return validateErrorMessage.value
   }
   return null
+}
+
+const validateConfirmPassword = (value: string): string | null => {
+  if (UtilCommon.checkIsEmpty(value)) {
+    return '必填'
+  }
+  if (newUserData.value.password !== value) {
+    return '密碼不相符'
+  }
+  return null
+}
+
+const checkButtonDisabled = (field: ModalType): boolean => {
+  if (field === 'username') {
+    // 修改個人資料: 確認是否有輸入
+    return !(newUserData.value.username.trim().length > 0)
+  }
+
+  if (field === 'password') {
+    // 修改密碼: 新密碼和確認密碼都沒有錯誤訊息且皆有輸入
+
+    const { password: errorPassword, confirmPassword: errorConfirmPassword } = modalErrorMsg.value
+    const { password: newPassword, confirmPassword: newConfirmPassword } = newUserData.value
+
+    return !(
+      [errorPassword, errorConfirmPassword].every((v) => v === null) &&
+      newPassword.trim().length > 0 &&
+      newConfirmPassword.trim().length > 0
+    )
+  }
+
+  return true
 }
 
 // handle functions
@@ -149,7 +184,7 @@ const mockUserData = {
     </div>
   </div>
 
-  <a-modal
+  <!-- <a-modal
     v-model:open="modalVisible"
     class="profile-modal primary"
     :centered="true"
@@ -157,6 +192,11 @@ const mockUserData = {
     :ok-button-props="{ ...modalStyleConfig.okButtonProps, loading: isButtonLoading }"
     :ok-text="modalStyleConfig.okText"
     @ok="handleConfirmClick(modalType)"
+  > -->
+  <a-modal
+    v-model:open="modalVisible"
+    class="profile-modal primary"
+    :centered="true"
   >
     <template #title>
       <div class="modal-header modal-header-primary">
@@ -182,8 +222,8 @@ const mockUserData = {
     <a-form v-if="modalType === 'password'">
       <a-form-item
         validateTrigger="blur"
-        :validate-status="modalErrorMsg ? 'error' : ''"
-        :help="modalErrorMsg"
+        :validate-status="modalErrorMsg.password ? 'error' : ''"
+        :help="modalErrorMsg.password"
       >
         <div class="input-container password-input">
           <span class="input-label"> 新密碼 </span>
@@ -191,7 +231,7 @@ const mockUserData = {
             v-model:value="newUserData.password"
             class="input-field"
             size="large"
-            @blur="modalErrorMsg = validatePassword('Password', newUserData.password)"
+            @blur="modalErrorMsg.password = validatePassword('Password', newUserData.password)"
           >
             <template #iconRender="v">
               <div
@@ -211,10 +251,10 @@ const mockUserData = {
         </div>
       </a-form-item>
 
-      <!-- <a-form-item
+      <a-form-item
         validateTrigger="blur"
-        :validate-status="errorMessage ? 'error' : ''"
-        :help="errorMessage"
+        :validate-status="modalErrorMsg.confirmPassword ? 'error' : ''"
+        :help="modalErrorMsg.confirmPassword"
       >
         <div class="input-container password-input">
           <span class="input-label"> 確認密碼 </span>
@@ -222,6 +262,9 @@ const mockUserData = {
             v-model:value="newUserData.confirmPassword"
             size="large"
             class="input-field"
+            @blur="
+              modalErrorMsg.confirmPassword = validateConfirmPassword(newUserData.confirmPassword)
+            "
           >
             <template #iconRender="x">
               <div
@@ -239,62 +282,20 @@ const mockUserData = {
             </template>
           </a-input-password>
         </div>
-      </a-form-item> -->
+      </a-form-item>
     </a-form>
 
-    <!-- <div
-      v-if="modalType === 'password'"
-      class="modal-content password"
-    >
-      <div class="input-container password-input">
-        <span class="input-label"> 新密碼 </span>
-
-        <a-input-password
-          v-model:value="newUserData.password"
-          class="input-field"
-          size="large"
-        >
-          <template #iconRender="v">
-            <div
-              class="password-visible"
-              v-if="v"
-            >
-              <BaseSvgIcon iconName="eye-off" />
-            </div>
-            <div
-              class="password-invisible"
-              v-else
-            >
-              <BaseSvgIcon iconName="eye-on" />
-            </div>
-          </template>
-        </a-input-password>
-      </div>
-
-      <div class="input-container password-input">
-        <span class="input-label"> 確認密碼 </span>
-        <a-input-password
-          v-model:value="newUserData.confirmPassword"
-          size="large"
-          class="input-field"
-        >
-          <template #iconRender="x">
-            <div
-              class="password-visible"
-              v-if="x"
-            >
-              <BaseSvgIcon iconName="eye-off" />
-            </div>
-            <div
-              class="password-invisible"
-              v-else
-            >
-              <BaseSvgIcon iconName="eye-on" />
-            </div>
-          </template>
-        </a-input-password>
-      </div>
-    </div> -->
+    <template #footer>
+      <a-button
+        type="primary"
+        class="confirm-button"
+        @click="handleConfirmClick(modalType)"
+        :loading="isButtonLoading"
+        :disabled="checkButtonDisabled(modalType)"
+      >
+        {{ modalStyleConfig.okText }}
+      </a-button>
+    </template>
   </a-modal>
 </template>
 
@@ -431,6 +432,11 @@ const mockUserData = {
     :deep(.ant-input) {
       background-color: $--background-color-base;
     }
+  }
+
+  .confirm-button {
+    width: 100%;
+    margin: 0;
   }
 }
 </style>
