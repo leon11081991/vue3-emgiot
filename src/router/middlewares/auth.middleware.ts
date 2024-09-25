@@ -56,4 +56,5 @@ export const authMiddleware = async ({
   }
 
   next()
+
 }
