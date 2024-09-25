@@ -1,11 +1,13 @@
 import { TestService } from '@/services/test.services'
 import { AuthServices } from '@/services/auth.services'
 import { DashboardServices } from '@/services/dashboard.services'
+import { StoreServices } from '@/services/store.services'
 
 const api = {
   test: new TestService(), // 測試範例
   auth: new AuthServices(), // 系統登入
-  dashboard: new DashboardServices() // 控制台
+  dashboard: new DashboardServices(), // 控制台
+  store: new StoreServices() // 商家
 }
 
 export { api }
