@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import type { StoresListInfoResType } from '@/models/types/store.types'
 import { ref, computed } from 'vue'
+import AvatarDisplay from '@/components/Base/AvatarDisplay.vue'
+import UpdateRecord from '@/components/DashboardPage/UpdateRecord.vue'
 import DashboardBarChart from '@/components/DashboardPage/DashboardBarChart.vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import { useFetchStore } from '@/composables/useFetchStore'
@@ -12,24 +13,19 @@ const searchInfo = ref({
   placeholder: '搜尋商家名稱'
 })
 
-const storeListsData = [
-  {
-    id: 'test1',
-    // icon: UserOutlined,
-    name: '雲端掌櫃 - 岡山'
-  },
-  {
-    id: 'test2',
-    // icon: UserOutlined,
-    name: '雲端掌櫃 - 岡山2'
-  }
-]
+const updateKey = ref(0)
 
 // computed
 const storeLists = computed(() => {
   const keyword = searchInfo.value.keyword.trim()
-  return keyword ? storeListsData.filter((item) => item.name.includes(keyword)) : storeListsData
+  return keyword
+    ? storesListInfo.value.data[0]?.stores.filter((item) => item.storeName.includes(keyword))
+    : storesListInfo.value.data[0]?.stores
 })
+
+function fnUpdateData() {
+  updateKey.value += 1
+}
 
 fetchStoresListInfo()
 </script>
@@ -37,7 +33,8 @@ fetchStoresListInfo()
 <template>
   <div class="index-page">
     <!-- BarChart -->
-    <DashboardBarChart />
+    <DashboardBarChart :key="updateKey" />
+    <UpdateRecord @update="fnUpdateData" />
     <div class="place-holder"></div>
     <div class="search-merchant-container">
       <BaseSvgIcon
@@ -53,18 +50,17 @@ fetchStoresListInfo()
     </div>
     <div class="merchant-list-container">
       <router-link
-        :key="item.id"
-        v-for="item in storeLists"
+        :key="listItem.storeId"
+        v-for="listItem in storeLists"
         class="merchant-list-item"
         to="/dashboard"
       >
-        <!-- <img
-          src=""
-          class="merchant-list-item_img"
-          alt=""
-        /> -->
-        <div class="merchant-list-item_img"></div>
-        {{ item.name }}
+        <AvatarDisplay
+          size="lg"
+          :name="listItem.storeName"
+          :charNum="2"
+        />
+        {{ listItem.storeName }}
       </router-link>
     </div>
   </div>

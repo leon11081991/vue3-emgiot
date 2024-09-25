@@ -8,13 +8,10 @@ export const useFetchStore = () => {
 
   /** 店家資訊清單 */
   const storesListInfo = ref<{
-    data: StoresListInfoResType
+    data: Array<StoresListInfoResType>
     isLoading: boolean
   }>({
-    data: {
-      customerId: '',
-      stores: []
-    },
+    data: [],
     isLoading: true
   })
 
@@ -29,6 +26,7 @@ export const useFetchStore = () => {
       }
 
       storesListInfo.value.data = result
+      console.log(`storesListInfo.value.data`, storesListInfo.value.data)
     } catch (error) {
       // TODO: 錯誤處理
     } finally {

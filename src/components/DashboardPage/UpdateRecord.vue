@@ -1,16 +1,19 @@
 <script setup lang="ts">
+import { ref, computed } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
+import { useDate } from '@/composables/useDate'
 
-const updateRecordProps = defineProps<{
-  date: string
-  time: string
-}>()
+const updateTime = ref('')
+
+const { getCurrentDateTime } = useDate()
+updateTime.value = getCurrentDateTime()
 
 const updateRecordEmit = defineEmits<{
   (e: 'update'): void
 }>()
 
 const updateClick = () => {
+  updateTime.value = getCurrentDateTime()
   updateRecordEmit('update')
 }
 </script>
@@ -19,9 +22,7 @@ const updateClick = () => {
   <div class="update-record-container">
     <div class="record-detail">
       <div class="updated-time">
-        <span>更新時間</span>
-        <span class="date">{{ updateRecordProps.date }}</span>
-        <span class="time">{{ updateRecordProps.time }}</span>
+        <span>更新時間 {{ updateTime }}</span>
       </div>
       <div
         class="update-button"

@@ -153,15 +153,6 @@ fetchOperationCoinChart({
       </div>
     </div>
   </div>
-  <div class="update-time">
-    更新時間 {{ updateTime }}
-    <BaseSvgIcon
-      class="refresh-icon"
-      @click="fnRefreshChart"
-      iconName="refresh"
-      color="secondary"
-    />
-  </div>
 </template>
 
 <style lang="scss" scoped>
@@ -240,18 +231,6 @@ fetchOperationCoinChart({
         width: 100%;
       }
     }
-  }
-}
-.update-time {
-  padding-top: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  color: $--color-update-time;
-  user-select: none;
-  .refresh-icon {
-    pointer-events: initial;
-    cursor: pointer;
   }
 }
 </style>
