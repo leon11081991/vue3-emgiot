@@ -35,3 +35,20 @@ export const unauthorizedHandler = (errorCode: number): void => {
     UtilCommon.goPage('/login')
   )
 }
+
+export const catchErrorHandler = (error: unknown) => {
+  let errorMessage: string
+
+  if (error instanceof Error) {
+    errorMessage = error.message
+  } else {
+    try {
+      errorMessage = JSON.stringify(error)
+    } catch {
+      errorMessage = String(error) // 如果 JSON.stringify 失败，使用 String 处理
+    }
+  }
+
+  // 抛出新的 Error，帶有詳細的錯誤信息，方便開發者查看
+  throw new Error(errorMessage)
+}
