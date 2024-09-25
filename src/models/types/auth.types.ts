@@ -1,14 +1,3 @@
-export type jwtDecodeType = {
-  exp: number // 過期時間
-  iat: number // 簽發時間
-  iss: string // 發行者
-  jti: string
-  nbf: number
-  sub: string // 主題：用戶的唯一標識符
-  name: string
-  photo: string
-}
-
 export type LoginReqType = {
   userId: string
   password: string
@@ -32,7 +21,8 @@ export type AccountDisableReqType = {
   userId: string
 }
 
-export type UserInfoType = {
-  userId: string
+export type UserInfoDataType = {
+  realName: string
+  nickName: string
   photoUrl: string
 }

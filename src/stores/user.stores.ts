@@ -1,18 +1,20 @@
-import type { UserInfoType } from '@/models/types/auth.types'
+import type { UserInfoDataType } from '@/models/types/auth.types'
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useUserStore = defineStore('user', () => {
   const token = ref<string>('')
-  const userInfo = ref<UserInfoType>({
-    userId: '',
+  const userInfo = ref<UserInfoDataType>({
+    realName: '',
+    nickName: '',
     photoUrl: ''
   })
 
   const initLoginState = (): void => {
     token.value = ''
     userInfo.value = {
-      userId: '',
+      realName: '',
+      nickName: '',
       photoUrl: ''
     }
   }
