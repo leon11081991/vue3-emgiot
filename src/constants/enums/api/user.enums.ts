@@ -1,4 +1,4 @@
 export enum UserEnum {
-  password = 'SignIn/Password', // 變更密碼
-  userInfo = 'SignIn/UserInfo' // 變更使用者資訊
+  password = 'SignUp/Password', // 變更密碼
+  userInfo = 'SignUp/UserInfo' // 取得、更新使用者資訊
 }

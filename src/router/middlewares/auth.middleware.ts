@@ -3,6 +3,7 @@ import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user.stores'
 import { useMessage } from '@/composables/useMessage'
 import { useToken } from '@/composables/useToken'
+import { useFetchUser } from '@/composables/useFetchUser'
 import { UtilCommon } from '@/utils/utilCommon'
 import { getI18nTranslate } from '@/utils/i18nUtils'
 
@@ -22,6 +23,7 @@ export const authMiddleware = async ({
   const token = userStore.token
   const { openMessage } = useMessage()
   const { isTokenExpired } = useToken()
+  const { fnGetUserInfo } = useFetchUser()
 
   const tokenValid = token && !isTokenExpired(token)
 
@@ -36,6 +38,7 @@ export const authMiddleware = async ({
   // 處理有效token的非登入頁
   if (to.name !== 'Login' && tokenValid) {
     // TODO: 取得用戶資訊
+    // await fnGetUserInfo(token)
     return next()
   }
 
@@ -56,5 +59,4 @@ export const authMiddleware = async ({
   }
 
   next()
-
 }
