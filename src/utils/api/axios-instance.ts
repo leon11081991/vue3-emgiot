@@ -17,11 +17,9 @@ const beforeRequest = (config: InternalAxiosRequestConfig) => {
   const userStore = useUserStore()
   const loginApiPath = '/LogIn/LogIn'
 
-  // TODO: 先請後端將token移除,等待login完成後再開啟
-  // if (!config.url?.includes(loginApiPath)) {
-  //   // config.headers.Authorization = `Bearer ${localStorage.getItem('token')}` // 假設 token 存在於 local storage
-  //   config.headers.Authorization = `Bearer ${userStore.userInfo.token}` // 假設 token 存在於 user store
-  // }
+  if (!config.url?.includes(loginApiPath)) {
+    config.headers.Authorization = `Bearer ${userStore.token}`
+  }
 
   config.headers['Content-Type'] = 'application/json;charset=UTF-8'
 

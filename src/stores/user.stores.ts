@@ -3,15 +3,23 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useUserStore = defineStore('user', () => {
-  // const token = ref<string>('')
+  const token = ref<string>('')
   const userInfo = ref<UserInfoType>({
-    token: '',
     userId: '',
     photoUrl: ''
   })
 
+  const initLoginState = (): void => {
+    token.value = ''
+    userInfo.value = {
+      userId: '',
+      photoUrl: ''
+    }
+  }
+
   return {
-    // token
-    userInfo
+    token,
+    userInfo,
+    initLoginState
   }
 })

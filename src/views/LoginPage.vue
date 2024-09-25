@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import type { LoginDataType } from '@/models/types/auth.types'
 import { ValidationTypeEnums } from '@/constants/enums/validator.enums'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { Form } from 'ant-design-vue'
 import { useI18n } from 'vue-i18n'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
@@ -13,12 +14,12 @@ import { UtilCommon } from '@/utils/utilCommon'
 type TabKey = 'login' | 'register'
 
 const { t: $t } = useI18n()
-const { fnLogin } = useAuth()
+const { loadLoginInfo, fnLogin } = useAuth()
 const { modalVisible, openModal, closeModal } = useModal()
 const { validateErrorMessage, validate } = useValidator()
 
 const activeKey = ref<TabKey>('login')
-const loginFormModel = ref({
+const loginFormModel = ref<LoginDataType>({
   userId: '',
   password: '',
   rememberMe: false
@@ -78,10 +79,13 @@ const onLoginFinish = (values: any) => {
   console.log('登入資料:', values)
   // 在這裡處理登入邏輯
 
-  fnLogin({
-    userId: values.userAccount,
-    password: values.password
-  })
+  fnLogin(
+    {
+      userId: values.userId,
+      password: values.password
+    },
+    values.rememberMe
+  )
 }
 
 // TODO: type 修正
@@ -94,6 +98,12 @@ const onRegisterFinish = (values: any) => {
 const onForgotPasswordFinish = (values: any) => {
   console.log('忘記密碼資料:', values)
 }
+
+onMounted(() => {
+  const rememberMeData = loadLoginInfo()
+  if (!rememberMeData) return
+  loginFormModel.value = rememberMeData
+})
 </script>
 
 <template>
@@ -160,17 +170,37 @@ const onForgotPasswordFinish = (values: any) => {
                 <template #prefix>
                   <BaseSvgIcon iconName="lock" />
                 </template>
+
+                <template #iconRender="x">
+                  <div
+                    class="password-visible"
+                    v-if="x"
+                  >
+                    <BaseSvgIcon iconName="eye-off" />
+                  </div>
+                  <div
+                    class="password-invisible"
+                    v-else
+                  >
+                    <BaseSvgIcon iconName="eye-on" />
+                  </div>
+                </template>
               </a-input-password>
             </a-form-item>
 
             <div class="actions-container">
               <!-- Remember Me -->
-              <a-checkbox
-                class="remember-me"
-                v-model:checked="loginFormModel.rememberMe"
+              <a-form-item
+                name="rememberMe"
+                class="remember-me-container"
               >
-                {{ $t('LoginPage.Login.RememberMe') }}
-              </a-checkbox>
+                <a-checkbox
+                  class="remember-me"
+                  v-model:checked="loginFormModel.rememberMe"
+                >
+                  {{ $t('LoginPage.Login.RememberMe') }}
+                </a-checkbox>
+              </a-form-item>
               <!-- Forgot Password -->
               <span
                 class="forgot-password"
@@ -368,6 +398,7 @@ const onForgotPasswordFinish = (values: any) => {
 
   :deep(.ant-input) {
     background-color: $--background-color-base;
+    color: $--color-gray-600;
   }
 }
 
@@ -416,14 +447,22 @@ const onForgotPasswordFinish = (values: any) => {
 .actions-container {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 
-  .remember-me {
-    color: $--color-primary;
+  .remember-me-container {
+    &.ant-form-item {
+      margin-bottom: 0;
+    }
+
+    .remember-me {
+      color: $--color-primary;
+    }
   }
 
   .forgot-password {
     @include base-transition;
+    display: flex;
+    align-items: center;
     padding-inline: 0.75rem;
     color: $--color-primary;
     border: 1px solid $--color-gray-500;

@@ -1,32 +1,76 @@
 import type {
-  LoginReqType,
+  UserInfoType,
+  LoginReqType
   // GoogleLoginReqType,
-  SignUpReqType
+  // SignUpReqType
   // ForgetPasswordReqType,
   // PasswordChangeReqType,
   // AccountDisableReqType
 } from '@/models/types/auth.types'
+import { useI18n } from 'vue-i18n'
 import { useMessage } from '@/composables/useMessage'
+import { useNotification } from '@/composables/useNotification'
 import { api } from '@/services'
+import { useUserStore } from '@/stores/user.stores'
+import { UtilCommon } from '@/utils/utilCommon'
+import { errorMessagesMapping } from '@/constants/mappings/errorMessages.mapping'
 
 export const useAuth = () => {
+  const { t: $t } = useI18n()
   const { openMessage } = useMessage()
+  const { openNotification } = useNotification()
+  const userStore = useUserStore()
 
-  const fnLogin = async (params: LoginReqType) => {
+  /** 存儲登入資訊 */
+  const _saveLoginInfo = (loginData: LoginReqType): void => {
+    UtilCommon.setLocalStorage('rememberMe', loginData)
+  }
+
+  /** 讀取記住我資訊 */
+  const loadLoginInfo = () => {
+    const rememberMe = UtilCommon.getLocalStorage<LoginReqType>('rememberMe')
+    if (!rememberMe) return
+    return {
+      userId: rememberMe.userId,
+      password: rememberMe.password,
+      rememberMe: true
+    }
+  }
+
+  /** 處理記住我 */
+  const handleRememberMe = (params: LoginReqType, isRememberMe: boolean): void => {
+    if (!isRememberMe) {
+      return UtilCommon.removeLocalStorage('rememberMe')
+    }
+    _saveLoginInfo(params)
+  }
+
+  /** 處理登入 */
+  const fnLogin = async (params: LoginReqType, isRememberMe: boolean) => {
     try {
-      const res = await api.auth.login(params)
+      handleRememberMe(params, isRememberMe)
 
-      if (!res.isSuccess) {
-        console.log('res', res)
+      const { result, isSuccess, message, resultCode } = await api.auth.login(params)
 
-        if (res.resultCode === 400) {
-          return openMessage('error', '查無此帳號')
-        }
+      if (!isSuccess) {
+        // 失敗：顯示錯誤訊息提示
+        openNotification(
+          {
+            title: $t('Common.Error'),
+            subTitle: `${resultCode} - ${$t(errorMessagesMapping[message])}`
+          },
+          'error'
+        )
+        return
       }
 
-      // TODO: 登入成功後的處理
+      userStore.token = result.token
+      openMessage('success', '登入成功，即將前往首頁...', {}, () => {
+        UtilCommon.goPage('/')
+      })
     } catch (e) {
-      openMessage('error', '登入失敗')
+      // TODO: 錯誤處理
+      throw new Error('Error')
     }
   }
 
@@ -36,7 +80,37 @@ export const useAuth = () => {
   //   } catch (error) { }
   // }
 
+  /** 處理登出 */
+  const fnLogOut = async () => {
+    try {
+      const { isSuccess, message, resultCode } = await api.auth.logout()
+
+      if (!isSuccess) {
+        // 失敗：顯示錯誤訊息提示
+        openNotification(
+          {
+            title: $t('Common.Error'),
+            subTitle: `${resultCode} - ${$t(errorMessagesMapping[message])}`
+          },
+          'error'
+        )
+        return
+      }
+
+      userStore.initLoginState()
+
+      openMessage('success', '登出成功', {}, () => {
+        UtilCommon.goPage('/login')
+      })
+    } catch (e) {
+      // TODO: 錯誤處理
+      throw new Error('Error')
+    }
+  }
+
   return {
-    fnLogin
+    loadLoginInfo,
+    fnLogin,
+    fnLogOut
   }
 }
