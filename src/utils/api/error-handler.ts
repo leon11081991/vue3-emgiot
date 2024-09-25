@@ -1,6 +1,5 @@
 import { getI18nTranslate } from '@/utils/i18nUtils'
 import { useMessage } from '@/composables/useMessage'
-import { useNotification } from '@/composables/useNotification'
 import { UtilCommon } from '@/utils/utilCommon'
 
 const { openMessage } = useMessage()

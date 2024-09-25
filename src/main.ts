@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { createAppRouter } from '@/router/index'
+import { storagePlugin } from '@/stores/storage-plugin'
 import App from './App.vue'
 
 import Antd from 'ant-design-vue'
@@ -13,6 +14,8 @@ import '@/assets/normalize.css'
 
 const { router } = createAppRouter()
 const pinia = createPinia()
+pinia.use(storagePlugin)
+
 const app = createApp(App)
 
 app.use(Antd)

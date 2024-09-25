@@ -48,6 +48,11 @@ const route = useRoute()
   border-radius: $--border-radius-middle;
 }
 
+/** Ant Design Form */
+.ant-form-item {
+  margin-bottom: 1rem;
+}
+
 /** Ant Design Button */
 .ant-btn {
   &.ant-btn-default {

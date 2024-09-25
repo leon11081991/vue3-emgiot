@@ -3,6 +3,7 @@ import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import MaskOverlay from '@/components/Base/MaskOverlay.vue'
 import AvatarDisplay from '@/components/Base/AvatarDisplay.vue'
 import { useSidebar } from '@/composables/useSidebar'
+import { useAuth } from '@/composables/useAuth'
 import { useDeviceWidth } from '@/composables/useDeviceWidth'
 import { useCommonStore } from '@/stores/common.stores'
 import { navigationList } from '@/constants/common.const'
@@ -10,6 +11,7 @@ import { widthMapping } from '@/constants/mappings/width.mapping'
 
 const commonStore = useCommonStore()
 const { sidebarRef, handleCloseSidebar } = useSidebar()
+const { fnLogOut } = useAuth()
 const { width } = useDeviceWidth()
 </script>
 
@@ -71,6 +73,7 @@ const { width } = useDeviceWidth()
       <a-button
         type="primary"
         class="logout-btn"
+        @click="fnLogOut()"
         >登出</a-button
       >
     </div>
