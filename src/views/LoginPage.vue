@@ -25,7 +25,10 @@ const loginFormModel = ref<LoginDataType>({
   rememberMe: false
 })
 const registerFormModel = ref({
-  userId: ''
+  userId: '',
+  password: '',
+  verifyPassword: '',
+  realName: ''
 })
 const forgetPasswordFormModel = ref({
   userId: ''
@@ -278,7 +281,7 @@ onMounted(() => {
             :model="registerFormModel"
             @finish="onRegisterFinish"
           >
-            <a-form-item name="email">
+            <a-form-item name="userId">
               <a-input-group>
                 <div class="input-container validate-input">
                   <a-input
@@ -291,14 +294,84 @@ onMounted(() => {
                     </template>
                   </a-input>
 
-                  <a-button
+                  <!-- <a-button
                     class="validate-btn"
                     :disabled="!validateValue('Email', registerFormModel.userId)"
                   >
                     {{ $t('LoginPage.Register.Validate') }}
-                  </a-button>
+                  </a-button> -->
                 </div>
               </a-input-group>
+            </a-form-item>
+
+            <a-form-item name="password">
+              <a-input-password
+                class="base-input"
+                autocomplete="current-password"
+                :placeholder="$t('SignUpPage.SignUp.Password')"
+                v-model:value="registerFormModel.password"
+              >
+                <template #prefix>
+                  <BaseSvgIcon iconName="lock" />
+                </template>
+
+                <template #iconRender="x">
+                  <div
+                    class="password-visible"
+                    v-if="x"
+                  >
+                    <BaseSvgIcon iconName="eye-off" />
+                  </div>
+                  <div
+                    class="password-invisible"
+                    v-else
+                  >
+                    <BaseSvgIcon iconName="eye-on" />
+                  </div>
+                </template>
+              </a-input-password>
+            </a-form-item>
+
+            <a-form-item name="verifyPassword">
+              <a-input-password
+                class="base-input"
+                autocomplete="none"
+                :placeholder="$t('SignUpPage.SignUp.VerifyPassword')"
+                v-model:value="registerFormModel.verifyPassword"
+              >
+                <template #prefix>
+                  <BaseSvgIcon iconName="lock" />
+                </template>
+
+                <template #iconRender="x">
+                  <div
+                    class="password-visible"
+                    v-if="x"
+                  >
+                    <BaseSvgIcon iconName="eye-off" />
+                  </div>
+                  <div
+                    class="password-invisible"
+                    v-else
+                  >
+                    <BaseSvgIcon iconName="eye-on" />
+                  </div>
+                </template>
+              </a-input-password>
+            </a-form-item>
+
+            <a-form-item name="realName">
+              <div class="input-container userInfo-input">
+                <a-input
+                  class="base-input"
+                  :placeholder="$t('SignUpPage.SignUp.UserInfo')"
+                  v-model:value="registerFormModel.realName"
+                >
+                  <template #prefix>
+                    <BaseSvgIcon iconName="profile" />
+                  </template>
+                </a-input>
+              </div>
             </a-form-item>
 
             <a-form-item>

@@ -53,8 +53,8 @@
       "LoginValidateMessages": "請填寫"
     },
     "Register": {
-      "TabLabel": "帳號認證",
-      "TextMessage": "使用電子信箱認證以保障帳號安全",
+      "TabLabel": "註冊",
+      "TextMessage": "歡迎加入",
       "UserId": "電子信箱",
       "Validate": "驗證",
       "Submit": "送出",
