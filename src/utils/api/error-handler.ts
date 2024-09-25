@@ -1,6 +1,7 @@
 import { getI18nTranslate } from '@/utils/i18nUtils'
 import { useMessage } from '@/composables/useMessage'
 import { UtilCommon } from '@/utils/utilCommon'
+import { useUserStore } from '@/stores/user.stores'
 
 const { openMessage } = useMessage()
 
@@ -25,6 +26,11 @@ export const errorCodeHandler = (errorCode: number): Promise<Error> => {
 
 export const unauthorizedHandler = (errorCode: number): void => {
   if (errorCode !== 401) return
+
+  const { initLoginState } = useUserStore()
+
+  initLoginState()
+  UtilCommon.removeLocalStorage('storage-user')
   openMessage('error', getI18nTranslate('Common.Response.Unauthorized'), {}, () =>
     UtilCommon.goPage('/login')
   )
