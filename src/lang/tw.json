@@ -3,6 +3,10 @@
     "UserNotFound": "用戶不存在"
   },
   "Common": {
+    "Result":{
+      "NotLogin": "請先登入...",
+      "TokenExpired": "登入已過期，請重新登入"
+    },
     "Response": {
       "Success": "成功",
       "Error": "錯誤",

@@ -9,8 +9,17 @@ export const useUserStore = defineStore('user', () => {
     photoUrl: ''
   })
 
+  const initLoginState = (): void => {
+    token.value = ''
+    userInfo.value = {
+      userId: '',
+      photoUrl: ''
+    }
+  }
+
   return {
     token,
-    userInfo
+    userInfo,
+    initLoginState
   }
 })

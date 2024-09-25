@@ -21,18 +21,6 @@ export const useAuth = () => {
   const { openNotification } = useNotification()
   const userStore = useUserStore()
 
-  // 初始化token
-  const _initToken = (): string => {
-    return ''
-  }
-  // 初始化用戶資訊
-  const _initUserInfo = (): UserInfoType => {
-    return {
-      userId: '',
-      photoUrl: ''
-    }
-  }
-
   /** 存儲登入資訊 */
   const _saveLoginInfo = (loginData: LoginReqType): void => {
     UtilCommon.setLocalStorage('rememberMe', loginData)
@@ -109,8 +97,7 @@ export const useAuth = () => {
         return
       }
 
-      userStore.token = _initToken()
-      userStore.userInfo = _initUserInfo()
+      userStore.initLoginState()
 
       openMessage('success', '登出成功', {}, () => {
         UtilCommon.goPage('/login')
