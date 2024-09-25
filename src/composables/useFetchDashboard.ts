@@ -9,6 +9,7 @@ import type {
 import { ref } from 'vue'
 import { api } from '@/services'
 import { useMessage } from '@/composables/useMessage'
+import { catchErrorHandler } from '@/utils/api/error-handler'
 
 export const useFetchDashboard = () => {
   const { openMessage } = useMessage()
@@ -60,8 +61,8 @@ export const useFetchDashboard = () => {
       }
 
       operationChart.value.data.clawMachine = result
-    } catch (error) {
-      // TODO: 錯誤處理
+    } catch (e) {
+      catchErrorHandler(e)
     } finally {
       operationChart.value.isLoading.clawMachine = false
     }
@@ -77,37 +78,32 @@ export const useFetchDashboard = () => {
       }
 
       operationChart.value.data.coinMachine = result
-    } catch (error) {
-      // TODO: 錯誤處理
+    } catch (e) {
+      catchErrorHandler(e)
     } finally {
       operationChart.value.isLoading.coinMachine = false
     }
   }
 
-  // TODO: WIP
   /** 處理取得選物機運營清單 */
   const fetchClawOperationsInfo = async (params: GetClawOperationsInfoReqType) => {
     try {
       const { result, isSuccess, message, resultCode } =
         await api.dashboard.getClawOperationsInfo(params)
-      // const res = await api.dashboard.getClawOperationsInfo(params)
 
-      // if (!res.IsSuccess) {
       if (!isSuccess) {
-        // openMessage('error', `${res.ResultCode} - ${res.Message}`)
         openMessage('error', `${resultCode} - ${message}`)
         return
       }
 
       clawOperationsInfo.value.data = result
-    } catch (error) {
-      // TODO: 錯誤處理
+    } catch (e) {
+      catchErrorHandler(e)
     } finally {
       clawOperationsInfo.value.isLoading = false
     }
   }
 
-  // TODO: WIP
   /** 處理取得兌幣機運營清單 */
   const fetchCoinOperationsInfo = async (params: GetCoinOperationsInfoReqType) => {
     try {
@@ -120,8 +116,8 @@ export const useFetchDashboard = () => {
       }
 
       coinOperationsInfo.value.data = result
-    } catch (error) {
-      // TODO: 錯誤處理
+    } catch (e) {
+      catchErrorHandler(e)
     } finally {
       coinOperationsInfo.value.isLoading = false
     }

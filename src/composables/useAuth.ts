@@ -1,5 +1,4 @@
 import type {
-  UserInfoType,
   LoginReqType
   // GoogleLoginReqType,
   // SignUpReqType
@@ -13,6 +12,7 @@ import { useNotification } from '@/composables/useNotification'
 import { api } from '@/services'
 import { useUserStore } from '@/stores/user.stores'
 import { UtilCommon } from '@/utils/utilCommon'
+import { catchErrorHandler } from '@/utils/api/error-handler'
 import { errorMessagesMapping } from '@/constants/mappings/errorMessages.mapping'
 
 export const useAuth = () => {
@@ -50,14 +50,14 @@ export const useAuth = () => {
     try {
       handleRememberMe(params, isRememberMe)
 
-      const { result, isSuccess, message, resultCode } = await api.auth.login(params)
+      const { result, isSuccess, resultCode } = await api.auth.login(params)
 
       if (!isSuccess) {
         // 失敗：顯示錯誤訊息提示
         openNotification(
           {
-            title: $t('Common.Error'),
-            subTitle: `${resultCode} - ${$t(errorMessagesMapping[message])}`
+            title: $t('Common.Response.Error'),
+            subTitle: `${resultCode} - ${$t(errorMessagesMapping[resultCode])}`
           },
           'error'
         )
@@ -65,12 +65,11 @@ export const useAuth = () => {
       }
 
       userStore.token = result.token
-      openMessage('success', '登入成功，即將前往首頁...', {}, () => {
+      openMessage('success', $t('Common.Result.LoginSuccess'), {}, () => {
         UtilCommon.goPage('/')
       })
     } catch (e) {
-      // TODO: 錯誤處理
-      throw new Error('Error')
+      catchErrorHandler(e)
     }
   }
 
@@ -99,12 +98,11 @@ export const useAuth = () => {
 
       userStore.initLoginState()
 
-      openMessage('success', '登出成功', {}, () => {
+      openMessage('success', $t('Common.Result.LogoutSuccess'), {}, () => {
         UtilCommon.goPage('/login')
       })
     } catch (e) {
-      // TODO: 錯誤處理
-      throw new Error('Error')
+      catchErrorHandler(e)
     }
   }
 

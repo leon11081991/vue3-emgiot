@@ -1,4 +1,4 @@
-import type { jwtDecodeType } from '@/models/types/auth.types'
+import type { JwtDecodeData } from '@/models/interfaces/token.interface'
 import { type JwtPayload, jwtDecode } from 'jwt-decode'
 
 export const useToken = () => {
@@ -30,7 +30,24 @@ export const useToken = () => {
     }
   }
 
+  /** 取得token中的資訊 */
+  const getDataFromToken = <T extends JwtPayload | K, K = JwtDecodeData>(
+    token: string,
+    key?: keyof T
+  ): T[keyof T] | T | null => {
+    const decodedToken = _decodeToken(token) as T
+    if (!decodedToken) return null
+
+    if (key) {
+      return decodedToken[key]
+    }
+
+    return decodedToken
+  }
+
   return {
-    isTokenExpired
+    _decodeToken,
+    isTokenExpired,
+    getDataFromToken
   }
 }

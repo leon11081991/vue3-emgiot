@@ -6,6 +6,11 @@ export class UserServices extends ApiFactory {
     super('')
   }
 
+  /** 取得使用者資訊 */
+  getUserInfo = async () => {
+    return await this.get<unknown, ApiResponse>(UserEnum.userInfo)
+  }
+
   /** 變更密碼 */
   changePassword = async (newPwd: string) => {
     return await this.put<string, ApiResponse>(UserEnum.password, newPwd)

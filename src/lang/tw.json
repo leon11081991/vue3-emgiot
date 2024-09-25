@@ -1,11 +1,14 @@
 {
   "ErrorMessage": {
-    "UserNotFound": "用戶不存在"
+    "UserNotFound": "用戶不存在",
+    "ServerError": "伺服器錯誤，請稍後再試"
   },
   "Common": {
     "Result":{
       "NotLogin": "請先登入...",
-      "TokenExpired": "登入已過期，請重新登入"
+      "TokenExpired": "登入已過期，請重新登入",
+      "LoginSuccess": "登入成功，即將前往首頁...",
+      "LogoutSuccess": "登出成功"
     },
     "Response": {
       "Success": "成功",
