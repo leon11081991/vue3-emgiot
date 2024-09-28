@@ -10,4 +10,9 @@ export class StoreServices extends ApiFactory {
   getStoresListInfo = async (): Promise<ApiResponse> => {
     return await this.get<unknown, ApiResponse>(StoreEnums.stores)
   }
+
+  /** 記錄當下點選的店家 */
+  recordCurrentStore = async (params: string): Promise<ApiResponse> => {
+    return await this.post<string, ApiResponse>(StoreEnums.recordCurrentStore, params)
+  }
 }

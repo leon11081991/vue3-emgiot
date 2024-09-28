@@ -1,32 +1,55 @@
 <script setup lang="ts">
+// import
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import AvatarDisplay from '@/components/Base/AvatarDisplay.vue'
 import UpdateRecord from '@/components/DashboardPage/UpdateRecord.vue'
 import DashboardBarChart from '@/components/DashboardPage/DashboardBarChart.vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import { useFetchStore } from '@/composables/useFetchStore'
+import { useRouter } from 'vue-router'
 
-const { storesListInfo, fetchStoresListInfo } = useFetchStore()
+// store 相關
+const { storesListInfo, fetchStoresListInfo, dispatchRecordCurrentStore } = useFetchStore()
 
+// route/router
+const router = useRouter()
+
+// i18n
+const { t: $t } = useI18n()
+
+// 非響應式變數
+const targetPath = '/dashboard'
+
+// ref 變數
 const searchInfo = ref({
   keyword: '',
-  placeholder: '搜尋商家名稱'
+  placeholder: $t('HomePage.search')
 })
-
 const updateKey = ref(0)
 
 // computed
 const storeLists = computed(() => {
   const keyword = searchInfo.value.keyword.trim()
   return keyword
-    ? storesListInfo.value.data[0]?.stores.filter((item) => item.storeName.includes(keyword))
-    : storesListInfo.value.data[0]?.stores
+    ? storesListInfo.value.data?.stores.filter((item) => item.storeName.includes(keyword))
+    : storesListInfo.value.data?.stores
 })
 
-function fnUpdateData() {
+// function
+function fnRefreshData() {
   updateKey.value += 1
 }
 
+// async/await function
+async function fnDispatchRecordStore(storeId: string) {
+  const dispatchStatus = await dispatchRecordCurrentStore(storeId)
+  if (dispatchStatus) {
+    router.push(targetPath)
+  }
+}
+
+// 生命週期 (Lifecycle hooks)
 fetchStoresListInfo()
 </script>
 
@@ -34,7 +57,7 @@ fetchStoresListInfo()
   <div class="index-page">
     <!-- BarChart -->
     <DashboardBarChart :key="updateKey" />
-    <UpdateRecord @update="fnUpdateData" />
+    <UpdateRecord @update="fnRefreshData" />
     <div class="place-holder"></div>
     <div class="search-merchant-container">
       <BaseSvgIcon
@@ -49,11 +72,11 @@ fetchStoresListInfo()
       />
     </div>
     <div class="merchant-list-container">
-      <router-link
+      <div
         :key="listItem.storeId"
         v-for="listItem in storeLists"
         class="merchant-list-item"
-        to="/dashboard"
+        @click="fnDispatchRecordStore(listItem.storeId)"
       >
         <AvatarDisplay
           size="lg"
@@ -61,7 +84,7 @@ fetchStoresListInfo()
           :charNum="2"
         />
         {{ listItem.storeName }}
-      </router-link>
+      </div>
     </div>
   </div>
 </template>

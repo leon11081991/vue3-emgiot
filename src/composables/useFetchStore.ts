@@ -8,10 +8,13 @@ export const useFetchStore = () => {
 
   /** 店家資訊清單 */
   const storesListInfo = ref<{
-    data: Array<StoresListInfoResType>
+    data: StoresListInfoResType
     isLoading: boolean
   }>({
-    data: [],
+    data: {
+      customerId: '',
+      stores: []
+    },
     isLoading: true
   })
 
@@ -29,13 +32,31 @@ export const useFetchStore = () => {
       console.log(`storesListInfo.value.data`, storesListInfo.value.data)
     } catch (error) {
       // TODO: 錯誤處理
+      console.error('Error fetchStoresListInfo:', error)
     } finally {
       storesListInfo.value.isLoading = false
     }
   }
 
+  /** 記錄當下點選的店家 */
+  const dispatchRecordCurrentStore = async (storeId: string) => {
+    try {
+      const { isSuccess, message, resultCode } = await api.store.recordCurrentStore(storeId)
+      if (!isSuccess) {
+        openMessage('error', `${resultCode} - ${message}`)
+        return
+      } else {
+        return true
+      }
+    } catch (error) {
+      // TODO: 錯誤處理
+      console.error('Error dispatchRecordCurrentStore:', error)
+    }
+  }
+
   return {
     storesListInfo,
-    fetchStoresListInfo
+    fetchStoresListInfo,
+    dispatchRecordCurrentStore
   }
 }
