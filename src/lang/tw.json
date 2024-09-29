@@ -17,7 +17,8 @@
       "BadRequest": "請求錯誤",
       "Forbidden": "拒絕存取",
       "NotFound": "找不到資源",
-      "InternalError": "內部錯誤",
+      "InternalError": "伺服器內部錯誤",
+      "ServerError": "伺服器錯誤",
       "NoNetwork": "請檢查網路連線狀態"
     },
     "Button": {

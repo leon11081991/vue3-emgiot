@@ -10,7 +10,7 @@ export const errorCodeHandler = (errorCode: number): Promise<Error> => {
     // 401: 'Common.Response.Unauthorized',
     400: 'Common.Response.BadRequest',
     404: 'Common.Response.NotFound',
-    500: 'Common.Response.ServerError',
+    500: 'Common.Response.InternalError',
     502: 'Common.Response.ServerError'
   }
 
