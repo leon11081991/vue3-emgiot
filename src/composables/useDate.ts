@@ -65,12 +65,21 @@ export const useDate = () => {
     return formatDate()
   }
 
+  /**
+   * Retrieves the current date and time formatted as 'YYYY-MM-DD HH:mm:ss'.
+   * @returns {string} The current date and time in the specified format.
+   */
+  function getCurrentDateTime(): string {
+    return dayjs().format('YYYY-MM-DD HH:mm:ss')
+  }
+
   return {
     year,
     month,
     day,
     formatDate,
     calculateDate,
-    today
+    today,
+    getCurrentDateTime
   }
 }
