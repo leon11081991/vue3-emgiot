@@ -31,8 +31,12 @@ export const unauthorizedHandler = (errorCode: number): void => {
 
   initLoginState()
   UtilCommon.removeLocalStorage('storage-user')
-  openMessage('error', getI18nTranslate('Common.Response.Unauthorized'), {}, () =>
-    UtilCommon.goPage('/login')
+  openMessage(
+    'error',
+    getI18nTranslate('Common.Response.Unauthorized'),
+    {}
+    // () =>
+    // UtilCommon.goPage('/login')
   )
 }
 

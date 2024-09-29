@@ -16,7 +16,7 @@ type ModalType = 'username' | 'password'
 // composables
 const { t: $t } = useI18n()
 const { modalVisible, openModal, closeModal } = useModal()
-const { validateErrorMessage, validate } = useValidator()
+const { validateErrorMessage, validate, validateConfirmPassword } = useValidator()
 const { fnUpdateUserInfo } = useFetchUser()
 
 // refs
@@ -53,16 +53,6 @@ const validatePassword = (type: keyof typeof ValidationTypeEnums, value: string)
   const isValid = validate(ValidationTypeEnums[type], value)
   if (!isValid) {
     return validateErrorMessage.value
-  }
-  return null
-}
-
-const validateConfirmPassword = (value: string): string | null => {
-  if (UtilCommon.checkIsEmpty(value)) {
-    return '必填'
-  }
-  if (newUserData.value.password !== value) {
-    return '密碼不相符'
   }
   return null
 }
@@ -263,7 +253,10 @@ const mockUserData = {
             size="large"
             class="input-field"
             @blur="
-              modalErrorMsg.confirmPassword = validateConfirmPassword(newUserData.confirmPassword)
+              modalErrorMsg.confirmPassword = validateConfirmPassword(
+                newUserData.confirmPassword,
+                newUserData.password
+              )
             "
           >
             <template #iconRender="x">

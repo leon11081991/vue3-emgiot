@@ -1,6 +1,6 @@
 export type LoginReqType = {
-  userId: string
-  password: string
+  userId: string // 帳號(email)
+  password: string // 密碼
 }
 
 export type LoginDataType = {
@@ -14,7 +14,10 @@ export type GoogleLoginReqType = {
   accessToken: string
 }
 
-export type SignUpReqType = LoginReqType
+export type SignUpReqType = LoginReqType & {
+  realName: string // 真實姓名
+}
+
 export type ForgetPasswordReqType = Omit<SignUpReqType, 'password'>
 export type PasswordChangeReqType = SignUpReqType
 export type AccountDisableReqType = {

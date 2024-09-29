@@ -1,6 +1,9 @@
 import { ref } from 'vue'
 import { ValidationTypeEnums } from '@/constants/enums/validator.enums'
+import { UtilCommon } from '@/utils/utilCommon'
+import { useI18n } from 'vue-i18n'
 
+/** 驗證格式規則 */
 const validationRules = [
   {
     key: ValidationTypeEnums.Email,
@@ -35,8 +38,11 @@ export type ValidatorReturnType = {
 }
 
 export const useValidator = () => {
-  const validateErrorMessage = ref<string>('')
+  const { t: $t } = useI18n()
 
+  const validateErrorMessage = ref<string | null>(null) // 驗證錯誤訊息
+
+  /** 基本驗證格式 */
   const validate = (type: ValidationTypeEnums, value: string): boolean => {
     const rule = validationRules.find((item) => item.key === type)
 
@@ -53,8 +59,20 @@ export const useValidator = () => {
     return true
   }
 
+  /** 驗證確認密碼 */
+  const validateConfirmPassword = (value: string, toCompareValue: string): string | null => {
+    if (UtilCommon.checkIsEmpty(value)) {
+      return $t('LoginPage.ValidateMessage.Required')
+    }
+    if (toCompareValue !== value) {
+      return $t('LoginPage.ValidateMessage.ConfirmPasswordError')
+    }
+    return null
+  }
+
   return {
     validateErrorMessage,
-    validate
+    validate,
+    validateConfirmPassword
   }
 }

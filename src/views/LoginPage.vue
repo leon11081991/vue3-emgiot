@@ -14,9 +14,9 @@ import { UtilCommon } from '@/utils/utilCommon'
 type TabKey = 'login' | 'register'
 
 const { t: $t } = useI18n()
-const { loadLoginInfo, fnLogin } = useAuth()
+const { loadLoginInfo, fnLogin, fnSignIn } = useAuth()
 const { modalVisible, openModal, closeModal } = useModal()
-const { validateErrorMessage, validate } = useValidator()
+const { validateErrorMessage, validate, validateConfirmPassword } = useValidator()
 
 const activeKey = ref<TabKey>('login')
 const loginFormModel = ref<LoginDataType>({
@@ -27,7 +27,7 @@ const loginFormModel = ref<LoginDataType>({
 const registerFormModel = ref({
   userId: '',
   password: '',
-  verifyPassword: '',
+  confirmPassword: '',
   realName: ''
 })
 const forgetPasswordFormModel = ref({
@@ -77,11 +77,21 @@ const validateValue = (type: keyof typeof ValidationTypeEnums, value: string): b
   return true
 }
 
+const checkRegisterButtonDisabled = (): boolean => {
+  const { userId, password, confirmPassword, realName } = registerFormModel.value
+
+  return !(
+    userId.trim().length > 0 &&
+    password.trim().length > 0 &&
+    confirmPassword.trim().length > 0 &&
+    realName.trim().length > 0
+  )
+}
+
 // TODO: type 修正
 const onLoginFinish = (values: any) => {
   console.log('登入資料:', values)
   // 在這裡處理登入邏輯
-
   fnLogin(
     {
       userId: values.userId,
@@ -95,6 +105,7 @@ const onLoginFinish = (values: any) => {
 const onRegisterFinish = (values: any) => {
   console.log('註冊資料:', values)
   // 在這裡處理註冊邏輯
+  fnSignIn(values)
 }
 
 // TODO: type 修正
@@ -113,6 +124,7 @@ onMounted(() => {
   <div class="login-page">
     <div class="login-register-container">
       <a-tabs
+        class="tabs-container"
         v-model:activeKey="activeKey"
         :tabBarStyle="loginPageTabBarStyleConfig"
       >
@@ -281,7 +293,14 @@ onMounted(() => {
             :model="registerFormModel"
             @finish="onRegisterFinish"
           >
-            <a-form-item name="userId">
+            <a-form-item
+              name="userId"
+              validateTrigger="blur"
+              :rules="[
+                { required: true, message: '' },
+                { validator: validateFormItem('Email', registerFormModel.userId) }
+              ]"
+            >
               <a-input-group>
                 <div class="input-container validate-input">
                   <a-input
@@ -304,7 +323,14 @@ onMounted(() => {
               </a-input-group>
             </a-form-item>
 
-            <a-form-item name="password">
+            <a-form-item
+              name="password"
+              validateTrigger="blur"
+              :rules="[
+                { required: true, message: '' },
+                { validator: validateFormItem('Password', registerFormModel.password) }
+              ]"
+            >
               <a-input-password
                 class="base-input"
                 autocomplete="current-password"
@@ -332,12 +358,24 @@ onMounted(() => {
               </a-input-password>
             </a-form-item>
 
-            <a-form-item name="verifyPassword">
+            <a-form-item
+              name="confirmPassword"
+              validateTrigger="blur"
+              :validate-status="validateErrorMessage ? 'error' : ''"
+              :help="validateErrorMessage"
+              :rules="[{ required: true, message: '' }]"
+            >
               <a-input-password
                 class="base-input"
                 autocomplete="none"
                 :placeholder="$t('SignUpPage.SignUp.VerifyPassword')"
-                v-model:value="registerFormModel.verifyPassword"
+                v-model:value="registerFormModel.confirmPassword"
+                @blur="
+                  validateErrorMessage = validateConfirmPassword(
+                    registerFormModel.confirmPassword,
+                    registerFormModel.password
+                  )
+                "
               >
                 <template #prefix>
                   <BaseSvgIcon iconName="lock" />
@@ -360,7 +398,11 @@ onMounted(() => {
               </a-input-password>
             </a-form-item>
 
-            <a-form-item name="realName">
+            <a-form-item
+              name="realName"
+              validateTrigger="blur"
+              :rules="[{ required: true, message: $t('LoginPage.ValidateMessage.Required') }]"
+            >
               <div class="input-container userInfo-input">
                 <a-input
                   class="base-input"
@@ -378,6 +420,7 @@ onMounted(() => {
               <a-button
                 class="register-btn"
                 type="primary"
+                :disabled="checkRegisterButtonDisabled()"
                 html-type="submit"
               >
                 {{ $t('LoginPage.Register.Submit') }}
@@ -445,6 +488,7 @@ onMounted(() => {
   position: relative;
   display: flex;
   justify-content: center;
+  min-height: calc(100dvh - $--page-padding-x - $--heading-font-size);
 }
 .login-register-container {
   width: 90%;
@@ -452,6 +496,17 @@ onMounted(() => {
 
   @include media-breakpoint-down(sm) {
     top: $--login-top-mobile;
+  }
+
+  .tabs-container {
+    height: 100%;
+    :deep(.ant-tabs-content) {
+      height: 100%;
+    }
+
+    :deep(.ant-tabs-tabpane) {
+      height: 100%;
+    }
   }
 }
 
@@ -495,6 +550,25 @@ onMounted(() => {
 }
 
 .register-tab-field {
+  .register-form {
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - $--heading-font-size - 22px - $--page-padding-top - $--page-padding-bottom);
+
+    .ant-form-item {
+      &:nth-of-type(1),
+      &:nth-of-type(3) {
+        margin-bottom: 2.5rem;
+      }
+      &:nth-of-type(4) {
+        flex: 1;
+      }
+      &:nth-of-type(5) {
+        margin-bottom: 0;
+      }
+    }
+  }
+
   .validate-input {
     position: relative;
 
@@ -511,6 +585,7 @@ onMounted(() => {
     z-index: 1;
   }
 }
+
 .text-message {
   margin-bottom: 2rem;
   text-align: center;
@@ -573,7 +648,7 @@ onMounted(() => {
 
 .to-register,
 .to-login {
-  margin-top: 2rem;
+  margin-top: 1.75rem;
   display: flex;
   justify-content: center;
   gap: 0.5rem;

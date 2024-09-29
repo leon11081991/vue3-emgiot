@@ -35,6 +35,11 @@ export class AuthServices extends ApiFactory {
     return await this.post<SignUpReqType, ApiResponse>(SignInEnum.signIn, signInData)
   }
 
+  /** 帳號驗證 */
+  validate = async (validateCode: string): Promise<ApiResponse> => {
+    return await this.put<string, ApiResponse>(SignInEnum.validate, validateCode)
+  }
+
   /** 忘記密碼 */
   forgetPassword = async (userAccountData: ForgetPasswordReqType): Promise<ApiResponse> => {
     return await this.put<ForgetPasswordReqType, ApiResponse>(

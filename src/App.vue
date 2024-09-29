@@ -25,6 +25,12 @@ const route = useRoute()
   max-width: map-get($grid-breakpoints, md);
   margin: 0 auto;
 }
+
+.layout-blank {
+  .main-page {
+    min-height: 100vh;
+  }
+}
 .main-page {
   min-height: calc(100vh - $--header-height);
   padding-inline: $--page-padding-x;

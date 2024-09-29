@@ -1,7 +1,7 @@
 import type {
-  LoginReqType
+  LoginReqType,
   // GoogleLoginReqType,
-  // SignUpReqType
+  SignUpReqType
   // ForgetPasswordReqType,
   // PasswordChangeReqType,
   // AccountDisableReqType
@@ -73,11 +73,43 @@ export const useAuth = () => {
     }
   }
 
-  // const fnSignIn = async (params: SignUpReqType) => {
-  //   try {
-  //     await api.auth.signIn(params)
-  //   } catch (error) { }
-  // }
+  /** 處理註冊 */
+  const fnSignIn = async (params: SignUpReqType) => {
+    try {
+      console.log('object', params)
+      const { userId, password, realName } = params
+      // await api.auth.signIn(params)
+    } catch (e) {
+      catchErrorHandler(e)
+    }
+  }
+
+  /** 處理註冊驗證 */
+  const fnSignUpValidate = async (validateCode: string) => {
+    try {
+      const { isSuccess } = await api.auth.validate(validateCode)
+
+      if (!isSuccess) {
+        // 失敗：顯示錯誤訊息提示
+
+        return
+      }
+
+      openNotification(
+        {
+          title: $t('Common.Success'),
+          subTitle: $t('Common.Result.SignUpSuccess')
+        },
+        'success',
+        'top',
+        () => {
+          UtilCommon.goPage('/')
+        }
+      )
+    } catch (e) {
+      catchErrorHandler(e)
+    }
+  }
 
   /** 處理登出 */
   const fnLogOut = async () => {
@@ -109,6 +141,8 @@ export const useAuth = () => {
   return {
     loadLoginInfo,
     fnLogin,
+    fnSignIn,
+    fnSignUpValidate,
     fnLogOut
   }
 }

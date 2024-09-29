@@ -5,6 +5,7 @@ import { getI18nTranslate } from '@/utils/i18nUtils'
 import { errorCodeHandler, unauthorizedHandler } from '@/utils/api/error-handler'
 import { useMessage } from '@/composables/useMessage'
 import { useUserStore } from '@/stores/user.stores'
+import { LoginEnum, SignInEnum } from '@/constants/enums/api/auth.enums'
 
 /** 創建實例 */
 const axiosInstance = axios.create({
@@ -15,9 +16,10 @@ const axiosInstance = axios.create({
 /** 處理請求發送前 */
 const beforeRequest = (config: InternalAxiosRequestConfig) => {
   const userStore = useUserStore()
-  const loginApiPath = '/LogIn/LogIn'
+  const loginApiPath = LoginEnum.login
+  const signInValidateApiPath = SignInEnum.validate
 
-  if (!config.url?.includes(loginApiPath)) {
+  if (!(config.url?.includes(loginApiPath) || config.url?.includes(signInValidateApiPath))) {
     config.headers.Authorization = `Bearer ${userStore.token}`
   }
 

@@ -75,6 +75,10 @@
       "AlreadyHasAccount": "已有帳號?",
       "ToggleToRegister": "註冊帳號",
       "ToggleToLogin": "登入帳號"
+    },
+    "ValidateMessage": {
+      "Required": "必填",
+      "ConfirmPasswordError": "密碼不相符"
     }
   },
   "SignUpPage": {

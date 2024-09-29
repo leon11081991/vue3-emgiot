@@ -5,9 +5,9 @@ export enum LoginEnum {
 }
 
 export enum SignInEnum {
-  signIn = 'SignIn/SignIn', // 註冊新帳號
-  validate = 'SignIn/Validate', // 帳號驗證
-  forgetPassword = 'SignIn/ForgetPassword', // 忘記密碼
-  passwordChange = 'SignIn/PasswordChange', // 變更密碼
-  accountDisable = 'SignIn/AccountDisable' // 帳號停用
+  signIn = 'SignUp/SignUp', // 註冊新帳號
+  validate = 'SignUp/Validate', // 帳號驗證
+  forgetPassword = 'SignUp/ForgetPassword', // 忘記密碼
+  passwordChange = 'SignUp/Password', // 變更密碼
+  accountDisable = 'SignUp/AccountDisable' // 帳號停用
 }
