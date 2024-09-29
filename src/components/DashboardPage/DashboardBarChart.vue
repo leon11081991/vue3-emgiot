@@ -17,11 +17,13 @@ const TABS = {
 
 // ref 變數
 const nowTopic = ref(TABS.REVENUE)
+const updateTime = ref('')
 
 // 初始化日期
-const { today, calculateDate } = useDate()
+const { today, calculateDate, getCurrentDateTime } = useDate()
 const startDate = today()
 const endDate = calculateDate(startDate, 'backward', 7)
+updateTime.value = getCurrentDateTime()
 
 // 獲取數據
 const { operationChart, fetchOperationClawChart, fetchOperationCoinChart } = useFetchDashboard()
@@ -36,7 +38,7 @@ const calculateTotal = (key: OperationDataKey) => {
 
 const revenueData = computed(() => `$${calculateTotal('revenue').value}`)
 const prizeWinCount = calculateTotal('prizeWinCount')
-const profit = calculateTotal('profit')
+const profit = computed(() => `$${calculateTotal('profit').value}`)
 const coinExchanged = computed(() => {
   const coinMachineData = operationChart.value.data.coinMachine || []
   return coinMachineData.reduce((total, entry) => total + (entry.coinExchanged || 0), 0)
@@ -45,6 +47,26 @@ const coinExchanged = computed(() => {
 // function
 function fnChangeTab(topic: string) {
   nowTopic.value = topic
+}
+
+function fnRefreshChart() {
+  updateTime.value = getCurrentDateTime()
+
+  fetchOperationClawChart({
+    startDate: '2024-09-01',
+    endDate: '2024-09-07',
+    // pcbName: 'TESTING_Coin1',
+    pcbGroupId: '3bbca0e6-9166-266c-3a00-e67b123456d3',
+    goodsId: '6d754fe5-e230-4b94-a553-e2cc66dd1fc1'
+  })
+
+  fetchOperationCoinChart({
+    startDate: '2024-09-01',
+    endDate: '2024-09-07',
+    // pcbName: 'TESTING_Claw',
+    pcbGroupId: '3bbca0e6-9166-266c-3a00-e67b123456d3',
+    goodsId: '6d884fe5-e230-4b94-a553-e2cc66dd1fc1'
+  })
 }
 
 fetchOperationClawChart({

@@ -90,7 +90,7 @@ const { width } = useDeviceWidth()
 <style lang="scss" scoped>
 aside.sidebar {
   @include base-transition;
-  position: fixed;
+  position: absolute;
   top: 0;
   right: -$--sidebar-width;
   display: flex;

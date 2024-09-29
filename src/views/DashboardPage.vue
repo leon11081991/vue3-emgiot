@@ -100,10 +100,7 @@ onMounted(async () => {
     <!-- BarChart -->
     <DashboardBarChart />
 
-    <UpdateRecord
-      :date="'2021-11-11'"
-      :time="'11:11:11'"
-    />
+    <UpdateRecord />
 
     <SegmentedTab
       v-model:value="selectedTab"

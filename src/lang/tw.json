@@ -4,7 +4,7 @@
     "ServerError": "伺服器錯誤，請稍後再試"
   },
   "Common": {
-    "Result":{
+    "Result": {
       "NotLogin": "請先登入...",
       "TokenExpired": "登入已過期，請重新登入",
       "LoginSuccess": "登入成功，即將前往首頁...",
@@ -30,7 +30,9 @@
       "Button": "確認"
     }
   },
-  "HomePage": {},
+  "HomePage": {
+    "search": "搜尋商家名稱"
+  },
   "DashboardPage": {
     "HeaderTitle": "雲端掌櫃 - ",
     "Tabs": {
