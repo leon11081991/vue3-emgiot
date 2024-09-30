@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+// import
 import { ref, computed } from 'vue'
 import { Bar } from 'vue-chartjs'
 import {
@@ -11,13 +12,13 @@ import {
   LinearScale
 } from 'chart.js'
 import type { ChartOptions, ChartData } from 'chart.js'
-import type { OperationChartResType } from '@/models/types/dashboard.types'
+import type { StoresTotalResType } from '@/models/types/store.types'
 import { useDate } from '@/composables/useDate'
 
 // Props (defineProps)
 const props = defineProps<{
   isLoading: Boolean
-  data: OperationChartResType
+  data: StoresTotalResType
 }>()
 
 // 非響應式變數
@@ -27,7 +28,6 @@ const barTargetColor = rootStyles.getPropertyValue('--bar-target-color').trim()
 const revenueBgColor = rootStyles.getPropertyValue('--bg-revenue-color').trim()
 
 // 子組件 ref
-// Chart.js 的組件需要先註冊
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 // ref 變數
@@ -35,7 +35,7 @@ const chartOptions = ref<ChartOptions<'bar'>>({
   responsive: true,
   plugins: {
     legend: {
-      display: false // 隱藏圖例（包括數據集標籤）
+      display: false
     },
     tooltip: {
       backgroundColor: '#fff',
@@ -45,9 +45,8 @@ const chartOptions = ref<ChartOptions<'bar'>>({
       cornerRadius: 8,
       callbacks: {
         labelColor: (context) => {
-          // 檢查 context.dataset 是否有定義
           const backgroundColorArray = context.dataset?.backgroundColor as string[] | undefined
-          const backgroundColor = backgroundColorArray?.[context.dataIndex] || '#000' // 如果未定義則使用預設顏色
+          const backgroundColor = backgroundColorArray?.[context.dataIndex] || '#000'
           return {
             borderColor: 'rgba(255, 255, 255, 0)',
             backgroundColor: backgroundColor,
@@ -60,46 +59,45 @@ const chartOptions = ref<ChartOptions<'bar'>>({
   },
   scales: {
     x: {
-      display: false // 隱藏 x 軸上的 labels
+      display: false
     },
     y: {
-      beginAtZero: true, // 確保 y 軸從 0 開始
+      beginAtZero: true,
       ticks: {
-        display: false // 隱藏 y 軸上的 labels
+        display: false
       },
       grid: {
-        display: true, // 顯示網格線
-        drawOnChartArea: true, // 繪製在圖表區域內
-        drawTicks: false, // 繪製 y 軸的刻度線
-        color: (context) => (context.tick.value === 0 ? revenueBgColor : revenueBgColor), // 設定 0 線的顏色和其他線的顏色
-        lineWidth: (context) => (context.tick.value === 0 ? 2 : 1) // 設定 0 線的寬度和其他線的寬度
+        display: true,
+        drawOnChartArea: true,
+        drawTicks: false,
+        color: (context) => (context.tick.value === 0 ? revenueBgColor : revenueBgColor),
+        lineWidth: (context) => (context.tick.value === 0 ? 2 : 1)
       },
       border: {
-        display: false // 不顯示 y 軸的邊框
+        display: false
       }
     }
   }
 })
 
 // computed
-const { formatDate } = useDate()
-const chartData = computed<ChartData<'bar'>>(() => ({
-  labels: props.data.clawMachine.map((item) => formatDate(item.date, 'YYYY-MM-DD')),
-  datasets: [
-    {
-      data: props.data.clawMachine.map((item) => item.revenue), // 替換為新數據
-      backgroundColor: props.data.clawMachine.map((item) => {
-        const nowDate = formatDate(item.date, 'YYYY-MM-DD')
-        // 日期比較之後會吃變數
-        if (nowDate === '2024-09-07') {
-          return barTargetColor
-        }
-        return barDefaultColor
-      }),
-      borderRadius: 6 // 設定圓角半徑
-    }
-  ]
-}))
+const { formatDate, today } = useDate()
+const chartData = computed<ChartData<'bar'>>(() => {
+  const data = props.data
+  return {
+    labels: data.map((item) => formatDate(item.date, 'YYYY-MM-DD')),
+    datasets: [
+      {
+        data: data.map((item) => item.revenue),
+        backgroundColor: data.map((item) => {
+          const nowDate = formatDate(item.date, 'YYYY-MM-DD')
+          return nowDate === today() ? barTargetColor : barDefaultColor
+        }),
+        borderRadius: 6
+      }
+    ]
+  }
+})
 </script>
 
 <template>

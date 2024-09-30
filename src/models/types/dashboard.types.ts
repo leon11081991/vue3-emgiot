@@ -14,14 +14,14 @@ type BaseOperationsInfoResType = {
   pcbGroupName: string // 機台群組名稱
 }
 
-type ClawMachineResType = {
+export type ClawMachineResType = {
   date: string // 日期
   revenue: number // 營收
   profit: number // 盈餘
   prizeWinCount: number // 出貨
 }
 
-type CoinMachineResType = {
+export type CoinMachineResType = {
   date: string // 日期
   coinExchanged: number // 兌幣量
 }
@@ -54,3 +54,5 @@ export type CoinOperationsInfoResType = BaseOperationsInfoResType & {
   coinExchanged: number // 已兌
   coinRemaining: number // 剩餘
 }
+
+export type PropsBarChartType = 'claw' | 'coin'

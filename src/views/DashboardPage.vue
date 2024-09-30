@@ -12,8 +12,9 @@ import FilteredTag from '@/components/DashboardPage/FilteredTag.vue'
 import UpdateRecord from '@/components/DashboardPage/UpdateRecord.vue'
 import ClawTabList from '@/components/DashboardPage/ClawTabList.vue'
 import FloatButton from '@/components/Base/FloatButton.vue'
-import DashboardBarChart from '@/components/DashboardPage/DashboardBarChart.vue'
+import DashboardBarChart from '@/components/BarChart/DashboardBarChart.vue'
 import BatchModal from '@/components/DashboardPage/Modal/BatchModal.vue'
+import StoreFilterModal from '@/components/DashboardPage/Modal/StoreFilterModal.vue'
 import { useI18n } from 'vue-i18n'
 import { useHeader } from '@/composables/useHeader'
 import { useDate } from '@/composables/useDate'
@@ -61,6 +62,8 @@ const coinActiveKey = ref([])
 const batchSearchParam = ref<string>('')
 const listData = ref<ClawOperationsInfoResType[] | CoinOperationsInfoResType[]>([])
 
+const updateKey = ref(0)
+
 const handleToggleTab = async (tab: DashboardTabType): Promise<void> => {
   if (tab === 'claw') {
     await fetchClawOperationsInfo({
@@ -82,6 +85,10 @@ const handleToggleTab = async (tab: DashboardTabType): Promise<void> => {
   }
 }
 
+const fnRefreshData = () => {
+  updateKey.value += 1
+}
+
 onMounted(async () => {
   storeName.value = '大寮光華店'
   updateHeaderTitle($t('DashboardPage.HeaderTitle') + storeName.value) // 設定動態 header title
@@ -98,9 +105,12 @@ onMounted(async () => {
 <template>
   <div class="dashboard-page">
     <!-- BarChart -->
-    <DashboardBarChart />
+    <DashboardBarChart
+      :key="updateKey"
+      :type="selectedTab"
+    />
 
-    <UpdateRecord />
+    <UpdateRecord @update="fnRefreshData" />
 
     <SegmentedTab
       v-model:value="selectedTab"
@@ -134,7 +144,10 @@ onMounted(async () => {
         />
       </div>
 
-      <div class="filter-button">
+      <div
+        class="filter-button"
+        @click="openModal()"
+      >
         <BaseSvgIcon iconName="filter-menu" />
       </div>
     </div>
@@ -158,9 +171,17 @@ onMounted(async () => {
   </div>
 
   <BatchModal
+    v-show="modalVisible"
     :modal-visible="modalVisible"
     :search-value="batchSearchParam"
-    @close="closeModal"
+    @close="closeModal()"
+  />
+
+  <StoreFilterModal
+    v-show="modalVisible"
+    :modal-visible="modalVisible"
+    :search-value="batchSearchParam"
+    @close="closeModal()"
   />
 </template>
 

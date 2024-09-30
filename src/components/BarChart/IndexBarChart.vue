@@ -2,12 +2,12 @@
 // import
 import { ref, computed } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
-import BarChart from '@/components/Common/BarChart.vue'
+import IndexBaseBarChart from './IndexBaseBarChart.vue'
 import { useDate } from '@/composables/useDate'
-import { useFetchDashboard } from '@/composables/useFetchDashboard'
+import { useFetchStore } from '@/composables/useFetchStore'
 
 // type
-type OperationDataKey = 'revenue' | 'prizeWinCount' | 'profit'
+type OperationDataKey = 'revenue' | 'prizeWinCount' | 'profit' | 'coinExchanged'
 
 // 非響應式變數
 const TABS = {
@@ -20,69 +20,36 @@ const nowTopic = ref(TABS.REVENUE)
 const updateTime = ref('')
 
 // 初始化日期
-const { today, calculateDate, getCurrentDateTime } = useDate()
-const startDate = today()
-const endDate = calculateDate(startDate, 'backward', 7)
+const { today, getCurrentDateTime } = useDate()
 updateTime.value = getCurrentDateTime()
 
 // 獲取數據
-const { operationChart, fetchOperationClawChart, fetchOperationCoinChart } = useFetchDashboard()
+const { operationTotalChart, fetchTotalOperationChart } = useFetchStore()
 
 // computed
-const calculateTotal = (key: OperationDataKey) => {
+const calculateTotalForToday = (key: OperationDataKey) => {
   return computed(() => {
-    const clawMachineData = operationChart.value.data.clawMachine || []
-    return clawMachineData.reduce((total, entry) => total + (entry[key] || 0), 0)
+    const totalData = operationTotalChart.value.data || []
+    const todayDate = today()
+    const todayData = totalData.filter((entry) => {
+      const entryDate = new Date(entry.date)
+      return entryDate.toDateString() === new Date(todayDate).toDateString()
+    })
+    return todayData.reduce((total, entry) => total + (entry[key] || 0), 0)
   })
 }
 
-const revenueData = computed(() => `$${calculateTotal('revenue').value}`)
-const prizeWinCount = calculateTotal('prizeWinCount')
-const profit = computed(() => `$${calculateTotal('profit').value}`)
-const coinExchanged = computed(() => {
-  const coinMachineData = operationChart.value.data.coinMachine || []
-  return coinMachineData.reduce((total, entry) => total + (entry.coinExchanged || 0), 0)
-})
+const revenueData = computed(() => `$${calculateTotalForToday('revenue').value}`)
+const prizeWinCount = calculateTotalForToday('prizeWinCount')
+const profit = computed(() => `$${calculateTotalForToday('profit').value}`)
+const coinExchanged = computed(() => `$${calculateTotalForToday('coinExchanged').value}`)
 
 // function
 function fnChangeTab(topic: string) {
   nowTopic.value = topic
 }
 
-function fnRefreshChart() {
-  updateTime.value = getCurrentDateTime()
-
-  fetchOperationClawChart({
-    startDate: '2024-09-01',
-    endDate: '2024-09-07',
-    // pcbName: 'TESTING_Coin1',
-    pcbGroupId: '3bbca0e6-9166-266c-3a00-e67b123456d3',
-    goodsId: '6d754fe5-e230-4b94-a553-e2cc66dd1fc1'
-  })
-
-  fetchOperationCoinChart({
-    startDate: '2024-09-01',
-    endDate: '2024-09-07',
-    // pcbName: 'TESTING_Claw',
-    pcbGroupId: '3bbca0e6-9166-266c-3a00-e67b123456d3',
-    goodsId: '6d884fe5-e230-4b94-a553-e2cc66dd1fc1'
-  })
-}
-
-fetchOperationClawChart({
-  startDate: '2024-09-01',
-  endDate: '2024-09-07',
-  // pcbName: 'TESTING_Coin1',
-  pcbGroupId: '3bbca0e6-9166-266c-3a00-e67b123456d3',
-  goodsId: '6d754fe5-e230-4b94-a553-e2cc66dd1fc1'
-})
-fetchOperationCoinChart({
-  startDate: '2024-09-01',
-  endDate: '2024-09-07',
-  // pcbName: 'TESTING_Claw',
-  pcbGroupId: '3bbca0e6-9166-266c-3a00-e67b123456d3',
-  goodsId: '6d884fe5-e230-4b94-a553-e2cc66dd1fc1'
-})
+fetchTotalOperationChart()
 </script>
 
 <template>
@@ -111,10 +78,10 @@ fetchOperationCoinChart({
         </p>
       </div>
       <div class="chartData-section">
-        <BarChart
+        <IndexBaseBarChart
           class="chart"
-          :isLoading="operationChart.isLoading.clawMachine || operationChart.isLoading.coinMachine"
-          :data="operationChart.data"
+          :isLoading="operationTotalChart.isLoading"
+          :data="operationTotalChart.data"
         />
         <div class="chartData-container">
           <div class="data-title">

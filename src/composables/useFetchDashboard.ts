@@ -15,7 +15,7 @@ export const useFetchDashboard = () => {
   const { openMessage } = useMessage()
 
   // TODO: 待優化
-  /** 首頁運營圖表 */
+  /** 店家運營圖表 */
   const operationChart = ref<{
     data: OperationChartResType
     isLoading: {
