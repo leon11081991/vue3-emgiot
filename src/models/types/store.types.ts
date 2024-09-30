@@ -11,7 +11,17 @@ type BaseStoreInfoResType = {
   ]
 }
 
+type BaseStoresTotalResType = {
+  coinExchanged: number
+  date: string
+  revenue: number
+  profit: number
+  prizeWinCount: number
+}
+
 export type StoresListInfoResType = {
   customerId: CustomerId
   stores: Array<BaseStoreInfoResType>
 }
+
+export type StoresTotalResType = Array<BaseStoresTotalResType>

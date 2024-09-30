@@ -4,8 +4,9 @@ import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AvatarDisplay from '@/components/Base/AvatarDisplay.vue'
 import UpdateRecord from '@/components/DashboardPage/UpdateRecord.vue'
-import DashboardBarChart from '@/components/DashboardPage/DashboardBarChart.vue'
+import IndexBarChart from '@/components/BarChart/IndexBarChart.vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
+import FloatButton from '@/components/Base/FloatButton.vue'
 import { useFetchStore } from '@/composables/useFetchStore'
 import { useRouter } from 'vue-router'
 
@@ -56,7 +57,7 @@ fetchStoresListInfo()
 <template>
   <div class="index-page">
     <!-- BarChart -->
-    <DashboardBarChart :key="updateKey" />
+    <IndexBarChart :key="updateKey" />
     <UpdateRecord @update="fnRefreshData" />
     <div class="place-holder"></div>
     <div class="search-merchant-container">
@@ -86,6 +87,7 @@ fetchStoresListInfo()
         {{ listItem.storeName }}
       </div>
     </div>
+    <FloatButton />
   </div>
 </template>
 

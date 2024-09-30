@@ -1,10 +1,38 @@
-import type { StoresListInfoResType } from '@/models/types/store.types'
+import type { StoresListInfoResType, StoresTotalResType } from '@/models/types/store.types'
 import { ref } from 'vue'
 import { api } from '@/services'
 import { useMessage } from '@/composables/useMessage'
+import { catchErrorHandler } from '@/utils/api/error-handler'
 
 export const useFetchStore = () => {
   const { openMessage } = useMessage()
+
+  /** 首頁總total運營圖表 */
+  const operationTotalChart = ref<{
+    data: StoresTotalResType
+    isLoading: boolean
+  }>({
+    data: [],
+    isLoading: true
+  })
+
+  /** 取得首頁總total運營圖表 */
+  const fetchTotalOperationChart = async () => {
+    try {
+      const { result, isSuccess } = await api.store.getTotalOperationChart()
+
+      if (!isSuccess) {
+        // TODO: 錯誤處理
+        return
+      }
+
+      operationTotalChart.value.data = result
+    } catch (e) {
+      catchErrorHandler(e)
+    } finally {
+      operationTotalChart.value.isLoading = false
+    }
+  }
 
   /** 店家資訊清單 */
   const storesListInfo = ref<{
@@ -56,7 +84,9 @@ export const useFetchStore = () => {
 
   return {
     storesListInfo,
+    operationTotalChart,
     fetchStoresListInfo,
-    dispatchRecordCurrentStore
+    dispatchRecordCurrentStore,
+    fetchTotalOperationChart
   }
 }

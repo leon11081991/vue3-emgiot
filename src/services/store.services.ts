@@ -6,7 +6,12 @@ export class StoreServices extends ApiFactory {
     super('')
   }
 
-  /** 取得店家資訊清單 */
+  /** 取得總total店家資訊清單 */
+  getTotalOperationChart = async (): Promise<ApiResponse> => {
+    return await this.get<unknown, ApiResponse>(StoreEnums.totalOperationsChart)
+  }
+
+  /** 取得所有店家資訊清單 */
   getStoresListInfo = async (): Promise<ApiResponse> => {
     return await this.get<unknown, ApiResponse>(StoreEnums.stores)
   }

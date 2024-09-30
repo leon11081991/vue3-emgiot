@@ -21,8 +21,6 @@ const route = useRoute()
 <style lang="scss">
 .container {
   position: relative;
-  overflow: hidden;
-  max-width: map-get($grid-breakpoints, md);
   margin: 0 auto;
 }
 
