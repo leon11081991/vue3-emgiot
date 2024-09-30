@@ -15,12 +15,16 @@ const axiosInstance = axios.create({
 
 /** 處理請求發送前 */
 const beforeRequest = (config: InternalAxiosRequestConfig) => {
-  const userStore = useUserStore()
-  const loginApiPath = LoginEnum.login
-  const signInValidateApiPath = SignInEnum.validate
+  const { token } = useUserStore()
+  const { login } = LoginEnum
+  const { signIn, validate, forgotPassword } = SignInEnum
 
-  if (!(config.url?.includes(loginApiPath) || config.url?.includes(signInValidateApiPath))) {
-    config.headers.Authorization = `Bearer ${userStore.token}`
+  const isAuthApi = [login, signIn, validate, forgotPassword].some((apiPath) =>
+    config.url?.includes(apiPath)
+  )
+
+  if (!isAuthApi) {
+    config.headers.Authorization = `Bearer ${token}`
   }
 
   config.headers['Content-Type'] = 'application/json;charset=UTF-8'

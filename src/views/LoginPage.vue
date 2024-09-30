@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import type { LoginDataType } from '@/models/types/auth.types'
+import type {
+  LoginDataType,
+  SignUpDataType,
+  ForgotPasswordReqType
+} from '@/models/types/auth.types'
 import { ValidationTypeEnums } from '@/constants/enums/validator.enums'
 import { onMounted, ref } from 'vue'
 import { Form } from 'ant-design-vue'
@@ -14,28 +18,30 @@ import { UtilCommon } from '@/utils/utilCommon'
 type TabKey = 'login' | 'register'
 
 const { t: $t } = useI18n()
-const { loadLoginInfo, fnLogin, fnSignIn } = useAuth()
+const { loadLoginInfo, fnLogin, fnSignIn, fnForgotPassword } = useAuth()
 const { modalVisible, openModal, closeModal } = useModal()
 const { validateErrorMessage, validate, validateConfirmPassword } = useValidator()
 
+const isButtonLoading = ref<boolean>(false)
 const activeKey = ref<TabKey>('login')
 const loginFormModel = ref<LoginDataType>({
   userId: '',
   password: '',
   rememberMe: false
 })
-const registerFormModel = ref({
+const registerFormModel = ref<SignUpDataType>({
   userId: '',
   password: '',
   confirmPassword: '',
   realName: ''
 })
-const forgetPasswordFormModel = ref({
+const forgotPasswordFormModel = ref<ForgotPasswordReqType>({
   userId: ''
 })
 
 const loginForm = Form.useForm(loginFormModel.value)
 const registerForm = Form.useForm(registerFormModel.value)
+const forgotPasswordForm = Form.useForm(forgotPasswordFormModel.value)
 
 const toggleTab = (key: TabKey) => {
   activeKey.value = key
@@ -88,29 +94,30 @@ const checkRegisterButtonDisabled = (): boolean => {
   )
 }
 
-// TODO: type 修正
-const onLoginFinish = (values: any) => {
-  console.log('登入資料:', values)
-  // 在這裡處理登入邏輯
+const onLoginFinish = (values: LoginDataType) => {
+  isButtonLoading.value = true
   fnLogin(
     {
       userId: values.userId,
       password: values.password
     },
     values.rememberMe
-  )
+  ).finally(() => {
+    isButtonLoading.value = false
+  })
+}
+
+const onRegisterFinish = (values: SignUpDataType) => {
+  isButtonLoading.value = true
+  fnSignIn(values).finally(() => {
+    isButtonLoading.value = false
+  })
 }
 
 // TODO: type 修正
-const onRegisterFinish = (values: any) => {
-  console.log('註冊資料:', values)
-  // 在這裡處理註冊邏輯
-  fnSignIn(values)
-}
-
-// TODO: type 修正
-const onForgotPasswordFinish = (values: any) => {
+const onForgotPasswordFinish = (values: ForgotPasswordReqType) => {
   console.log('忘記密碼資料:', values)
+  fnForgotPassword(values)
 }
 
 onMounted(() => {
@@ -230,6 +237,7 @@ onMounted(() => {
                 class="login-btn"
                 type="primary"
                 html-type="submit"
+                :loading="isButtonLoading"
               >
                 {{ $t('LoginPage.Login.Submit') }}
               </a-button>
@@ -312,13 +320,6 @@ onMounted(() => {
                       <BaseSvgIcon iconName="mail" />
                     </template>
                   </a-input>
-
-                  <!-- <a-button
-                    class="validate-btn"
-                    :disabled="!validateValue('Email', registerFormModel.userId)"
-                  >
-                    {{ $t('LoginPage.Register.Validate') }}
-                  </a-button> -->
                 </div>
               </a-input-group>
             </a-form-item>
@@ -421,6 +422,7 @@ onMounted(() => {
                 class="register-btn"
                 type="primary"
                 :disabled="checkRegisterButtonDisabled()"
+                :loading="isButtonLoading"
                 html-type="submit"
               >
                 {{ $t('LoginPage.Register.Submit') }}
@@ -444,6 +446,7 @@ onMounted(() => {
     <a-modal
       class="forgot-password-modal"
       v-model:open="modalVisible"
+      :footer="null"
       @cancel="closeModal"
     >
       <template #title>
@@ -452,13 +455,27 @@ onMounted(() => {
         </div>
       </template>
 
-      <a-form :layout="'vertical'">
-        <a-form-item name="email">
+      <a-form
+        class="forgot-password-form"
+        name="forgot-password_form"
+        layout="vertical"
+        :model="forgotPasswordFormModel"
+        :form="forgotPasswordForm"
+        @finish="onForgotPasswordFinish"
+      >
+        <a-form-item
+          name="userId"
+          validateTrigger="blur"
+          :rules="[
+            { required: true, message: '' },
+            { validator: validateFormItem('Email', forgotPasswordFormModel.userId) }
+          ]"
+        >
           <div class="input-container email-input">
             <a-input
               class="base-input"
               :placeholder="$t('LoginPage.ForgotPassword.UserId')"
-              v-model:value="forgetPasswordFormModel.userId"
+              v-model:value="forgotPasswordFormModel.userId"
             >
               <template #prefix>
                 <BaseSvgIcon iconName="mail" />
@@ -466,19 +483,33 @@ onMounted(() => {
             </a-input>
           </div>
         </a-form-item>
+
+        <a-form-item>
+          <a-button
+            :disabled="!validateValue('Email', forgotPasswordFormModel.userId)"
+            class="forgot-password-btn"
+            type="primary"
+            size="large"
+            html-type="submit"
+          >
+            {{ $t('LoginPage.ForgotPassword.Submit') }}
+          </a-button>
+        </a-form-item>
       </a-form>
 
-      <template #footer>
-        <a-button
-          :disabled="!validateValue('Email', forgetPasswordFormModel.userId)"
-          class="forgot-password-btn"
-          type="primary"
-          size="large"
-          @click="onForgotPasswordFinish"
-        >
-          {{ $t('LoginPage.ForgotPassword.Submit') }}
-        </a-button>
-      </template>
+      <!-- <template #footer>
+        <a-form-item>
+          <a-button
+            :disabled="!validateValue('Email', forgotPasswordFormModel.userId)"
+            class="forgot-password-btn"
+            type="primary"
+            size="large"
+            html-type="submit"
+          >
+            {{ $t('LoginPage.ForgotPassword.Submit') }}
+          </a-button>
+        </a-form-item>
+      </template> -->
     </a-modal>
   </div>
 </template>
@@ -624,7 +655,7 @@ onMounted(() => {
 
 .other-message {
   position: relative;
-  margin-bottom: 1rem;
+  margin-block: 1rem;
   text-align: center;
   color: $--color-gray-600;
 

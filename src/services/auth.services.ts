@@ -3,7 +3,7 @@ import type {
   LoginReqType,
   GoogleLoginReqType,
   SignUpReqType,
-  ForgetPasswordReqType,
+  ForgotPasswordReqType,
   PasswordChangeReqType,
   AccountDisableReqType
 } from '@/models/types/auth.types'
@@ -41,9 +41,9 @@ export class AuthServices extends ApiFactory {
   }
 
   /** 忘記密碼 */
-  forgetPassword = async (userAccountData: ForgetPasswordReqType): Promise<ApiResponse> => {
-    return await this.put<ForgetPasswordReqType, ApiResponse>(
-      SignInEnum.forgetPassword,
+  forgotPassword = async (userAccountData: ForgotPasswordReqType): Promise<ApiResponse> => {
+    return await this.put<ForgotPasswordReqType, ApiResponse>(
+      SignInEnum.forgotPassword,
       userAccountData
     )
   }

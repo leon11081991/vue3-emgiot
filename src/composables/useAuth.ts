@@ -1,8 +1,8 @@
 import type {
   LoginReqType,
   // GoogleLoginReqType,
-  SignUpReqType
-  // ForgetPasswordReqType,
+  SignUpReqType,
+  ForgotPasswordReqType
   // PasswordChangeReqType,
   // AccountDisableReqType
 } from '@/models/types/auth.types'
@@ -46,7 +46,7 @@ export const useAuth = () => {
   }
 
   /** 處理登入 */
-  const fnLogin = async (params: LoginReqType, isRememberMe: boolean) => {
+  const fnLogin = async (params: LoginReqType, isRememberMe: boolean): Promise<void> => {
     try {
       handleRememberMe(params, isRememberMe)
 
@@ -74,18 +74,39 @@ export const useAuth = () => {
   }
 
   /** 處理註冊 */
-  const fnSignIn = async (params: SignUpReqType) => {
+  const fnSignIn = async (params: SignUpReqType): Promise<void> => {
     try {
-      console.log('object', params)
       const { userId, password, realName } = params
-      // await api.auth.signIn(params)
+      const { isSuccess } = await api.auth.signIn({ userId, password, realName })
+
+      if (!isSuccess) {
+        // 失敗：顯示錯誤訊息提示
+        // TODO: 錯誤處理，目前沒有提供對應的狀態碼錯誤
+        return
+      }
+
+      openNotification(
+        {
+          subTitle:
+            '系統寄出[驗證信]至您的電子郵件地址。請依郵件內容，點擊下面的連結完成完成Email驗證。'
+        },
+        'success',
+        'top',
+        () => {
+          UtilCommon.goPage('/login')
+        },
+        {
+          hasIcon: false,
+          hasClose: false
+        }
+      )
     } catch (e) {
       catchErrorHandler(e)
     }
   }
 
   /** 處理註冊驗證 */
-  const fnSignUpValidate = async (validateCode: string) => {
+  const fnSignUpValidate = async (validateCode: string): Promise<void> => {
     try {
       const { isSuccess } = await api.auth.validate(validateCode)
 
@@ -138,11 +159,27 @@ export const useAuth = () => {
     }
   }
 
+  /** 處理忘記密碼 */
+  const fnForgotPassword = async (params: ForgotPasswordReqType): Promise<void> => {
+    try {
+      const { isSuccess } = await api.auth.forgotPassword(params)
+
+      if (!isSuccess) {
+        // 失敗：顯示錯誤訊息提示
+        // TODO: 錯誤處理，目前沒有提供對應的狀態碼錯誤
+        return
+      }
+    } catch (error) {
+      catchErrorHandler(error)
+    }
+  }
+
   return {
     loadLoginInfo,
     fnLogin,
     fnSignIn,
     fnSignUpValidate,
-    fnLogOut
+    fnLogOut,
+    fnForgotPassword
   }
 }
