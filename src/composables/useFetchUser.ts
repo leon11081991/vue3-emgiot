@@ -33,27 +33,21 @@ export const useFetchUser = () => {
     }
   }
 
-  /** 處理變更密碼 */
-  const fnChangePassword = async (newPwd: string) => {
-    try {
-      const { result, isSuccess } = await api.user.changePassword(newPwd)
-
-      if (!isSuccess) {
-        // TODO: 錯誤處理
-        return
-      }
-      console.log('fnChangePassword', result)
-    } catch (e) {
-      catchErrorHandler(e)
-    }
-  }
-
   /** 處理變更使用者資訊 */
   const fnUpdateUserInfo = async (newUserName: string) => {
     try {
-      const res = await api.user.updateUserInfo(newUserName)
+      console.log('object', newUserName)
+      const { result, isSuccess } = await api.user.updateUserInfo(newUserName)
 
-      console.log('fnUpdateUserInfo', res)
+      console.log('fnUpdateUserInfo', result, isSuccess)
+
+      if (!isSuccess) {
+        // TODO: 錯誤處理
+        openMessage('error', getI18nTranslate('ErrorMessage.UpdateUserInfoFail'))
+        return
+      }
+
+      fnGetUserInfo(userStore.token)
     } catch (e) {
       catchErrorHandler(e)
     }
@@ -61,7 +55,6 @@ export const useFetchUser = () => {
 
   return {
     fnGetUserInfo,
-    fnChangePassword,
     fnUpdateUserInfo
   }
 }

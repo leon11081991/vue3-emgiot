@@ -6,7 +6,7 @@ import { getI18nTranslate } from '@/utils/i18nUtils'
 import { errorCodeHandler, unauthorizedHandler } from '@/utils/api/error-handler'
 import { useMessage } from '@/composables/useMessage'
 import { useUserStore } from '@/stores/user.stores'
-import { LoginEnum, SignInEnum } from '@/constants/enums/api/auth.enums'
+import { LoginEnum, SignUpEnum } from '@/constants/enums/api/auth.enums'
 
 /** 創建實例 */
 const axiosInstance = axios.create({
@@ -18,7 +18,7 @@ const axiosInstance = axios.create({
 const beforeRequest = (config: InternalAxiosRequestConfig) => {
   const { token } = useUserStore()
   const { login } = LoginEnum
-  const { signIn, validate, forgotPassword } = SignInEnum
+  const { signIn, validate, forgotPassword } = SignUpEnum
 
   const isAuthApi = [login, signIn, validate, forgotPassword].some((apiPath) =>
     config.url?.includes(apiPath)
@@ -61,9 +61,10 @@ const responseFailed = (error: AxiosError) => {
   if (response) {
     const { status, data } = response
 
-    unauthorizedHandler(status)
-    errorCodeHandler(status, (data as ApiResponseModel).message)
+    const unauthorized = unauthorizedHandler(status)
+    if (unauthorized) return unauthorized
 
+    errorCodeHandler(status, (data as ApiResponseModel).message)
     return Promise.resolve(data as ApiResponseModel) // 讓後續的 catch 去做個別處理
   }
 }

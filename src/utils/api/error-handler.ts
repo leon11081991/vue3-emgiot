@@ -9,7 +9,7 @@ export const errorCodeHandler = (errorCode: number, errorMessage: string): void 
   const errorMessages: { [key: number]: string } = {
     400: 'Common.Response.BadRequest',
     404: 'Common.Response.NotFound',
-    500: 'Common.Response.ServerError',
+    500: 'Common.Response.InternalError',
     502: 'Common.Response.ServerError'
   }
 
@@ -29,7 +29,9 @@ export const unauthorizedHandler = (errorCode: number): Promise<Error> | void =>
 
   initLoginState()
   UtilCommon.removeLocalStorage('storage-user')
-  openMessage('error', getI18nTranslate('Common.Response.Unauthorized'))
+  openMessage('error', getI18nTranslate('Common.Response.Unauthorized'), {}, () => {
+    UtilCommon.goPage('/login')
+  })
 
   return Promise.reject(new Error(getI18nTranslate('Common.Response.Unauthorized')))
 }

@@ -23,7 +23,7 @@ export type SignUpDataType = SignUpReqType & {
 }
 
 export type ForgotPasswordReqType = Omit<LoginReqType, 'password'>
-export type PasswordChangeReqType = SignUpReqType
+
 export type AccountDisableReqType = {
   userId: string
 }
