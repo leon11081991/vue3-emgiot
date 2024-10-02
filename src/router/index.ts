@@ -26,9 +26,9 @@ const routes = [
     }
   },
   {
-    path: '/sign-up',
-    name: 'SignUp',
-    component: () => import('@/views/SignUpPage.vue'),
+    path: '/validation',
+    name: 'Validation',
+    component: () => import('@/views/ValidationPage.vue'),
     meta: {
       layout: 'LayoutBlank',
       middleware: [layoutMiddleware]

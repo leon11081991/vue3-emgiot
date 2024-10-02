@@ -23,6 +23,12 @@ const route = useRoute()
   position: relative;
   margin: 0 auto;
 }
+
+.layout-blank {
+  .main-page {
+    min-height: 100vh;
+  }
+}
 .main-page {
   min-height: calc(100vh - $--header-height);
   padding-inline: $--page-padding-x;
@@ -49,6 +55,10 @@ const route = useRoute()
 /** Ant Design Form */
 .ant-form-item {
   margin-bottom: 1rem;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
 }
 
 /** Ant Design Button */
@@ -252,6 +262,11 @@ const route = useRoute()
     grid-template-columns: auto 1fr;
     gap: 1rem;
   }
+  &.no-icon {
+    .ant-result-icon {
+      display: none;
+    }
+  }
 
   .ant-result-icon {
     grid-area: icon;
@@ -310,5 +325,12 @@ const route = useRoute()
 /** Ant Design Empty */
 .ant-empty {
   margin-block: 0.5rem;
+}
+
+/** Ant Design Notification */
+.ant-notification {
+  & .ant-notification-notice-close {
+    display: none;
+  }
 }
 </style>
