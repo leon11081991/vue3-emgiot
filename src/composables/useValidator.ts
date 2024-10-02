@@ -14,6 +14,9 @@ const validationRules = [
     key: ValidationTypeEnums.Password,
     value: /^[A-Za-z0-9]{6,}$/,
     errorMessage: '密碼需為6位以上字母或數字'
+    // TODO: 正式需更換為下列規則
+    // value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,16}$/,
+    // errorMessage: '密碼需為8-16位英文數字混和密碼'
   },
   {
     key: ValidationTypeEnums.Phone,

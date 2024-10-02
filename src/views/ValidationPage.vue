@@ -2,23 +2,23 @@
 import { onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuth } from '@/composables/useAuth'
-import { useMessage } from '@/composables/useMessage'
 import { useNotification } from '@/composables/useNotification'
 import { UtilCommon } from '@/utils/utilCommon'
 
+// composables
 const { t: $t } = useI18n()
 const { fnSignUpValidate } = useAuth()
-const { openMessage } = useMessage()
 const { openNotification } = useNotification()
 
 const query = UtilCommon.getQueryParam('input')
-console.log('query', query)
+
+// lifecycle hooks
 onMounted(() => {
   if (!query) {
     openNotification(
       {
         title: $t('Common.Response.Error'),
-        subTitle: `驗證失敗，請確認網址是否正確`
+        subTitle: $t('ErrorMessage.ValidateFail')
       },
       'error',
       'top',
@@ -34,7 +34,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>Validate Page</div>
+  <div class="validate-page">Validate Page</div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.validate-page {
+  opacity: 0;
+}
+</style>

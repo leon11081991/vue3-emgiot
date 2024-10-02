@@ -48,24 +48,24 @@ export const useAuth = () => {
   /** 處理登入 */
   const fnLogin = async (params: LoginReqType, isRememberMe: boolean): Promise<void> => {
     try {
+      // 處理記住我
       handleRememberMe(params, isRememberMe)
 
       const { result, isSuccess, resultCode } = await api.auth.login(params)
 
       if (!isSuccess) {
         // 失敗：顯示錯誤訊息提示
-        openNotification(
+        return openNotification(
           {
             title: $t('Common.Response.Error'),
-            subTitle: `${resultCode} - ${$t(errorMessagesMapping[resultCode])}`
+            subTitle: `${resultCode} - ${$t(errorMessagesMapping['fnLogin'][resultCode])}`
           },
           'error'
         )
-        return
       }
 
       userStore.token = result.token
-      openMessage('success', $t('Common.Result.LoginSuccess'), {}, () => {
+      return openMessage('success', $t('Common.Result.LoginSuccess'), {}, () => {
         UtilCommon.goPage('/')
       })
     } catch (e) {
@@ -74,21 +74,21 @@ export const useAuth = () => {
   }
 
   /** 處理註冊 */
-  const fnSignIn = async (params: SignUpReqType): Promise<void> => {
+  const fnSignUp = async (params: SignUpReqType): Promise<boolean> => {
     try {
       const { userId, password, realName } = params
-      const { isSuccess } = await api.auth.signIn({ userId, password, realName })
+      const { isSuccess, resultCode } = await api.auth.signIn({ userId, password, realName })
 
       if (!isSuccess) {
         // 失敗：顯示錯誤訊息提示
         // TODO: 錯誤處理，目前沒有提供對應的狀態碼錯誤
-        return
+        openMessage('error', `${resultCode} - ${$t(errorMessagesMapping['fnSignUp'][resultCode])}`)
+        return false
       }
 
       openNotification(
         {
-          subTitle:
-            '系統寄出[驗證信]至您的電子郵件地址。請依郵件內容，點擊下面的連結完成完成Email驗證。'
+          subTitle: $t('Common.Result.SignUpSuccess')
         },
         'success',
         'top',
@@ -100,31 +100,44 @@ export const useAuth = () => {
           hasClose: false
         }
       )
+
+      return true
     } catch (e) {
       catchErrorHandler(e)
+      return false
     }
   }
 
   /** 處理註冊驗證 */
   const fnSignUpValidate = async (validateCode: string): Promise<void> => {
     try {
-      const { isSuccess } = await api.auth.validate(validateCode)
+      const { isSuccess, resultCode } = await api.auth.validate(validateCode)
 
       if (!isSuccess) {
         // 失敗：顯示錯誤訊息提示
-
-        return
+        // TODO: 之後依據resultCode去做對應的訊息
+        return openNotification(
+          {
+            title: $t('Common.Response.Error'),
+            subTitle: `${resultCode} - ${$t(errorMessagesMapping['fnSignUpValidate'][resultCode])}`
+          },
+          'error',
+          'top',
+          () => {
+            UtilCommon.goPage('/login')
+          }
+        )
       }
 
-      openNotification(
+      return openNotification(
         {
-          title: $t('Common.Success'),
-          subTitle: $t('Common.Result.SignUpSuccess')
+          title: $t('Common.Response.Success'),
+          subTitle: $t('Common.Result.ValidateSuccess')
         },
         'success',
         'top',
         () => {
-          UtilCommon.goPage('/')
+          UtilCommon.goPage('/login')
         }
       )
     } catch (e) {
@@ -133,25 +146,23 @@ export const useAuth = () => {
   }
 
   /** 處理登出 */
-  const fnLogOut = async () => {
+  const fnLogOut = async (): Promise<void> => {
     try {
-      const { isSuccess, message, resultCode } = await api.auth.logout()
+      const { isSuccess, resultCode } = await api.auth.logout()
 
       if (!isSuccess) {
         // 失敗：顯示錯誤訊息提示
-        openNotification(
+        return openNotification(
           {
-            title: $t('Common.Error'),
-            subTitle: `${resultCode} - ${$t(errorMessagesMapping[message])}`
+            title: $t('Common.Response.Error'),
+            subTitle: `${resultCode} - ${$t(errorMessagesMapping['fnLogOut'][resultCode])}`
           },
           'error'
         )
-        return
       }
 
       userStore.initLoginState()
-
-      openMessage('success', $t('Common.Result.LogoutSuccess'), {}, () => {
+      return openMessage('success', $t('Common.Result.LogoutSuccess'), {}, () => {
         UtilCommon.goPage('/login')
       })
     } catch (e) {
@@ -160,24 +171,39 @@ export const useAuth = () => {
   }
 
   /** 處理忘記密碼 */
-  const fnForgotPassword = async (params: ForgotPasswordReqType): Promise<void> => {
+  const fnForgotPassword = async (params: ForgotPasswordReqType): Promise<boolean> => {
     try {
-      const { isSuccess } = await api.auth.forgotPassword(params)
+      const { isSuccess, resultCode } = await api.auth.forgotPassword(params)
 
       if (!isSuccess) {
         // 失敗：顯示錯誤訊息提示
         // TODO: 錯誤處理，目前沒有提供對應的狀態碼錯誤
-        return
+        openMessage(
+          'error',
+          `${resultCode} - ${$t(errorMessagesMapping['fnForgotPassword'][resultCode])}`
+        )
+        return false
       }
+
+      openNotification(
+        {
+          title: $t('Common.Response.Success'),
+          subTitle: `${$t('Common.Result.ForgotPasswordSuccess')}`
+        },
+        'success'
+      )
+
+      return true
     } catch (error) {
       catchErrorHandler(error)
+      return false
     }
   }
 
   return {
     loadLoginInfo,
     fnLogin,
-    fnSignIn,
+    fnSignUp,
     fnSignUpValidate,
     fnLogOut,
     fnForgotPassword

@@ -47,6 +47,10 @@ export const useNotification = () => {
         )
       }),
       placement,
+      top: placement === 'top' ? '50%' : undefined,
+      style: {
+        transform: placement === 'top' ? 'translateY(-50%)' : undefined
+      },
       closeIcon: options.hasClose ? undefined : null,
       duration: 300
     })

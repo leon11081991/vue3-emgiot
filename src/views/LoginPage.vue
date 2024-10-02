@@ -16,13 +16,23 @@ import { useValidator } from '@/composables/useValidator'
 import { UtilCommon } from '@/utils/utilCommon'
 
 type TabKey = 'login' | 'register'
+type ButtonFieldType = 'login' | 'register' | 'forgotPassword'
 
 const { t: $t } = useI18n()
-const { loadLoginInfo, fnLogin, fnSignIn, fnForgotPassword } = useAuth()
+const { loadLoginInfo, fnLogin, fnSignUp, fnForgotPassword } = useAuth()
 const { modalVisible, openModal, closeModal } = useModal()
 const { validateErrorMessage, validate, validateConfirmPassword } = useValidator()
 
-const isButtonLoading = ref<boolean>(false)
+// constants
+const maxLength = 10
+
+// refs
+const isButtonLoading = ref<Record<ButtonFieldType, boolean>>({
+  login: false,
+  register: false,
+  forgotPassword: false
+})
+const isSentValidationCode = ref<boolean>(false)
 const activeKey = ref<TabKey>('login')
 const loginFormModel = ref<LoginDataType>({
   userId: '',
@@ -43,6 +53,7 @@ const loginForm = Form.useForm(loginFormModel.value)
 const registerForm = Form.useForm(registerFormModel.value)
 const forgotPasswordForm = Form.useForm(forgotPasswordFormModel.value)
 
+// functions
 const toggleTab = (key: TabKey) => {
   activeKey.value = key
 }
@@ -95,7 +106,7 @@ const checkRegisterButtonDisabled = (): boolean => {
 }
 
 const onLoginFinish = (values: LoginDataType) => {
-  isButtonLoading.value = true
+  isButtonLoading.value.login = true
   fnLogin(
     {
       userId: values.userId,
@@ -103,23 +114,35 @@ const onLoginFinish = (values: LoginDataType) => {
     },
     values.rememberMe
   ).finally(() => {
-    isButtonLoading.value = false
+    isButtonLoading.value.login = false
   })
 }
 
 const onRegisterFinish = (values: SignUpDataType) => {
-  isButtonLoading.value = true
-  fnSignIn(values).finally(() => {
-    isButtonLoading.value = false
-  })
+  isButtonLoading.value.register = true
+  fnSignUp(values)
+    .then((res) => {
+      if (!res) return
+      isSentValidationCode.value = true
+    })
+    .finally(() => {
+      isButtonLoading.value.register = false
+    })
 }
 
-// TODO: type 修正
 const onForgotPasswordFinish = (values: ForgotPasswordReqType) => {
-  console.log('忘記密碼資料:', values)
+  isButtonLoading.value.forgotPassword = true
   fnForgotPassword(values)
+    .then((res) => {
+      if (!res) return
+      closeModal()
+    })
+    .finally(() => {
+      isButtonLoading.value.forgotPassword = false
+    })
 }
 
+// lifecycle hooks
 onMounted(() => {
   const rememberMeData = loadLoginInfo()
   if (!rememberMeData) return
@@ -129,7 +152,10 @@ onMounted(() => {
 
 <template>
   <div class="login-page">
-    <div class="login-register-container">
+    <div
+      class="login-register-container"
+      :class="{ 'is-sent-validation': isSentValidationCode }"
+    >
       <a-tabs
         class="tabs-container"
         v-model:activeKey="activeKey"
@@ -237,7 +263,7 @@ onMounted(() => {
                 class="login-btn"
                 type="primary"
                 html-type="submit"
-                :loading="isButtonLoading"
+                :loading="isButtonLoading.login"
               >
                 {{ $t('LoginPage.Login.Submit') }}
               </a-button>
@@ -408,6 +434,7 @@ onMounted(() => {
                 <a-input
                   class="base-input"
                   :placeholder="$t('SignUpPage.SignUp.UserInfo')"
+                  :maxLength="maxLength"
                   v-model:value="registerFormModel.realName"
                 >
                   <template #prefix>
@@ -422,8 +449,8 @@ onMounted(() => {
                 class="register-btn"
                 type="primary"
                 :disabled="checkRegisterButtonDisabled()"
-                :loading="isButtonLoading"
                 html-type="submit"
+                :loading="isButtonLoading.register"
               >
                 {{ $t('LoginPage.Register.Submit') }}
               </a-button>
@@ -491,25 +518,12 @@ onMounted(() => {
             type="primary"
             size="large"
             html-type="submit"
+            :loading="isButtonLoading.forgotPassword"
           >
             {{ $t('LoginPage.ForgotPassword.Submit') }}
           </a-button>
         </a-form-item>
       </a-form>
-
-      <!-- <template #footer>
-        <a-form-item>
-          <a-button
-            :disabled="!validateValue('Email', forgotPasswordFormModel.userId)"
-            class="forgot-password-btn"
-            type="primary"
-            size="large"
-            html-type="submit"
-          >
-            {{ $t('LoginPage.ForgotPassword.Submit') }}
-          </a-button>
-        </a-form-item>
-      </template> -->
     </a-modal>
   </div>
 </template>
@@ -527,6 +541,10 @@ onMounted(() => {
 
   @include media-breakpoint-down(sm) {
     top: $--login-top-mobile;
+  }
+
+  &.is-sent-validation {
+    display: none;
   }
 
   .tabs-container {
