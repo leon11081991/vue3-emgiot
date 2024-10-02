@@ -5,9 +5,8 @@ import { useUserStore } from '@/stores/user.stores'
 
 const { openMessage } = useMessage()
 
-export const errorCodeHandler = (errorCode: number): Promise<Error> => {
+export const errorCodeHandler = (errorCode: number, errorMessage: string): void => {
   const errorMessages: { [key: number]: string } = {
-    // 401: 'Common.Response.Unauthorized',
     400: 'Common.Response.BadRequest',
     404: 'Common.Response.NotFound',
     500: 'Common.Response.ServerError',
@@ -17,27 +16,22 @@ export const errorCodeHandler = (errorCode: number): Promise<Error> => {
   const errorMessageKey = errorMessages[errorCode]
 
   if (errorMessageKey) {
-    openMessage('error', getI18nTranslate(errorMessageKey))
-    return Promise.reject(new Error(getI18nTranslate(errorMessageKey)))
+    return console.error(getI18nTranslate(errorMessageKey), errorMessage)
   }
 
-  return Promise.reject(new Error('Unknown error code'))
+  return console.error('Unknown error code', errorMessage)
 }
 
-export const unauthorizedHandler = (errorCode: number): void => {
+export const unauthorizedHandler = (errorCode: number): Promise<Error> | void => {
   if (errorCode !== 401) return
 
   const { initLoginState } = useUserStore()
 
   initLoginState()
   UtilCommon.removeLocalStorage('storage-user')
-  openMessage(
-    'error',
-    getI18nTranslate('Common.Response.Unauthorized'),
-    {}
-    // () =>
-    // UtilCommon.goPage('/login')
-  )
+  openMessage('error', getI18nTranslate('Common.Response.Unauthorized'))
+
+  return Promise.reject(new Error(getI18nTranslate('Common.Response.Unauthorized')))
 }
 
 export const catchErrorHandler = (error: unknown) => {

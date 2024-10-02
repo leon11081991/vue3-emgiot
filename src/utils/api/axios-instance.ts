@@ -1,4 +1,5 @@
 import type { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios'
+import type { ApiResponseModel } from '@/utils/api/models'
 import axios from 'axios'
 import { env } from '@/env'
 import { getI18nTranslate } from '@/utils/i18nUtils'
@@ -56,14 +57,15 @@ const responseFailed = (error: AxiosError) => {
   }
 
   const { response } = error
+
   if (response) {
-    const { status } = response
+    const { status, data } = response
 
     unauthorizedHandler(status)
-    errorCodeHandler(status)
-  }
+    errorCodeHandler(status, (data as ApiResponseModel).message)
 
-  return Promise.reject(error)
+    return Promise.resolve(data as ApiResponseModel) // 讓後續的 catch 去做個別處理
+  }
 }
 
 /** 請求攔截器 */
