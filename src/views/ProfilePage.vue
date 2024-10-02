@@ -9,6 +9,7 @@ import { useFetchUser } from '@/composables/useFetchUser'
 import { modalStyleConfig } from '@/constants/configs/profile.config'
 import { ValidationTypeEnums } from '@/constants/enums/validator.enums'
 import { UtilCommon } from '@/utils/utilCommon'
+import { useUserStore } from '@/stores/user.stores'
 
 // type
 type ModalType = 'username' | 'password'
@@ -18,6 +19,8 @@ const { t: $t } = useI18n()
 const { modalVisible, openModal, closeModal } = useModal()
 const { validateErrorMessage, validate, validateConfirmPassword } = useValidator()
 const { fnUpdateUserInfo } = useFetchUser()
+// stores
+const userStore = useUserStore()
 
 // refs
 const newUserData = ref({
@@ -90,7 +93,11 @@ const handleConfirmClick = async (field: ModalType): Promise<void> => {
 
   // TODO: api
   if (field === 'username') {
-    await fnUpdateUserInfo(newUserData.value.username)
+    try {
+      await fnUpdateUserInfo(newUserData.value.username)
+    } catch (error) {
+      Promise.reject(error)
+    }
   }
 
   if (field === 'password') {
@@ -114,11 +121,11 @@ const mockUserData = {
     <div class="profile-content">
       <div class="display-container">
         <AvatarDisplay
-          :name="mockUserData.username"
+          :name="userStore.userInfo.nickName"
           size="lg"
         />
         <div class="user-name-container">
-          <p class="user-name-display">{{ mockUserData.name }}</p>
+          <p class="user-name-display">{{ userStore.userInfo.nickName }}</p>
           <div
             class="name-edit-button"
             @click="handleOpenModal('username')"
@@ -133,7 +140,7 @@ const mockUserData = {
             {{ $t('ProfilePage.EditableContainer.UserNameField.Title') }}
           </span>
           <a-input
-            v-model:value="mockUserData.name"
+            v-model:value="userStore.userInfo.realName"
             size="large"
             readonly
             class="input-field"

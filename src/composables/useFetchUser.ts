@@ -51,9 +51,10 @@ export const useFetchUser = () => {
   /** 處理變更使用者資訊 */
   const fnUpdateUserInfo = async (newUserName: string) => {
     try {
-      const res = await api.user.updateUserInfo(newUserName)
+      console.log('object', newUserName)
+      const { result, isSuccess } = await api.user.updateUserInfo(newUserName)
 
-      console.log('fnUpdateUserInfo', res)
+      console.log('fnUpdateUserInfo', result, isSuccess)
     } catch (e) {
       catchErrorHandler(e)
     }
