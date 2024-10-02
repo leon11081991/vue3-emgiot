@@ -1,14 +1,24 @@
 {
   "ErrorMessage": {
     "UserNotFound": "用戶不存在",
-    "ServerError": "伺服器錯誤，請稍後再試"
+    "ServerError": "伺服器錯誤，請稍後再試",
+    "WrongUserIdAndPassword": "帳號或密碼錯誤。",
+    "DuplicateUserId": "此帳號已被註冊。",
+    "GetUserInfoFail":"取得使用者資訊失敗",
+    "ValidationCodeIncorrect": "驗證碼不正確。",
+    "ValidateFail": "驗證失敗，請確認網址是否正確。",
+    "UserNotVerified":"使用者未驗證。"
   },
   "Common": {
     "Result": {
       "NotLogin": "請先登入...",
       "TokenExpired": "登入已過期，請重新登入",
       "LoginSuccess": "登入成功，即將前往首頁...",
-      "LogoutSuccess": "登出成功"
+      "LogoutSuccess": "登出成功",
+      "SignUpSuccess": "系統寄出[驗證信]至您的電子郵件地址。請依郵件內容，點擊下面的連結完成完成Email驗證。",
+      "ForgotPasswordSuccess": "發送信件成功，請使用信件內連結重設密碼。",
+      "ValidateSuccess":"驗證成功，即將前往登入頁..."
+      
     },
     "Response": {
       "Success": "成功",
@@ -55,8 +65,8 @@
       "LoginValidateMessages": "請填寫"
     },
     "Register": {
-      "TabLabel": "帳號認證",
-      "TextMessage": "使用電子信箱認證以保障帳號安全",
+      "TabLabel": "註冊",
+      "TextMessage": "歡迎加入",
       "UserId": "電子信箱",
       "Validate": "驗證",
       "Submit": "送出",
@@ -75,6 +85,10 @@
       "AlreadyHasAccount": "已有帳號?",
       "ToggleToRegister": "註冊帳號",
       "ToggleToLogin": "登入帳號"
+    },
+    "ValidateMessage": {
+      "Required": "必填",
+      "ConfirmPasswordError": "密碼不相符"
     }
   },
   "SignUpPage": {

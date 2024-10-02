@@ -76,4 +76,17 @@ export class UtilCommon {
   static removeLocalStorage(key: string): void {
     localStorage.removeItem(key)
   }
+
+  /** 抓取網址查詢參數 */
+  static getQueryParam(key: string): string | null {
+    const urlParams = new URLSearchParams(window.location.search)
+    let param = urlParams.get(key)
+
+    if (param) {
+      param = decodeURIComponent(param) // 先使用 decodeURIComponent 解碼
+      param = param.replace(/ /g, '+') // 將空格替換回 '+'
+    }
+
+    return param
+  }
 }

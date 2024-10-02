@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import type { LoginDataType } from '@/models/types/auth.types'
+import type {
+  LoginDataType,
+  SignUpDataType,
+  ForgotPasswordReqType
+} from '@/models/types/auth.types'
 import { ValidationTypeEnums } from '@/constants/enums/validator.enums'
 import { onMounted, ref } from 'vue'
 import { Form } from 'ant-design-vue'
@@ -12,28 +16,44 @@ import { useValidator } from '@/composables/useValidator'
 import { UtilCommon } from '@/utils/utilCommon'
 
 type TabKey = 'login' | 'register'
+type ButtonFieldType = 'login' | 'register' | 'forgotPassword'
 
 const { t: $t } = useI18n()
-const { loadLoginInfo, fnLogin } = useAuth()
+const { loadLoginInfo, fnLogin, fnSignUp, fnForgotPassword } = useAuth()
 const { modalVisible, openModal, closeModal } = useModal()
-const { validateErrorMessage, validate } = useValidator()
+const { validateErrorMessage, validate, validateConfirmPassword } = useValidator()
 
+// constants
+const maxLength = 10
+
+// refs
+const isButtonLoading = ref<Record<ButtonFieldType, boolean>>({
+  login: false,
+  register: false,
+  forgotPassword: false
+})
+const isSentValidationCode = ref<boolean>(false)
 const activeKey = ref<TabKey>('login')
 const loginFormModel = ref<LoginDataType>({
   userId: '',
   password: '',
   rememberMe: false
 })
-const registerFormModel = ref({
-  userId: ''
+const registerFormModel = ref<SignUpDataType>({
+  userId: '',
+  password: '',
+  confirmPassword: '',
+  realName: ''
 })
-const forgetPasswordFormModel = ref({
+const forgotPasswordFormModel = ref<ForgotPasswordReqType>({
   userId: ''
 })
 
 const loginForm = Form.useForm(loginFormModel.value)
 const registerForm = Form.useForm(registerFormModel.value)
+const forgotPasswordForm = Form.useForm(forgotPasswordFormModel.value)
 
+// functions
 const toggleTab = (key: TabKey) => {
   activeKey.value = key
 }
@@ -74,31 +94,55 @@ const validateValue = (type: keyof typeof ValidationTypeEnums, value: string): b
   return true
 }
 
-// TODO: type 修正
-const onLoginFinish = (values: any) => {
-  console.log('登入資料:', values)
-  // 在這裡處理登入邏輯
+const checkRegisterButtonDisabled = (): boolean => {
+  const { userId, password, confirmPassword, realName } = registerFormModel.value
 
+  return !(
+    userId.trim().length > 0 &&
+    password.trim().length > 0 &&
+    confirmPassword.trim().length > 0 &&
+    realName.trim().length > 0
+  )
+}
+
+const onLoginFinish = (values: LoginDataType) => {
+  isButtonLoading.value.login = true
   fnLogin(
     {
       userId: values.userId,
       password: values.password
     },
     values.rememberMe
-  )
+  ).finally(() => {
+    isButtonLoading.value.login = false
+  })
 }
 
-// TODO: type 修正
-const onRegisterFinish = (values: any) => {
-  console.log('註冊資料:', values)
-  // 在這裡處理註冊邏輯
+const onRegisterFinish = (values: SignUpDataType) => {
+  isButtonLoading.value.register = true
+  fnSignUp(values)
+    .then((res) => {
+      if (!res) return
+      isSentValidationCode.value = true
+    })
+    .finally(() => {
+      isButtonLoading.value.register = false
+    })
 }
 
-// TODO: type 修正
-const onForgotPasswordFinish = (values: any) => {
-  console.log('忘記密碼資料:', values)
+const onForgotPasswordFinish = (values: ForgotPasswordReqType) => {
+  isButtonLoading.value.forgotPassword = true
+  fnForgotPassword(values)
+    .then((res) => {
+      if (!res) return
+      closeModal()
+    })
+    .finally(() => {
+      isButtonLoading.value.forgotPassword = false
+    })
 }
 
+// lifecycle hooks
 onMounted(() => {
   const rememberMeData = loadLoginInfo()
   if (!rememberMeData) return
@@ -108,8 +152,12 @@ onMounted(() => {
 
 <template>
   <div class="login-page">
-    <div class="login-register-container">
+    <div
+      class="login-register-container"
+      :class="{ 'is-sent-validation': isSentValidationCode }"
+    >
       <a-tabs
+        class="tabs-container"
         v-model:activeKey="activeKey"
         :tabBarStyle="loginPageTabBarStyleConfig"
       >
@@ -215,6 +263,7 @@ onMounted(() => {
                 class="login-btn"
                 type="primary"
                 html-type="submit"
+                :loading="isButtonLoading.login"
               >
                 {{ $t('LoginPage.Login.Submit') }}
               </a-button>
@@ -278,7 +327,14 @@ onMounted(() => {
             :model="registerFormModel"
             @finish="onRegisterFinish"
           >
-            <a-form-item name="email">
+            <a-form-item
+              name="userId"
+              validateTrigger="blur"
+              :rules="[
+                { required: true, message: '' },
+                { validator: validateFormItem('Email', registerFormModel.userId) }
+              ]"
+            >
               <a-input-group>
                 <div class="input-container validate-input">
                   <a-input
@@ -290,22 +346,111 @@ onMounted(() => {
                       <BaseSvgIcon iconName="mail" />
                     </template>
                   </a-input>
-
-                  <a-button
-                    class="validate-btn"
-                    :disabled="!validateValue('Email', registerFormModel.userId)"
-                  >
-                    {{ $t('LoginPage.Register.Validate') }}
-                  </a-button>
                 </div>
               </a-input-group>
+            </a-form-item>
+
+            <a-form-item
+              name="password"
+              validateTrigger="blur"
+              :rules="[
+                { required: true, message: '' },
+                { validator: validateFormItem('Password', registerFormModel.password) }
+              ]"
+            >
+              <a-input-password
+                class="base-input"
+                autocomplete="current-password"
+                :placeholder="$t('SignUpPage.SignUp.Password')"
+                v-model:value="registerFormModel.password"
+              >
+                <template #prefix>
+                  <BaseSvgIcon iconName="lock" />
+                </template>
+
+                <template #iconRender="x">
+                  <div
+                    class="password-visible"
+                    v-if="x"
+                  >
+                    <BaseSvgIcon iconName="eye-off" />
+                  </div>
+                  <div
+                    class="password-invisible"
+                    v-else
+                  >
+                    <BaseSvgIcon iconName="eye-on" />
+                  </div>
+                </template>
+              </a-input-password>
+            </a-form-item>
+
+            <a-form-item
+              name="confirmPassword"
+              validateTrigger="blur"
+              :validate-status="validateErrorMessage ? 'error' : ''"
+              :help="validateErrorMessage"
+              :rules="[{ required: true, message: '' }]"
+            >
+              <a-input-password
+                class="base-input"
+                autocomplete="none"
+                :placeholder="$t('SignUpPage.SignUp.VerifyPassword')"
+                v-model:value="registerFormModel.confirmPassword"
+                @blur="
+                  validateErrorMessage = validateConfirmPassword(
+                    registerFormModel.confirmPassword,
+                    registerFormModel.password
+                  )
+                "
+              >
+                <template #prefix>
+                  <BaseSvgIcon iconName="lock" />
+                </template>
+
+                <template #iconRender="x">
+                  <div
+                    class="password-visible"
+                    v-if="x"
+                  >
+                    <BaseSvgIcon iconName="eye-off" />
+                  </div>
+                  <div
+                    class="password-invisible"
+                    v-else
+                  >
+                    <BaseSvgIcon iconName="eye-on" />
+                  </div>
+                </template>
+              </a-input-password>
+            </a-form-item>
+
+            <a-form-item
+              name="realName"
+              validateTrigger="blur"
+              :rules="[{ required: true, message: $t('LoginPage.ValidateMessage.Required') }]"
+            >
+              <div class="input-container userInfo-input">
+                <a-input
+                  class="base-input"
+                  :placeholder="$t('SignUpPage.SignUp.UserInfo')"
+                  :maxLength="maxLength"
+                  v-model:value="registerFormModel.realName"
+                >
+                  <template #prefix>
+                    <BaseSvgIcon iconName="profile" />
+                  </template>
+                </a-input>
+              </div>
             </a-form-item>
 
             <a-form-item>
               <a-button
                 class="register-btn"
                 type="primary"
+                :disabled="checkRegisterButtonDisabled()"
                 html-type="submit"
+                :loading="isButtonLoading.register"
               >
                 {{ $t('LoginPage.Register.Submit') }}
               </a-button>
@@ -328,6 +473,7 @@ onMounted(() => {
     <a-modal
       class="forgot-password-modal"
       v-model:open="modalVisible"
+      :footer="null"
       @cancel="closeModal"
     >
       <template #title>
@@ -336,13 +482,27 @@ onMounted(() => {
         </div>
       </template>
 
-      <a-form :layout="'vertical'">
-        <a-form-item name="email">
+      <a-form
+        class="forgot-password-form"
+        name="forgot-password_form"
+        layout="vertical"
+        :model="forgotPasswordFormModel"
+        :form="forgotPasswordForm"
+        @finish="onForgotPasswordFinish"
+      >
+        <a-form-item
+          name="userId"
+          validateTrigger="blur"
+          :rules="[
+            { required: true, message: '' },
+            { validator: validateFormItem('Email', forgotPasswordFormModel.userId) }
+          ]"
+        >
           <div class="input-container email-input">
             <a-input
               class="base-input"
               :placeholder="$t('LoginPage.ForgotPassword.UserId')"
-              v-model:value="forgetPasswordFormModel.userId"
+              v-model:value="forgotPasswordFormModel.userId"
             >
               <template #prefix>
                 <BaseSvgIcon iconName="mail" />
@@ -350,19 +510,20 @@ onMounted(() => {
             </a-input>
           </div>
         </a-form-item>
-      </a-form>
 
-      <template #footer>
-        <a-button
-          :disabled="!validateValue('Email', forgetPasswordFormModel.userId)"
-          class="forgot-password-btn"
-          type="primary"
-          size="large"
-          @click="onForgotPasswordFinish"
-        >
-          {{ $t('LoginPage.ForgotPassword.Submit') }}
-        </a-button>
-      </template>
+        <a-form-item>
+          <a-button
+            :disabled="!validateValue('Email', forgotPasswordFormModel.userId)"
+            class="forgot-password-btn"
+            type="primary"
+            size="large"
+            html-type="submit"
+            :loading="isButtonLoading.forgotPassword"
+          >
+            {{ $t('LoginPage.ForgotPassword.Submit') }}
+          </a-button>
+        </a-form-item>
+      </a-form>
     </a-modal>
   </div>
 </template>
@@ -372,6 +533,7 @@ onMounted(() => {
   position: relative;
   display: flex;
   justify-content: center;
+  min-height: calc(100dvh - $--page-padding-x - $--heading-font-size);
 }
 .login-register-container {
   width: 90%;
@@ -379,6 +541,21 @@ onMounted(() => {
 
   @include media-breakpoint-down(sm) {
     top: $--login-top-mobile;
+  }
+
+  &.is-sent-validation {
+    display: none;
+  }
+
+  .tabs-container {
+    height: 100%;
+    :deep(.ant-tabs-content) {
+      height: 100%;
+    }
+
+    :deep(.ant-tabs-tabpane) {
+      height: 100%;
+    }
   }
 }
 
@@ -422,6 +599,25 @@ onMounted(() => {
 }
 
 .register-tab-field {
+  .register-form {
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - $--heading-font-size - 22px - $--page-padding-top - $--page-padding-bottom);
+
+    .ant-form-item {
+      &:nth-of-type(1),
+      &:nth-of-type(3) {
+        margin-bottom: 2.5rem;
+      }
+      &:nth-of-type(4) {
+        flex: 1;
+      }
+      &:nth-of-type(5) {
+        margin-bottom: 0;
+      }
+    }
+  }
+
   .validate-input {
     position: relative;
 
@@ -438,6 +634,7 @@ onMounted(() => {
     z-index: 1;
   }
 }
+
 .text-message {
   margin-bottom: 2rem;
   text-align: center;
@@ -476,7 +673,7 @@ onMounted(() => {
 
 .other-message {
   position: relative;
-  margin-bottom: 1rem;
+  margin-block: 1rem;
   text-align: center;
   color: $--color-gray-600;
 
@@ -500,7 +697,7 @@ onMounted(() => {
 
 .to-register,
 .to-login {
-  margin-top: 2rem;
+  margin-top: 1.75rem;
   display: flex;
   justify-content: center;
   gap: 0.5rem;

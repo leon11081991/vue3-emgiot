@@ -37,8 +37,11 @@ export const authMiddleware = async ({
 
   // 處理有效token的非登入頁
   if (to.name !== 'Login' && tokenValid) {
-    // TODO: 取得用戶資訊
-    // await fnGetUserInfo(token)
+    const { realName } = userStore.userInfo
+    if (!realName) {
+      await fnGetUserInfo(token)
+    }
+
     return next()
   }
 
