@@ -61,9 +61,10 @@ const responseFailed = (error: AxiosError) => {
   if (response) {
     const { status, data } = response
 
-    unauthorizedHandler(status)
-    errorCodeHandler(status, (data as ApiResponseModel).message)
+    const unauthorized = unauthorizedHandler(status)
+    if (unauthorized) return unauthorized
 
+    errorCodeHandler(status, (data as ApiResponseModel).message)
     return Promise.resolve(data as ApiResponseModel) // 讓後續的 catch 去做個別處理
   }
 }
