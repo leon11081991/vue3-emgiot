@@ -17,8 +17,9 @@ const props = withDefaults(
     size: 'md'
   }
 )
-
-const { avatarLetters } = useAvatarLetters(props.name, props.charNum)
+const avatarLetters = computed(() => {
+  return useAvatarLetters(props.name, props.charNum).avatarLetters.value
+})
 const { colorHex } = useRandomColor()
 
 const avatarSize = computed(() => {
@@ -50,7 +51,7 @@ const avatarSize = computed(() => {
       <span
         v-for="(letter, index) in avatarLetters"
         :key="index"
-        :class="`letter letter-${index + 1}`"
+        :class="`letter letter-${index + 1} ${props.size}`"
       >
         {{ letter }}
       </span>
@@ -75,17 +76,29 @@ const avatarSize = computed(() => {
 
 .two-letters .letter {
   position: absolute;
-  font-size: 1.5rem;
   overflow: hidden;
+  line-height: 1;
+
+  &.sm {
+    font-size: 1rem;
+  }
+
+  &.md {
+    font-size: 1.5rem;
+  }
+
+  &.lg {
+    font-size: 2rem;
+  }
 }
 
 .letter-1 {
   top: 4px;
-  left: 2px;
+  left: 0;
 }
 
 .letter-2 {
-  top: 20px;
-  right: 2px;
+  bottom: 4px;
+  right: 0;
 }
 </style>

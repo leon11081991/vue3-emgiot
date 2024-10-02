@@ -1,5 +1,6 @@
 import type {
   LoginReqType,
+  LoginDataType,
   // GoogleLoginReqType,
   SignUpReqType,
   ForgotPasswordReqType
@@ -27,9 +28,9 @@ export const useAuth = () => {
   }
 
   /** 讀取記住我資訊 */
-  const loadLoginInfo = () => {
+  const loadLoginInfo = (): LoginDataType | null => {
     const rememberMe = UtilCommon.getLocalStorage<LoginReqType>('rememberMe')
-    if (!rememberMe) return
+    if (!rememberMe) return null
     return {
       userId: rememberMe.userId,
       password: rememberMe.password,
@@ -200,12 +201,29 @@ export const useAuth = () => {
     }
   }
 
+  /** 處理變更密碼 */
+  const fnChangePassword = async (newPwd: string) => {
+    try {
+      const { isSuccess, resultCode } = await api.auth.changePassword(newPwd)
+
+      if (!isSuccess) {
+        // TODO: 錯誤處理，目前沒有提供對應的狀態碼錯誤
+        return openMessage('error', `${resultCode} - ${$t('ErrorMessage.ChangePasswordFail')}`)
+      }
+
+      return openMessage('success', $t('Common.Result.ChangePasswordSuccess'))
+    } catch (e) {
+      catchErrorHandler(e)
+    }
+  }
+
   return {
     loadLoginInfo,
     fnLogin,
     fnSignUp,
     fnSignUpValidate,
     fnLogOut,
-    fnForgotPassword
+    fnForgotPassword,
+    fnChangePassword
   }
 }

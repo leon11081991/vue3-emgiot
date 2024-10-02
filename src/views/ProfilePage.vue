@@ -5,6 +5,7 @@ import AvatarDisplay from '@/components/Base/AvatarDisplay.vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import { useModal } from '@/composables/useModal'
 import { useValidator } from '@/composables/useValidator'
+import { useAuth } from '@/composables/useAuth'
 import { useFetchUser } from '@/composables/useFetchUser'
 import { modalStyleConfig } from '@/constants/configs/profile.config'
 import { ValidationTypeEnums } from '@/constants/enums/validator.enums'
@@ -18,6 +19,7 @@ type ModalType = 'username' | 'password'
 const { t: $t } = useI18n()
 const { modalVisible, openModal, closeModal } = useModal()
 const { validateErrorMessage, validate, validateConfirmPassword } = useValidator()
+const { fnChangePassword } = useAuth()
 const { fnUpdateUserInfo } = useFetchUser()
 // stores
 const userStore = useUserStore()
@@ -41,6 +43,7 @@ const modalErrorMsg = ref<Record<string, string | null>>({
 
 // constants
 const maxLength = 10
+const fakePassword = '12345678'
 
 // functions
 const changeModalField = (field: ModalType): void => {
@@ -91,28 +94,21 @@ const handleConfirmClick = async (field: ModalType): Promise<void> => {
   console.log('[handleConfirmClick]', field)
   isButtonLoading.value = true
 
-  // TODO: api
   if (field === 'username') {
-    try {
-      await fnUpdateUserInfo(newUserData.value.username)
-    } catch (error) {
-      Promise.reject(error)
-    }
+    fnUpdateUserInfo(newUserData.value.username).finally(() => {
+      newUserData.value.username = ''
+    })
   }
 
   if (field === 'password') {
-    // TODO: change password api
+    fnChangePassword(newUserData.value.password).finally(() => {
+      newUserData.value.password = ''
+      newUserData.value.confirmPassword = ''
+    })
   }
 
   isButtonLoading.value = false
   closeModal()
-}
-
-const mockUserData = {
-  name: '雲小二',
-  username: '雲小二',
-  avatar: 'https://i.pravatar.cc/300',
-  password: 'asvasv'
 }
 </script>
 
@@ -157,7 +153,7 @@ const mockUserData = {
           </span>
           <a-input-group>
             <a-input-password
-              v-model:value="mockUserData.password"
+              v-model:value="fakePassword"
               :visibility-toggle="false"
               size="large"
               readonly

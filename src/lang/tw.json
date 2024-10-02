@@ -4,10 +4,12 @@
     "ServerError": "伺服器錯誤，請稍後再試",
     "WrongUserIdAndPassword": "帳號或密碼錯誤。",
     "DuplicateUserId": "此帳號已被註冊。",
-    "GetUserInfoFail":"取得使用者資訊失敗",
+    "GetUserInfoFail": "取得使用者資訊失敗",
     "ValidationCodeIncorrect": "驗證碼不正確。",
     "ValidateFail": "驗證失敗，請確認網址是否正確。",
-    "UserNotVerified":"使用者未驗證。"
+    "UserNotVerified":"使用者未驗證。",
+    "UpdateUserInfoFail": "請以非數字的字元作為使用者名稱開頭。",
+    "ChangePasswordFail": "密碼變更失敗"
   },
   "Common": {
     "Result": {
@@ -17,7 +19,8 @@
       "LogoutSuccess": "登出成功",
       "SignUpSuccess": "系統寄出[驗證信]至您的電子郵件地址。請依郵件內容，點擊下面的連結完成完成Email驗證。",
       "ForgotPasswordSuccess": "發送信件成功，請使用信件內連結重設密碼。",
-      "ValidateSuccess":"驗證成功，即將前往登入頁..."
+      "ChangePasswordSuccess": "密碼變更成功",
+      "ValidateSuccess": "驗證成功，即將前往登入頁..."
       
     },
     "Response": {
@@ -89,7 +92,7 @@
     },
     "ValidateMessage": {
       "Required": "必填",
-      "ConfirmPasswordError": "密碼不相符"
+      "ConfirmPasswordError": "與密碼未一致，請重新輸入"
     }
   },
   "SignUpPage": {
