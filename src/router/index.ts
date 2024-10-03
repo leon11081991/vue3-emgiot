@@ -62,6 +62,15 @@ const routes = [
     }
   },
   {
+    path: '/member-info/:storeId/:userId',
+    name: 'MemberInfo',
+    component: () => import('@/views/MemberInfoPage.vue'),
+    meta: {
+      layout: 'LayoutDefault',
+      middleware: [authMiddleware, layoutMiddleware]
+    }
+  },
+  {
     path: '/notepad',
     name: 'Notepad',
     component: () => import('@/views/NotepadPage.vue'),

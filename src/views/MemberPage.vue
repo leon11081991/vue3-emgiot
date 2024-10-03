@@ -1,45 +1,30 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import AvatarDisplay from '@/components/Base/AvatarDisplay.vue'
+import { useFetchStoreMember } from '@/composables/useFetchStoreMember'
 
+// composables
+const router = useRouter()
+const { storeMembers, fnGetStoreMembers } = useFetchStoreMember()
+
+// refs
 const activeKey = ref([])
 
-const mockData = [
-  {
-    storeName: '大寮光華店',
-    storeId: 1,
-    members: [
-      {
-        memberId: 13,
-        name: '雲小二',
-        level: 2
-      },
-      {
-        memberId: 14,
-        name: '阿小二',
-        level: 1
-      }
-    ]
-  },
-  {
-    storeName: '大寮國光店',
-    storeId: 2,
-    members: [
-      {
-        memberId: 12,
-        name: '阿蝦',
-        level: 1
-      }
-    ]
-  }
-]
+const goToMemberInfo = (storeId: string, userId: string) => {
+  router.push({ name: 'MemberInfo', params: { storeId: storeId, userId: userId } })
+}
+
+onMounted(async () => {
+  await fnGetStoreMembers()
+})
 </script>
 
 <template>
   <div class="member-page">
     <div class="collapse-container">
       <a-collapse
-        v-for="store in mockData"
+        v-for="store in storeMembers.data"
         :key="store.storeId"
         v-model:activeKey="activeKey"
         class="member-collapse"
@@ -61,20 +46,24 @@ const mockData = [
           </template>
 
           <ul class="content-list">
-            <li
+            <template
               v-for="member in store.members"
-              :key="member.memberId"
-              class="content-item"
+              :key="member.userId"
             >
-              <AvatarDisplay
+              <li
+                class="content-item"
+                @click="goToMemberInfo(store.storeId, member.userId)"
+              >
+                <!-- <AvatarDisplay
                 size="md"
-                :name="member.name"
-              />
-              <div class="member-wrap">
-                <h6 class="member-name">{{ member.name }}</h6>
-                <div class="member-level">Lv.{{ member.level }}</div>
-              </div>
-            </li>
+                :name="member.userName"
+              /> -->
+                <div class="member-wrap">
+                  <h6 class="member-name">{{ member.userName }}</h6>
+                  <div class="member-level">Lv.{{ member.roleName }}</div>
+                </div>
+              </li>
+            </template>
           </ul>
         </a-collapse-panel>
       </a-collapse>

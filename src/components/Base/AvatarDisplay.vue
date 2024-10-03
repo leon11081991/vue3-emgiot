@@ -12,6 +12,7 @@ const props = withDefaults(
     size?: 'sm' | 'md' | 'lg'
   }>(),
   {
+    name: '',
     charNum: 1,
     isGoogleMember: false,
     size: 'md'
