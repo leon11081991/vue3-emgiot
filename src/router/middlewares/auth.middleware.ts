@@ -55,19 +55,10 @@ export const authMiddleware = async ({
     userStore.initLoginState()
     UtilCommon.removeLocalStorage('storage-user')
     openMessage('warning', getI18nTranslate('Common.Result.TokenExpired'), {}, () => {
-      // router.push({ name: 'Login' })
       UtilCommon.goPage('/login')
     })
     return
   }
-  // if (!tokenValid) {
-  //   userStore.initLoginState()
-  //   UtilCommon.removeLocalStorage('storage-user')
-  //   openMessage('warning', getI18nTranslate('Common.Result.TokenExpired'), {}, () => {
-  //     router.push({ name: 'Login' })
-  //   })
-  //   return
-  // }
 
   next()
 }
