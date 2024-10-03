@@ -22,17 +22,17 @@ export const authMiddleware = async ({
   const userStore = useUserStore()
   const token = userStore.token
   const { openMessage } = useMessage()
-  const { isTokenExpired } = useToken()
+  const { checkTokenValidity } = useToken()
   const { fnGetUserInfo } = useFetchUser()
-
-  const tokenValid = token && !isTokenExpired(token)
+  const tokenValid = checkTokenValidity(token) // 檢查token是否有效
 
   // 處理無效token的非登入頁
   if (to.name !== 'Login' && !tokenValid) {
-    openMessage('error', getI18nTranslate('Common.Result.NotLogin'), { duration: 2 }, () => {
-      router.push({ name: 'Login' })
+    userStore.initLoginState()
+    UtilCommon.removeLocalStorage('storage-user')
+    return openMessage('error', getI18nTranslate('Common.Result.NotLogin'), { duration: 2 }, () => {
+      UtilCommon.goPage('/login')
     })
-    return
   }
 
   // 處理有效token的非登入頁
@@ -41,7 +41,6 @@ export const authMiddleware = async ({
     if (!realName) {
       await fnGetUserInfo(token)
     }
-
     return next()
   }
 
@@ -51,15 +50,24 @@ export const authMiddleware = async ({
     return
   }
 
-  // 處理token過期
-  if (token && isTokenExpired(token)) {
+  // 處理有token但無效token
+  if (token && !checkTokenValidity(token)) {
     userStore.initLoginState()
     UtilCommon.removeLocalStorage('storage-user')
     openMessage('warning', getI18nTranslate('Common.Result.TokenExpired'), {}, () => {
-      router.push({ name: 'Login' })
+      // router.push({ name: 'Login' })
+      UtilCommon.goPage('/login')
     })
     return
   }
+  // if (!tokenValid) {
+  //   userStore.initLoginState()
+  //   UtilCommon.removeLocalStorage('storage-user')
+  //   openMessage('warning', getI18nTranslate('Common.Result.TokenExpired'), {}, () => {
+  //     router.push({ name: 'Login' })
+  //   })
+  //   return
+  // }
 
   next()
 }
