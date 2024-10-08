@@ -8,6 +8,8 @@ import Antd from 'ant-design-vue'
 import i18n from '@/plugins/i18n'
 import versionPlugin from '@/plugins/version'
 import 'virtual:svg-icons-register'
+import { Quasar, QDate } from 'quasar'
+import quasarLang from 'quasar/lang/zh-TW'
 
 import 'ant-design-vue/dist/reset.css'
 import '@/assets/normalize.css'
@@ -23,5 +25,9 @@ app.use(pinia)
 app.use(router)
 app.use(i18n)
 app.use(versionPlugin)
+app.use(Quasar, {
+  components: { QDate },
+  lang: quasarLang
+})
 
 app.mount('#app')
