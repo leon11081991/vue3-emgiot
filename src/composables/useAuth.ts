@@ -1,8 +1,9 @@
 import type {
-  LoginReqType
+  LoginReqType,
+  LoginDataType,
   // GoogleLoginReqType,
-  // SignUpReqType
-  // ForgetPasswordReqType,
+  SignUpReqType,
+  ForgotPasswordReqType
   // PasswordChangeReqType,
   // AccountDisableReqType
 } from '@/models/types/auth.types'
@@ -27,9 +28,9 @@ export const useAuth = () => {
   }
 
   /** 讀取記住我資訊 */
-  const loadLoginInfo = () => {
+  const loadLoginInfo = (): LoginDataType | null => {
     const rememberMe = UtilCommon.getLocalStorage<LoginReqType>('rememberMe')
-    if (!rememberMe) return
+    if (!rememberMe) return null
     return {
       userId: rememberMe.userId,
       password: rememberMe.password,
@@ -46,26 +47,26 @@ export const useAuth = () => {
   }
 
   /** 處理登入 */
-  const fnLogin = async (params: LoginReqType, isRememberMe: boolean) => {
+  const fnLogin = async (params: LoginReqType, isRememberMe: boolean): Promise<void> => {
     try {
+      // 處理記住我
       handleRememberMe(params, isRememberMe)
 
       const { result, isSuccess, resultCode } = await api.auth.login(params)
 
       if (!isSuccess) {
         // 失敗：顯示錯誤訊息提示
-        openNotification(
+        return openNotification(
           {
             title: $t('Common.Response.Error'),
-            subTitle: `${resultCode} - ${$t(errorMessagesMapping[resultCode])}`
+            subTitle: `${resultCode} - ${$t(errorMessagesMapping['fnLogin'][resultCode])}`
           },
           'error'
         )
-        return
       }
 
       userStore.token = result.token
-      openMessage('success', $t('Common.Result.LoginSuccess'), {}, () => {
+      return openMessage('success', $t('Common.Result.LoginSuccess'), {}, () => {
         UtilCommon.goPage('/')
       })
     } catch (e) {
@@ -73,34 +74,144 @@ export const useAuth = () => {
     }
   }
 
-  // const fnSignIn = async (params: SignUpReqType) => {
-  //   try {
-  //     await api.auth.signIn(params)
-  //   } catch (error) { }
-  // }
-
-  /** 處理登出 */
-  const fnLogOut = async () => {
+  /** 處理註冊 */
+  const fnSignUp = async (params: SignUpReqType): Promise<boolean> => {
     try {
-      const { isSuccess, message, resultCode } = await api.auth.logout()
+      const { userId, password, realName } = params
+      const { isSuccess, resultCode } = await api.auth.signIn({ userId, password, realName })
 
       if (!isSuccess) {
         // 失敗：顯示錯誤訊息提示
-        openNotification(
+        // TODO: 錯誤處理，目前沒有提供對應的狀態碼錯誤
+        openMessage('error', `${resultCode} - ${$t(errorMessagesMapping['fnSignUp'][resultCode])}`)
+        return false
+      }
+
+      openNotification(
+        {
+          subTitle: $t('Common.Result.SignUpSuccess')
+        },
+        'success',
+        'top',
+        () => {
+          UtilCommon.goPage('/login')
+        },
+        {
+          hasIcon: false,
+          hasClose: false
+        }
+      )
+
+      return true
+    } catch (e) {
+      catchErrorHandler(e)
+      return false
+    }
+  }
+
+  /** 處理註冊驗證 */
+  const fnSignUpValidate = async (validateCode: string): Promise<void> => {
+    try {
+      const { isSuccess, resultCode } = await api.auth.validate(validateCode)
+
+      if (!isSuccess) {
+        // 失敗：顯示錯誤訊息提示
+        // TODO: 之後依據resultCode去做對應的訊息
+        return openNotification(
           {
-            title: $t('Common.Error'),
-            subTitle: `${resultCode} - ${$t(errorMessagesMapping[message])}`
+            title: $t('Common.Response.Error'),
+            subTitle: `${resultCode} - ${$t(errorMessagesMapping['fnSignUpValidate'][resultCode])}`
+          },
+          'error',
+          'top',
+          () => {
+            UtilCommon.goPage('/login')
+          }
+        )
+      }
+
+      return openNotification(
+        {
+          title: $t('Common.Response.Success'),
+          subTitle: $t('Common.Result.ValidateSuccess')
+        },
+        'success',
+        'top',
+        () => {
+          UtilCommon.goPage('/login')
+        }
+      )
+    } catch (e) {
+      catchErrorHandler(e)
+    }
+  }
+
+  /** 處理登出 */
+  const fnLogOut = async (): Promise<void> => {
+    try {
+      const { isSuccess, resultCode } = await api.auth.logout()
+
+      if (!isSuccess) {
+        // 失敗：顯示錯誤訊息提示
+        return openNotification(
+          {
+            title: $t('Common.Response.Error'),
+            subTitle: `${resultCode} - ${$t(errorMessagesMapping['fnLogOut'][resultCode])}`
           },
           'error'
         )
-        return
       }
 
       userStore.initLoginState()
-
-      openMessage('success', $t('Common.Result.LogoutSuccess'), {}, () => {
+      return openMessage('success', $t('Common.Result.LogoutSuccess'), {}, () => {
         UtilCommon.goPage('/login')
       })
+    } catch (e) {
+      catchErrorHandler(e)
+    }
+  }
+
+  /** 處理忘記密碼 */
+  const fnForgotPassword = async (params: ForgotPasswordReqType): Promise<boolean> => {
+    try {
+      const { isSuccess, resultCode } = await api.auth.forgotPassword(params)
+
+      if (!isSuccess) {
+        // 失敗：顯示錯誤訊息提示
+        // TODO: 錯誤處理，目前沒有提供對應的狀態碼錯誤
+        openMessage(
+          'error',
+          `${resultCode} - ${$t(errorMessagesMapping['fnForgotPassword'][resultCode])}`
+        )
+        return false
+      }
+
+      openNotification(
+        {
+          title: $t('Common.Response.Success'),
+          subTitle: `${$t('Common.Result.ForgotPasswordSuccess')}`
+        },
+        'success'
+      )
+
+      return true
+    } catch (error) {
+      catchErrorHandler(error)
+      return false
+    }
+  }
+
+  /** 處理變更密碼 */
+  const fnChangePassword = async (newPwd: string) => {
+    try {
+      const { isSuccess, resultCode } = await api.auth.changePassword(newPwd)
+
+      if (!isSuccess) {
+        // TODO: 錯誤處理，目前沒有提供對應的狀態碼錯誤
+        return openMessage('error', `${resultCode} - ${$t('ErrorMessage.ChangePasswordFail')}`)
+      }
+
+      return openMessage('success', $t('Common.Result.ChangePasswordSuccess'))
     } catch (e) {
       catchErrorHandler(e)
     }
@@ -109,6 +220,10 @@ export const useAuth = () => {
   return {
     loadLoginInfo,
     fnLogin,
-    fnLogOut
+    fnSignUp,
+    fnSignUpValidate,
+    fnLogOut,
+    fnForgotPassword,
+    fnChangePassword
   }
 }

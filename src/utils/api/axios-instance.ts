@@ -1,10 +1,12 @@
 import type { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios'
+import type { ApiResponseModel } from '@/utils/api/models'
 import axios from 'axios'
 import { env } from '@/env'
 import { getI18nTranslate } from '@/utils/i18nUtils'
 import { errorCodeHandler, unauthorizedHandler } from '@/utils/api/error-handler'
 import { useMessage } from '@/composables/useMessage'
 import { useUserStore } from '@/stores/user.stores'
+import { LoginEnum, SignUpEnum } from '@/constants/enums/api/auth.enums'
 
 /** 創建實例 */
 const axiosInstance = axios.create({
@@ -14,11 +16,16 @@ const axiosInstance = axios.create({
 
 /** 處理請求發送前 */
 const beforeRequest = (config: InternalAxiosRequestConfig) => {
-  const userStore = useUserStore()
-  const loginApiPath = '/LogIn/LogIn'
+  const { token } = useUserStore()
+  const { login } = LoginEnum
+  const { signIn, validate, forgotPassword } = SignUpEnum
 
-  if (!config.url?.includes(loginApiPath)) {
-    config.headers.Authorization = `Bearer ${userStore.token}`
+  const isAuthApi = [login, signIn, validate, forgotPassword].some((apiPath) =>
+    config.url?.includes(apiPath)
+  )
+
+  if (!isAuthApi) {
+    config.headers.Authorization = `Bearer ${token}`
   }
 
   config.headers['Content-Type'] = 'application/json;charset=UTF-8'
@@ -50,14 +57,16 @@ const responseFailed = (error: AxiosError) => {
   }
 
   const { response } = error
+
   if (response) {
-    const { status } = response
+    const { status, data } = response
 
-    unauthorizedHandler(status)
-    errorCodeHandler(status)
+    const unauthorized = unauthorizedHandler(status)
+    if (unauthorized) return unauthorized
+
+    errorCodeHandler(status, (data as ApiResponseModel).message)
+    return Promise.resolve(data as ApiResponseModel) // 讓後續的 catch 去做個別處理
   }
-
-  return Promise.reject(error)
 }
 
 /** 請求攔截器 */

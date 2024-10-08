@@ -17,16 +17,16 @@ export const useToken = () => {
     return decodedToken.exp < currentTime
   }
 
-  /** 檢查token是否過期：true：過期，false：未過期 */
-  const isTokenExpired = (token: string): boolean => {
-    if (!token) return true
+  /** 檢查token是否有效：返回true表示有效，返回false表示無效 */
+  const checkTokenValidity = (token: string | null): boolean => {
+    if (!token) return false // 沒有token，直接認定為無效
 
-    const decodedToken = _decodeToken(token)
     try {
-      return _checkExpire(decodedToken)
+      const decodedToken = _decodeToken(token)
+      return !_checkExpire(decodedToken) // 如果token沒過期，返回true
     } catch (error) {
       console.error('Error decoding token:', error)
-      return true
+      return false // 如果解碼錯誤，認定為無效
     }
   }
 
@@ -47,7 +47,7 @@ export const useToken = () => {
 
   return {
     _decodeToken,
-    isTokenExpired,
+    checkTokenValidity,
     getDataFromToken
   }
 }

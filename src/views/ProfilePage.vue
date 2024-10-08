@@ -5,10 +5,12 @@ import AvatarDisplay from '@/components/Base/AvatarDisplay.vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import { useModal } from '@/composables/useModal'
 import { useValidator } from '@/composables/useValidator'
+import { useAuth } from '@/composables/useAuth'
 import { useFetchUser } from '@/composables/useFetchUser'
 import { modalStyleConfig } from '@/constants/configs/profile.config'
 import { ValidationTypeEnums } from '@/constants/enums/validator.enums'
 import { UtilCommon } from '@/utils/utilCommon'
+import { useUserStore } from '@/stores/user.stores'
 
 // type
 type ModalType = 'username' | 'password'
@@ -16,8 +18,11 @@ type ModalType = 'username' | 'password'
 // composables
 const { t: $t } = useI18n()
 const { modalVisible, openModal, closeModal } = useModal()
-const { validateErrorMessage, validate } = useValidator()
+const { validateErrorMessage, validate, validateConfirmPassword } = useValidator()
+const { fnChangePassword } = useAuth()
 const { fnUpdateUserInfo } = useFetchUser()
+// stores
+const userStore = useUserStore()
 
 // refs
 const newUserData = ref({
@@ -38,6 +43,7 @@ const modalErrorMsg = ref<Record<string, string | null>>({
 
 // constants
 const maxLength = 10
+const fakePassword = '12345678'
 
 // functions
 const changeModalField = (field: ModalType): void => {
@@ -53,16 +59,6 @@ const validatePassword = (type: keyof typeof ValidationTypeEnums, value: string)
   const isValid = validate(ValidationTypeEnums[type], value)
   if (!isValid) {
     return validateErrorMessage.value
-  }
-  return null
-}
-
-const validateConfirmPassword = (value: string): string | null => {
-  if (UtilCommon.checkIsEmpty(value)) {
-    return '必填'
-  }
-  if (newUserData.value.password !== value) {
-    return '密碼不相符'
   }
   return null
 }
@@ -98,24 +94,21 @@ const handleConfirmClick = async (field: ModalType): Promise<void> => {
   console.log('[handleConfirmClick]', field)
   isButtonLoading.value = true
 
-  // TODO: api
   if (field === 'username') {
-    await fnUpdateUserInfo(newUserData.value.username)
+    fnUpdateUserInfo(newUserData.value.username).finally(() => {
+      newUserData.value.username = ''
+    })
   }
 
   if (field === 'password') {
-    // TODO: change password api
+    fnChangePassword(newUserData.value.password).finally(() => {
+      newUserData.value.password = ''
+      newUserData.value.confirmPassword = ''
+    })
   }
 
   isButtonLoading.value = false
   closeModal()
-}
-
-const mockUserData = {
-  name: '雲小二',
-  username: '雲小二',
-  avatar: 'https://i.pravatar.cc/300',
-  password: 'asvasv'
 }
 </script>
 
@@ -124,11 +117,11 @@ const mockUserData = {
     <div class="profile-content">
       <div class="display-container">
         <AvatarDisplay
-          :name="mockUserData.username"
+          :name="userStore.userInfo.nickName"
           size="lg"
         />
         <div class="user-name-container">
-          <p class="user-name-display">{{ mockUserData.name }}</p>
+          <p class="user-name-display">{{ userStore.userInfo.nickName }}</p>
           <div
             class="name-edit-button"
             @click="handleOpenModal('username')"
@@ -143,7 +136,7 @@ const mockUserData = {
             {{ $t('ProfilePage.EditableContainer.UserNameField.Title') }}
           </span>
           <a-input
-            v-model:value="mockUserData.name"
+            v-model:value="userStore.userInfo.realName"
             size="large"
             readonly
             class="input-field"
@@ -160,7 +153,7 @@ const mockUserData = {
           </span>
           <a-input-group>
             <a-input-password
-              v-model:value="mockUserData.password"
+              v-model:value="fakePassword"
               :visibility-toggle="false"
               size="large"
               readonly
@@ -263,7 +256,10 @@ const mockUserData = {
             size="large"
             class="input-field"
             @blur="
-              modalErrorMsg.confirmPassword = validateConfirmPassword(newUserData.confirmPassword)
+              modalErrorMsg.confirmPassword = validateConfirmPassword(
+                newUserData.confirmPassword,
+                newUserData.password
+              )
             "
           >
             <template #iconRender="x">

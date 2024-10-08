@@ -3,11 +3,10 @@ import type {
   LoginReqType,
   GoogleLoginReqType,
   SignUpReqType,
-  ForgetPasswordReqType,
-  PasswordChangeReqType,
+  ForgotPasswordReqType,
   AccountDisableReqType
 } from '@/models/types/auth.types'
-import { LoginEnum, SignInEnum } from '@/constants/enums/api/auth.enums'
+import { LoginEnum, SignUpEnum } from '@/constants/enums/api/auth.enums'
 
 /** 系統登入、註冊 */
 export class AuthServices extends ApiFactory {
@@ -32,29 +31,31 @@ export class AuthServices extends ApiFactory {
 
   /** 註冊新帳號 */
   signIn = async (signInData: SignUpReqType): Promise<ApiResponse> => {
-    return await this.post<SignUpReqType, ApiResponse>(SignInEnum.signIn, signInData)
+    return await this.post<SignUpReqType, ApiResponse>(SignUpEnum.signIn, signInData)
+  }
+
+  /** 帳號驗證 */
+  validate = async (validateCode: string): Promise<ApiResponse> => {
+    return await this.put<string, ApiResponse>(SignUpEnum.validate, validateCode)
   }
 
   /** 忘記密碼 */
-  forgetPassword = async (userAccountData: ForgetPasswordReqType): Promise<ApiResponse> => {
-    return await this.put<ForgetPasswordReqType, ApiResponse>(
-      SignInEnum.forgetPassword,
+  forgotPassword = async (userAccountData: ForgotPasswordReqType): Promise<ApiResponse> => {
+    return await this.put<ForgotPasswordReqType, ApiResponse>(
+      SignUpEnum.forgotPassword,
       userAccountData
     )
   }
 
   /** 變更密碼 */
-  passwordChange = async (passwordChangeData: PasswordChangeReqType): Promise<ApiResponse> => {
-    return await this.put<PasswordChangeReqType, ApiResponse>(
-      SignInEnum.passwordChange,
-      passwordChangeData
-    )
+  changePassword = async (newPwd: string) => {
+    return await this.put<string, ApiResponse>(SignUpEnum.passwordChange, newPwd)
   }
 
   /** 帳號停用 */
   accountDisable = async (accountDisableData: AccountDisableReqType): Promise<ApiResponse> => {
     return await this.put<AccountDisableReqType, ApiResponse>(
-      SignInEnum.accountDisable,
+      SignUpEnum.accountDisable,
       accountDisableData
     )
   }

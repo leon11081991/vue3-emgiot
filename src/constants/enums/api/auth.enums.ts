@@ -4,10 +4,10 @@ export enum LoginEnum {
   logOut = 'LogIn/LogOut' // 系統登出
 }
 
-export enum SignInEnum {
-  signIn = 'SignIn/SignIn', // 註冊新帳號
-  validate = 'SignIn/Validate', // 帳號驗證
-  forgetPassword = 'SignIn/ForgetPassword', // 忘記密碼
-  passwordChange = 'SignIn/PasswordChange', // 變更密碼
-  accountDisable = 'SignIn/AccountDisable' // 帳號停用
+export enum SignUpEnum {
+  signIn = 'SignUp/SignUp', // 註冊新帳號
+  validate = 'SignUp/Validate', // 帳號驗證
+  forgotPassword = 'SignUp/ForgetPassword', // 忘記密碼
+  passwordChange = 'SignUp/Password', // 變更密碼
+  accountDisable = 'SignUp/AccountDisable' // 帳號停用
 }

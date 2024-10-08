@@ -6,10 +6,12 @@ import { useSidebar } from '@/composables/useSidebar'
 import { useAuth } from '@/composables/useAuth'
 import { useDeviceWidth } from '@/composables/useDeviceWidth'
 import { useCommonStore } from '@/stores/common.stores'
+import { useUserStore } from '@/stores/user.stores'
 import { navigationList } from '@/constants/common.const'
 import { widthMapping } from '@/constants/mappings/width.mapping'
 
 const commonStore = useCommonStore()
+const userStore = useUserStore()
 const { sidebarRef, handleCloseSidebar } = useSidebar()
 const { fnLogOut } = useAuth()
 const { width } = useDeviceWidth()
@@ -30,9 +32,9 @@ const { width } = useDeviceWidth()
 
     <div class="user-info">
       <div class="user-container">
-        <AvatarDisplay name="雲小二" />
+        <AvatarDisplay :name="userStore.userInfo.nickName" />
         <div class="user-wrap">
-          <h5 class="user-name">雲小二雲小二雲小二雲小二</h5>
+          <h5 class="user-name">{{ userStore.userInfo.nickName }}</h5>
           <div class="user-level">
             <span class="user-level-text">1級</span>
           </div>
