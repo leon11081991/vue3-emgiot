@@ -137,6 +137,25 @@ const route = useRoute()
       box-shadow: $--box-shadow-light;
     }
   }
+
+  &.ant-btn-outlined {
+    @include base-transition;
+    height: auto;
+    padding-block: 0.75rem;
+    background-color: $--color-white;
+    color: $--color-primary;
+    border: 1px solid $--color-primary;
+
+    &:hover {
+      color: $--color-white;
+      background-color: $--color-primary;
+      box-shadow: $--box-shadow-light;
+    }
+
+    &[disabled] {
+      background-color: $--color-primary--disabled;
+    }
+  }
 }
 
 /** Ant Design Float Button */

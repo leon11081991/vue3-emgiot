@@ -73,6 +73,18 @@ export const useDate = () => {
     return dayjs().format('YYYY-MM-DD HH:mm:ss')
   }
 
+  const getDaysInTwoMonths = (): number => {
+    return new Date(year, month - 1, 0).getDate() // 以startDate月分為主
+  }
+
+  /**
+   * Calculate the date for three months ago, considering different month lengths.
+   * @returns {string} The date formatted as 'YYYY-MM-DD'
+   */
+  const getThreeMonthsAgo = (): string => {
+    return dayjs().subtract(3, 'month').format('YYYY-MM-DD')
+  }
+
   return {
     year,
     month,
@@ -80,6 +92,8 @@ export const useDate = () => {
     formatDate,
     calculateDate,
     today,
-    getCurrentDateTime
+    getCurrentDateTime,
+    getDaysInTwoMonths,
+    getThreeMonthsAgo
   }
 }

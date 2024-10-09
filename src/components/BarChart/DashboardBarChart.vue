@@ -27,8 +27,9 @@ const updateTime = ref('')
 
 // 初始化日期
 const { today, calculateDate, getCurrentDateTime } = useDate()
-const startDate = ref(today())
-const endDate = ref(calculateDate(startDate.value, 'backward', 7))
+const endDate = ref(today())
+const startDate = ref(calculateDate(endDate.value, 'backward', 7))
+
 updateTime.value = getCurrentDateTime()
 
 // 獲取數據
@@ -73,12 +74,12 @@ function fnChangeTab(topic: string) {
 
 // 生命週期 (Lifecycle hooks)
 fetchOperationClawChart({
-  startDate: '2024-09-01',
-  endDate: '2024-09-07'
+  startDate: startDate.value,
+  endDate: endDate.value
 })
 fetchOperationCoinChart({
-  startDate: '2024-09-01',
-  endDate: '2024-09-07'
+  startDate: startDate.value,
+  endDate: endDate.value
 })
 </script>
 
