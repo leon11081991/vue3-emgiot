@@ -46,7 +46,7 @@ const avatarSize = computed(() => {
     ></a-avatar>
     <div
       v-else
-      :class="['avatar', { 'two-letters': avatarLetters.length === 2 }]"
+      :class="['avatar', { 'two-letters': avatarLetters?.length === 2 }]"
       :style="{ backgroundColor: colorHex, width: `${avatarSize}px`, height: `${avatarSize}px` }"
     >
       <span
