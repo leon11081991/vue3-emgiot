@@ -171,14 +171,12 @@ onMounted(async () => {
   </div>
 
   <BatchModal
-    v-show="modalVisible"
     :modal-visible="modalVisible"
     :search-value="batchSearchParam"
     @close="closeModal()"
   />
 
   <StoreFilterModal
-    v-show="modalVisible"
     :modal-visible="modalVisible"
     :search-value="batchSearchParam"
     @close="closeModal()"
