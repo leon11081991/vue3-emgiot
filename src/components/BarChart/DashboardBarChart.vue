@@ -13,6 +13,8 @@ type OperationDataKey = 'revenue' | 'prizeWinCount' | 'profit'
 // defineProps
 const props = defineProps<{
   type: PropsBarChartType
+  startDate: string
+  endDate: string
 }>()
 
 // 非響應式變數
@@ -26,9 +28,7 @@ const nowTopic = ref(TABS.REVENUE)
 const updateTime = ref('')
 
 // 初始化日期
-const { today, calculateDate, getCurrentDateTime } = useDate()
-const endDate = ref(today())
-const startDate = ref(calculateDate(endDate.value, 'backward', 7))
+const { today, getCurrentDateTime } = useDate()
 
 updateTime.value = getCurrentDateTime()
 
@@ -74,12 +74,12 @@ function fnChangeTab(topic: string) {
 
 // 生命週期 (Lifecycle hooks)
 fetchOperationClawChart({
-  startDate: startDate.value,
-  endDate: endDate.value
+  startDate: props.startDate,
+  endDate: props.endDate
 })
 fetchOperationCoinChart({
-  startDate: startDate.value,
-  endDate: endDate.value
+  startDate: props.startDate,
+  endDate: props.endDate
 })
 </script>
 

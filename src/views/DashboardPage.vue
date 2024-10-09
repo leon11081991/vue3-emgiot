@@ -1,4 +1,5 @@
 <script setup lang="ts">
+/* import */
 import { type DefineComponent, ref, onMounted, defineAsyncComponent } from 'vue'
 import type { Tab } from '@/models/interfaces/tab.interface'
 import type {
@@ -22,6 +23,7 @@ import { useFetchDashboard } from '@/composables/useFetchDashboard'
 import { useModal } from '@/composables/useModal'
 import { createDashboardTabs } from '@/constants/dashboard.const'
 
+/* type */
 type ClawTabCompType = DefineComponent<
   { activeKey: string[]; data: ClawOperationsInfoResType[] },
   {},
@@ -32,14 +34,23 @@ type CoinTabCompType = DefineComponent<
   {},
   any
 >
+type RefreshDashboardType = {
+  startDate: string
+  endDate: string
+  groupsDDLFilter: string
+  groupName: string
+  goodsName: string
+}
 
+/* 非響應式變數 */
 const { t: $t } = useI18n()
 const { updateHeaderTitle } = useHeader()
-const { today } = useDate()
+const { today, calculateDate } = useDate()
 const { clawOperationsInfo, coinOperationsInfo, fetchClawOperationsInfo, fetchCoinOperationsInfo } =
   useFetchDashboard()
 const { modalVisible, openModal, closeModal } = useModal()
 
+/* 10. 子組件 ref */
 const tabComps: Record<DashboardTabType, ClawTabCompType | CoinTabCompType> = {
   claw: ClawTabList,
   coin: defineAsyncComponent({
@@ -49,6 +60,10 @@ const tabComps: Record<DashboardTabType, ClawTabCompType | CoinTabCompType> = {
     delay: 200
   })
 }
+
+/* ref 變數 */
+const initialEndDate = today()
+const initialStartDate = calculateDate(initialEndDate, 'backward', 7)
 
 const storeName = ref('')
 
@@ -63,39 +78,88 @@ const batchSearchParam = ref<string>('')
 const listData = ref<ClawOperationsInfoResType[] | CoinOperationsInfoResType[]>([])
 
 const updateKey = ref(0)
+const resetKey = ref(0)
+const endDate = ref(initialStartDate)
+const startDate = ref(initialStartDate)
 
-const handleToggleTab = async (tab: DashboardTabType): Promise<void> => {
+/* 13. computed */
+// 沒有 computed 定義
+
+/* 14. function */
+const handleToggleTab = async (
+  tab: DashboardTabType,
+  groupsDDLFilter?: string,
+  groupName?: string,
+  goodsName?: string
+): Promise<void> => {
   if (tab === 'claw') {
     await fetchClawOperationsInfo({
-      startDate: today(),
-      endDate: today()
+      startDate: startDate.value,
+      endDate: endDate.value
     })
 
     listData.value = clawOperationsInfo.value.data
+
+    if (groupsDDLFilter) {
+      listData.value = listData.value.filter((item) => item.pcbName.includes(groupsDDLFilter))
+    }
+
+    if (groupName) {
+      listData.value = listData.value.filter((item) => item.pcbGroupName.includes(groupName))
+    }
+
+    if (goodsName) {
+      listData.value = listData.value.filter((item) => item.goodsName.includes(goodsName))
+    }
+
     return
   }
 
   if (tab === 'coin') {
     await fetchCoinOperationsInfo({
-      startDate: today(),
-      endDate: today()
+      startDate: startDate.value,
+      endDate: endDate.value
     })
+
     listData.value = coinOperationsInfo.value.data
+
+    if (groupsDDLFilter) {
+      listData.value = listData.value.filter((item) => item.pcbName.includes(groupsDDLFilter))
+    }
+
+    if (groupName) {
+      listData.value = listData.value.filter((item) => item.pcbGroupName.includes(groupName))
+    }
+
     return
   }
 }
 
-const fnRefreshData = () => {
+const fnRefreshData = (data?: RefreshDashboardType) => {
+  startDate.value = data?.startDate || initialStartDate
+  endDate.value = data?.endDate || initialEndDate
+
+  if (!data) {
+    resetKey.value += 1
+    handleToggleTab(selectedTab.value)
+  }
+
   updateKey.value += 1
 }
 
+const fnRefreshDashboard = (data: RefreshDashboardType) => {
+  fnRefreshData(data)
+  handleToggleTab(selectedTab.value, data.groupsDDLFilter, data.groupName, data.goodsName)
+}
+
+/* 生命週期 (Lifecycle hooks) */
 onMounted(async () => {
   storeName.value = '大寮光華店'
   updateHeaderTitle($t('DashboardPage.HeaderTitle') + storeName.value) // 設定動態 header title
 
   await fetchClawOperationsInfo({
-    startDate: today(),
-    endDate: today()
+    startDate: startDate.value,
+    endDate: endDate.value
   })
 
   listData.value = clawOperationsInfo.value.data
@@ -108,6 +172,8 @@ onMounted(async () => {
     <DashboardBarChart
       :key="updateKey"
       :type="selectedTab"
+      :startDate="startDate"
+      :endDate="endDate"
     />
 
     <UpdateRecord @update="fnRefreshData" />
@@ -178,8 +244,9 @@ onMounted(async () => {
 
   <StoreFilterModal
     :modal-visible="modalVisible"
-    :search-value="batchSearchParam"
+    :reset="resetKey"
     @close="closeModal()"
+    @refresh="fnRefreshDashboard"
   />
 </template>
 

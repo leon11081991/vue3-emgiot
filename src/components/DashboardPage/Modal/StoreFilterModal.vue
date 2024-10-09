@@ -1,6 +1,6 @@
 <script setup lang="ts">
-/* 1. import */
-import { ref, computed, onMounted, onBeforeUnmount, h } from 'vue'
+/* import */
+import { ref, computed, onMounted, onBeforeUnmount, h, watchEffect } from 'vue'
 import { CaretDownOutlined } from '@ant-design/icons-vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import { useDropdown } from '@/composables/useDropdown'
@@ -10,47 +10,57 @@ import { useDate } from '@/composables/useDate'
 import '@/assets/scss/quasar.scss'
 import '@quasar/extras/material-icons/material-icons.css'
 
-/* 2. type */
+/* type */
 type PickerType = 'start' | 'end' | 'range'
 type SelectType = 'group' | 'merchandise'
+type RefreshDashboardType = {
+  startDate: string
+  endDate: string
+  groupsDDLFilter: string
+  groupName: string
+  goodsName: string
+}
 
-const { groupsDDLList, goodsList, fetchGroupsDDLList, fetchGoodsList } = useDropdown()
-
-/* 5. Props (defineProps) */
+/* Props (defineProps) */
 const props = defineProps<{
   modalVisible: boolean
-  searchValue: string
+  reset: number
 }>()
 
-/* 6. Emits Events (defineEmits) */
+/* Emits Events (defineEmits) */
 const emit = defineEmits<{
   (e: 'close'): void
-  (e: 'update:searchValue', value: string): void
-  (e: 'onSearch'): void
+  (e: 'refresh', value: RefreshDashboardType): void
 }>()
 
-/* 9. 非響應式變數 */
+/* 非響應式變數 */
 const { today, calculateDate, getDaysInTwoMonths, getThreeMonthsAgo } = useDate()
+const { groupsDDLList, goodsList, fetchGroupsDDLList, fetchGoodsList } = useDropdown()
 
-/* 11. ref 變數 */
+/* ref 變數 */
 const startDate = ref<string | null>(today())
 const endDate = ref<string | null>(today())
 const rangeDate = ref<{ from: string; to: string } | string>({ from: '', to: '' })
 const tempRangeDate = ref({ from: '', to: '' })
 const rangePickerActiveItem = ref('今日')
 
+const groupsDDLFilter = ref('')
+const groupName = ref('')
+const goodsName = ref('')
 const picker = ref({
   start: false,
   end: false,
   range: false
 })
 
+const isFirstTimeSelectRangePicker = ref(false)
+
 const isDropdownOpen = ref({
   group: false,
   merchandise: false
 })
 
-/* 13. computed */
+/* computed */
 // 動態根據下拉選單狀態更改圖標
 const customIcon = (selectType: SelectType) => {
   return h(CaretDownOutlined, {
@@ -59,23 +69,19 @@ const customIcon = (selectType: SelectType) => {
 }
 
 /* 14. function */
-
 const closeModal = () => {
   emit('close')
 }
 
 const fnFilterDashboardData = () => {
+  emit('refresh', {
+    startDate: startDate.value || '',
+    endDate: endDate.value || '',
+    groupsDDLFilter: groupsDDLFilter.value || '',
+    groupName: groupName.value || '',
+    goodsName: goodsName.value || ''
+  })
   closeModal()
-}
-
-const updateSearchValue = (value: string) => {
-  console.log('updateSearchValue', value)
-  emit('update:searchValue', value)
-}
-
-const onSearch = () => {
-  console.log('onSearch')
-  emit('onSearch')
 }
 
 const fnToggleDatePicker = (type: PickerType) => {
@@ -86,7 +92,6 @@ const fnToggleDatePicker = (type: PickerType) => {
     }
   })
 
-  // 檢查 rangeDate 是否為物件並更新值
   if (typeof rangeDate.value === 'object' && 'from' in rangeDate.value && startDate.value) {
     rangeDate.value.from = startDate.value
   }
@@ -95,7 +100,6 @@ const fnToggleDatePicker = (type: PickerType) => {
     rangeDate.value.to = endDate.value
   }
 
-  // 如果 rangeDate 是字串並且 startDate 和 endDate 相等，更新 rangeDate 為字串值
   if (typeof rangeDate.value === 'string' && startDate.value === endDate.value) {
     rangeDate.value = startDate.value || endDate.value || ''
   }
@@ -117,6 +121,7 @@ const fnRangePicker = (label: keyof typeof dateRangePickerConfig) => {
 }
 
 const handleFnKeepTempRangeDate = () => {
+  if (!isFirstTimeSelectRangePicker.value) isFirstTimeSelectRangePicker.value = true
   if (typeof rangeDate.value === 'object' && rangeDate.value?.from && rangeDate.value?.to) {
     tempRangeDate.value.from = rangeDate.value?.from
     tempRangeDate.value.to = rangeDate.value?.to
@@ -136,7 +141,18 @@ const fnHandleRangeDateConfirm = () => {
   fnToggleDatePicker('range')
 }
 
-/* 18. 生命週期 (Lifecycle hooks) */
+const handleDropdownVisibleChange = (visible: boolean, selectType: 'group' | 'merchandise') => {
+  isDropdownOpen.value[selectType] = visible
+}
+
+/* watch */
+watchEffect(() => {
+  if (props.reset) {
+    fnResetFilter()
+  }
+})
+
+/* 生命週期 (Lifecycle hooks) */
 onMounted(() => {
   document.addEventListener('click', handleClickOutside)
 })
@@ -145,11 +161,7 @@ onBeforeUnmount(() => {
   document.removeEventListener('click', handleClickOutside)
 })
 
-/* 下拉選單開關變化處理 */
-const handleDropdownVisibleChange = (visible: boolean, selectType: 'group' | 'merchandise') => {
-  isDropdownOpen.value[selectType] = visible
-}
-/* 當點擊QDate外部時隱藏日期選擇器 */
+/* 其他函數 */
 const handleClickOutside = (event: MouseEvent) => {
   const target = event.target as HTMLElement
   const datePickerElements = ['.datePickerCom', '.dateData', '.q-date', '.q-date__calendar']
@@ -161,7 +173,6 @@ const handleClickOutside = (event: MouseEvent) => {
   }
 }
 
-/* date range picker configuration */
 const dateRangePickerConfig = {
   今日: 0,
   二日: 1,
@@ -175,9 +186,32 @@ const optionsConfig = (date: string) => {
   return current >= new Date(getThreeMonthsAgo()) && current <= new Date(today())
 }
 
+const handleInputChange = (e: Event) => {
+  const target = e.target as HTMLInputElement
+  groupsDDLFilter.value = target.value
+}
+
+const handleSelectGroupsDDL = (data: string) => {
+  groupName.value = data
+}
+
+const handleSelectGoods = (data: string) => {
+  goodsName.value = data
+}
+
+const fnResetFilter = () => {
+  startDate.value = today()
+  endDate.value = today()
+  groupsDDLFilter.value = ''
+  groupName.value = ''
+  goodsName.value = ''
+  isFirstTimeSelectRangePicker.value = false
+}
+
 fetchGroupsDDLList()
 fetchGoodsList()
 </script>
+
 <template>
   <a-modal
     :open="props.modalVisible"
@@ -201,7 +235,7 @@ fetchGoodsList()
               mask="YYYY-MM-DD"
               class="datePickerCom startDateCom"
               v-model="startDate"
-              @update:modelValue="fnToggleDatePicker('start')"
+              @update:modelValue="() => fnToggleDatePicker('start')"
               minimal
               persistent
             />
@@ -228,7 +262,7 @@ fetchGoodsList()
               mask="YYYY-MM-DD"
               class="datePickerCom endDateCom"
               v-model="endDate"
-              @update:modelValue="fnToggleDatePicker('end')"
+              @update:modelValue="() => fnToggleDatePicker('end')"
               minimal
               persistent
             />
@@ -271,7 +305,7 @@ fetchGoodsList()
                   <a-button
                     class="confirm-btn btn"
                     type="primary"
-                    v-if="isRangeDateSelected"
+                    v-if="isRangeDateSelected && isFirstTimeSelectRangePicker"
                     @click="fnHandleRangeDateConfirm"
                   >
                     確認
@@ -307,10 +341,9 @@ fetchGoodsList()
     <div class="search-action-container">
       <a-input
         class="search-input"
-        :value="props.searchValue"
+        :value="groupsDDLFilter"
+        @change="handleInputChange"
         placeholder="機台"
-        @change="updateSearchValue"
-        @pressEnter="onSearch"
       >
         <template #prefix>
           <BaseSvgIcon iconName="magnifier" />
@@ -320,24 +353,31 @@ fetchGoodsList()
 
     <div class="select-container">
       <a-select
+        v-if="groupsDDLList?.data"
         class="select-item group-container"
         placeholder="群組"
+        :value="groupName"
         :suffixIcon="customIcon('group')"
         size="large"
+        @change="handleSelectGroupsDDL"
         @dropdownVisibleChange="(visible: boolean) => handleDropdownVisibleChange(visible, 'group')"
       >
         <a-select-option
           v-for="groupsDDL in groupsDDLList.data"
           :key="groupsDDL.groupId"
           :value="groupsDDL.groupName"
-          >{{ groupsDDL.groupName }}</a-select-option
         >
+          {{ groupsDDL.groupName }}
+        </a-select-option>
       </a-select>
       <a-select
+        v-if="goodsList?.data"
         class="select-item merchandise-container"
         placeholder="商品"
+        :value="goodsName"
         :suffixIcon="customIcon('merchandise')"
         size="large"
+        @change="handleSelectGoods"
         @dropdownVisibleChange="
           (visible: boolean) => handleDropdownVisibleChange(visible, 'merchandise')
         "
@@ -346,8 +386,9 @@ fetchGoodsList()
           v-for="goods in goodsList.data"
           :key="goods.goodsId"
           :value="goods.goodsName"
-          >{{ goods.goodsName }}</a-select-option
         >
+          {{ goods.goodsName }}
+        </a-select-option>
       </a-select>
     </div>
     <template #footer>
