@@ -1,5 +1,9 @@
 <script setup lang="ts">
 /* import */
+import type {
+  RefreshDashboardType,
+  SelectedGroupAndGoodsRemoveType
+} from '@/models/types/dashboard.types'
 import { ref, computed, onMounted, onBeforeUnmount, h, watchEffect } from 'vue'
 import { CaretDownOutlined } from '@ant-design/icons-vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
@@ -13,18 +17,6 @@ import '@quasar/extras/material-icons/material-icons.css'
 /* type */
 type PickerType = 'start' | 'end' | 'range'
 type SelectType = 'group' | 'goods'
-type RefreshDashboardType = {
-  startDate: string
-  endDate: string
-  groupsDDLFilter: string
-  groupName: string
-  goodsName: string
-}
-
-type SelectedGroupAndGoodsRemoveType = {
-  groupName: number
-  goodsName: number
-}
 
 /* Props (defineProps) */
 const props = defineProps<{

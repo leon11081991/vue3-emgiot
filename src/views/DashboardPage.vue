@@ -5,7 +5,10 @@ import type { Tab } from '@/models/interfaces/tab.interface'
 import type {
   DashboardTabType,
   ClawOperationsInfoResType,
-  CoinOperationsInfoResType
+  CoinOperationsInfoResType,
+  RefreshDashboardType,
+  SelectedGroupAndGoodsType,
+  SelectedGroupAndGoodsRemoveType
 } from '@/models/types/dashboard.types'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import SegmentedTab from '@/components/Base/SegmentedTab.vue'
@@ -34,23 +37,6 @@ type CoinTabCompType = DefineComponent<
   {},
   any
 >
-type RefreshDashboardType = {
-  startDate: string
-  endDate: string
-  groupsDDLFilter: string
-  groupName: string
-  goodsName: string
-}
-
-type SelectedGroupAndGoodsType = {
-  groupName: string
-  goodsName: string
-}
-
-type SelectedGroupAndGoodsRemoveType = {
-  groupName: number
-  goodsName: number
-}
 
 /* 非響應式變數 */
 const { t: $t } = useI18n()
