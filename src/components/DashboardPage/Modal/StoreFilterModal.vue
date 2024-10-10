@@ -12,7 +12,7 @@ import '@quasar/extras/material-icons/material-icons.css'
 
 /* type */
 type PickerType = 'start' | 'end' | 'range'
-type SelectType = 'group' | 'merchandise'
+type SelectType = 'group' | 'goods'
 type RefreshDashboardType = {
   startDate: string
   endDate: string
@@ -21,10 +21,16 @@ type RefreshDashboardType = {
   goodsName: string
 }
 
+type SelectedGroupAndGoodsRemoveType = {
+  groupName: number
+  goodsName: number
+}
+
 /* Props (defineProps) */
 const props = defineProps<{
   modalVisible: boolean
-  reset: number
+  resetAll: number
+  removeSelected: SelectedGroupAndGoodsRemoveType
 }>()
 
 /* Emits Events (defineEmits) */
@@ -58,7 +64,7 @@ const isConfirmFilterCondition = ref(false)
 
 const isDropdownOpen = ref({
   group: false,
-  merchandise: false
+  goods: false
 })
 
 /* computed */
@@ -146,15 +152,23 @@ const fnHandleRangeDateConfirm = () => {
   fnToggleDatePicker('range')
 }
 
-const handleDropdownVisibleChange = (visible: boolean, selectType: 'group' | 'merchandise') => {
+const handleDropdownVisibleChange = (visible: boolean, selectType: 'group' | 'goods') => {
   isDropdownOpen.value[selectType] = visible
 }
 
 /* watch */
 watchEffect(() => {
-  if (props.reset) {
+  if (props.resetAll) {
     isConfirmFilterCondition.value = false
     fnResetFilter()
+  }
+
+  if (props.removeSelected['groupName']) {
+    groupName.value = ''
+  }
+
+  if (props.removeSelected['goodsName']) {
+    goodsName.value = ''
   }
 })
 
@@ -378,15 +392,13 @@ fetchGoodsList()
       </a-select>
       <a-select
         v-if="goodsList?.data"
-        class="select-item merchandise-container"
+        class="select-item goods-container"
         placeholder="商品"
         :value="goodsName"
-        :suffixIcon="customIcon('merchandise')"
+        :suffixIcon="customIcon('goods')"
         size="large"
         @change="handleSelectGoods"
-        @dropdownVisibleChange="
-          (visible: boolean) => handleDropdownVisibleChange(visible, 'merchandise')
-        "
+        @dropdownVisibleChange="(visible: boolean) => handleDropdownVisibleChange(visible, 'goods')"
       >
         <a-select-option
           v-for="goods in goodsList.data"

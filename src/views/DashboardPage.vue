@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /* import */
-import { type DefineComponent, ref, onMounted, defineAsyncComponent } from 'vue'
+import { type DefineComponent, ref, onMounted, defineAsyncComponent, computed } from 'vue'
 import type { Tab } from '@/models/interfaces/tab.interface'
 import type {
   DashboardTabType,
@@ -42,6 +42,16 @@ type RefreshDashboardType = {
   goodsName: string
 }
 
+type SelectedGroupAndGoodsType = {
+  groupName: string
+  goodsName: string
+}
+
+type SelectedGroupAndGoodsRemoveType = {
+  groupName: number
+  goodsName: number
+}
+
 /* 非響應式變數 */
 const { t: $t } = useI18n()
 const { updateHeaderTitle } = useHeader()
@@ -81,6 +91,14 @@ const updateKey = ref(0)
 const resetKey = ref(0)
 const endDate = ref(initialEndDate)
 const startDate = ref(initialStartDate)
+const removeSelected = ref<SelectedGroupAndGoodsRemoveType>({
+  groupName: 0,
+  goodsName: 0
+})
+const selectedGroupAndGoods = ref<SelectedGroupAndGoodsType>({
+  groupName: '',
+  goodsName: ''
+})
 
 /* function */
 const handleToggleTab = async (
@@ -132,21 +150,60 @@ const handleToggleTab = async (
   }
 }
 
-const fnRefreshData = (data?: RefreshDashboardType) => {
+const fnResetData = (data?: RefreshDashboardType) => {
   startDate.value = data?.startDate || initialStartDate
   endDate.value = data?.endDate || initialEndDate
 
   if (!data) {
+    const groupAndGoodsObj = {
+      groupName: '',
+      goodsName: ''
+    }
     resetKey.value += 1
     handleToggleTab(selectedTab.value)
+    fnGetSelectedGroupAndGoods(groupAndGoodsObj)
   }
 
   updateKey.value += 1
 }
 
+const fnGetSelectedGroupAndGoods = (groupAndGoodsObj: SelectedGroupAndGoodsType) => {
+  Object.keys(selectedGroupAndGoods.value).forEach((key) => {
+    const typedKey = key as keyof SelectedGroupAndGoodsType
+    selectedGroupAndGoods.value[typedKey] = groupAndGoodsObj[typedKey]
+  })
+}
+
+const filteredGroupAndGoods = computed(() => {
+  return Object.keys(selectedGroupAndGoods.value).filter(
+    (key) => selectedGroupAndGoods.value[key as keyof SelectedGroupAndGoodsType]
+  )
+})
+
 const fnRefreshDashboard = (data: RefreshDashboardType) => {
-  fnRefreshData(data)
+  const groupAndGoodsObj = {
+    groupName: data.groupName,
+    goodsName: data.goodsName
+  }
+
+  fnResetData(data)
   handleToggleTab(selectedTab.value, data.groupsDDLFilter, data.groupName, data.goodsName)
+  fnGetSelectedGroupAndGoods(groupAndGoodsObj)
+}
+
+const fnRemoveFilteredTag = (key: string) => {
+  const typedKey = key as keyof SelectedGroupAndGoodsType
+  selectedGroupAndGoods.value[typedKey] = ''
+  removeSelected.value[typedKey] += 1
+
+  // 需要同步清除對應的input資料
+  fnRefreshDashboard({
+    startDate: startDate.value,
+    endDate: endDate.value,
+    groupsDDLFilter: selectedGroupAndGoods.value.groupName,
+    groupName: selectedGroupAndGoods.value.groupName,
+    goodsName: selectedGroupAndGoods.value.goodsName
+  })
 }
 
 /* 生命週期 (Lifecycle hooks) */
@@ -173,7 +230,7 @@ onMounted(async () => {
       :endDate="endDate"
     />
 
-    <UpdateRecord @update="fnRefreshData" />
+    <UpdateRecord @update="fnResetData" />
 
     <SegmentedTab
       v-model:value="selectedTab"
@@ -200,10 +257,10 @@ onMounted(async () => {
 
       <div class="filtered-tags-container">
         <FilteredTag
-          v-for="i in 3"
-          :key="i"
-          text="大寮光華店"
-          @close="() => console.log('test close')"
+          v-for="key in filteredGroupAndGoods"
+          :key="key"
+          :text="selectedGroupAndGoods[key as keyof SelectedGroupAndGoodsType]"
+          @close="fnRemoveFilteredTag(key)"
         />
       </div>
 
@@ -241,7 +298,8 @@ onMounted(async () => {
 
   <StoreFilterModal
     :modal-visible="modalVisible"
-    :reset="resetKey"
+    :resetAll="resetKey"
+    :removeSelected="removeSelected"
     @close="closeModal()"
     @refresh="fnRefreshDashboard"
   />
