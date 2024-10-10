@@ -54,6 +54,7 @@ const picker = ref({
 })
 
 const isFirstTimeSelectRangePicker = ref(false)
+const isConfirmFilterCondition = ref(false)
 
 const isDropdownOpen = ref({
   group: false,
@@ -68,12 +69,16 @@ const customIcon = (selectType: SelectType) => {
   })
 }
 
-/* 14. function */
+/* function */
 const closeModal = () => {
+  if (!isConfirmFilterCondition.value) {
+    fnResetFilter()
+  }
   emit('close')
 }
 
 const fnFilterDashboardData = () => {
+  isConfirmFilterCondition.value = true
   emit('refresh', {
     startDate: startDate.value || '',
     endDate: endDate.value || '',
@@ -148,6 +153,7 @@ const handleDropdownVisibleChange = (visible: boolean, selectType: 'group' | 'me
 /* watch */
 watchEffect(() => {
   if (props.reset) {
+    isConfirmFilterCondition.value = false
     fnResetFilter()
   }
 })

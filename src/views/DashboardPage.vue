@@ -50,7 +50,7 @@ const { clawOperationsInfo, coinOperationsInfo, fetchClawOperationsInfo, fetchCo
   useFetchDashboard()
 const { modalVisible, openModal, closeModal } = useModal()
 
-/* 10. 子組件 ref */
+/* 子組件 ref */
 const tabComps: Record<DashboardTabType, ClawTabCompType | CoinTabCompType> = {
   claw: ClawTabList,
   coin: defineAsyncComponent({
@@ -82,10 +82,7 @@ const resetKey = ref(0)
 const endDate = ref(initialEndDate)
 const startDate = ref(initialStartDate)
 
-/* 13. computed */
-// 沒有 computed 定義
-
-/* 14. function */
+/* function */
 const handleToggleTab = async (
   tab: DashboardTabType,
   groupsDDLFilter?: string,
