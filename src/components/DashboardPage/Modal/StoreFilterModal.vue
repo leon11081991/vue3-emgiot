@@ -78,12 +78,12 @@ const customIcon = (selectType: SelectType) => {
 /* function */
 const closeModal = () => {
   if (!isConfirmFilterCondition.value) {
-    fnResetFilter()
+    resetFilter()
   }
   emit('close')
 }
 
-const fnFilterDashboardData = () => {
+const filterDashboardData = () => {
   isConfirmFilterCondition.value = true
   emit('refresh', {
     startDate: startDate.value || '',
@@ -95,26 +95,21 @@ const fnFilterDashboardData = () => {
   closeModal()
 }
 
-const fnToggleDatePicker = (type: PickerType) => {
-  const pickerKeys = Object.keys(picker.value) as Array<keyof typeof picker.value>
-  pickerKeys.forEach((key) => {
-    if (key !== type) {
-      picker.value[key] = false
-    }
-  })
-
-  if (typeof rangeDate.value === 'object' && 'from' in rangeDate.value && startDate.value) {
-    rangeDate.value.from = startDate.value
-  }
-
-  if (typeof rangeDate.value === 'object' && 'to' in rangeDate.value && endDate.value) {
-    rangeDate.value.to = endDate.value
-  }
-
-  if (typeof rangeDate.value === 'string' && startDate.value === endDate.value) {
+const updateRangeDate = () => {
+  if (typeof rangeDate.value === 'object') {
+    if (rangeDate.value.from && startDate.value) rangeDate.value.from = startDate.value
+    if (rangeDate.value.to && endDate.value) rangeDate.value.to = endDate.value
+  } else if (typeof rangeDate.value === 'string' && startDate.value === endDate.value) {
     rangeDate.value = startDate.value || endDate.value || ''
   }
+}
 
+const toggleDatePicker = (type: PickerType) => {
+  const pickerKeys = Object.keys(picker.value) as Array<keyof typeof picker.value>
+  pickerKeys.forEach((key) => {
+    if (key !== type) picker.value[key] = false
+  })
+  updateRangeDate()
   picker.value[type] = !picker.value[type]
 }
 
@@ -124,14 +119,14 @@ const isRangeDateSelected = computed(() =>
     : rangeDate.value
 )
 
-const fnRangePicker = (label: keyof typeof dateRangePickerConfig) => {
+const setRangePicker = (label: keyof typeof dateRangePickerConfig) => {
   rangePickerActiveItem.value = label
   if (endDate.value) {
     startDate.value = calculateDate(endDate.value, 'backward', dateRangePickerConfig[label])
   }
 }
 
-const handleFnKeepTempRangeDate = () => {
+const keepTempRangeDate = () => {
   if (!isFirstTimeSelectRangePicker.value) isFirstTimeSelectRangePicker.value = true
   if (typeof rangeDate.value === 'object' && rangeDate.value?.from && rangeDate.value?.to) {
     tempRangeDate.value.from = rangeDate.value?.from
@@ -142,17 +137,17 @@ const handleFnKeepTempRangeDate = () => {
   }
 }
 
-const fnHandleRangeDateConfirm = () => {
+const confirmRangeDate = () => {
   if (tempRangeDate.value?.from && tempRangeDate.value?.to) {
     startDate.value = tempRangeDate.value?.from
     endDate.value = tempRangeDate.value?.to
     tempRangeDate.value.from = ''
     tempRangeDate.value.to = ''
   }
-  fnToggleDatePicker('range')
+  toggleDatePicker('range')
 }
 
-const handleDropdownVisibleChange = (visible: boolean, selectType: 'group' | 'goods') => {
+const toggleDropdownVisibility = (visible: boolean, selectType: 'group' | 'goods') => {
   isDropdownOpen.value[selectType] = visible
 }
 
@@ -160,13 +155,11 @@ const handleDropdownVisibleChange = (visible: boolean, selectType: 'group' | 'go
 watchEffect(() => {
   if (props.resetAll) {
     isConfirmFilterCondition.value = false
-    fnResetFilter()
+    resetFilter()
   }
-
   if (props.removeSelected['groupName']) {
     groupName.value = ''
   }
-
   if (props.removeSelected['goodsName']) {
     goodsName.value = ''
   }
@@ -193,11 +186,13 @@ const handleClickOutside = (event: MouseEvent) => {
   }
 }
 
+const DAYS_IN_WEEK = 6
+const TODAY = 0
 const dateRangePickerConfig = {
-  今日: 0,
+  今日: TODAY,
   二日: 1,
   三日: 2,
-  一週: 6,
+  一週: DAYS_IN_WEEK,
   一個月: getDaysInTwoMonths()
 }
 
@@ -211,15 +206,15 @@ const handleInputChange = (e: Event) => {
   groupsDDLFilter.value = target.value
 }
 
-const handleSelectGroupsDDL = (data: string) => {
+const selectGroup = (data: string) => {
   groupName.value = data
 }
 
-const handleSelectGoods = (data: string) => {
+const selectGoods = (data: string) => {
   goodsName.value = data
 }
 
-const fnResetFilter = () => {
+const resetFilter = () => {
   startDate.value = today()
   endDate.value = today()
   groupsDDLFilter.value = ''
@@ -255,7 +250,7 @@ fetchGoodsList()
               mask="YYYY-MM-DD"
               class="datePickerCom startDateCom"
               v-model="startDate"
-              @update:modelValue="() => fnToggleDatePicker('start')"
+              @update:modelValue="() => toggleDatePicker('start')"
               minimal
               persistent
             />
@@ -263,7 +258,7 @@ fetchGoodsList()
         </div>
         <div
           class="dateData"
-          @click.stop="fnToggleDatePicker('start')"
+          @click.stop="toggleDatePicker('start')"
         >
           <div class="dateData-item">
             開始時間
@@ -282,7 +277,7 @@ fetchGoodsList()
               mask="YYYY-MM-DD"
               class="datePickerCom endDateCom"
               v-model="endDate"
-              @update:modelValue="() => fnToggleDatePicker('end')"
+              @update:modelValue="() => toggleDatePicker('end')"
               minimal
               persistent
             />
@@ -290,7 +285,7 @@ fetchGoodsList()
         </div>
         <div
           class="dateData"
-          @click.stop="fnToggleDatePicker('end')"
+          @click.stop="toggleDatePicker('end')"
         >
           <div class="dateData-item">
             結束時間
@@ -305,7 +300,7 @@ fetchGoodsList()
           class="rangeDate-icon"
           iconName="calendar"
           size="lg"
-          @click.stop="fnToggleDatePicker('range')"
+          @click.stop="toggleDatePicker('range')"
         />
         <div class="quasar-custom-container range">
           <transition name="fade">
@@ -315,7 +310,7 @@ fetchGoodsList()
               mask="YYYY-MM-DD"
               class="rangeDate"
               v-model="rangeDate"
-              @update:modelValue="handleFnKeepTempRangeDate"
+              @update:modelValue="keepTempRangeDate"
               range
               minimal
               persistent
@@ -326,7 +321,7 @@ fetchGoodsList()
                     class="confirm-btn btn"
                     type="primary"
                     v-if="isRangeDateSelected && isFirstTimeSelectRangePicker"
-                    @click="fnHandleRangeDateConfirm"
+                    @click="confirmRangeDate"
                   >
                     確認
                   </a-button>
@@ -334,7 +329,7 @@ fetchGoodsList()
                     v-else
                     class="cancel-btn btn"
                     type="outlined"
-                    @click="fnToggleDatePicker('range')"
+                    @click="toggleDatePicker('range')"
                   >
                     取消
                   </a-button>
@@ -352,7 +347,7 @@ fetchGoodsList()
         :key="label"
         :class="{ active: label === rangePickerActiveItem }"
         class="rangeDate-picker-item"
-        @click="fnRangePicker(label)"
+        @click="setRangePicker(label)"
       >
         {{ label }}
       </div>
@@ -379,8 +374,8 @@ fetchGoodsList()
         :value="groupName"
         :suffixIcon="customIcon('group')"
         size="large"
-        @change="handleSelectGroupsDDL"
-        @dropdownVisibleChange="(visible: boolean) => handleDropdownVisibleChange(visible, 'group')"
+        @change="selectGroup"
+        @dropdownVisibleChange="(visible: boolean) => toggleDropdownVisibility(visible, 'group')"
       >
         <a-select-option
           v-for="groupsDDL in groupsDDLList.data"
@@ -397,8 +392,8 @@ fetchGoodsList()
         :value="goodsName"
         :suffixIcon="customIcon('goods')"
         size="large"
-        @change="handleSelectGoods"
-        @dropdownVisibleChange="(visible: boolean) => handleDropdownVisibleChange(visible, 'goods')"
+        @change="selectGoods"
+        @dropdownVisibleChange="(visible: boolean) => toggleDropdownVisibility(visible, 'goods')"
       >
         <a-select-option
           v-for="goods in goodsList.data"
@@ -414,7 +409,7 @@ fetchGoodsList()
         <a-button
           class="confirm-btn btn"
           type="primary"
-          @click="fnFilterDashboardData"
+          @click="filterDashboardData"
         >
           確認
         </a-button>
