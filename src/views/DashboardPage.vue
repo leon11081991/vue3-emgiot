@@ -79,7 +79,7 @@ const listData = ref<ClawOperationsInfoResType[] | CoinOperationsInfoResType[]>(
 
 const updateKey = ref(0)
 const resetKey = ref(0)
-const endDate = ref(initialStartDate)
+const endDate = ref(initialEndDate)
 const startDate = ref(initialStartDate)
 
 /* 13. computed */
