@@ -8,13 +8,14 @@ import { useDate } from '@/composables/useDate'
 import { useFetchDashboard } from '@/composables/useFetchDashboard'
 
 // type
-type OperationDataKey = 'revenue' | 'prizeWinCount' | 'profit'
+type OperationDataKey = 'revenue' | 'prizeWinCount' | 'profit' | 'coinExchanged'
 
 // defineProps
 const props = defineProps<{
   type: PropsBarChartType
   startDate: string
   endDate: string
+  isInitialChart: boolean
 }>()
 
 // 非響應式變數
@@ -24,55 +25,67 @@ const TABS = {
 }
 
 // ref 變數
-const nowTopic = ref(TABS.REVENUE)
-const updateTime = ref('')
+const currentTab = ref(TABS.REVENUE)
+const lastUpdatedTime = ref('')
 
 // 初始化日期
-const { today, getCurrentDateTime } = useDate()
+const { today, getCurrentDateTime, formatDate } = useDate()
 
-updateTime.value = getCurrentDateTime()
+lastUpdatedTime.value = getCurrentDateTime()
 
 // 獲取數據
 const { operationChart, fetchOperationClawChart, fetchOperationCoinChart } = useFetchDashboard()
 
-// computed
-const calculateTotalForToday = (key: OperationDataKey) => {
-  return computed(() => {
-    const clawMachineData = operationChart.value.data.clawMachine || []
-    const todayDate = today()
-    const todayData = clawMachineData.filter((entry) => {
-      const entryDate = new Date(entry.date)
-      return entryDate.toDateString() === new Date(todayDate).toDateString()
-    })
-    return todayData.reduce((total, entry) => total + (entry[key] || 0), 0)
+// Helper function to filter data within date range
+function getEntriesWithinDateRange(data: any[], startDate: string, endDate: string) {
+  const start = new Date(props.isInitialChart ? today() : startDate)
+  const end = new Date(props.isInitialChart ? today() : endDate)
+
+  return data.filter((entry) => {
+    const entryDate = new Date(formatDate(entry.date, 'YYYY-MM-DD'))
+    return entryDate >= start && entryDate <= end
   })
 }
 
-const calculateTotal = (key: OperationDataKey) => {
+// Helper function to calculate total by key
+function sumByKey(data: any[], key: OperationDataKey) {
+  return data.reduce((total, entry) => total + (entry[key] || 0), 0)
+}
+
+// Computed to calculate total for a specific range
+const getTotalForDateRange = (key: OperationDataKey) => {
   return computed(() => {
+    const startDate = props.isInitialChart ? today() : props.startDate
+    const endDate = props.isInitialChart ? today() : props.endDate
     const clawMachineData = operationChart.value.data.clawMachine || []
-    return clawMachineData.reduce((total, entry) => total + (entry[key] || 0), 0)
+    const filteredData = getEntriesWithinDateRange(clawMachineData, startDate, endDate)
+    return sumByKey(filteredData, key)
   })
 }
 
-const revenueData = computed(() => `$${calculateTotalForToday('revenue').value}`)
-const prizeWinCount = calculateTotalForToday('prizeWinCount')
-const profit = computed(() => `$${calculateTotalForToday('profit').value}`)
-const coinExchanged = computed(() => {
+const isTodayData = computed(() => {
+  const isSameStartEnd = props.startDate === props.endDate
+  const isToday = props.startDate === today()
+
+  return isSameStartEnd && isToday
+})
+
+// Calculated data
+const revenueTotal = computed(() => `$${getTotalForDateRange('revenue').value}`)
+const prizeWinCountTotal = getTotalForDateRange('prizeWinCount')
+const profitTotal = computed(() => `$${getTotalForDateRange('profit').value}`)
+const coinExchangedTotal = computed(() => {
   const coinMachineData = operationChart.value.data.coinMachine || []
-  const todayCoinData = coinMachineData.filter((entry) => {
-    const entryDate = new Date(entry.date)
-    return entryDate.toDateString() === new Date().toDateString()
-  })
-  return todayCoinData.reduce((total, entry) => total + (entry.coinExchanged || 0), 0)
+  const todayCoinData = getEntriesWithinDateRange(coinMachineData, props.startDate, props.endDate)
+  return sumByKey(todayCoinData, 'coinExchanged')
 })
 
 // function
-function fnChangeTab(topic: string) {
-  nowTopic.value = topic
+function changeTab(tab: string) {
+  currentTab.value = tab
 }
 
-// 生命週期 (Lifecycle hooks)
+// Lifecycle hooks
 fetchOperationClawChart({
   startDate: props.startDate,
   endDate: props.endDate
@@ -87,15 +100,15 @@ fetchOperationCoinChart({
   <div class="bar-chart-tab">
     <div
       class="tab-item revenue"
-      :class="{ active: nowTopic === TABS.REVENUE }"
-      @click="fnChangeTab(TABS.REVENUE)"
+      :class="{ active: currentTab === TABS.REVENUE }"
+      @click="changeTab(TABS.REVENUE)"
     >
       營收
     </div>
     <div
       class="tab-item profit"
-      :class="{ active: nowTopic === TABS.PROFIT }"
-      @click="fnChangeTab(TABS.PROFIT)"
+      :class="{ active: currentTab === TABS.PROFIT }"
+      @click="changeTab(TABS.PROFIT)"
     >
       盈餘
     </div>
@@ -103,9 +116,10 @@ fetchOperationCoinChart({
   <div class="bar-chart-container">
     <div class="chart-section">
       <div class="revenue">
-        今日{{ nowTopic === TABS.REVENUE ? '營收' : '盈餘' }}
+        {{ isTodayData || props.isInitialChart ? '今日' : `${props.startDate} ~ ${props.endDate}`
+        }}{{ currentTab === TABS.REVENUE ? '營收' : '盈餘' }}
         <p class="revenue-data">
-          {{ nowTopic === TABS.REVENUE ? revenueData : profit }}
+          {{ currentTab === TABS.REVENUE ? revenueTotal : profitTotal }}
         </p>
       </div>
       <div class="chartData-section">
@@ -124,7 +138,7 @@ fetchOperationCoinChart({
                 color="white"
               />
             </div>
-            <div class="data">{{ prizeWinCount }}</div>
+            <div class="data">{{ prizeWinCountTotal }}</div>
           </div>
           <div class="data-title">
             <div class="title">
@@ -134,9 +148,7 @@ fetchOperationCoinChart({
                 color="white"
               />
             </div>
-            <div class="data">
-              {{ profit }}
-            </div>
+            <div class="data">{{ profitTotal }}</div>
           </div>
           <div class="data-title">
             <div class="title">
@@ -146,7 +158,7 @@ fetchOperationCoinChart({
                 color="white"
               />
             </div>
-            <div class="data">{{ coinExchanged }}</div>
+            <div class="data">{{ coinExchangedTotal }}</div>
           </div>
         </div>
       </div>

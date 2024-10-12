@@ -60,6 +60,7 @@ const tabComps: Record<DashboardTabType, ClawTabCompType | CoinTabCompType> = {
 /* ref 變數 */
 const initialEndDate = today()
 const initialStartDate = calculateDate(initialEndDate, 'backward', 7)
+const isInitialChart = ref(true)
 
 const storeName = ref('')
 
@@ -141,6 +142,7 @@ const fnResetData = (data?: RefreshDashboardType) => {
   endDate.value = data?.endDate || initialEndDate
 
   if (!data) {
+    isInitialChart.value = true
     const groupAndGoodsObj = {
       groupName: '',
       goodsName: ''
@@ -172,6 +174,7 @@ const fnRefreshDashboard = (data: RefreshDashboardType) => {
     goodsName: data.goodsName
   }
 
+  isInitialChart.value = false
   fnResetData(data)
   handleToggleTab(selectedTab.value, data.groupsDDLFilter, data.groupName, data.goodsName)
   fnGetSelectedGroupAndGoods(groupAndGoodsObj)
@@ -214,6 +217,7 @@ onMounted(async () => {
       :type="selectedTab"
       :startDate="startDate"
       :endDate="endDate"
+      :isInitialChart="isInitialChart"
     />
 
     <UpdateRecord @update="fnResetData" />
