@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { type DefineComponent, ref, onMounted, defineAsyncComponent } from 'vue'
+/* import */
+import { type DefineComponent, ref, onMounted, defineAsyncComponent, computed } from 'vue'
 import type { Tab } from '@/models/interfaces/tab.interface'
 import type {
   DashboardTabType,
   ClawOperationsInfoResType,
-  CoinOperationsInfoResType
+  CoinOperationsInfoResType,
+  RefreshDashboardType,
+  SelectedGroupAndGoodsType,
+  SelectedGroupAndGoodsRemoveType
 } from '@/models/types/dashboard.types'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import SegmentedTab from '@/components/Base/SegmentedTab.vue'
@@ -22,6 +26,7 @@ import { useFetchDashboard } from '@/composables/useFetchDashboard'
 import { useModal } from '@/composables/useModal'
 import { createDashboardTabs } from '@/constants/dashboard.const'
 
+/* type */
 type ClawTabCompType = DefineComponent<
   { activeKey: string[]; data: ClawOperationsInfoResType[] },
   {},
@@ -33,13 +38,15 @@ type CoinTabCompType = DefineComponent<
   any
 >
 
+/* 非響應式變數 */
 const { t: $t } = useI18n()
 const { updateHeaderTitle } = useHeader()
-const { today } = useDate()
+const { today, calculateDate } = useDate()
 const { clawOperationsInfo, coinOperationsInfo, fetchClawOperationsInfo, fetchCoinOperationsInfo } =
   useFetchDashboard()
 const { modalVisible, openModal, closeModal } = useModal()
 
+/* 子組件 ref */
 const tabComps: Record<DashboardTabType, ClawTabCompType | CoinTabCompType> = {
   claw: ClawTabList,
   coin: defineAsyncComponent({
@@ -49,6 +56,11 @@ const tabComps: Record<DashboardTabType, ClawTabCompType | CoinTabCompType> = {
     delay: 200
   })
 }
+
+/* ref 變數 */
+const initialEndDate = today()
+const initialStartDate = calculateDate(initialEndDate, 'backward', 7)
+const isInitialChart = ref(true)
 
 const storeName = ref('')
 
@@ -63,39 +75,134 @@ const batchSearchParam = ref<string>('')
 const listData = ref<ClawOperationsInfoResType[] | CoinOperationsInfoResType[]>([])
 
 const updateKey = ref(0)
+const resetKey = ref(0)
+const endDate = ref(initialEndDate)
+const startDate = ref(initialStartDate)
+const removeSelected = ref<SelectedGroupAndGoodsRemoveType>({
+  groupName: 0,
+  goodsName: 0
+})
+const selectedGroupAndGoods = ref<SelectedGroupAndGoodsType>({
+  groupName: '',
+  goodsName: ''
+})
 
-const handleToggleTab = async (tab: DashboardTabType): Promise<void> => {
+/* function */
+const handleToggleTab = async (
+  tab: DashboardTabType,
+  groupsDDLFilter?: string,
+  groupName?: string,
+  goodsName?: string
+): Promise<void> => {
   if (tab === 'claw') {
     await fetchClawOperationsInfo({
-      startDate: today(),
-      endDate: today()
+      startDate: startDate.value,
+      endDate: endDate.value
     })
 
     listData.value = clawOperationsInfo.value.data
+
+    if (groupsDDLFilter) {
+      listData.value = listData.value.filter((item) => item.pcbName.includes(groupsDDLFilter))
+    }
+
+    if (groupName) {
+      listData.value = listData.value.filter((item) => item.pcbGroupName.includes(groupName))
+    }
+
+    if (goodsName) {
+      listData.value = listData.value.filter((item) => item.goodsName.includes(goodsName))
+    }
+
     return
   }
 
   if (tab === 'coin') {
     await fetchCoinOperationsInfo({
-      startDate: today(),
-      endDate: today()
+      startDate: startDate.value,
+      endDate: endDate.value
     })
+
     listData.value = coinOperationsInfo.value.data
+
+    if (groupsDDLFilter) {
+      listData.value = listData.value.filter((item) => item.pcbName.includes(groupsDDLFilter))
+    }
+
+    if (groupName) {
+      listData.value = listData.value.filter((item) => item.pcbGroupName.includes(groupName))
+    }
+
     return
   }
 }
 
-const fnRefreshData = () => {
+const fnResetData = (data?: RefreshDashboardType) => {
+  startDate.value = data?.startDate || initialStartDate
+  endDate.value = data?.endDate || initialEndDate
+
+  if (!data) {
+    isInitialChart.value = true
+    const groupAndGoodsObj = {
+      groupName: '',
+      goodsName: ''
+    }
+    resetKey.value += 1
+    handleToggleTab(selectedTab.value)
+    fnGetSelectedGroupAndGoods(groupAndGoodsObj)
+  }
+
   updateKey.value += 1
 }
 
+const fnGetSelectedGroupAndGoods = (groupAndGoodsObj: SelectedGroupAndGoodsType) => {
+  Object.keys(selectedGroupAndGoods.value).forEach((key) => {
+    const typedKey = key as keyof SelectedGroupAndGoodsType
+    selectedGroupAndGoods.value[typedKey] = groupAndGoodsObj[typedKey]
+  })
+}
+
+const filteredGroupAndGoods = computed(() => {
+  return Object.keys(selectedGroupAndGoods.value).filter(
+    (key) => selectedGroupAndGoods.value[key as keyof SelectedGroupAndGoodsType]
+  )
+})
+
+const fnRefreshDashboard = (data: RefreshDashboardType) => {
+  const groupAndGoodsObj = {
+    groupName: data.groupName,
+    goodsName: data.goodsName
+  }
+
+  isInitialChart.value = false
+  fnResetData(data)
+  handleToggleTab(selectedTab.value, data.groupsDDLFilter, data.groupName, data.goodsName)
+  fnGetSelectedGroupAndGoods(groupAndGoodsObj)
+}
+
+const fnRemoveFilteredTag = (key: string) => {
+  const typedKey = key as keyof SelectedGroupAndGoodsType
+  selectedGroupAndGoods.value[typedKey] = ''
+  removeSelected.value[typedKey] += 1
+
+  // 需要同步清除對應的input資料
+  fnRefreshDashboard({
+    startDate: startDate.value,
+    endDate: endDate.value,
+    groupsDDLFilter: selectedGroupAndGoods.value.groupName,
+    groupName: selectedGroupAndGoods.value.groupName,
+    goodsName: selectedGroupAndGoods.value.goodsName
+  })
+}
+
+/* 生命週期 (Lifecycle hooks) */
 onMounted(async () => {
   storeName.value = '大寮光華店'
   updateHeaderTitle($t('DashboardPage.HeaderTitle') + storeName.value) // 設定動態 header title
 
   await fetchClawOperationsInfo({
-    startDate: today(),
-    endDate: today()
+    startDate: startDate.value,
+    endDate: endDate.value
   })
 
   listData.value = clawOperationsInfo.value.data
@@ -108,9 +215,12 @@ onMounted(async () => {
     <DashboardBarChart
       :key="updateKey"
       :type="selectedTab"
+      :startDate="startDate"
+      :endDate="endDate"
+      :isInitialChart="isInitialChart"
     />
 
-    <UpdateRecord @update="fnRefreshData" />
+    <UpdateRecord @update="fnResetData" />
 
     <SegmentedTab
       v-model:value="selectedTab"
@@ -137,10 +247,10 @@ onMounted(async () => {
 
       <div class="filtered-tags-container">
         <FilteredTag
-          v-for="i in 3"
-          :key="i"
-          text="大寮光華店"
-          @close="() => console.log('test close')"
+          v-for="key in filteredGroupAndGoods"
+          :key="key"
+          :text="selectedGroupAndGoods[key as keyof SelectedGroupAndGoodsType]"
+          @close="fnRemoveFilteredTag(key)"
         />
       </div>
 
@@ -178,8 +288,10 @@ onMounted(async () => {
 
   <StoreFilterModal
     :modal-visible="modalVisible"
-    :search-value="batchSearchParam"
+    :resetAll="resetKey"
+    :removeSelected="removeSelected"
     @close="closeModal()"
+    @refresh="fnRefreshDashboard"
   />
 </template>
 
