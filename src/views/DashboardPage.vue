@@ -62,8 +62,6 @@ const initialEndDate = today()
 const initialStartDate = calculateDate(initialEndDate, 'backward', 7)
 const isInitialChart = ref(true)
 
-const storeName = ref('')
-
 const tabOptions = ref<Tab<DashboardTabType>[]>(createDashboardTabs($t))
 const selectedTab = ref<DashboardTabType>(tabOptions.value[0].value)
 const transitionName = ref('slide-right')
@@ -85,6 +83,26 @@ const removeSelected = ref<SelectedGroupAndGoodsRemoveType>({
 const selectedGroupAndGoods = ref<SelectedGroupAndGoodsType>({
   groupName: '',
   goodsName: ''
+})
+
+const filteredGroupAndGoods = computed(() => {
+  return Object.keys(selectedGroupAndGoods.value).filter(
+    (key) => selectedGroupAndGoods.value[key as keyof SelectedGroupAndGoodsType]
+  )
+})
+
+const storeName = computed(() => {
+  const keyword = '店'
+  const name = localStorage.getItem('storeName')
+
+  if (!name) {
+    return ''
+  }
+
+  const lastChar = name[name.length - 1]
+  const isStoreKeywordExist = lastChar.includes(keyword)
+
+  return isStoreKeywordExist ? name : name + keyword
 })
 
 /* function */
@@ -162,12 +180,6 @@ const fnGetSelectedGroupAndGoods = (groupAndGoodsObj: SelectedGroupAndGoodsType)
   })
 }
 
-const filteredGroupAndGoods = computed(() => {
-  return Object.keys(selectedGroupAndGoods.value).filter(
-    (key) => selectedGroupAndGoods.value[key as keyof SelectedGroupAndGoodsType]
-  )
-})
-
 const fnRefreshDashboard = (data: RefreshDashboardType) => {
   const groupAndGoodsObj = {
     groupName: data.groupName,
@@ -197,9 +209,7 @@ const fnRemoveFilteredTag = (key: string) => {
 
 /* 生命週期 (Lifecycle hooks) */
 onMounted(async () => {
-  storeName.value = '大寮光華店'
   updateHeaderTitle($t('DashboardPage.HeaderTitle') + storeName.value) // 設定動態 header title
-
   await fetchClawOperationsInfo({
     startDate: startDate.value,
     endDate: endDate.value

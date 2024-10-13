@@ -38,14 +38,15 @@ const storeLists = computed(() => {
 })
 
 // function
-function fnRefreshData() {
+const fnRefreshData = () => {
   updateKey.value += 1
 }
 
 // async/await function
-async function fnDispatchRecordStore(storeId: string) {
+const fnDispatchRecordStore = async (storeId: string, storeName: string) => {
   const dispatchStatus = await dispatchRecordCurrentStore(storeId)
   if (dispatchStatus) {
+    localStorage.setItem('storeName', storeName)
     router.push(targetPath)
   }
 }
@@ -77,7 +78,7 @@ fetchStoresListInfo()
         :key="listItem.storeId"
         v-for="listItem in storeLists"
         class="merchant-list-item"
-        @click="fnDispatchRecordStore(listItem.storeId)"
+        @click="fnDispatchRecordStore(listItem.storeId, listItem.storeName)"
       >
         <AvatarDisplay
           size="lg"
