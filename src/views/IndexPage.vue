@@ -30,7 +30,6 @@ const searchInfo = ref({
   placeholder: $t('HomePage.search')
 })
 const updateKey = ref(0)
-const batchSearchParam = ref('')
 
 // computed
 const storeLists = computed(() => {
@@ -94,7 +93,6 @@ fetchStoresListInfo()
     <FloatButton @click="openModal" />
     <CreateStoreModal
       :modal-visible="modalVisible"
-      :search-value="batchSearchParam"
       @close="closeModal"
       @update:storeList="fetchStoresListInfo"
     />

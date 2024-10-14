@@ -5,7 +5,6 @@ import type { BaseCreateStoreReqType } from '@/models/types/store.types'
 
 const props = defineProps<{
   modalVisible: boolean
-  searchValue: string
 }>()
 
 const emit = defineEmits<{
