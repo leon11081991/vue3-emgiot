@@ -43,7 +43,7 @@ export const useDropdown = () => {
     }
   }
 
-  /** 取得可用商品 */
+  /** 取得可用商品群組 */
   const fetchGoodsList = async () => {
     try {
       const { result, isSuccess, message, resultCode } = await api.dropdown.getGoods()

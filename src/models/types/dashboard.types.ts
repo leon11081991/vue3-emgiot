@@ -56,3 +56,21 @@ export type CoinOperationsInfoResType = BaseOperationsInfoResType & {
 }
 
 export type PropsBarChartType = 'claw' | 'coin'
+
+export type RefreshDashboardType = {
+  startDate: string
+  endDate: string
+  groupsDDLFilter: string
+  groupName: string
+  goodsName: string
+}
+
+export type SelectedGroupAndGoodsType = {
+  groupName: string
+  goodsName: string
+}
+
+export type SelectedGroupAndGoodsRemoveType = {
+  groupName: number
+  goodsName: number
+}

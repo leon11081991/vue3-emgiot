@@ -6,12 +6,12 @@ export class DropdownServices extends ApiFactory {
     super('')
   }
 
-  /** 取得店家選物機圖表 */
+  /** 取得可用機台群組  */
   getGroupsDDL = async (): Promise<ApiResponse> => {
     return await this.get<unknown, ApiResponse>(DropdownEnum.getGroupsDDL)
   }
 
-  /** 取得店家兌幣機圖表 */
+  /** 取得可用商品群組 */
   getGoods = async (): Promise<ApiResponse> => {
     return await this.get<unknown, ApiResponse>(DropdownEnum.getGoods)
   }

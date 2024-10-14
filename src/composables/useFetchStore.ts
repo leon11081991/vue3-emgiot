@@ -57,7 +57,6 @@ export const useFetchStore = () => {
       }
 
       storesListInfo.value.data = result
-      console.log(`storesListInfo.value.data`, storesListInfo.value.data)
     } catch (error) {
       // TODO: 錯誤處理
       console.error('Error fetchStoresListInfo:', error)
