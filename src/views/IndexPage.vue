@@ -7,9 +7,10 @@ import UpdateRecord from '@/components/DashboardPage/UpdateRecord.vue'
 import IndexBarChart from '@/components/BarChart/IndexBarChart.vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import FloatButton from '@/components/Base/FloatButton.vue'
+import CreateStoreModal from '@/components/Index/Modal/CreateStoreModal.vue'
 import { useFetchStore } from '@/composables/useFetchStore'
+import { useModal } from '@/composables/useModal'
 import { useRouter } from 'vue-router'
-
 // store 相關
 const { storesListInfo, fetchStoresListInfo, dispatchRecordCurrentStore } = useFetchStore()
 
@@ -21,6 +22,7 @@ const { t: $t } = useI18n()
 
 // 非響應式變數
 const targetPath = '/dashboard'
+const { modalVisible, openModal, closeModal } = useModal()
 
 // ref 變數
 const searchInfo = ref({
@@ -28,6 +30,7 @@ const searchInfo = ref({
   placeholder: $t('HomePage.search')
 })
 const updateKey = ref(0)
+const batchSearchParam = ref('')
 
 // computed
 const storeLists = computed(() => {
@@ -88,7 +91,13 @@ fetchStoresListInfo()
         {{ listItem.storeName }}
       </div>
     </div>
-    <FloatButton />
+    <FloatButton @click="openModal" />
+    <CreateStoreModal
+      :modal-visible="modalVisible"
+      :search-value="batchSearchParam"
+      @close="closeModal"
+      @update:storeList="fetchStoresListInfo"
+    />
   </div>
 </template>
 

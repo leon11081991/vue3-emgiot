@@ -1,4 +1,8 @@
-import type { StoresListInfoResType, StoresTotalResType } from '@/models/types/store.types'
+import type {
+  StoresListInfoResType,
+  StoresTotalResType,
+  BaseCreateStoreReqType
+} from '@/models/types/store.types'
 import { ref } from 'vue'
 import { api } from '@/services'
 import { useMessage } from '@/composables/useMessage'
@@ -19,10 +23,10 @@ export const useFetchStore = () => {
   /** 取得首頁總total運營圖表 */
   const fetchTotalOperationChart = async () => {
     try {
-      const { result, isSuccess } = await api.store.getTotalOperationChart()
+      const { result, isSuccess, resultCode, message } = await api.store.getTotalOperationChart()
 
       if (!isSuccess) {
-        // TODO: 錯誤處理
+        openMessage('error', `${resultCode} - ${message}`)
         return
       }
 
@@ -81,11 +85,33 @@ export const useFetchStore = () => {
     }
   }
 
+  /** 建立新店家 */
+  const createNewStore = async (params: BaseCreateStoreReqType) => {
+    try {
+      const { isSuccess, message, resultCode } = await api.store.createNewStore(params)
+      if (!isSuccess) {
+        if (message.includes('existed')) {
+          return false
+        }
+
+        openMessage('error', `${resultCode} - ${message}`)
+        return
+      } else {
+        openMessage('success', 'success')
+        return true
+      }
+    } catch (error) {
+      // TODO: 錯誤處理
+      console.error('Error createNewStore:', error)
+    }
+  }
+
   return {
     storesListInfo,
     operationTotalChart,
     fetchStoresListInfo,
     dispatchRecordCurrentStore,
-    fetchTotalOperationChart
+    fetchTotalOperationChart,
+    createNewStore
   }
 }
