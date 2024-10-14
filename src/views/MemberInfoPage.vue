@@ -1,55 +1,57 @@
 <script setup lang="ts">
+import type { StoreMemberInfoDataType } from '@/models/types/storeMember.types'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import AvatarDisplay from '@/components/Base/AvatarDisplay.vue'
 import { useFetchStoreMember } from '@/composables/useFetchStoreMember'
+import { useModal } from '@/composables/useModal'
 import { levelOptions } from '@/constants/common/select.const'
 
 const { storeId, userId } = useRoute().params
-const { fnGetStoreMemberInfo } = useFetchStoreMember()
+const { storeMemberInfo, fnGetStoreMemberInfo, fnUpdateStoreMemberInfo } = useFetchStoreMember()
+const { modalVisible, openModal, closeModal } = useModal()
 
-const value1 = ref(1)
-const isShowDeviceList = ref(false)
-const checked = ref({
-  isGoodsManagement: false,
-  isSpecial: false
-})
+const memberInfoData = ref<StoreMemberInfoDataType>({} as StoreMemberInfoDataType)
 
-// const pcbOptions = [
-//   { pcbGroupName: '南部食品機', pcbName: 'W208_01', pcbId: '01' },
-//   { pcbGroupName: '南部食品機', pcbName: 'W208_02', pcbId: '02' },
-//   { pcbGroupName: '南部食品機', pcbName: 'W208b1_01', pcbId: '03' }
-// ]
+// TODO: get data from api
+const mockData = [
+  { pcbGroupName: '南部食品機', pcbName: 'W208_01', pcbId: '7878855' },
+  { pcbGroupName: '南部食品機', pcbName: 'W208_02', pcbId: '7878856' },
+  { pcbGroupName: '南部食品機', pcbName: 'W208b1_01', pcbId: '03' }
+]
 
 onMounted(async () => {
-  fnGetStoreMemberInfo({
+  await fnGetStoreMemberInfo({
     storeId: storeId as string,
     userId: userId as string
   })
+  memberInfoData.value = {
+    ...storeMemberInfo.value.data,
+    storeId: storeId as string
+  }
 })
 </script>
 
 <template>
+  {{ memberInfoData }}
   <div class="member-info-page">
     <section class="info-container">
       <div class="store-info-container">
         <AvatarDisplay
           size="lg"
-          :name="'大和心心'"
+          :name="memberInfoData?.storeName"
           :charNum="2"
         />
-        <h4 class="store-name">
-          雲端掌櫃&nbsp;-&nbsp;{{ '大和大和大和大和大和大和大和大和大和大和大和' }}
-        </h4>
+        <h4 class="store-name">雲端掌櫃&nbsp;-&nbsp;{{ memberInfoData.storeName }}</h4>
       </div>
       <div class="user-info-container">
         <AvatarDisplay
           size="md"
-          :name="'ccc'"
+          :name="memberInfoData.userName"
         />
         <div class="user-wrap">
-          <h6 class="user-name">{{ 'ccc' }}</h6>
+          <h6 class="user-name">{{ memberInfoData.userName }}</h6>
           <div class="user-level">Lv.{{ '1' }}</div>
         </div>
       </div>
@@ -57,8 +59,11 @@ onMounted(async () => {
 
     <section class="setting-container">
       <h4 class="section-title">權限設定</h4>
+
       <a-select
-        v-model:value="value1"
+        class="level-select"
+        v-model:value="memberInfoData.roleOrder"
+        size="large"
         :options="levelOptions"
         :field-names="{ label: 'name', value: 'id' }"
       >
@@ -73,26 +78,20 @@ onMounted(async () => {
 
       <div class="content-setting">
         <p class="content-setting-label">啟用裝置過濾 <span>(2台)</span></p>
-        <a-switch v-model:checked="isShowDeviceList" />
+        <a-switch v-model:checked="memberInfoData.isForbidden" />
       </div>
 
       <div
         class="device-list"
-        :class="{ expanded: isShowDeviceList }"
+        :class="{ expanded: memberInfoData.isForbidden }"
       >
         <div class="device-list-inner">
-          <p>test</p>
-          <p>test</p>
-          <p>test</p>
-          <p>test</p>
-          <p>test</p>
-        </div>
-        <!-- <a-checkbox-group
-            v-model:value="checkedList"
-            @change="() => console.log(checkedList)"
+          <a-checkbox-group
+            v-model:value="memberInfoData.forbiddenPcbs"
+            @change="() => console.log(memberInfoData.forbiddenPcbs)"
           >
             <template
-              v-for="option in pcbOptions"
+              v-for="option in mockData"
               :key="option.value"
             >
               <a-checkbox :value="option.pcbId">
@@ -102,15 +101,20 @@ onMounted(async () => {
                 </div>
               </a-checkbox>
             </template>
-          </a-checkbox-group> -->
+          </a-checkbox-group>
+        </div>
       </div>
       <div class="content-setting">
         <p class="content-setting-label">商品管理權限</p>
-        <a-switch v-model:checked="checked.isGoodsManagement" />
+        <a-switch v-model:checked="memberInfoData.isGoodsManagement" />
       </div>
       <div class="content-setting">
         <p class="content-setting-label">特殊商品可見</p>
-        <a-switch v-model:checked="checked.isSpecial" />
+        <a-switch v-model:checked="memberInfoData.isSpecial" />
+      </div>
+      <div class="content-setting">
+        <p class="content-setting-label">屏蔽，對方無法在成員列表看見你</p>
+        <a-switch v-model:checked="memberInfoData.isSpecial" />
       </div>
     </section>
 
@@ -118,6 +122,7 @@ onMounted(async () => {
       <a-button
         type="primary"
         size="large"
+        @click="fnUpdateStoreMemberInfo({ ...memberInfoData, storeId: storeId as string })"
       >
         變更
       </a-button>
@@ -125,11 +130,37 @@ onMounted(async () => {
         type="delete"
         size="large"
         ghost
+        @click="openModal"
       >
         刪除成員
       </a-button>
     </div>
   </div>
+
+  <a-modal
+    v-model:visible="modalVisible"
+    class="delete-member-modal primary"
+  >
+    <template #title>
+      <div class="modal-header modal-header-primary">
+        <span class="modal-title">{{ '刪除成員' }}</span>
+      </div>
+    </template>
+
+    <div class="delete-member-container">請確認是否將該成員移出此店家。</div>
+
+    <template #footer>
+      <div class="delete-member-actions-container">
+        <a-button type="primary">確定</a-button>
+        <a-button
+          type="primary"
+          ghost
+          @click="closeModal"
+          >取消</a-button
+        >
+      </div>
+    </template>
+  </a-modal>
 </template>
 
 <style lang="scss" scoped>
@@ -152,7 +183,6 @@ section {
     align-items: center;
     gap: 0.5rem;
     padding-bottom: 0.5rem;
-    border-bottom: 1px solid $--color-gray-400;
 
     .store-name {
       flex: 1;
@@ -168,6 +198,7 @@ section {
     gap: 0.5rem;
     padding-top: 0.5rem;
     padding-left: 2rem;
+    border-top: 1px solid $--color-gray-400;
 
     .user-wrap {
       flex: 1;
@@ -191,6 +222,14 @@ section {
   color: $--color-gray-600;
 }
 
+.level-select {
+  :deep(.ant-select-selection-item) {
+    display: flex;
+    justify-content: center;
+    color: $--color-primary;
+  }
+}
+
 .setting-container,
 .content-setting-container {
   display: flex;
@@ -202,7 +241,7 @@ section {
   .content-setting {
     display: flex;
     align-items: center;
-    padding-left: 2rem;
+    padding-left: 1rem;
 
     @include media-breakpoint-down(sm) {
       padding-left: 1rem;
@@ -235,12 +274,30 @@ section {
   }
 
   .device-list-inner {
+    margin-inline: 2rem;
     overflow: hidden;
+
+    .ant-checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
+      .checkbox-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        .name-text {
+          color: $--color-primary;
+        }
+      }
+    }
   }
 }
 
 .actions-container {
-  position: fixed;
+  // position: fixed;
+  position: sticky;
   background-color: $--background-color-base;
   padding-inline: $--page-padding-x;
   padding-bottom: $--page-padding-bottom;
@@ -253,6 +310,24 @@ section {
 
   @include media-breakpoint-down(sm) {
     padding-inline: $--page-padding-x-mobile;
+  }
+}
+
+.delete-member-modal {
+  .delete-member-container {
+    display: flex;
+    justify-content: center;
+    margin-block: 2rem;
+    font-size: 1rem;
+    color: $--color-gray-600;
+  }
+
+  .delete-member-actions-container {
+    display: flex;
+
+    & button {
+      flex: 1;
+    }
   }
 }
 </style>

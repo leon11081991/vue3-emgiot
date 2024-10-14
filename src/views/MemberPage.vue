@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import AvatarDisplay from '@/components/Base/AvatarDisplay.vue'
+import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import { useFetchStoreMember } from '@/composables/useFetchStoreMember'
 
 // composables
+const { t: $t } = useI18n()
 const router = useRouter()
 const { storeMembers, fnGetStoreMembers } = useFetchStoreMember()
 
@@ -29,6 +32,7 @@ onMounted(async () => {
         v-model:activeKey="activeKey"
         class="member-collapse"
         collapsible="header"
+        :accordion="true"
       >
         <a-collapse-panel
           :key="store.storeId"
@@ -54,13 +58,16 @@ onMounted(async () => {
                 class="content-item"
                 @click="goToMemberInfo(store.storeId, member.userId)"
               >
-                <!-- <AvatarDisplay
-                size="md"
-                :name="member.userName"
-              /> -->
+                <AvatarDisplay
+                  size="md"
+                  :name="member.userName"
+                />
                 <div class="member-wrap">
                   <h6 class="member-name">{{ member.userName }}</h6>
-                  <div class="member-level">Lv.{{ member.roleName }}</div>
+                  <div class="member-level">
+                    <BaseSvgIcon :iconName="`level-${member.roleOrder}`" />
+                    {{ $t(`MemberPage.Level.${member.roleOrder}`) }}
+                  </div>
                 </div>
               </li>
             </template>
@@ -169,6 +176,9 @@ onMounted(async () => {
   }
 
   .member-level {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
     font-size: 1rem;
     color: $--color-gray-600;
   }

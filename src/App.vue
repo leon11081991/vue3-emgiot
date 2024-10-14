@@ -96,6 +96,17 @@ const route = useRoute()
     &[disabled] {
       background-color: $--color-primary--disabled;
     }
+
+    &.ant-btn-background-ghost {
+      background-color: $--color-white;
+      color: $--color-primary;
+      border: 1px solid $--color-primary;
+
+      &:hover {
+        background-color: $--color-primary;
+        color: $--color-white;
+      }
+    }
   }
 
   &.ant-btn-secondary {
