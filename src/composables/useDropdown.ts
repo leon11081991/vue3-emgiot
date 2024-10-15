@@ -1,4 +1,8 @@
-import type { BaseGroupsDDLResType, BaseGoodsResType } from '@/models/types/dropdown.type'
+import type {
+  BaseGroupsDDLResType,
+  BaseGoodsResType,
+  PcbsReqType
+} from '@/models/types/dropdown.type'
 import { ref } from 'vue'
 import { api } from '@/services'
 import { useMessage } from '@/composables/useMessage'
@@ -19,6 +23,15 @@ export const useDropdown = () => {
   // 可用商品
   const goodsList = ref<{
     data: BaseGoodsResType[]
+    isLoading: boolean
+  }>({
+    data: [],
+    isLoading: true
+  })
+
+  // 可用機台
+  const pcbsList = ref<{
+    data: PcbsReqType[]
     isLoading: boolean
   }>({
     data: [],
@@ -61,10 +74,30 @@ export const useDropdown = () => {
     }
   }
 
+  /** 取得可用機台 */
+  const fetchPcbsList = async (storeId: string) => {
+    try {
+      const { result, isSuccess } = await api.dropdown.getPcbs({ storeId })
+
+      if (!isSuccess) {
+        // TODO: 錯誤處理
+        return
+      }
+
+      pcbsList.value.data = result
+    } catch (e) {
+      catchErrorHandler(e)
+    } finally {
+      pcbsList.value.isLoading = false
+    }
+  }
+
   return {
     groupsDDLList,
     goodsList,
+    pcbsList,
     fetchGroupsDDLList,
-    fetchGoodsList
+    fetchGoodsList,
+    fetchPcbsList
   }
 }

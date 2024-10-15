@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user.stores'
 import AvatarDisplay from '@/components/Base/AvatarDisplay.vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import { useFetchStoreMember } from '@/composables/useFetchStoreMember'
@@ -9,13 +10,23 @@ import { useFetchStoreMember } from '@/composables/useFetchStoreMember'
 // composables
 const { t: $t } = useI18n()
 const router = useRouter()
+const userStore = useUserStore()
 const { storeMembers, fnGetStoreMembers } = useFetchStoreMember()
 
 // refs
 const activeKey = ref([])
 
+const isSelfAccount = (id: string, userId: string) => {
+  return id === userId
+}
+
 const goToMemberInfo = (storeId: string, userId: string) => {
   router.push({ name: 'MemberInfo', params: { storeId: storeId, userId: userId } })
+}
+
+// TODO
+const changeVisibility = (visibility: boolean, storeId: string, userId: string) => {
+  console.log('changeVisibility', visibility, storeId, userId)
 }
 
 onMounted(async () => {
@@ -49,6 +60,7 @@ onMounted(async () => {
             </div>
           </template>
 
+          {{ store.members }}
           <ul class="content-list">
             <template
               v-for="member in store.members"
@@ -56,17 +68,39 @@ onMounted(async () => {
             >
               <li
                 class="content-item"
-                @click="goToMemberInfo(store.storeId, member.userId)"
+                @click.prevent="goToMemberInfo(store.storeId, member.userId)"
               >
                 <AvatarDisplay
                   size="md"
                   :name="member.userName"
                 />
                 <div class="member-wrap">
-                  <h6 class="member-name">{{ member.userName }}</h6>
-                  <div class="member-level">
-                    <BaseSvgIcon :iconName="`level-${member.roleOrder}`" />
-                    {{ $t(`MemberPage.Level.${member.roleOrder}`) }}
+                  <div class="member-container">
+                    <h6 class="member-name">{{ member.userName }}</h6>
+                    <div class="member-level">
+                      <BaseSvgIcon :iconName="`level-${member.roleOrder}`" />
+                      {{ $t(`MemberPage.Level.${member.roleOrder}`) }}
+                    </div>
+                  </div>
+
+                  <div
+                    v-if="isSelfAccount(member.userId, userStore.userInfo.userId)"
+                    class="isVisible-container"
+                    @click.stop
+                  >
+                    <a-checkbox
+                      v-model:checked="member.isVisible"
+                      @change="
+                        (e: Event) =>
+                          changeVisibility(
+                            (e.target as HTMLInputElement).checked,
+                            store.storeId,
+                            member.userId
+                          )
+                      "
+                      >隱身</a-checkbox
+                    >
+                    <p>階級比你低的無法看見你</p>
                   </div>
                 </div>
               </li>
@@ -169,6 +203,13 @@ onMounted(async () => {
 }
 
 .member-wrap {
+  display: flex;
+  gap: 1rem;
+
+  .member-container {
+    flex: 1;
+  }
+
   .member-name {
     font-size: 1rem;
     color: $--color-primary;
@@ -181,6 +222,19 @@ onMounted(async () => {
     gap: 0.25rem;
     font-size: 1rem;
     color: $--color-gray-600;
+  }
+
+  .isVisible-container {
+    cursor: auto;
+
+    .ant-checkbox-wrapper {
+      font-size: 1rem;
+      color: $--color-gray-700;
+    }
+
+    p {
+      color: $--color-gray-600;
+    }
   }
 }
 </style>

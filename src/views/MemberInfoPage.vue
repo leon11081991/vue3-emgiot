@@ -6,11 +6,13 @@ import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import AvatarDisplay from '@/components/Base/AvatarDisplay.vue'
 import { useFetchStoreMember } from '@/composables/useFetchStoreMember'
 import { useModal } from '@/composables/useModal'
+import { useDropdown } from '@/composables/useDropdown'
 import { levelOptions } from '@/constants/common/select.const'
 
 const { storeId, userId } = useRoute().params
 const { storeMemberInfo, fnGetStoreMemberInfo, fnUpdateStoreMemberInfo } = useFetchStoreMember()
 const { modalVisible, openModal, closeModal } = useModal()
+const { pcbsList, fetchPcbsList } = useDropdown()
 
 const memberInfoData = ref<StoreMemberInfoDataType>({} as StoreMemberInfoDataType)
 
@@ -26,15 +28,20 @@ onMounted(async () => {
     storeId: storeId as string,
     userId: userId as string
   })
+
   memberInfoData.value = {
     ...storeMemberInfo.value.data,
     storeId: storeId as string
   }
+
+  await fetchPcbsList(storeId as string)
 })
 </script>
 
 <template>
   {{ memberInfoData }}
+
+  {{ pcbsList.data }}
   <div class="member-info-page">
     <section class="info-container">
       <div class="store-info-container">
@@ -77,7 +84,12 @@ onMounted(async () => {
       <h4 class="section-title">權限內容設定</h4>
 
       <div class="content-setting">
-        <p class="content-setting-label">啟用裝置過濾 <span>(2台)</span></p>
+        <p class="content-setting-label">
+          啟用裝置過濾
+          <span v-if="memberInfoData.forbiddenPcbs?.length > 0"
+            >({{ memberInfoData.forbiddenPcbs?.length }}台)</span
+          >
+        </p>
         <a-switch v-model:checked="memberInfoData.isForbidden" />
       </div>
 
@@ -91,13 +103,13 @@ onMounted(async () => {
             @change="() => console.log(memberInfoData.forbiddenPcbs)"
           >
             <template
-              v-for="option in mockData"
-              :key="option.value"
+              v-for="option in pcbsList.data"
+              :key="option.pcbId"
             >
               <a-checkbox :value="option.pcbId">
                 <div class="checkbox-item">
-                  <span class="group-tag">{{ option.pcbGroupName }}</span>
-                  <span class="name-text">{{ option.pcbName }}</span>
+                  <span class="group-tag">{{ option.groupName }}</span>
+                  <span class="name-text">{{ option.machineName }}</span>
                 </div>
               </a-checkbox>
             </template>

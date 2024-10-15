@@ -8,3 +8,14 @@ export type BaseGoodsResType = {
   goodsName: string
   cost: number
 }
+
+export type PcbsResType = {
+  storeId: string
+}
+
+export type PcbsReqType = {
+  pcbId: string
+  dueDate: string
+  machineName: string
+  groupName: string
+}
