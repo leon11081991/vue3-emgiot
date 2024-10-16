@@ -76,6 +76,7 @@ const isModalVisible = ref<Record<DashboardModalType, boolean>>({
 })
 
 const batchSearchParam = ref<string>('')
+const batchCheckedList = ref<string[]>([])
 const listData = ref<ClawOperationsInfoResType[] | CoinOperationsInfoResType[]>([])
 
 const updateKey = ref(0)
@@ -112,7 +113,17 @@ const storeName = computed(() => {
 })
 
 /* function */
+const resetModalVisible = (
+  modalVisibility: Record<DashboardModalType, boolean>
+): Record<DashboardModalType, boolean> => {
+  Object.keys(modalVisibility).forEach((key) => {
+    modalVisibility[key as DashboardModalType] = false
+  })
+  return modalVisibility
+}
+
 const handleOpenModal = (type: DashboardModalType): void => {
+  isModalVisible.value = resetModalVisible(isModalVisible.value)
   openModal(() => {
     isModalVisible.value[type] = true
   })
@@ -165,6 +176,15 @@ const handleToggleTab = async (
 
     return
   }
+}
+
+const updateCheckedList = (val: string[]) => {
+  console.log('updateCheckedList!!!!', val)
+  batchCheckedList.value = val
+}
+
+const clearCheckedList = (checkedList: string[]) => {
+  checkedList = []
 }
 
 const fnResetData = (data?: RefreshDashboardType) => {
@@ -306,7 +326,10 @@ onMounted(async () => {
     v-if="isModalVisible.batch"
     :modal-visible="modalVisible"
     :search-value="batchSearchParam"
+    :checked-list="batchCheckedList"
     @close="closeModal()"
+    @update:checked-list="updateCheckedList"
+    @clear-checked-list="clearCheckedList(batchCheckedList)"
   />
 
   <StoreFilterModal

@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 
 const props = defineProps<{
   modalVisible: boolean
   searchValue: string
+  checkedList: string[]
 }>()
 
 const emit = defineEmits<{
   (e: 'close'): void
   (e: 'update:searchValue', value: string): void
   (e: 'onSearch'): void
+  (e: 'update:checkedList', value: string[]): void
+  (e: 'clearCheckedList'): void
 }>()
-
-const checkedList = ref<string[]>([])
 
 // TODO: get data from api
 type PcbOptionsType = {
@@ -29,13 +29,19 @@ const pcbOptions: PcbOptionsType[] = [
 ]
 
 const onClickCheckAll = (options: PcbOptionsType[]) => {
+  let checkedList: string[] = []
   options.forEach((item) => {
-    checkedList.value.push(item.pcbId)
+    checkedList.push(item.pcbId)
   })
+  emit('update:checkedList', checkedList)
 }
 
 const onClickUncheckAll = () => {
-  checkedList.value = []
+  emit('update:checkedList', [])
+}
+
+const onUpdateCheckedList = (value: string[]) => {
+  emit('update:checkedList', value)
 }
 
 const closeModal = () => {
@@ -98,8 +104,8 @@ const onSearch = () => {
 
     <div class="batch-list">
       <a-checkbox-group
-        v-model:value="checkedList"
-        @change="() => console.log(checkedList)"
+        :value="props.checkedList"
+        @change="onUpdateCheckedList"
       >
         <template
           v-for="option in pcbOptions"
