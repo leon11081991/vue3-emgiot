@@ -1,7 +1,7 @@
 import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCommonStore } from '@/stores/common.stores'
-import { navigationList } from '@/constants/common.const'
+import { headerTitleList } from '@/constants/common/header.const'
 
 /** header 相關邏輯 */
 export const useHeader = () => {
@@ -21,11 +21,11 @@ export const useHeader = () => {
   }
 
   /** 處理header title
-   *  尋找 navigationList 中是否有與當前頁面相同的 header title
+   *  尋找 headerTitleList 中是否有與當前頁面相同的 header title
    */
   const headerTitleHandler = (title: string = '') => {
     const currentPage = router.currentRoute.value.name
-    const item = navigationList.find((item) => item.name == currentPage)
+    const item = headerTitleList.find((item) => item.name == currentPage)
     return item?.['header-title'] ?? title
   }
 

@@ -63,8 +63,9 @@ const route = useRoute()
 
 /** Ant Design Button */
 .ant-btn {
+  @include base-transition;
+
   &.ant-btn-default {
-    @include base-transition;
     background-color: $--color-default;
     color: $--color-white;
     border: none;
@@ -81,7 +82,6 @@ const route = useRoute()
   }
 
   &.ant-btn-primary {
-    @include base-transition;
     height: auto;
     padding-block: 0.75rem;
     background-color: $--color-primary;
@@ -96,11 +96,20 @@ const route = useRoute()
     &[disabled] {
       background-color: $--color-primary--disabled;
     }
+
+    &.ant-btn-background-ghost {
+      background-color: $--color-white;
+      color: $--color-primary;
+      border: 1px solid $--color-primary;
+
+      &:hover {
+        background-color: $--color-primary;
+        color: $--color-white;
+      }
+    }
   }
 
   &.ant-btn-secondary {
-    @include base-transition;
-
     &.ant-btn-background-ghost {
       background-color: $--color-white;
       color: $--color-secondary;
@@ -108,6 +117,19 @@ const route = useRoute()
 
       &:hover {
         background-color: $--color-secondary;
+        color: $--color-white;
+      }
+    }
+  }
+
+  &.ant-btn-delete {
+    &.ant-btn-background-ghost {
+      background-color: $--color-white;
+      color: $--color-danger;
+      border: 1px solid $--color-danger;
+
+      &:hover {
+        background-color: $--color-danger;
         color: $--color-white;
       }
     }

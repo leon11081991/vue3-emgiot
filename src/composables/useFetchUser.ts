@@ -26,6 +26,7 @@ export const useFetchUser = () => {
 
       userStore.userInfo.realName = result.realName
       userStore.userInfo.nickName = result.nickName
+      userStore.userInfo.userId = (getDataFromToken<JwtDecodeData>(token, 'name') as string) || ''
       userStore.userInfo.photoUrl =
         (getDataFromToken<JwtDecodeData>(token, 'photo') as string) || ''
     } catch (e) {

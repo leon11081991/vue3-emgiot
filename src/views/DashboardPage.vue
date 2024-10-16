@@ -2,6 +2,7 @@
 /* import */
 import { type DefineComponent, ref, onMounted, defineAsyncComponent, computed } from 'vue'
 import type { Tab } from '@/models/interfaces/tab.interface'
+import type { DashboardModalType } from '@/models/types/modal.types'
 import type {
   DashboardTabType,
   ClawOperationsInfoResType,
@@ -70,7 +71,13 @@ const transitionName = ref('slide-right')
 const clawActiveKey = ref([])
 const coinActiveKey = ref([])
 
+const isModalVisible = ref<Record<DashboardModalType, boolean>>({
+  batch: false,
+  storeFilter: false
+})
+
 const batchSearchParam = ref<string>('')
+const batchCheckedList = ref<string[]>([])
 const listData = ref<ClawOperationsInfoResType[] | CoinOperationsInfoResType[]>([])
 
 const updateKey = ref(0)
@@ -107,6 +114,22 @@ const storeName = computed(() => {
 })
 
 /* function */
+const resetModalVisible = (
+  modalVisibility: Record<DashboardModalType, boolean>
+): Record<DashboardModalType, boolean> => {
+  Object.keys(modalVisibility).forEach((key) => {
+    modalVisibility[key as DashboardModalType] = false
+  })
+  return modalVisibility
+}
+
+const handleOpenModal = (type: DashboardModalType): void => {
+  isModalVisible.value = resetModalVisible(isModalVisible.value)
+  openModal(() => {
+    isModalVisible.value[type] = true
+  })
+}
+
 const handleToggleTab = async (
   tab: DashboardTabType,
   groupsDDLFilter?: string,
@@ -154,6 +177,15 @@ const handleToggleTab = async (
 
     return
   }
+}
+
+const updateCheckedList = (val: string[]) => {
+  console.log('updateCheckedList!!!!', val)
+  batchCheckedList.value = val
+}
+
+const clearCheckedList = (checkedList: string[]) => {
+  checkedList = []
 }
 
 const fnResetData = (data?: RefreshDashboardType) => {
@@ -250,7 +282,7 @@ onMounted(async () => {
           v-if="selectedTab === 'claw'"
           ghost
           type="secondary"
-          @click="openModal()"
+          @click="handleOpenModal('batch')"
           >批量補幣</a-button
         >
         <a-button
@@ -272,7 +304,7 @@ onMounted(async () => {
 
       <div
         class="filter-button"
-        @click="openModal()"
+        @click="handleOpenModal('storeFilter')"
       >
         <BaseSvgIcon iconName="filter-menu" />
       </div>
@@ -297,12 +329,17 @@ onMounted(async () => {
   </div>
 
   <BatchModal
+    v-if="isModalVisible.batch"
     :modal-visible="modalVisible"
     :search-value="batchSearchParam"
+    :checked-list="batchCheckedList"
     @close="closeModal()"
+    @update:checked-list="updateCheckedList"
+    @clear-checked-list="clearCheckedList(batchCheckedList)"
   />
 
   <StoreFilterModal
+    v-if="isModalVisible.storeFilter"
     :modal-visible="modalVisible"
     :resetAll="resetKey"
     :removeSelected="removeSelected"

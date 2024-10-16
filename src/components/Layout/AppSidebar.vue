@@ -7,7 +7,7 @@ import { useAuth } from '@/composables/useAuth'
 import { useDeviceWidth } from '@/composables/useDeviceWidth'
 import { useCommonStore } from '@/stores/common.stores'
 import { useUserStore } from '@/stores/user.stores'
-import { navigationList } from '@/constants/common.const'
+import { navigationList } from '@/constants/common/sidebar.const'
 import { widthMapping } from '@/constants/mappings/width.mapping'
 
 const commonStore = useCommonStore()
