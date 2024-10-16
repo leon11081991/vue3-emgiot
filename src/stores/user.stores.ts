@@ -7,6 +7,7 @@ export const useUserStore = defineStore('user', () => {
   const userInfo = ref<UserInfoDataType>({
     realName: '',
     nickName: '',
+    userId: '',
     photoUrl: ''
   })
 
@@ -15,6 +16,7 @@ export const useUserStore = defineStore('user', () => {
     userInfo.value = {
       realName: '',
       nickName: '',
+      userId: '',
       photoUrl: ''
     }
   }

@@ -1,4 +1,5 @@
 import { type ApiResponse, ApiFactory } from '@/utils/api'
+import type { PcbsResType } from '@/models/types/dropdown.type'
 import { DropdownEnum } from '@/constants/enums/api/dropdown.enums'
 
 export class DropdownServices extends ApiFactory {
@@ -14,5 +15,10 @@ export class DropdownServices extends ApiFactory {
   /** 取得可用商品群組 */
   getGoods = async (): Promise<ApiResponse> => {
     return await this.get<unknown, ApiResponse>(DropdownEnum.getGoods)
+  }
+
+  /** 取得可用機台 */
+  getPcbs = async (storeId: PcbsResType): Promise<ApiResponse> => {
+    return await this.get<unknown, ApiResponse>(DropdownEnum.getPcbs, storeId)
   }
 }
