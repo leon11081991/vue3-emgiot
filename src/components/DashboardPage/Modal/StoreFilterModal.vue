@@ -43,8 +43,8 @@ const tempRangeDate = ref({ from: '', to: '' })
 const rangePickerActiveItem = ref('今日')
 
 const groupsDDLFilter = ref('')
-const groupName = ref('')
-const goodsName = ref('')
+const groupName = ref('群組')
+const goodsName = ref('商品')
 const picker = ref({
   start: false,
   end: false,
@@ -573,6 +573,12 @@ fetchGoodsList()
   padding: 1.75rem 0;
   .select-item {
     flex: 1;
+    ::v-deep(.ant-select-selection-item) {
+      color: $--color-primary;
+    }
+    ::v-deep(.ant-select-arrow) {
+      color: $--color-primary;
+    }
   }
 }
 

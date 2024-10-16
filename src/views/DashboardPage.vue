@@ -20,6 +20,7 @@ import FloatButton from '@/components/Base/FloatButton.vue'
 import DashboardBarChart from '@/components/BarChart/DashboardBarChart.vue'
 import BatchModal from '@/components/DashboardPage/Modal/BatchModal.vue'
 import StoreFilterModal from '@/components/DashboardPage/Modal/StoreFilterModal.vue'
+import UpdateStoreModal from '@/components/DashboardPage/Modal/UpdateStoreModal.vue'
 import { useI18n } from 'vue-i18n'
 import { useHeader } from '@/composables/useHeader'
 import { useDate } from '@/composables/useDate'
@@ -72,7 +73,8 @@ const coinActiveKey = ref([])
 
 const isModalVisible = ref<Record<DashboardModalType, boolean>>({
   batch: false,
-  storeFilter: false
+  storeFilter: false,
+  updateStoreFilter: false
 })
 
 const batchSearchParam = ref<string>('')
@@ -239,6 +241,10 @@ const fnRemoveFilteredTag = (key: string) => {
   })
 }
 
+const fnUpdateStoreInfo = () => {
+  handleOpenModal('updateStoreFilter')
+}
+
 /* 生命週期 (Lifecycle hooks) */
 onMounted(async () => {
   updateHeaderTitle($t('DashboardPage.HeaderTitle') + storeName.value) // 設定動態 header title
@@ -260,6 +266,7 @@ onMounted(async () => {
       :startDate="startDate"
       :endDate="endDate"
       :isInitialChart="isInitialChart"
+      @update:storeInfo="fnUpdateStoreInfo"
     />
 
     <UpdateRecord @update="fnResetData" />
@@ -339,6 +346,12 @@ onMounted(async () => {
     :removeSelected="removeSelected"
     @close="closeModal()"
     @refresh="fnRefreshDashboard"
+  />
+
+  <UpdateStoreModal
+    v-if="isModalVisible.updateStoreFilter"
+    :modal-visible="modalVisible"
+    @close="closeModal"
   />
 </template>
 

@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import type { BaseCreateStoreReqType } from '@/models/types/store.types'
+import { useHeader } from '@/composables/useHeader'
 import { useFetchStore } from '@/composables/useFetchStore'
 import { useMessage } from '@/composables/useMessage'
-import type { BaseCreateStoreReqType } from '@/models/types/store.types'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps<{
   modalVisible: boolean
@@ -10,18 +12,25 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'close'): void
-  (e: 'update:storeList'): void
 }>()
 
 // store 相關
-const { createNewStore } = useFetchStore()
+const { t: $t } = useI18n()
+const { updateHeaderTitle } = useHeader()
+const { updateStore } = useFetchStore()
 const { openMessage } = useMessage()
 
 const storeNameMaxLen = 10
 const storeName = ref('')
+const wifiInfo = ref({
+  wifiSSID: '',
+  wifiPassword: ''
+})
 
 const storeModalDataRest = () => {
   storeName.value = ''
+  wifiInfo.value.wifiSSID = ''
+  wifiInfo.value.wifiPassword = ''
   isStoreNameExisted.value = false
 }
 
@@ -39,30 +48,46 @@ const updateStoreValue = (e: Event) => {
   storeName.value = value
 }
 
-const fnCreateNewStore = async () => {
-  if (storeName.value.trim() === '') {
-    openMessage('error', '輸入不得為空')
-    return
-  }
+const updateWifiSSID = (e: Event) => {
+  const value = (e.target as HTMLInputElement).value
+  wifiInfo.value.wifiSSID = value
+}
 
-  if (isStoreNameLenOverRule.value) {
-    openMessage('error', '長度超過10個字')
+const updateWifiPassword = (e: Event) => {
+  const value = (e.target as HTMLInputElement).value
+  wifiInfo.value.wifiPassword = value
+}
+
+const fnUpdateStoreInfo = async () => {
+  if (storeName.value.trim() === '') {
+    openMessage('error', '店家名稱不得為空')
     return
   }
 
   const params: BaseCreateStoreReqType = {
     storeName: storeName.value,
-    wifiInfo: [] // create could be empty array
+    wifiInfo: wifiInfo.value.wifiSSID && wifiInfo.value.wifiPassword ? [wifiInfo.value] : []
   }
-  const res = await createNewStore(params)
+  const res = await updateStore(params)
 
   if (res) {
-    emit('update:storeList')
+    const keyword = '店'
+    const lastChar = storeName.value[storeName.value.length - 1]
+    const isStoreKeywordExist = lastChar.includes(storeName.value)
+    const newName = isStoreKeywordExist ? storeName.value : storeName.value + keyword
+
+    localStorage.setItem('storeName', newName)
+    updateHeaderTitle($t('DashboardPage.HeaderTitle') + newName) // 設定動態 header title
     closeModal()
   } else {
     isStoreNameExisted.value = true
   }
 }
+
+onMounted(() => {
+  const storeName = localStorage.getItem('storeName')
+  updateHeaderTitle($t('DashboardPage.HeaderTitle') + storeName)
+})
 </script>
 
 <template>
@@ -73,7 +98,7 @@ const fnCreateNewStore = async () => {
   >
     <template #title>
       <div class="modal-header modal-header-primary">
-        <span class="modal-title">{{ '新增店家' }}</span>
+        <span class="modal-title">{{ '編輯店家' }}</span>
       </div>
     </template>
 
@@ -93,13 +118,29 @@ const fnCreateNewStore = async () => {
         <span>{{ storeExistMessage }}</span>
         <span class="ml-auto">{{ storeName.length }} / {{ storeNameMaxLen }}</span>
       </div>
+      <a-input
+        class="createStore-input"
+        :value="wifiInfo.wifiSSID"
+        placeholder="請輸入WIFI名稱"
+        @change="updateWifiSSID"
+        @keyup.enter="fnUpdateStoreInfo"
+      >
+      </a-input>
+      <a-input
+        class="createStore-input"
+        :value="wifiInfo.wifiPassword"
+        placeholder="請輸入WIFI密碼"
+        @change="updateWifiPassword"
+        @keyup.enter="fnUpdateStoreInfo"
+      >
+      </a-input>
     </div>
 
     <template #footer>
       <a-button
         class="confirm-btn"
         type="primary"
-        @click="fnCreateNewStore"
+        @click="fnUpdateStoreInfo"
       >
         {{ '確認' }}
       </a-button>

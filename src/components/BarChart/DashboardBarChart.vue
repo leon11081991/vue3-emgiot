@@ -18,6 +18,11 @@ const props = defineProps<{
   isInitialChart: boolean
 }>()
 
+// defineEmit
+const emit = defineEmits<{
+  (e: 'update:storeInfo'): void
+}>()
+
 // 非響應式變數
 const TABS = {
   REVENUE: 'revenue',
@@ -81,8 +86,12 @@ const coinExchangedTotal = computed(() => {
 })
 
 // function
-function changeTab(tab: string) {
+const changeTab = (tab: string) => {
   currentTab.value = tab
+}
+
+const emitUpdateStoreWifiInfo = () => {
+  emit('update:storeInfo')
 }
 
 // Lifecycle hooks
@@ -111,6 +120,17 @@ fetchOperationCoinChart({
       @click="changeTab(TABS.PROFIT)"
     >
       盈餘
+    </div>
+    <div
+      class="edit-store"
+      @click="emitUpdateStoreWifiInfo"
+    >
+      <BaseSvgIcon
+        iconName="edit"
+        color="white"
+        size="sm"
+      />
+      編輯店家
     </div>
   </div>
   <div class="bar-chart-container">
@@ -177,12 +197,29 @@ fetchOperationCoinChart({
     border-top-right-radius: 8px;
     letter-spacing: 3px;
     user-select: none;
+    text-align: center;
     cursor: pointer;
     color: $--color-white;
     background-color: $--color-Tab-bg;
     &.active {
       background-color: $--color-targetTab-bg;
     }
+    @media screen and (max-width: 430px) {
+      flex: 1;
+      padding: 8px 0;
+    }
+  }
+  .edit-store {
+    display: flex;
+    align-items: center;
+    max-height: 32px;
+    padding: 0 8px;
+    margin: 0 16px 0 auto;
+    border-radius: 8px;
+    user-select: none;
+    cursor: pointer;
+    color: $--color-white;
+    background-color: $--color-primary;
   }
 }
 .bar-chart-container {
