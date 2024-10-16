@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import type { BaseCreateStoreReqType } from '@/models/types/store.types'
 import { useHeader } from '@/composables/useHeader'
 import { useFetchStore } from '@/composables/useFetchStore'
@@ -38,7 +38,7 @@ const closeModal = () => {
   storeModalDataRest()
   emit('close')
 }
-0
+
 const isStoreNameExisted = ref(false)
 const isStoreNameLenOverRule = computed(() => +storeName.value.length > storeNameMaxLen)
 const storeExistMessage = computed(() => (isStoreNameExisted.value ? '你已建立過相同名稱店家' : ''))
@@ -78,12 +78,16 @@ const fnUpdateStoreInfo = async () => {
 
     localStorage.setItem('storeName', newName)
     updateHeaderTitle($t('DashboardPage.HeaderTitle') + newName) // 設定動態 header title
-
     closeModal()
   } else {
     isStoreNameExisted.value = true
   }
 }
+
+onMounted(() => {
+  const storeName = localStorage.getItem('storeName')
+  updateHeaderTitle($t('DashboardPage.HeaderTitle') + storeName)
+})
 </script>
 
 <template>

@@ -73,7 +73,8 @@ const coinActiveKey = ref([])
 
 const isModalVisible = ref<Record<DashboardModalType, boolean>>({
   batch: false,
-  storeFilter: false
+  storeFilter: false,
+  updateStoreFilter: false
 })
 
 const batchSearchParam = ref<string>('')
@@ -241,7 +242,7 @@ const fnRemoveFilteredTag = (key: string) => {
 }
 
 const fnUpdateStoreInfo = () => {
-  openModal()
+  handleOpenModal('updateStoreFilter')
 }
 
 /* 生命週期 (Lifecycle hooks) */
@@ -348,6 +349,7 @@ onMounted(async () => {
   />
 
   <UpdateStoreModal
+    v-if="isModalVisible.updateStoreFilter"
     :modal-visible="modalVisible"
     @close="closeModal"
   />
