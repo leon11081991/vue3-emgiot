@@ -39,9 +39,6 @@ onMounted(async () => {
 </script>
 
 <template>
-  {{ memberInfoData }}
-
-  {{ pcbsList.data }}
   <div class="member-info-page">
     <section class="info-container">
       <div class="store-info-container">

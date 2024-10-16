@@ -60,7 +60,6 @@ onMounted(async () => {
             </div>
           </template>
 
-          {{ store.members }}
           <ul class="content-list">
             <template
               v-for="member in store.members"
