@@ -163,6 +163,7 @@ export const useAuth = () => {
       }
 
       userStore.initLoginState()
+      UtilCommon.removeLocalStorage('store-info')
       return openMessage('success', $t('Common.Result.LogoutSuccess'), {}, () => {
         UtilCommon.goPage('/login')
       })

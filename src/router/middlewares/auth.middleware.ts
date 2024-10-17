@@ -30,6 +30,7 @@ export const authMiddleware = async ({
   if (to.name !== 'Login' && !tokenValid) {
     userStore.initLoginState()
     UtilCommon.removeLocalStorage('storage-user')
+    UtilCommon.removeLocalStorage('store-info')
     return openMessage('error', getI18nTranslate('Common.Result.NotLogin'), { duration: 2 }, () => {
       UtilCommon.goPage('/login')
     })
@@ -54,6 +55,7 @@ export const authMiddleware = async ({
   if (token && !checkTokenValidity(token)) {
     userStore.initLoginState()
     UtilCommon.removeLocalStorage('storage-user')
+    UtilCommon.removeLocalStorage('store-info')
     openMessage('warning', getI18nTranslate('Common.Result.TokenExpired'), {}, () => {
       UtilCommon.goPage('/login')
     })
