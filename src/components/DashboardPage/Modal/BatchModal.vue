@@ -1,34 +1,28 @@
 <script setup lang="ts">
-import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
+import type { PcbsResType } from '@/models/types/dropdown.type'
+import { ref, computed } from 'vue'
+import SearchInput from '@/components/Base/SearchInput.vue'
 
 const props = defineProps<{
   modalVisible: boolean
   searchValue: string
   checkedList: string[]
+  listData: PcbsResType[]
 }>()
 
 const emit = defineEmits<{
   (e: 'close'): void
-  (e: 'update:searchValue', value: string): void
-  (e: 'onSearch'): void
   (e: 'update:checkedList', value: string[]): void
-  (e: 'clearCheckedList'): void
 }>()
 
-// TODO: get data from api
-type PcbOptionsType = {
-  pcbGroupName: string
-  pcbName: string
-  pcbId: string
-}
-// TODO: get data from api
-const pcbOptions: PcbOptionsType[] = [
-  { pcbGroupName: '南部食品機', pcbName: 'W208_01', pcbId: '01' },
-  { pcbGroupName: '南部食品機', pcbName: 'W208_02', pcbId: '02' },
-  { pcbGroupName: '南部食品機', pcbName: 'W208b1_01', pcbId: '03' }
-]
+const searchKeyword = ref<string>('')
+const pcbsList = computed(() => {
+  return (props.listData || []).filter((item) => {
+    return item.machineName?.includes(searchKeyword.value) || ''
+  })
+})
 
-const onClickCheckAll = (options: PcbOptionsType[]) => {
+const onClickCheckAll = (options: PcbsResType[]) => {
   let checkedList: string[] = []
   options.forEach((item) => {
     checkedList.push(item.pcbId)
@@ -48,14 +42,8 @@ const closeModal = () => {
   emit('close')
 }
 
-const updateSearchValue = (value: string) => {
-  console.log('updateSearchValue')
-  emit('update:searchValue', value)
-}
-
-const onSearch = () => {
-  console.log('onSearch')
-  emit('onSearch')
+const updateSearchKeyword = (val: string) => {
+  searchKeyword.value = val
 }
 </script>
 
@@ -73,25 +61,20 @@ const onSearch = () => {
 
     <div class="search-action-container">
       <p class="search-action-title">{{ '請選擇要進行操作的機台' }}</p>
-      <a-input
-        class="search-input"
-        :value="props.searchValue"
-        placeholder="搜尋機台名稱"
-        @change="updateSearchValue"
-        @pressEnter="onSearch"
-      >
-        <template #prefix>
-          <BaseSvgIcon iconName="magnifier" />
-        </template>
-      </a-input>
+
+      <SearchInput
+        :search-value="searchKeyword"
+        :placeholder="'搜尋機台名稱'"
+        @update:searchValue="updateSearchKeyword"
+      />
     </div>
 
     <div class="action-container">
-      <p class="action-text">已選{{ '1' }}台</p>
+      <p class="action-text">已選{{ props.checkedList.length }}台</p>
       <a-button
         ghost
         type="secondary"
-        @click="onClickCheckAll(pcbOptions)"
+        @click="onClickCheckAll(props.listData)"
         >全部選擇
       </a-button>
       <a-button
@@ -108,13 +91,17 @@ const onSearch = () => {
         @change="onUpdateCheckedList"
       >
         <template
-          v-for="option in pcbOptions"
-          :key="option.value"
+          v-for="option in pcbsList"
+          :key="option.pcbId"
         >
           <a-checkbox :value="option.pcbId">
             <div class="checkbox-item">
-              <span class="group-tag">{{ option.pcbGroupName }}</span>
-              <span class="name-text">{{ option.pcbName }}</span>
+              <span
+                v-if="option.groupName"
+                class="group-tag"
+                >{{ option.groupName }}</span
+              >
+              <span class="name-text">{{ option.machineName }}</span>
             </div>
           </a-checkbox>
         </template>
@@ -141,21 +128,13 @@ const onSearch = () => {
   .search-action-title {
     color: $--color-gray-700;
   }
-  .search-input {
-    &.ant-input-affix-wrapper {
-      background-color: $--background-color-base;
-
-      :deep(.ant-input) {
-        background-color: $--background-color-base;
-      }
-    }
-  }
 }
 
 .action-container {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: space-between;
   gap: 1rem;
   margin-block: 0.75rem;
 

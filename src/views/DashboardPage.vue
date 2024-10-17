@@ -2,6 +2,7 @@
 /* import */
 import { type DefineComponent, ref, onMounted, defineAsyncComponent, computed } from 'vue'
 import type { Tab } from '@/models/interfaces/tab.interface'
+import type { StoreInfoStorageDataType } from '@/models/types/store.types'
 import type { DashboardModalType } from '@/models/types/modal.types'
 import type {
   DashboardTabType,
@@ -25,7 +26,9 @@ import { useHeader } from '@/composables/useHeader'
 import { useDate } from '@/composables/useDate'
 import { useFetchDashboard } from '@/composables/useFetchDashboard'
 import { useModal } from '@/composables/useModal'
+import { useDropdown } from '@/composables/useDropdown'
 import { createDashboardTabs } from '@/constants/dashboard.const'
+import { UtilCommon } from '@/utils/utilCommon'
 
 /* type */
 type ClawTabCompType = DefineComponent<
@@ -46,6 +49,7 @@ const { today, calculateDate } = useDate()
 const { clawOperationsInfo, coinOperationsInfo, fetchClawOperationsInfo, fetchCoinOperationsInfo } =
   useFetchDashboard()
 const { modalVisible, openModal, closeModal } = useModal()
+const { pcbsList, fetchPcbsList } = useDropdown()
 
 /* 子組件 ref */
 const tabComps: Record<DashboardTabType, ClawTabCompType | CoinTabCompType> = {
@@ -75,6 +79,9 @@ const isModalVisible = ref<Record<DashboardModalType, boolean>>({
   storeFilter: false
 })
 
+const storeId = ref<string>(
+  UtilCommon.getLocalStorage<StoreInfoStorageDataType>('store-info')?.storeId || ''
+)
 const batchSearchParam = ref<string>('')
 const batchCheckedList = ref<string[]>([])
 const listData = ref<ClawOperationsInfoResType[] | CoinOperationsInfoResType[]>([])
@@ -122,8 +129,12 @@ const resetModalVisible = (
   return modalVisibility
 }
 
-const handleOpenModal = (type: DashboardModalType): void => {
+const handleOpenModal = (type: DashboardModalType, machineType?: 0 | 1): void => {
   isModalVisible.value = resetModalVisible(isModalVisible.value)
+
+  if (type === 'batch') {
+    fetchPcbsList(storeId.value, machineType || 0)
+  }
   openModal(() => {
     isModalVisible.value[type] = true
   })
@@ -276,7 +287,7 @@ onMounted(async () => {
           v-if="selectedTab === 'claw'"
           ghost
           type="secondary"
-          @click="handleOpenModal('batch')"
+          @click="handleOpenModal('batch', 0)"
           >批量補幣</a-button
         >
         <a-button
@@ -327,6 +338,7 @@ onMounted(async () => {
     :modal-visible="modalVisible"
     :search-value="batchSearchParam"
     :checked-list="batchCheckedList"
+    :list-data="pcbsList.data"
     @close="closeModal()"
     @update:checked-list="updateCheckedList"
     @clear-checked-list="clearCheckedList(batchCheckedList)"
