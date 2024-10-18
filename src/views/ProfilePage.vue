@@ -90,25 +90,33 @@ const handleOpenModal = (field: ModalType): void => {
   openModal(() => changeModalField(field))
 }
 
-const handleConfirmClick = async (field: ModalType): Promise<void> => {
-  console.log('[handleConfirmClick]', field)
+const handleConfirmClick = (field: ModalType): void => {
   isButtonLoading.value = true
 
   if (field === 'username') {
-    fnUpdateUserInfo(newUserData.value.username).finally(() => {
-      newUserData.value.username = ''
-    })
+    fnUpdateUserInfo(newUserData.value.username)
+      .then(() => {
+        newUserData.value.username = ''
+        closeModal()
+      })
+      .finally(() => {
+        isButtonLoading.value = false
+      })
+    return
   }
 
   if (field === 'password') {
-    fnChangePassword(newUserData.value.password).finally(() => {
-      newUserData.value.password = ''
-      newUserData.value.confirmPassword = ''
-    })
+    fnChangePassword(newUserData.value.password)
+      .then(() => {
+        newUserData.value.password = ''
+        newUserData.value.confirmPassword = ''
+        closeModal()
+      })
+      .finally(() => {
+        isButtonLoading.value = false
+      })
+    return
   }
-
-  isButtonLoading.value = false
-  closeModal()
 }
 </script>
 
@@ -117,11 +125,11 @@ const handleConfirmClick = async (field: ModalType): Promise<void> => {
     <div class="profile-content">
       <div class="display-container">
         <AvatarDisplay
-          :name="userStore.userInfo.nickName"
+          :name="userStore.userInfo.name"
           size="lg"
         />
         <div class="user-name-container">
-          <p class="user-name-display">{{ userStore.userInfo.nickName }}</p>
+          <p class="user-name-display">{{ userStore.userInfo.name }}</p>
           <div
             class="name-edit-button"
             @click="handleOpenModal('username')"
@@ -136,7 +144,7 @@ const handleConfirmClick = async (field: ModalType): Promise<void> => {
             {{ $t('ProfilePage.EditableContainer.UserNameField.Title') }}
           </span>
           <a-input
-            v-model:value="userStore.userInfo.realName"
+            v-model:value="userStore.userInfo.name"
             size="large"
             readonly
             class="input-field"
@@ -177,15 +185,6 @@ const handleConfirmClick = async (field: ModalType): Promise<void> => {
     </div>
   </div>
 
-  <!-- <a-modal
-    v-model:open="modalVisible"
-    class="profile-modal primary"
-    :centered="true"
-    :cancel-button-props="modalStyleConfig.cancelButtonProps"
-    :ok-button-props="{ ...modalStyleConfig.okButtonProps, loading: isButtonLoading }"
-    :ok-text="modalStyleConfig.okText"
-    @ok="handleConfirmClick(modalType)"
-  > -->
   <a-modal
     v-model:open="modalVisible"
     class="profile-modal primary"
@@ -219,7 +218,9 @@ const handleConfirmClick = async (field: ModalType): Promise<void> => {
         :help="modalErrorMsg.password"
       >
         <div class="input-container password-input">
-          <span class="input-label"> 新密碼 </span>
+          <span class="input-label">
+            {{ $t('ProfilePage.Modal.PasswordField.NewPassword') }}
+          </span>
           <a-input-password
             v-model:value="newUserData.password"
             class="input-field"
@@ -250,7 +251,9 @@ const handleConfirmClick = async (field: ModalType): Promise<void> => {
         :help="modalErrorMsg.confirmPassword"
       >
         <div class="input-container password-input">
-          <span class="input-label"> 確認密碼 </span>
+          <span class="input-label">
+            {{ $t('ProfilePage.Modal.PasswordField.ConfirmPassword') }}
+          </span>
           <a-input-password
             v-model:value="newUserData.confirmPassword"
             size="large"
