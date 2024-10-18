@@ -24,8 +24,7 @@ export const useFetchUser = () => {
         })
       }
 
-      userStore.userInfo.realName = result.realName
-      userStore.userInfo.nickName = result.nickName
+      userStore.userInfo.name = result.name
       userStore.userInfo.userId = (getDataFromToken<JwtDecodeData>(token, 'name') as string) || ''
       userStore.userInfo.photoUrl =
         (getDataFromToken<JwtDecodeData>(token, 'photo') as string) || ''
@@ -37,10 +36,7 @@ export const useFetchUser = () => {
   /** 處理變更使用者資訊 */
   const fnUpdateUserInfo = async (newUserName: string) => {
     try {
-      console.log('object', newUserName)
-      const { result, isSuccess } = await api.user.updateUserInfo(newUserName)
-
-      console.log('fnUpdateUserInfo', result, isSuccess)
+      const { isSuccess } = await api.user.updateUserInfo(newUserName)
 
       if (!isSuccess) {
         // TODO: 錯誤處理

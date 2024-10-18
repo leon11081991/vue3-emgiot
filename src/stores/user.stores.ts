@@ -5,8 +5,7 @@ import { defineStore } from 'pinia'
 export const useUserStore = defineStore('user', () => {
   const token = ref<string>('')
   const userInfo = ref<UserInfoDataType>({
-    realName: '',
-    nickName: '',
+    name: '',
     userId: '',
     photoUrl: ''
   })
@@ -14,8 +13,7 @@ export const useUserStore = defineStore('user', () => {
   const initLoginState = (): void => {
     token.value = ''
     userInfo.value = {
-      realName: '',
-      nickName: '',
+      name: '',
       userId: '',
       photoUrl: ''
     }

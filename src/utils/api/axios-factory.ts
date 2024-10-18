@@ -33,6 +33,6 @@ export class ApiFactory {
     body: Body,
     config?: AxiosRequestConfig
   ): Promise<Response> {
-    return axios.put(`${this.apiUrl}/${url}`, body, config)
+    return axios.put(`${this.apiUrl}/${url}`, JSON.stringify(body), config)
   }
 }
