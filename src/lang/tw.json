@@ -108,7 +108,7 @@
   "ProfilePage": {
     "EditableContainer": {
       "UserNameField": {
-        "Title": "真實姓名"
+        "Title": "ID"
       },
       "PasswordField": {
         "Title": "密碼",
@@ -123,6 +123,8 @@
       },
       "PasswordField": {
         "Title": "修改密碼",
+        "NewPassword": "新密碼",
+        "ConfirmPassword": "確認密碼",
         "Button": "變更"
       }
     }

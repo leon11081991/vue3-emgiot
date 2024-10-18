@@ -29,8 +29,7 @@ export type AccountDisableReqType = {
 }
 
 export type UserInfoDataType = {
-  realName: string // 真實姓名
-  nickName: string // 昵稱
+  name: string // 名稱
   userId: string // 帳號
   photoUrl: string // 大頭貼
 }

@@ -106,12 +106,34 @@ export const useFetchStore = () => {
     }
   }
 
+  /** 更新店家 */
+  const updateStore = async (params: BaseCreateStoreReqType) => {
+    try {
+      const { isSuccess, message, resultCode } = await api.store.updateStore(params)
+      if (!isSuccess) {
+        if (message.includes('existed')) {
+          return false
+        }
+
+        openMessage('error', `${resultCode} - ${message}`)
+        return
+      } else {
+        openMessage('success', 'success')
+        return true
+      }
+    } catch (error) {
+      // TODO: 錯誤處理
+      console.error('Error updateStore:', error)
+    }
+  }
+
   return {
     storesListInfo,
     operationTotalChart,
     fetchStoresListInfo,
     dispatchRecordCurrentStore,
     fetchTotalOperationChart,
-    createNewStore
+    createNewStore,
+    updateStore
   }
 }
