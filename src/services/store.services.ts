@@ -26,4 +26,9 @@ export class StoreServices extends ApiFactory {
   createNewStore = async (params: BaseCreateStoreReqType): Promise<ApiResponse> => {
     return await this.post<BaseCreateStoreReqType, ApiResponse>(StoreEnums.add, params)
   }
+
+  /** 更新店家 */
+  updateStore = async (params: BaseCreateStoreReqType): Promise<ApiResponse> => {
+    return await this.put<BaseCreateStoreReqType, ApiResponse>(StoreEnums.update, params)
+  }
 }
