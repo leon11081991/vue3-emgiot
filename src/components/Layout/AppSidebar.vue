@@ -32,9 +32,9 @@ const { width } = useDeviceWidth()
 
     <div class="user-info">
       <div class="user-container">
-        <AvatarDisplay :name="userStore.userInfo.nickName" />
+        <AvatarDisplay :name="userStore.userInfo.name" />
         <div class="user-wrap">
-          <h5 class="user-name">{{ userStore.userInfo.nickName }}</h5>
+          <h5 class="user-name">{{ userStore.userInfo.name }}</h5>
           <div class="user-level">
             <span class="user-level-text">1級</span>
           </div>
