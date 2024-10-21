@@ -9,11 +9,12 @@ export type BaseGoodsResType = {
   cost: number
 }
 
-export type PcbsResType = {
+export type PcbsReqType = {
   storeId: string
+  machineType?: 0 | 1 // 0: 選物販賣機 1:兌幣機
 }
 
-export type PcbsReqType = {
+export type PcbsResType = {
   pcbId: string
   dueDate: string
   machineName: string

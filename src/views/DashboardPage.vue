@@ -2,13 +2,16 @@
 /* import */
 import { type DefineComponent, ref, onMounted, defineAsyncComponent, computed } from 'vue'
 import type { Tab } from '@/models/interfaces/tab.interface'
+import type { StoreInfoStorageDataType } from '@/models/types/store.types'
 import type { DashboardModalType } from '@/models/types/modal.types'
 import type {
   DashboardTabType,
   ClawOperationsInfoResType,
   CoinOperationsInfoResType,
-  RefreshDashboardType,
+  RefreshClawDashboardType,
+  RefreshCoinDashboardType,
   SelectedGroupAndGoodsType,
+  SelectedGroupType,
   SelectedGroupAndGoodsRemoveType
 } from '@/models/types/dashboard.types'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
@@ -19,14 +22,17 @@ import ClawTabList from '@/components/DashboardPage/ClawTabList.vue'
 import FloatButton from '@/components/Base/FloatButton.vue'
 import DashboardBarChart from '@/components/BarChart/DashboardBarChart.vue'
 import BatchModal from '@/components/DashboardPage/Modal/BatchModal.vue'
-import StoreFilterModal from '@/components/DashboardPage/Modal/StoreFilterModal.vue'
+import ClawStoreFilterModal from '@/components/DashboardPage/Modal/ClawStoreFilterModal.vue'
+import CoinStoreFilterModal from '@/components/DashboardPage/Modal/CoinStoreFilterModal.vue'
 import UpdateStoreModal from '@/components/DashboardPage/Modal/UpdateStoreModal.vue'
 import { useI18n } from 'vue-i18n'
 import { useHeader } from '@/composables/useHeader'
 import { useDate } from '@/composables/useDate'
 import { useFetchDashboard } from '@/composables/useFetchDashboard'
 import { useModal } from '@/composables/useModal'
+import { useDropdown } from '@/composables/useDropdown'
 import { createDashboardTabs } from '@/constants/dashboard.const'
+import { UtilCommon } from '@/utils/utilCommon'
 
 /* type */
 type ClawTabCompType = DefineComponent<
@@ -47,6 +53,7 @@ const { today, calculateDate } = useDate()
 const { clawOperationsInfo, coinOperationsInfo, fetchClawOperationsInfo, fetchCoinOperationsInfo } =
   useFetchDashboard()
 const { modalVisible, openModal, closeModal } = useModal()
+const { pcbsList, fetchPcbsList } = useDropdown()
 
 /* 子組件 ref */
 const tabComps: Record<DashboardTabType, ClawTabCompType | CoinTabCompType> = {
@@ -73,10 +80,14 @@ const coinActiveKey = ref([])
 
 const isModalVisible = ref<Record<DashboardModalType, boolean>>({
   batch: false,
-  storeFilter: false,
-  updateStoreFilter: false
+  clawStoreFilter: false,
+  updateStoreFilter: false,
+  coinStoreFilter: false
 })
 
+const storeId = ref<string>(
+  UtilCommon.getLocalStorage<StoreInfoStorageDataType>('store-info')?.storeId || ''
+)
 const batchSearchParam = ref<string>('')
 const batchCheckedList = ref<string[]>([])
 const listData = ref<ClawOperationsInfoResType[] | CoinOperationsInfoResType[]>([])
@@ -87,16 +98,28 @@ const endDate = ref(initialEndDate)
 const startDate = ref(initialStartDate)
 const removeSelected = ref<SelectedGroupAndGoodsRemoveType>({
   groupName: 0,
-  goodsName: 0
+  goodsName: 0,
+  groupsDDLFilter: 0
 })
+
 const selectedGroupAndGoods = ref<SelectedGroupAndGoodsType>({
   groupName: '',
-  goodsName: ''
+  goodsName: '',
+  groupsDDLFilter: ''
+})
+const selectedGroup = ref<SelectedGroupType>({
+  groupName: '',
+  groupsDDLFilter: ''
 })
 
 const filteredGroupAndGoods = computed(() => {
   return Object.keys(selectedGroupAndGoods.value).filter(
     (key) => selectedGroupAndGoods.value[key as keyof SelectedGroupAndGoodsType]
+  )
+})
+const filteredGroup = computed(() => {
+  return Object.keys(selectedGroup.value).filter(
+    (key) => selectedGroup.value[key as keyof SelectedGroupType]
   )
 })
 
@@ -124,11 +147,23 @@ const resetModalVisible = (
   return modalVisibility
 }
 
-const handleOpenModal = (type: DashboardModalType): void => {
+const handleOpenModal = (type: DashboardModalType, machineType?: 0 | 1): void => {
   isModalVisible.value = resetModalVisible(isModalVisible.value)
+
+  if (type === 'batch') {
+    fetchPcbsList(storeId.value, machineType || 0)
+  }
   openModal(() => {
     isModalVisible.value[type] = true
   })
+}
+
+const fnChoiceCoinClawModal = () => {
+  if (selectedTab.value === 'claw') {
+    handleOpenModal('clawStoreFilter')
+  } else if (selectedTab.value === 'coin') {
+    handleOpenModal('coinStoreFilter')
+  }
 }
 
 const handleToggleTab = async (
@@ -144,7 +179,6 @@ const handleToggleTab = async (
     })
 
     listData.value = clawOperationsInfo.value.data
-
     if (groupsDDLFilter) {
       listData.value = listData.value.filter((item) => item.pcbName.includes(groupsDDLFilter))
     }
@@ -189,7 +223,7 @@ const clearCheckedList = (checkedList: string[]) => {
   checkedList = []
 }
 
-const fnResetData = (data?: RefreshDashboardType) => {
+const fnResetClawData = (data?: RefreshClawDashboardType) => {
   startDate.value = data?.startDate || initialStartDate
   endDate.value = data?.endDate || initialEndDate
 
@@ -197,7 +231,8 @@ const fnResetData = (data?: RefreshDashboardType) => {
     isInitialChart.value = true
     const groupAndGoodsObj = {
       groupName: '',
-      goodsName: ''
+      goodsName: '',
+      groupsDDLFilter: ''
     }
     resetKey.value += 1
     handleToggleTab(selectedTab.value)
@@ -207,6 +242,28 @@ const fnResetData = (data?: RefreshDashboardType) => {
   updateKey.value += 1
 }
 
+const fnResetCoinData = (data?: RefreshCoinDashboardType) => {
+  startDate.value = data?.startDate || initialStartDate
+  endDate.value = data?.endDate || initialEndDate
+
+  if (!data) {
+    isInitialChart.value = true
+    const groupObj = {
+      groupName: '',
+      groupsDDLFilter: ''
+    }
+    resetKey.value += 1
+    handleToggleTab(selectedTab.value)
+    fnGetSelectedGroup(groupObj)
+  }
+
+  updateKey.value += 1
+}
+
+const fnResetData = () => {
+  fnResetClawData()
+}
+
 const fnGetSelectedGroupAndGoods = (groupAndGoodsObj: SelectedGroupAndGoodsType) => {
   Object.keys(selectedGroupAndGoods.value).forEach((key) => {
     const typedKey = key as keyof SelectedGroupAndGoodsType
@@ -214,30 +271,62 @@ const fnGetSelectedGroupAndGoods = (groupAndGoodsObj: SelectedGroupAndGoodsType)
   })
 }
 
-const fnRefreshDashboard = (data: RefreshDashboardType) => {
+const fnGetSelectedGroup = (groupObj: SelectedGroupType) => {
+  Object.keys(selectedGroupAndGoods.value).forEach((key) => {
+    const typedKey = key as keyof SelectedGroupType
+    selectedGroup.value[typedKey] = groupObj[typedKey]
+  })
+}
+
+const fnRefreshClawDashboard = (data: RefreshClawDashboardType) => {
   const groupAndGoodsObj = {
     groupName: data.groupName,
-    goodsName: data.goodsName
+    goodsName: data.goodsName,
+    groupsDDLFilter: data.groupsDDLFilter
   }
 
   isInitialChart.value = false
-  fnResetData(data)
+  fnResetClawData(data)
   handleToggleTab(selectedTab.value, data.groupsDDLFilter, data.groupName, data.goodsName)
   fnGetSelectedGroupAndGoods(groupAndGoodsObj)
 }
 
-const fnRemoveFilteredTag = (key: string) => {
+const fnRefreshCoinDashboard = (data: RefreshCoinDashboardType) => {
+  const groupObj = {
+    groupName: data.groupName,
+    groupsDDLFilter: data.groupsDDLFilter
+  }
+
+  isInitialChart.value = false
+  fnResetCoinData(data)
+  handleToggleTab(selectedTab.value, data.groupsDDLFilter, data.groupName)
+  fnGetSelectedGroup(groupObj)
+}
+
+const fnRemoveClawFilteredTag = (key: string) => {
   const typedKey = key as keyof SelectedGroupAndGoodsType
   selectedGroupAndGoods.value[typedKey] = ''
   removeSelected.value[typedKey] += 1
 
-  // 需要同步清除對應的input資料
-  fnRefreshDashboard({
+  fnRefreshClawDashboard({
     startDate: startDate.value,
     endDate: endDate.value,
-    groupsDDLFilter: selectedGroupAndGoods.value.groupName,
+    groupsDDLFilter: selectedGroupAndGoods.value.groupsDDLFilter,
     groupName: selectedGroupAndGoods.value.groupName,
     goodsName: selectedGroupAndGoods.value.goodsName
+  })
+}
+
+const fnRemoveCoinFilteredTag = (key: string) => {
+  const typedKey = key as keyof SelectedGroupType
+  selectedGroup.value[typedKey] = ''
+  removeSelected.value[typedKey] += 1
+
+  fnRefreshCoinDashboard({
+    startDate: startDate.value,
+    endDate: endDate.value,
+    groupsDDLFilter: selectedGroup.value.groupsDDLFilter,
+    groupName: selectedGroup.value.groupName
   })
 }
 
@@ -283,7 +372,7 @@ onMounted(async () => {
           v-if="selectedTab === 'claw'"
           ghost
           type="secondary"
-          @click="handleOpenModal('batch')"
+          @click="handleOpenModal('batch', 0)"
           >批量補幣</a-button
         >
         <a-button
@@ -295,17 +384,32 @@ onMounted(async () => {
       </div>
 
       <div class="filtered-tags-container">
-        <FilteredTag
-          v-for="key in filteredGroupAndGoods"
-          :key="key"
-          :text="selectedGroupAndGoods[key as keyof SelectedGroupAndGoodsType]"
-          @close="fnRemoveFilteredTag(key)"
-        />
+        <div
+          v-if="selectedTab === 'claw'"
+          class="claw-tags"
+        >
+          <FilteredTag
+            v-for="(key, idx) in filteredGroupAndGoods"
+            :key="key + idx"
+            :text="selectedGroupAndGoods[key as keyof SelectedGroupAndGoodsType]"
+            @close="fnRemoveClawFilteredTag(key)"
+          />
+        </div>
+        <div
+          v-else-if="selectedTab === 'coin'"
+          class="coin-tags"
+        >
+          <FilteredTag
+            v-for="(key, idx) in filteredGroup"
+            :key="key + idx"
+            :text="selectedGroup[key as keyof SelectedGroupType]"
+            @close="fnRemoveCoinFilteredTag(key)"
+          />
+        </div>
       </div>
-
       <div
         class="filter-button"
-        @click="handleOpenModal('storeFilter')"
+        @click="fnChoiceCoinClawModal"
       >
         <BaseSvgIcon iconName="filter-menu" />
       </div>
@@ -334,18 +438,28 @@ onMounted(async () => {
     :modal-visible="modalVisible"
     :search-value="batchSearchParam"
     :checked-list="batchCheckedList"
+    :list-data="pcbsList.data"
     @close="closeModal()"
     @update:checked-list="updateCheckedList"
     @clear-checked-list="clearCheckedList(batchCheckedList)"
   />
 
-  <StoreFilterModal
-    v-if="isModalVisible.storeFilter"
+  <ClawStoreFilterModal
+    v-if="isModalVisible.clawStoreFilter"
     :modal-visible="modalVisible"
     :resetAll="resetKey"
     :removeSelected="removeSelected"
     @close="closeModal()"
-    @refresh="fnRefreshDashboard"
+    @refresh:claw-store-dashboard="fnRefreshClawDashboard"
+  />
+
+  <CoinStoreFilterModal
+    v-if="isModalVisible.coinStoreFilter"
+    :modal-visible="modalVisible"
+    :resetAll="resetKey"
+    :removeSelected="removeSelected"
+    @close="closeModal()"
+    @refresh:coin-store-dashboard="fnRefreshCoinDashboard"
   />
 
   <UpdateStoreModal
@@ -368,6 +482,10 @@ onMounted(async () => {
     align-items: center;
     justify-content: end;
     flex-wrap: wrap;
+    .claw-tags,
+    .coin-tags {
+      display: flex;
+    }
   }
 
   .filter-button {

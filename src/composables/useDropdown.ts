@@ -1,12 +1,13 @@
 import type {
   BaseGroupsDDLResType,
   BaseGoodsResType,
-  PcbsReqType
+  PcbsResType
 } from '@/models/types/dropdown.type'
 import { ref } from 'vue'
 import { api } from '@/services'
 import { useMessage } from '@/composables/useMessage'
 import { catchErrorHandler } from '@/utils/api/error-handler'
+import { DropdownDto } from '@/utils/api/dto/dropdown.dto'
 
 export const useDropdown = () => {
   const { openMessage } = useMessage()
@@ -31,7 +32,7 @@ export const useDropdown = () => {
 
   // 可用機台
   const pcbsList = ref<{
-    data: PcbsReqType[]
+    data: PcbsResType[]
     isLoading: boolean
   }>({
     data: [],
@@ -75,16 +76,16 @@ export const useDropdown = () => {
   }
 
   /** 取得可用機台 */
-  const fetchPcbsList = async (storeId: string) => {
+  const fetchPcbsList = async (storeId: string, machineType?: 0 | 1) => {
     try {
-      const { result, isSuccess } = await api.dropdown.getPcbs({ storeId })
+      const { result, isSuccess } = await api.dropdown.getPcbs({ storeId, machineType })
 
       if (!isSuccess) {
         // TODO: 錯誤處理
         return
       }
 
-      pcbsList.value.data = result
+      pcbsList.value.data = DropdownDto.FilterEmptyNameData(result)
     } catch (e) {
       catchErrorHandler(e)
     } finally {

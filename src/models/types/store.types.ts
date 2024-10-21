@@ -24,6 +24,11 @@ type BaseStoresTotalResType = {
   prizeWinCount: number
 }
 
+export type StoreInfoStorageDataType = {
+  storeId: string
+  storeName: string
+}
+
 export type StoresListInfoResType = {
   customerId: CustomerId
   stores: Array<BaseStoreInfoResType>

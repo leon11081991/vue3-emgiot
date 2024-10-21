@@ -1,1 +1,5 @@
-export type DashboardModalType = 'batch' | 'storeFilter' | 'updateStoreFilter'
+export type DashboardModalType =
+  | 'batch'
+  | 'clawStoreFilter'
+  | 'updateStoreFilter'
+  | 'coinStoreFilter'

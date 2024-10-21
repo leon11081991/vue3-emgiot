@@ -57,7 +57,7 @@ export type CoinOperationsInfoResType = BaseOperationsInfoResType & {
 
 export type PropsBarChartType = 'claw' | 'coin'
 
-export type RefreshDashboardType = {
+export type RefreshClawDashboardType = {
   startDate: string
   endDate: string
   groupsDDLFilter: string
@@ -65,12 +65,41 @@ export type RefreshDashboardType = {
   goodsName: string
 }
 
+export type RefreshCoinDashboardType = {
+  startDate: string
+  endDate: string
+  groupsDDLFilter: string
+  groupName: string
+}
+
 export type SelectedGroupAndGoodsType = {
   groupName: string
   goodsName: string
+  groupsDDLFilter: string
+}
+
+export type SelectedGroupType = {
+  groupName: string
+  groupsDDLFilter: string
 }
 
 export type SelectedGroupAndGoodsRemoveType = {
   groupName: number
   goodsName: number
+  groupsDDLFilter: number
+}
+
+type BaseMachineActionType =
+  | 'restock'
+  | 'withdraw'
+  | 'lock'
+  | 'unlock'
+  | 'errorReset'
+  | 'M1Reset'
+  | 'M2Reset'
+
+export type UpdateMachineActionReqType = {
+  pcbId: string
+  action: BaseMachineActionType
+  count: number
 }
