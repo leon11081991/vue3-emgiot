@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // import
+import type { StoreInfoStorageDataType } from '@/models/types/store.types'
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AvatarDisplay from '@/components/Base/AvatarDisplay.vue'
@@ -11,6 +12,8 @@ import CreateStoreModal from '@/components/Index/Modal/CreateStoreModal.vue'
 import { useFetchStore } from '@/composables/useFetchStore'
 import { useModal } from '@/composables/useModal'
 import { useRouter } from 'vue-router'
+import { UtilCommon } from '@/utils/utilCommon'
+
 // store 相關
 const { storesListInfo, fetchStoresListInfo, dispatchRecordCurrentStore } = useFetchStore()
 
@@ -49,6 +52,11 @@ const fnDispatchRecordStore = async (storeId: string, storeName: string) => {
   const dispatchStatus = await dispatchRecordCurrentStore(storeId)
   if (dispatchStatus) {
     localStorage.setItem('storeName', storeName)
+    UtilCommon.setLocalStorage<StoreInfoStorageDataType>('store-info', {
+      storeId,
+      storeName
+    })
+
     router.push(targetPath)
   }
 }

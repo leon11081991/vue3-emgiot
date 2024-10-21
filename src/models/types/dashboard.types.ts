@@ -74,3 +74,18 @@ export type SelectedGroupAndGoodsRemoveType = {
   groupName: number
   goodsName: number
 }
+
+type BaseMachineActionType =
+  | 'restock'
+  | 'withdraw'
+  | 'lock'
+  | 'unlock'
+  | 'errorReset'
+  | 'M1Reset'
+  | 'M2Reset'
+
+export type UpdateMachineActionReqType = {
+  pcbId: string
+  action: BaseMachineActionType
+  count: number
+}
