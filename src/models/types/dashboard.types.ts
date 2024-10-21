@@ -88,3 +88,18 @@ export type SelectedGroupAndGoodsRemoveType = {
   goodsName: number
   groupsDDLFilter: number
 }
+
+type BaseMachineActionType =
+  | 'restock'
+  | 'withdraw'
+  | 'lock'
+  | 'unlock'
+  | 'errorReset'
+  | 'M1Reset'
+  | 'M2Reset'
+
+export type UpdateMachineActionReqType = {
+  pcbId: string
+  action: BaseMachineActionType
+  count: number
+}
