@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /* import */
 import type {
-  RefreshDashboardType,
+  RefreshCoinDashboardType,
   SelectedGroupAndGoodsRemoveType
 } from '@/models/types/dashboard.types'
 import { ref, computed, onMounted, onBeforeUnmount, h, watchEffect } from 'vue'
@@ -16,7 +16,7 @@ import '@quasar/extras/material-icons/material-icons.css'
 
 /* type */
 type PickerType = 'start' | 'end' | 'range'
-type SelectType = 'group' | 'goods'
+type SelectType = 'group'
 
 /* Props (defineProps) */
 const props = defineProps<{
@@ -28,12 +28,25 @@ const props = defineProps<{
 /* Emits Events (defineEmits) */
 const emit = defineEmits<{
   (e: 'close'): void
-  (e: 'refresh', value: RefreshDashboardType): void
+  (e: 'refresh:coinStoreDashboard', value: RefreshCoinDashboardType): void
 }>()
 
 /* 非響應式變數 */
 const { today, calculateDate, getDaysInTwoMonths, getThreeMonthsAgo } = useDate()
-const { groupsDDLList, goodsList, fetchGroupsDDLList, fetchGoodsList } = useDropdown()
+const { groupsDDLList, fetchGroupsDDLList } = useDropdown()
+
+const DAYS_IN_WEEK = 6
+const TODAY = 0
+const dateRangePickerConfig = {
+  今日: TODAY,
+  二日: 1,
+  三日: 2,
+  一週: DAYS_IN_WEEK,
+  一個月: getDaysInTwoMonths()
+}
+const groupDefaultName = '分類'
+let resetGroupNameCount = 0
+let resetGroupsDDLFilter = 0
 
 /* ref 變數 */
 const startDate = ref<string | null>(today())
@@ -43,8 +56,7 @@ const tempRangeDate = ref({ from: '', to: '' })
 const rangePickerActiveItem = ref('今日')
 
 const groupsDDLFilter = ref('')
-const groupName = ref('群組')
-const goodsName = ref('商品')
+const groupName = ref(groupDefaultName)
 const picker = ref({
   start: false,
   end: false,
@@ -55,8 +67,7 @@ const isFirstTimeSelectRangePicker = ref(false)
 const isConfirmFilterCondition = ref(false)
 
 const isDropdownOpen = ref({
-  group: false,
-  goods: false
+  group: false
 })
 
 /* computed */
@@ -67,7 +78,27 @@ const customIcon = (selectType: SelectType) => {
   })
 }
 
+const isRangeDateSelected = computed(() =>
+  typeof rangeDate.value === 'object'
+    ? rangeDate.value?.from || rangeDate.value?.to
+    : rangeDate.value
+)
+
 /* function */
+const optionsConfig = (date: string) => {
+  const current = new Date(date)
+  return current >= new Date(getThreeMonthsAgo()) && current <= new Date(today())
+}
+
+const resetFilter = () => {
+  startDate.value = today()
+  endDate.value = today()
+  groupsDDLFilter.value = ''
+  groupName.value = groupDefaultName
+  isFirstTimeSelectRangePicker.value = false
+  console.log('reset全清除是問題')
+}
+
 const closeModal = () => {
   if (!isConfirmFilterCondition.value) {
     resetFilter()
@@ -75,14 +106,13 @@ const closeModal = () => {
   emit('close')
 }
 
-const filterDashboardData = () => {
+const filterCoinDashboardData = () => {
   isConfirmFilterCondition.value = true
-  emit('refresh', {
+  emit('refresh:coinStoreDashboard', {
     startDate: startDate.value || '',
     endDate: endDate.value || '',
     groupsDDLFilter: groupsDDLFilter.value || '',
-    groupName: groupName.value || '',
-    goodsName: goodsName.value || ''
+    groupName: groupName.value === groupDefaultName ? '' : groupName.value || ''
   })
   closeModal()
 }
@@ -104,12 +134,6 @@ const toggleDatePicker = (type: PickerType) => {
   updateRangeDate()
   picker.value[type] = !picker.value[type]
 }
-
-const isRangeDateSelected = computed(() =>
-  typeof rangeDate.value === 'object'
-    ? rangeDate.value?.from || rangeDate.value?.to
-    : rangeDate.value
-)
 
 const setRangePicker = (label: keyof typeof dateRangePickerConfig) => {
   rangePickerActiveItem.value = label
@@ -139,8 +163,28 @@ const confirmRangeDate = () => {
   toggleDatePicker('range')
 }
 
-const toggleDropdownVisibility = (visible: boolean, selectType: 'group' | 'goods') => {
+const toggleDropdownVisibility = (visible: boolean, selectType: 'group') => {
   isDropdownOpen.value[selectType] = visible
+}
+
+const handleInputChange = (e: Event) => {
+  const target = e.target as HTMLInputElement
+  groupsDDLFilter.value = target.value
+}
+
+const selectGroup = (data: string) => {
+  groupName.value = data
+}
+
+const handleClickOutside = (event: MouseEvent) => {
+  const target = event.target as HTMLElement
+  const datePickerElements = ['.datePickerCom', '.dateData', '.q-date', '.q-date__calendar']
+  const isClickInside = datePickerElements.some((selector) => target.closest(selector))
+  if (!isClickInside) {
+    picker.value.start = false
+    picker.value.end = false
+    picker.value.range = false
+  }
 }
 
 /* watch */
@@ -149,11 +193,20 @@ watchEffect(() => {
     isConfirmFilterCondition.value = false
     resetFilter()
   }
-  if (props.removeSelected['groupName']) {
-    groupName.value = ''
+
+  if (
+    props.removeSelected['groupName'] &&
+    props.removeSelected['groupName'] !== resetGroupNameCount
+  ) {
+    groupName.value = groupDefaultName
+    resetGroupNameCount++
   }
-  if (props.removeSelected['goodsName']) {
-    goodsName.value = ''
+  if (
+    props.removeSelected['groupsDDLFilter'] &&
+    props.removeSelected['groupsDDLFilter'] !== resetGroupsDDLFilter
+  ) {
+    groupsDDLFilter.value = ''
+    resetGroupsDDLFilter++
   }
 })
 
@@ -166,57 +219,7 @@ onBeforeUnmount(() => {
   document.removeEventListener('click', handleClickOutside)
 })
 
-/* 其他函數 */
-const handleClickOutside = (event: MouseEvent) => {
-  const target = event.target as HTMLElement
-  const datePickerElements = ['.datePickerCom', '.dateData', '.q-date', '.q-date__calendar']
-  const isClickInside = datePickerElements.some((selector) => target.closest(selector))
-  if (!isClickInside) {
-    picker.value.start = false
-    picker.value.end = false
-    picker.value.range = false
-  }
-}
-
-const DAYS_IN_WEEK = 6
-const TODAY = 0
-const dateRangePickerConfig = {
-  今日: TODAY,
-  二日: 1,
-  三日: 2,
-  一週: DAYS_IN_WEEK,
-  一個月: getDaysInTwoMonths()
-}
-
-const optionsConfig = (date: string) => {
-  const current = new Date(date)
-  return current >= new Date(getThreeMonthsAgo()) && current <= new Date(today())
-}
-
-const handleInputChange = (e: Event) => {
-  const target = e.target as HTMLInputElement
-  groupsDDLFilter.value = target.value
-}
-
-const selectGroup = (data: string) => {
-  groupName.value = data
-}
-
-const selectGoods = (data: string) => {
-  goodsName.value = data
-}
-
-const resetFilter = () => {
-  startDate.value = today()
-  endDate.value = today()
-  groupsDDLFilter.value = ''
-  groupName.value = ''
-  goodsName.value = ''
-  isFirstTimeSelectRangePicker.value = false
-}
-
 fetchGroupsDDLList()
-fetchGoodsList()
 </script>
 
 <template>
@@ -362,7 +365,7 @@ fetchGoodsList()
       <a-select
         v-if="groupsDDLList?.data"
         class="select-item group-container"
-        placeholder="群組"
+        :placeholder="groupDefaultName"
         :value="groupName"
         :suffixIcon="customIcon('group')"
         size="large"
@@ -377,31 +380,13 @@ fetchGoodsList()
           {{ groupsDDL.groupName }}
         </a-select-option>
       </a-select>
-      <a-select
-        v-if="goodsList?.data"
-        class="select-item goods-container"
-        placeholder="商品"
-        :value="goodsName"
-        :suffixIcon="customIcon('goods')"
-        size="large"
-        @change="selectGoods"
-        @dropdownVisibleChange="(visible: boolean) => toggleDropdownVisibility(visible, 'goods')"
-      >
-        <a-select-option
-          v-for="goods in goodsList.data"
-          :key="goods.goodsId"
-          :value="goods.goodsName"
-        >
-          {{ goods.goodsName }}
-        </a-select-option>
-      </a-select>
     </div>
     <template #footer>
       <div class="button-group">
         <a-button
           class="confirm-btn btn"
           type="primary"
-          @click="filterDashboardData"
+          @click="filterCoinDashboardData"
         >
           確認
         </a-button>
