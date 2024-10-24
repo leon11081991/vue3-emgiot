@@ -1,34 +1,54 @@
 <script setup lang="ts">
+/* import */
 import type { ProductListModalType } from '@/models/types/modal.types'
-import { ref, computed } from 'vue'
+import type { BaseGoodsResType } from '@/models/types/dropdown.type'
+import { ref, computed, watchEffect } from 'vue'
 import MoreOperationModal from '@/components/Product/Modal/MoreOperationModal.vue'
-import CreateEditGoodsModal from '@/components/Product/Modal/CreateEditGoodsModal.vue'
+import AddEditGoodsModal from '@/components/Product/Modal/AddEditGoodsModal.vue'
 import { useModal } from '@/composables/useModal'
 import { useDropdown } from '@/composables/useDropdown'
 
+/* defineProps */
 const props = defineProps<{
   goodsFilter: string
+  addModalOpenCount: number
 }>()
 
+/* store 相關 */
 const { modalVisible, openModal, closeModal } = useModal()
 const { goodsList, fetchGoodsList } = useDropdown()
 
+/* ref 變數 */
 const isModalVisible = ref<Record<ProductListModalType, boolean>>({
   more: false,
   edit: false,
   delete: false,
-  create: false,
+  add: false,
   check: false
 })
 
-const goodsId = ref('')
 const openModalType = ref('')
+const singleGoodsInfo = ref<BaseGoodsResType>({
+  goodsId: '',
+  goodsName: '',
+  cost: 0,
+  isSpecial: false,
+  forbiddenStores: []
+})
 
 /* computed */
 const isProductListEmpty = computed(() => goodsList.value.data.length === 0)
+
 const filteredGoodsList = computed(() =>
   goodsList.value.data.filter((item) => item.goodsName.includes(props.goodsFilter))
 )
+
+/* watchEffect */
+watchEffect(() => {
+  if (props.addModalOpenCount) {
+    fnOpenOperationModal('add')
+  }
+})
 
 /* function */
 const resetModalVisible = (
@@ -40,9 +60,9 @@ const resetModalVisible = (
   return modalVisibility
 }
 
-const fnOpenOperationModal = (type: ProductListModalType, id?: string): void => {
-  if (id) {
-    goodsId.value = id
+const fnOpenOperationModal = (type: ProductListModalType, item?: BaseGoodsResType): void => {
+  if (item) {
+    singleGoodsInfo.value = item
   }
 
   openModalType.value = type
@@ -52,6 +72,7 @@ const fnOpenOperationModal = (type: ProductListModalType, id?: string): void => 
   })
 }
 
+/* store 呼叫 */
 fetchGoodsList()
 </script>
 
@@ -67,7 +88,6 @@ fetchGoodsList()
     <div class="list-body">
       <a-empty v-if="isProductListEmpty" />
       <a-list
-        class="demo-loadmore-list"
         :loading="goodsList.isLoading"
         item-layout="horizontal"
         :data-source="filteredGoodsList"
@@ -87,7 +107,7 @@ fetchGoodsList()
             <template #actions>
               <a
                 key="list-loadmore-more"
-                @click="fnOpenOperationModal('more', item.goodsId)"
+                @click="fnOpenOperationModal('more', item)"
                 >...</a
               >
             </template>
@@ -95,17 +115,21 @@ fetchGoodsList()
         </template>
       </a-list>
     </div>
+
     <MoreOperationModal
       v-if="isModalVisible.more"
       :modal-visible="modalVisible"
       @open-modal="fnOpenOperationModal"
       @close="closeModal"
     />
-    <CreateEditGoodsModal
-      v-if="isModalVisible.edit || isModalVisible.create"
+
+    <AddEditGoodsModal
+      v-if="isModalVisible.edit || isModalVisible.add"
       :modal-visible="modalVisible"
       :type="openModalType"
+      :goodsInfo="singleGoodsInfo"
       @close="closeModal"
+      @goods:refresh="fetchGoodsList"
     />
   </div>
 </template>
@@ -113,6 +137,7 @@ fetchGoodsList()
 <style lang="scss" scoped>
 .list {
   padding-top: 1rem;
+
   .list-header {
     display: grid;
     padding: 0.75rem 24px;
@@ -127,6 +152,7 @@ fetchGoodsList()
       text-align: center;
     }
   }
+
   .product-list-header {
     grid-template-columns: 2fr 1fr 1fr 1fr;
   }
@@ -147,109 +173,6 @@ fetchGoodsList()
 
   .list-item {
     text-align: center;
-  }
-
-  // .list-collapse {
-  //   background-color: $--background-color-base;
-  // }
-
-  // .list-collapse-panel {
-  //   :deep(.ant-collapse-expand-icon) {
-  //     display: none;
-  //   }
-
-  //   :deep(.ant-collapse-header) {
-  //     padding: 0.5rem;
-  //   }
-
-  //   :deep(.ant-collapse-content),
-  //   :deep(.ant-collapse-content-box) {
-  //     padding: 0;
-  //   }
-
-  //   .item-main-content {
-  //     display: grid;
-
-  //     & > .item-section {
-  //       color: $--color-primary;
-  //     }
-
-  //     .item-category {
-  //       padding: 0.25rem 0.5rem;
-  //       background-color: $--color-primary;
-  //       color: $--color-white;
-  //       border-radius: $--border-radius-middle;
-  //     }
-
-  //     .item-id {
-  //       position: relative;
-
-  //       .offline {
-  //         position: absolute;
-  //         content: '';
-  //         width: 0.3rem;
-  //         height: 0.3rem;
-  //         border-radius: $--border-radius-circle;
-  //         background-color: $--color-error;
-
-  //         top: 50%;
-  //         left: -0.5rem;
-  //         transform: translateY(-50%);
-  //       }
-
-  //       .online {
-  //         position: absolute;
-  //         content: '';
-  //         width: 0.3rem;
-  //         height: 0.3rem;
-  //         border-radius: $--border-radius-circle;
-  //         background-color: $--color-secondary;
-
-  //         top: 50%;
-  //         left: -0.5rem;
-  //         transform: translateY(-50%);
-  //       }
-  //     }
-  //   }
-
-  //   .item-action-content {
-  //     display: flex;
-  //     flex-wrap: wrap;
-  //     justify-content: space-between;
-  //     padding: 0.5rem;
-
-  //     & > .item-section {
-  //       flex: 1;
-  //       color: $--color-gray-600;
-  //     }
-
-  //     .action-button {
-  //       @include base-transition;
-  //       border-radius: $--border-radius-middle;
-
-  //       &:hover {
-  //         cursor: pointer;
-  //         background-color: rgba(#000000, 0.1);
-  //       }
-  //     }
-  //   }
-
-  //   .item-section {
-  //     display: flex;
-  //     flex-direction: column;
-  //     align-items: center;
-
-  //     &.chart-detail {
-  //       flex-direction: row;
-  //       align-items: center;
-  //       gap: 0.5rem;
-  //     }
-  //   }
-  // }
-
-  // demo list
-  .demo-loadmore-list {
-    min-height: 350px;
   }
 }
 </style>

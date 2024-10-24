@@ -8,6 +8,7 @@ export type BaseGoodsResType = {
   goodsName: string
   cost: number
   isSpecial: boolean
+  forbiddenStores: string[]
 }
 
 export type PcbsReqType = {

@@ -5,6 +5,7 @@ import { StoreServices } from '@/services/store.services'
 import { UserServices } from '@/services/user.services'
 import { StoreMemberService } from '@/services/store-member.services'
 import { DropdownServices } from '@/services/dropdown.services'
+import { GoodsServices } from '@/services/goods.services'
 
 const api = {
   test: new TestService(), // 測試範例
@@ -13,7 +14,8 @@ const api = {
   store: new StoreServices(), // 商家
   user: new UserServices(), // 使用者
   storeMember: new StoreMemberService(), // 成員
-  dropdown: new DropdownServices() // 下拉選單
+  dropdown: new DropdownServices(), // 下拉選單
+  goods: new GoodsServices() // 商品
 }
 
 export { api }

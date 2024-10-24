@@ -1,23 +1,29 @@
 <script setup lang="ts">
+/* import */
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import FloatButton from '@/components/Base/FloatButton.vue'
 import ProductTabList from '@/components/Product/ProductTabList.vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 
-// store
+/* store */
 const { t: $t } = useI18n()
 
 /* 非響應式變數 */
-const searchInput_placeholder = '搜尋商品名稱'
+const searchInputPlaceholder = '搜尋商品名稱'
 
-// ref變數
+/* ref變數 */
 const goodsFilter = ref('')
+const createGoodsModalOpenCount = ref(0)
 
-// function
+/* function */
 const handleInputChange = (e: Event) => {
   const target = e.target as HTMLInputElement
   goodsFilter.value = target.value
+}
+
+const fnHandleAddGoods = () => {
+  createGoodsModalOpenCount.value += 1
 }
 </script>
 
@@ -27,7 +33,7 @@ const handleInputChange = (e: Event) => {
       <a-input
         class="search-input"
         :value="goodsFilter"
-        :placeholder="searchInput_placeholder"
+        :placeholder="searchInputPlaceholder"
         @change="handleInputChange"
       >
         <template #prefix>
@@ -35,8 +41,11 @@ const handleInputChange = (e: Event) => {
         </template>
       </a-input>
     </div>
-    <ProductTabList :goodsFilter="goodsFilter" />
-    <FloatButton />
+    <ProductTabList
+      :goodsFilter="goodsFilter"
+      :add-modal-open-count="createGoodsModalOpenCount"
+    />
+    <FloatButton @click="fnHandleAddGoods" />
   </div>
 </template>
 
