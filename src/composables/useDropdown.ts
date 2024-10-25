@@ -1,7 +1,9 @@
 import type {
   BaseGroupsDDLResType,
   BaseGoodsResType,
-  PcbsResType
+  PcbsResType,
+  UserRoleInStoreResType,
+  StoresItemDataType
 } from '@/models/types/dropdown.type'
 import { ref } from 'vue'
 import { api } from '@/services'
@@ -33,6 +35,24 @@ export const useDropdown = () => {
   // 可用機台
   const pcbsList = ref<{
     data: PcbsResType[]
+    isLoading: boolean
+  }>({
+    data: [],
+    isLoading: true
+  })
+
+  // 權限設定
+  const userRoleInStoreList = ref<{
+    data: UserRoleInStoreResType[]
+    isLoading: boolean
+  }>({
+    data: [],
+    isLoading: true
+  })
+
+  //
+  const storesList = ref<{
+    data: StoresItemDataType[]
     isLoading: boolean
   }>({
     data: [],
@@ -78,10 +98,13 @@ export const useDropdown = () => {
   /** 取得可用機台 */
   const fetchPcbsList = async (storeId: string, machineType?: 0 | 1) => {
     try {
-      const { result, isSuccess } = await api.dropdown.getPcbs({ storeId, machineType })
+      const { result, isSuccess, message, resultCode } = await api.dropdown.getPcbs({
+        storeId,
+        machineType
+      })
 
       if (!isSuccess) {
-        // TODO: 錯誤處理
+        openMessage('error', `${resultCode} - ${message}`)
         return
       }
 
@@ -93,12 +116,53 @@ export const useDropdown = () => {
     }
   }
 
+  /** 處理權限設定 */
+  const fetchUserRoleInStore = async (storeId: string) => {
+    try {
+      const { result, isSuccess, message, resultCode } = await api.dropdown.userRoleInStore({
+        storeId
+      })
+
+      if (!isSuccess) {
+        openMessage('error', `${resultCode} - ${message}`)
+        return
+      }
+
+      userRoleInStoreList.value.data = result
+    } catch (e) {
+      catchErrorHandler(e)
+    } finally {
+      userRoleInStoreList.value.isLoading = false
+    }
+  }
+
+  /** 處理可用店家 */
+  const fetchStoresList = async () => {
+    try {
+      const { result, isSuccess, message, resultCode } = await api.dropdown.getStores()
+
+      if (!isSuccess) {
+        return openMessage('error', `${resultCode} - ${message}`)
+      }
+
+      storesList.value.data = result['stores']
+    } catch (e) {
+      catchErrorHandler(e)
+    } finally {
+      storesList.value.isLoading = false
+    }
+  }
+
   return {
     groupsDDLList,
     goodsList,
     pcbsList,
+    userRoleInStoreList,
+    storesList,
     fetchGroupsDDLList,
     fetchGoodsList,
-    fetchPcbsList
+    fetchPcbsList,
+    fetchUserRoleInStore,
+    fetchStoresList
   }
 }
