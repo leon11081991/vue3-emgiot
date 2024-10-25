@@ -71,6 +71,33 @@ const routes = [
     }
   },
   {
+    path: '/add-member',
+    name: 'AddMember',
+    component: () => import('@/views/AddMemberPage.vue'),
+    meta: {
+      layout: 'LayoutDefault',
+      middleware: [authMiddleware, layoutMiddleware]
+    }
+  },
+  {
+    path: '/invite-link',
+    name: 'InviteLink',
+    component: () => import('@/views/InviteLinkPage.vue'),
+    meta: {
+      layout: 'LayoutDefault',
+      middleware: [authMiddleware, layoutMiddleware]
+    }
+  },
+  {
+    path: '/member-join',
+    name: 'MemberJoin',
+    component: () => import('@/views/MemberJoinPage.vue'),
+    meta: {
+      layout: 'LayoutBlank',
+      middleware: [authMiddleware, layoutMiddleware]
+    }
+  },
+  {
     path: '/notepad',
     name: 'Notepad',
     component: () => import('@/views/NotepadPage.vue'),
