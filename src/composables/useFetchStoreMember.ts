@@ -7,14 +7,13 @@ import type {
 } from '@/models/types/storeMember.types'
 import { ref } from 'vue'
 import { api } from '@/services'
-import { useRouter } from 'vue-router'
 import { useMessage } from '@/composables/useMessage'
 import { useNotification } from '@/composables/useNotification'
 import { StoreMemberDto } from '@/utils/api/dto/storeMember.dto'
 import { catchErrorHandler } from '@/utils/api/error-handler'
 import { UtilCommon } from '@/utils/utilCommon'
+import { getI18nTranslate } from '@/utils/i18nUtils'
 
-const router = useRouter()
 const { openMessage } = useMessage()
 const { openNotification } = useNotification()
 
@@ -39,11 +38,10 @@ export const useFetchStoreMember = () => {
   /** 處理取得店家成員清單 */
   const fetchStoreMembers = async () => {
     try {
-      const { result, isSuccess, resultCode } = await api.storeMember.getStoreMembers()
+      const { result, isSuccess, resultCode, message } = await api.storeMember.getStoreMembers()
 
-      console.log('[fetchStoreMembers]', result, isSuccess, resultCode)
       if (!isSuccess) {
-        //  TODO: 錯誤處理
+        openMessage('error', `${resultCode} - ${message}`)
         return
       }
 
@@ -91,14 +89,20 @@ export const useFetchStoreMember = () => {
   /** 處理變更成員資訊 */
   const fnUpdateStoreMemberInfo = async (params: StoreMemberInfoDataType): Promise<void> => {
     try {
-      const { result, isSuccess, resultCode, message } =
-        await api.storeMember.updateStoreMemberInfo(StoreMemberDto.FormattedUpdateReqData(params))
+      const { isSuccess, resultCode, message } = await api.storeMember.updateStoreMemberInfo(
+        StoreMemberDto.FormattedUpdateReqData(params)
+      )
 
       if (!isSuccess) {
         return openMessage('error', `${resultCode} - ${message}`)
       }
 
-      return openMessage('success', `變更成員資訊成功`)
+      return openMessage(
+        'success',
+        getI18nTranslate('MemberInfoPage.Message.UpdateSuccess'),
+        { duration: 1.5 },
+        () => UtilCommon.scrollToTop()
+      )
     } catch (e) {
       catchErrorHandler(e)
     }
@@ -137,6 +141,12 @@ export const useFetchStoreMember = () => {
     try {
       const { result, isSuccess, message, resultCode } = await api.storeMember.memberJoin(params)
       console.log('fnMemberJoin', result, isSuccess, message, resultCode)
+
+      if (!isSuccess) {
+        return openMessage('error', `${resultCode} - ${message}`)
+      }
+
+      return result
     } catch (e) {
       catchErrorHandler(e)
     }

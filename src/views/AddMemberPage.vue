@@ -12,12 +12,13 @@ import { useStoreMember } from '@/composables/useStoreMember'
 import { useFetchStoreMember } from '@/composables/useFetchStoreMember'
 import { useDropdown } from '@/composables/useDropdown'
 
-// i18n
-const { t: $t } = useI18n()
-// router
+// Router
 const router = useRouter()
 
-// composables
+// i18n
+const { t: $t } = useI18n()
+
+// Composables
 const { changePermissionSetting, resetForbiddenPcbsIfNeeded } = useStoreMember()
 const { fnAddInviteMember } = useFetchStoreMember()
 const {
@@ -29,7 +30,7 @@ const {
   fetchStoresList
 } = useDropdown()
 
-// refs
+// Refs
 const isButtonLoading = ref<boolean>(false)
 const newMemberInfoData = ref<StoreMemberInfoDataType>({
   userId: '',
@@ -161,8 +162,8 @@ section {
 
 .actions-container {
   position: sticky;
-  background-color: $--background-color-base;
-  padding-top: 0.5rem;
+  background: linear-gradient(to bottom, transparent 0.2rem, $--background-color-base 1rem);
+  padding-top: 1.5rem;
   padding-bottom: $--page-padding-bottom;
   bottom: 0;
   left: 0;

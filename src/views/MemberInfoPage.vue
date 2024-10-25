@@ -14,19 +14,27 @@ import { useDropdown } from '@/composables/useDropdown'
 import { useStoreMember } from '@/composables/useStoreMember'
 import { useDebounce } from '@/composables/useDebounce'
 
+// Route
 const { storeId, userId } = useRoute().params
+
+// i18n
 const { t: $t } = useI18n()
+
+// Composables
 const { storeMemberInfo, fetchStoreMemberInfo, fnUpdateStoreMemberInfo } = useFetchStoreMember()
 const { modalVisible, openModal, closeModal } = useModal()
 const { pcbsList, userRoleInStoreList, fetchPcbsList, fetchUserRoleInStore } = useDropdown()
 const { changePermissionSetting, resetForbiddenPcbsIfNeeded } = useStoreMember()
 
+// Refs
 const memberInfoData = ref<StoreMemberInfoDataType>({} as StoreMemberInfoDataType)
 
+// Functions
 const updateMemberInfo = useDebounce((memberInfoData: StoreMemberInfoDataType, storeId: string) => {
   fnUpdateStoreMemberInfo({ ...memberInfoData, storeId })
 }, 500)
 
+// Life Cycle Hooks
 onMounted(async () => {
   await Promise.all([
     fetchStoreMemberInfo({
@@ -47,33 +55,46 @@ onMounted(async () => {
 
 <template>
   <div class="member-info-page">
-    <InfoContainer :store-name="memberInfoData?.storeName">
-      <div class="user-info-container">
-        <AvatarDisplay
-          size="md"
-          :name="memberInfoData.userName"
-        />
-        <div class="user-wrap">
-          <h6 class="user-name">{{ memberInfoData.userName }}</h6>
-          <div class="user-level">
-            <BaseSvgIcon :iconName="`level-${memberInfoData.roleOrder}`" />
-            {{ $t(`Common.Level.${memberInfoData.roleOrder}`) }}
+    <div class="member-info-page-inner">
+      <InfoContainer :store-name="memberInfoData?.storeName">
+        <template #user>
+          <div class="user-info-container">
+            <AvatarDisplay
+              size="md"
+              :name="memberInfoData.userName"
+            />
+
+            <a-skeleton-input
+              v-if="storeMemberInfo.isLoading"
+              :active="true"
+              :size="'small'"
+            />
+            <div
+              v-else
+              class="user-wrap"
+            >
+              <h6 class="user-name">{{ memberInfoData.userName }}</h6>
+              <div class="user-level">
+                <BaseSvgIcon :iconName="`level-${memberInfoData.roleOrder}`" />
+                {{ $t(`Common.Level.${memberInfoData.roleOrder}`) }}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </InfoContainer>
+        </template>
+      </InfoContainer>
 
-    <PermissionContainer
-      :selected-role="memberInfoData?.roleId || ''"
-      :user-role-in-store-list="userRoleInStoreList.data"
-      @update:selectedRole="changePermissionSetting($event, memberInfoData)"
-    />
+      <PermissionContainer
+        :selected-role="memberInfoData?.roleId || ''"
+        :user-role-in-store-list="userRoleInStoreList.data"
+        @update:selectedRole="changePermissionSetting($event, memberInfoData)"
+      />
 
-    <ContentSettingContainer
-      :member-info-data="memberInfoData"
-      :pcbs-list="pcbsList.data"
-      @change-is-forbidden="resetForbiddenPcbsIfNeeded($event, memberInfoData)"
-    />
+      <ContentSettingContainer
+        :member-info-data="memberInfoData"
+        :pcbs-list="pcbsList.data"
+        @change-is-forbidden="resetForbiddenPcbsIfNeeded($event, memberInfoData)"
+      />
+    </div>
 
     <div class="actions-container">
       <a-button
@@ -124,6 +145,14 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .member-info-page {
+  min-height: calc(100vh - $--header-height - $--page-padding-top - $--page-padding-bottom);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .member-info-page-inner {
+    flex: 1;
+  }
 }
 
 section {
@@ -163,76 +192,10 @@ section {
   color: $--color-gray-600;
 }
 
-.permission-container,
-.content-setting-container {
-  display: flex;
-  flex-direction: column;
-  margin-inline: 1rem;
-}
-
-.content-setting-container {
-  .content-setting {
-    display: flex;
-    align-items: center;
-    padding-left: 1rem;
-
-    @include media-breakpoint-down(sm) {
-      padding-left: 1rem;
-    }
-
-    &:not(:last-child) {
-      margin-bottom: 1rem;
-    }
-  }
-
-  .content-setting-label {
-    flex: 1;
-    color: $--color-gray-800;
-  }
-
-  .devices-container {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .device-list {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 0.3s ease;
-
-    &.expanded {
-      grid-template-rows: 1fr;
-      margin-bottom: 1rem;
-    }
-  }
-
-  .device-list-inner {
-    margin-inline: 2rem;
-    overflow: hidden;
-
-    .ant-checkbox-group {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-
-      .checkbox-item {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-
-        .name-text {
-          color: $--color-primary;
-        }
-      }
-    }
-  }
-}
-
 .actions-container {
-  // position: fixed;
   position: sticky;
-  background-color: $--background-color-base;
-  padding-inline: $--page-padding-x;
+  background: linear-gradient(to bottom, transparent 0.2rem, $--background-color-base 1rem);
+  padding-top: 1.5rem;
   padding-bottom: $--page-padding-bottom;
   bottom: 0;
   left: 0;

@@ -139,6 +139,10 @@
     "IsVisible":{
       "CheckboxLabel":"隱身",
       "HintText":"階級比你低的無法看見你"
+    },
+    "Message":{
+      "IsSelfAccount":"無法訪問自身帳號。",
+      "CanNotAccess":"無法訪問超過等級或同等級的帳號。"
     }
   },
   "AddMemberPage": {
@@ -150,6 +154,9 @@
     "Button":{
       "Update": "變更",
       "Delete": "刪除成員"
+    },
+    "Message":{
+      "UpdateSuccess":"變更成員資訊成功"
     },
     "PermissionContainer":{
       "Title":"權限設定"
