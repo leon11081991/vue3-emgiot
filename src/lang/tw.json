@@ -12,6 +12,7 @@
     "ChangePasswordFail": "密碼變更失敗"
   },
   "Common": {
+    "AppName": "雲端掌櫃",
     "Result": {
       "NotLogin": "請先登入...",
       "TokenExpired": "登入已過期，請重新登入",
@@ -42,6 +43,11 @@
     },
     "Notification": {
       "Button": "確認"
+    },
+    "Level":{
+      "1":"1級",
+      "2":"2級",
+      "3":"3級"
     }
   },
   "HomePage": {
@@ -130,10 +136,45 @@
     }
   },
   "MemberPage":{
-    "Level":{
-      "1":"1級",
-      "2":"2級",
-      "3":"3級"
+    "IsVisible":{
+      "CheckboxLabel":"隱身",
+      "HintText":"階級比你低的無法看見你"
     }
+  },
+  "AddMemberPage": {
+    "Button":{
+      "CreateAddMemberLink":"產生邀請連結"
+    }
+  },
+  "MemberInfoPage": {
+    "Button":{
+      "Update": "變更",
+      "Delete": "刪除成員"
+    },
+    "PermissionContainer":{
+      "Title":"權限設定"
+    },
+    "ContentSettingContainer":{
+      "Title":"權限內容設定",
+      "SettingLabel":{
+        "ForbiddenPcbs":"啟用裝置過濾",
+        "IsGoodsManagement":"商品管理權限",
+        "IsSpecial":"特殊商品可見",
+        "IsInvisibleToThisUser":"屏蔽，對方無法在成員列表看見你"
+      }
+    },
+    "Modal":{
+      "DeleteMember":{
+        "Title": "刪除成員",
+        "Content": "請確認是否將該成員移出此店家?",
+        "Button":{
+          "Confirm": "確認",
+          "Cancel": "取消"
+        }
+      }
+    }
+  },
+  "InviteLinkPage": {
+    
   }
 }
