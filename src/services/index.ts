@@ -3,7 +3,7 @@ import { AuthServices } from '@/services/auth.services'
 import { DashboardServices } from '@/services/dashboard.services'
 import { StoreServices } from '@/services/store.services'
 import { UserServices } from '@/services/user.services'
-import { StoreMemberService } from '@/services/store-member.services'
+import { StoreMemberService } from '@/services/storeMember.services'
 import { DropdownServices } from '@/services/dropdown.services'
 
 const api = {
