@@ -424,7 +424,7 @@ onMounted(async () => {
           <component
             :is="tabComps[selectedTab]"
             :active-key="selectedTab === 'claw' ? clawActiveKey : coinActiveKey"
-            :data="listData"
+            :data="listData || []"
           />
         </KeepAlive>
       </transition>
