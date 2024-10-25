@@ -2,32 +2,39 @@
 import type { StoreMemberInfoDataType } from '@/models/types/storeMember.types'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import AvatarDisplay from '@/components/Base/AvatarDisplay.vue'
+import InfoContainer from '@/components/MemberPage/InfoContainer.vue'
+import PermissionContainer from '@/components/MemberPage/PermissionContainer.vue'
+import ContentSettingContainer from '@/components/MemberPage/ContentSettingContainer.vue'
 import { useFetchStoreMember } from '@/composables/useFetchStoreMember'
 import { useModal } from '@/composables/useModal'
 import { useDropdown } from '@/composables/useDropdown'
-import { levelOptions } from '@/constants/common/select.const'
+import { useStoreMember } from '@/composables/useStoreMember'
+import { useDebounce } from '@/composables/useDebounce'
 
 const { storeId, userId } = useRoute().params
-const { storeMemberInfo, fnGetStoreMemberInfo, fnUpdateStoreMemberInfo } = useFetchStoreMember()
+const { t: $t } = useI18n()
+const { storeMemberInfo, fetchStoreMemberInfo, fnUpdateStoreMemberInfo } = useFetchStoreMember()
 const { modalVisible, openModal, closeModal } = useModal()
-const { pcbsList, fetchPcbsList } = useDropdown()
+const { pcbsList, userRoleInStoreList, fetchPcbsList, fetchUserRoleInStore } = useDropdown()
+const { changePermissionSetting, resetForbiddenPcbsIfNeeded } = useStoreMember()
 
 const memberInfoData = ref<StoreMemberInfoDataType>({} as StoreMemberInfoDataType)
 
-// TODO: get data from api
-const mockData = [
-  { pcbGroupName: '南部食品機', pcbName: 'W208_01', pcbId: '7878855' },
-  { pcbGroupName: '南部食品機', pcbName: 'W208_02', pcbId: '7878856' },
-  { pcbGroupName: '南部食品機', pcbName: 'W208b1_01', pcbId: '03' }
-]
+const updateMemberInfo = useDebounce((memberInfoData: StoreMemberInfoDataType, storeId: string) => {
+  fnUpdateStoreMemberInfo({ ...memberInfoData, storeId })
+}, 500)
 
 onMounted(async () => {
-  await fnGetStoreMemberInfo({
-    storeId: storeId as string,
-    userId: userId as string
-  })
+  await Promise.all([
+    fetchStoreMemberInfo({
+      storeId: storeId as string,
+      userId: userId as string
+    }),
+    fetchUserRoleInStore(storeId as string)
+  ])
 
   memberInfoData.value = {
     ...storeMemberInfo.value.data,
@@ -40,15 +47,7 @@ onMounted(async () => {
 
 <template>
   <div class="member-info-page">
-    <section class="info-container">
-      <div class="store-info-container">
-        <AvatarDisplay
-          size="lg"
-          :name="memberInfoData?.storeName"
-          :charNum="2"
-        />
-        <h4 class="store-name">雲端掌櫃&nbsp;-&nbsp;{{ memberInfoData.storeName }}</h4>
-      </div>
+    <InfoContainer :store-name="memberInfoData?.storeName">
       <div class="user-info-container">
         <AvatarDisplay
           size="md"
@@ -56,84 +55,33 @@ onMounted(async () => {
         />
         <div class="user-wrap">
           <h6 class="user-name">{{ memberInfoData.userName }}</h6>
-          <div class="user-level">Lv.{{ '1' }}</div>
+          <div class="user-level">
+            <BaseSvgIcon :iconName="`level-${memberInfoData.roleOrder}`" />
+            {{ $t(`Common.Level.${memberInfoData.roleOrder}`) }}
+          </div>
         </div>
       </div>
-    </section>
+    </InfoContainer>
 
-    <section class="setting-container">
-      <h4 class="section-title">權限設定</h4>
+    <PermissionContainer
+      :selected-role="memberInfoData?.roleId || ''"
+      :user-role-in-store-list="userRoleInStoreList.data"
+      @update:selectedRole="changePermissionSetting($event, memberInfoData)"
+    />
 
-      <a-select
-        class="level-select"
-        v-model:value="memberInfoData.roleOrder"
-        size="large"
-        :options="levelOptions"
-        :field-names="{ label: 'name', value: 'id' }"
-      >
-        <template #suffixIcon>
-          <BaseSvgIcon iconName="dropdown" />
-        </template>
-      </a-select>
-    </section>
-
-    <section class="content-setting-container">
-      <h4 class="section-title">權限內容設定</h4>
-
-      <div class="content-setting">
-        <p class="content-setting-label">
-          啟用裝置過濾
-          <span v-if="memberInfoData.forbiddenPcbs?.length > 0"
-            >({{ memberInfoData.forbiddenPcbs?.length }}台)</span
-          >
-        </p>
-        <a-switch v-model:checked="memberInfoData.isForbidden" />
-      </div>
-
-      <div
-        class="device-list"
-        :class="{ expanded: memberInfoData.isForbidden }"
-      >
-        <div class="device-list-inner">
-          <a-checkbox-group
-            v-model:value="memberInfoData.forbiddenPcbs"
-            @change="() => console.log(memberInfoData.forbiddenPcbs)"
-          >
-            <template
-              v-for="option in pcbsList.data"
-              :key="option.pcbId"
-            >
-              <a-checkbox :value="option.pcbId">
-                <div class="checkbox-item">
-                  <span class="group-tag">{{ option.groupName }}</span>
-                  <span class="name-text">{{ option.machineName }}</span>
-                </div>
-              </a-checkbox>
-            </template>
-          </a-checkbox-group>
-        </div>
-      </div>
-      <div class="content-setting">
-        <p class="content-setting-label">商品管理權限</p>
-        <a-switch v-model:checked="memberInfoData.isGoodsManagement" />
-      </div>
-      <div class="content-setting">
-        <p class="content-setting-label">特殊商品可見</p>
-        <a-switch v-model:checked="memberInfoData.isSpecial" />
-      </div>
-      <div class="content-setting">
-        <p class="content-setting-label">屏蔽，對方無法在成員列表看見你</p>
-        <a-switch v-model:checked="memberInfoData.isSpecial" />
-      </div>
-    </section>
+    <ContentSettingContainer
+      :member-info-data="memberInfoData"
+      :pcbs-list="pcbsList.data"
+      @change-is-forbidden="resetForbiddenPcbsIfNeeded($event, memberInfoData)"
+    />
 
     <div class="actions-container">
       <a-button
         type="primary"
         size="large"
-        @click="fnUpdateStoreMemberInfo({ ...memberInfoData, storeId: storeId as string })"
+        @click="updateMemberInfo(memberInfoData, storeId as string)"
       >
-        變更
+        {{ $t('MemberInfoPage.Button.Update') }}
       </a-button>
       <a-button
         type="delete"
@@ -141,31 +89,33 @@ onMounted(async () => {
         ghost
         @click="openModal"
       >
-        刪除成員
+        {{ $t('MemberInfoPage.Button.Delete') }}
       </a-button>
     </div>
   </div>
 
   <a-modal
-    v-model:visible="modalVisible"
+    v-model:open="modalVisible"
     class="delete-member-modal primary"
   >
     <template #title>
       <div class="modal-header modal-header-primary">
-        <span class="modal-title">{{ '刪除成員' }}</span>
+        <span class="modal-title">{{ $t('MemberInfoPage.Modal.DeleteMember.Title') }}</span>
       </div>
     </template>
 
-    <div class="delete-member-container">請確認是否將該成員移出此店家。</div>
+    <div class="delete-member-container">{{ $t('MemberInfoPage.Modal.DeleteMember.Content') }}</div>
 
     <template #footer>
       <div class="delete-member-actions-container">
-        <a-button type="primary">確定</a-button>
+        <a-button type="primary">{{
+          $t('MemberInfoPage.Modal.DeleteMember.Button.Confirm')
+        }}</a-button>
         <a-button
           type="primary"
           ghost
           @click="closeModal"
-          >取消</a-button
+          >{{ $t('MemberInfoPage.Modal.DeleteMember.Button.Cancel') }}</a-button
         >
       </div>
     </template>
@@ -182,47 +132,29 @@ section {
   }
 }
 
-.info-container {
-  padding: 0.75rem;
-  border-radius: $--border-radius-middle;
-  border: 1px solid $--color-gray-400;
+.user-info-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-top: 0.5rem;
+  padding-left: 2rem;
+  border-top: 1px solid $--color-gray-400;
 
-  .store-info-container {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding-bottom: 0.5rem;
-
-    .store-name {
-      flex: 1;
-      font-size: 1.5rem;
-      color: $--color-primary;
-      font-weight: bold;
-    }
+  .user-wrap {
+    flex: 1;
   }
 
-  .user-info-container {
+  .user-name {
+    font-size: 1rem;
+    color: $--color-primary;
+    font-weight: bold;
+  }
+
+  .user-level {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding-top: 0.5rem;
-    padding-left: 2rem;
-    border-top: 1px solid $--color-gray-400;
-
-    .user-wrap {
-      flex: 1;
-    }
-
-    .user-name {
-      font-size: 1rem;
-      color: $--color-primary;
-      font-weight: bold;
-    }
-
-    .user-level {
-      font-size: 1rem;
-      color: $--color-gray-600;
-    }
+    font-size: 1rem;
+    color: $--color-gray-600;
   }
 }
 
@@ -231,15 +163,7 @@ section {
   color: $--color-gray-600;
 }
 
-.level-select {
-  :deep(.ant-select-selection-item) {
-    display: flex;
-    justify-content: center;
-    color: $--color-primary;
-  }
-}
-
-.setting-container,
+.permission-container,
 .content-setting-container {
   display: flex;
   flex-direction: column;
