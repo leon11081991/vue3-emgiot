@@ -12,6 +12,7 @@
     "ChangePasswordFail": "密碼變更失敗"
   },
   "Common": {
+    "AppName": "雲端掌櫃",
     "Result": {
       "NotLogin": "請先登入...",
       "TokenExpired": "登入已過期，請重新登入",
@@ -42,6 +43,16 @@
     },
     "Notification": {
       "Button": "確認"
+    },
+    "Message":{
+      "CopySuccess":"複製成功",
+      "CopyFailed":"複製失敗",
+      "ClipboardNotSupported":"不支援此瀏覽器複製功能"
+    },
+    "Level":{
+      "1":"1級",
+      "2":"2級",
+      "3":"3級"
     }
   },
   "HomePage": {
@@ -130,10 +141,59 @@
     }
   },
   "MemberPage":{
-    "Level":{
-      "1":"1級",
-      "2":"2級",
-      "3":"3級"
+    "IsVisible":{
+      "CheckboxLabel":"隱身",
+      "HintText":"階級比你低的無法看見你"
+    },
+    "Message":{
+      "IsSelfAccount":"無法訪問自身帳號。",
+      "CanNotAccess":"無法訪問超過等級或同等級的帳號。"
+    }
+  },
+  "AddMemberPage": {
+    "Button":{
+      "CreateAddMemberLink":"產生邀請連結"
+    }
+  },
+  "MemberInfoPage": {
+    "Button":{
+      "Update": "變更",
+      "Delete": "刪除成員"
+    },
+    "Message":{
+      "UpdateSuccess":"變更成員資訊成功",
+      "DeleteSuccess":"刪除成員成功"
+    },
+    "PermissionContainer":{
+      "Title":"權限設定",
+      "WarningMsg":"因於該店家的權限等級，未有可供設定的等級。請切換其他店家。"
+    },
+    "ContentSettingContainer":{
+      "Title":"權限內容設定",
+      "SettingLabel":{
+        "ForbiddenPcbs":"啟用裝置過濾",
+        "IsGoodsManagement":"商品管理權限",
+        "IsSpecial":"特殊商品可見",
+        "IsInvisibleToThisUser":"屏蔽，對方無法在成員列表看見你"
+      }
+    },
+    "Modal":{
+      "DeleteMember":{
+        "Title": "刪除成員",
+        "Content": "請確認是否將該成員移出此店家?",
+        "Button":{
+          "Confirm": "確認",
+          "Cancel": "取消"
+        }
+      }
+    }
+  },
+  "InviteLinkPage": {
+    "QRCodeHint":"邀請碼時效一天，只能提供一人使用。",
+    "TextHint":"邀請您加入雲端掌櫃，請點選下方連結接受邀請。",
+    "Button":{
+      "Copy":"複製內容",
+      "Return":"返回"
     }
   }
 }

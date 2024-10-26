@@ -1,6 +1,7 @@
 export const errorMessagesMapping: Record<string, any> = {
   fnLogin: {
-    '4001': 'ErrorMessage.WrongUserIdAndPassword'
+    '4001': 'ErrorMessage.WrongUserIdAndPassword',
+    '4002': 'ErrorMessage.UserNotFound'
   },
   fnForgotPassword: {
     null: 'ErrorMessage.UserNotVerified' // TODO: 目前回傳的是 null，等後端定義

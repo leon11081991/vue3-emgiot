@@ -4,10 +4,16 @@ import { ref } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import { UtilCommon } from '@/utils/utilCommon'
 
-const props = defineProps<{
-  activeKey: string[]
-  data: CoinOperationsInfoResType[]
-}>()
+const props = withDefaults(
+  defineProps<{
+    activeKey: string[]
+    data: CoinOperationsInfoResType[]
+  }>(),
+  {
+    activeKey: () => [],
+    data: () => []
+  }
+)
 
 const emit = defineEmits<{
   (e: 'update:activeKey', value: string[]): void
@@ -30,9 +36,9 @@ const updateValue = (value: string[]) => {
     </div>
 
     <div class="list-body">
-      <a-empty v-if="data.length === 0" />
+      <a-empty v-if="!data || data?.length === 0" />
       <a-collapse
-        v-else
+        v-if="data && data.length > 0"
         class="list-collapse"
         v-model:activeKey="coinActiveKey"
         :bordered="false"
@@ -179,7 +185,7 @@ const updateValue = (value: string[]) => {
           width: 0.3rem;
           height: 0.3rem;
           border-radius: $--border-radius-circle;
-          background-color: $--color-secondary;
+          background-color: $--color-success;
 
           top: 50%;
           left: -0.5rem;

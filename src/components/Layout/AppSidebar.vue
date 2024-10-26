@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import MaskOverlay from '@/components/Base/MaskOverlay.vue'
 import AvatarDisplay from '@/components/Base/AvatarDisplay.vue'
@@ -10,6 +11,7 @@ import { useUserStore } from '@/stores/user.stores'
 import { navigationList } from '@/constants/common/sidebar.const'
 import { widthMapping } from '@/constants/mappings/width.mapping'
 
+const { t: $t } = useI18n()
 const commonStore = useCommonStore()
 const userStore = useUserStore()
 const { sidebarRef, handleCloseSidebar } = useSidebar()
@@ -36,7 +38,10 @@ const { width } = useDeviceWidth()
         <div class="user-wrap">
           <h5 class="user-name">{{ userStore.userInfo.name }}</h5>
           <div class="user-level">
-            <span class="user-level-text">1級</span>
+            <BaseSvgIcon :iconName="`level-${userStore.userInfo.roleOrder}`" />
+            <span class="user-level-text">
+              {{ $t(`Common.Level.${userStore.userInfo.roleOrder}`) }}</span
+            >
           </div>
         </div>
       </div>
@@ -159,6 +164,8 @@ aside.sidebar {
       font-size: 1rem;
     }
     .user-level {
+      display: flex;
+      align-items: center;
     }
 
     .message-container {
