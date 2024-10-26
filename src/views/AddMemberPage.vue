@@ -19,7 +19,7 @@ const router = useRouter()
 const { t: $t } = useI18n()
 
 // Composables
-const { changePermissionSetting, resetForbiddenPcbsIfNeeded } = useStoreMember()
+const { changePermissionSetting, updateMemberData } = useStoreMember()
 const { fnAddInviteMember } = useFetchStoreMember()
 const {
   pcbsList,
@@ -105,13 +105,15 @@ onMounted(async () => {
       <PermissionContainer
         :selected-role="newMemberInfoData.roleId"
         :user-role-in-store-list="userRoleInStoreList.data"
+        :is-loading="userRoleInStoreList.isLoading"
         :disabled="!newMemberInfoData.storeName"
         @update:selectedRole="changePermissionSetting($event, newMemberInfoData)"
       />
+
       <ContentSettingContainer
         :member-info-data="newMemberInfoData"
         :pcbs-list="pcbsList.data"
-        @change-is-forbidden="resetForbiddenPcbsIfNeeded($event, newMemberInfoData)"
+        @update:member-info-data="updateMemberData($event, newMemberInfoData)"
       />
     </div>
 

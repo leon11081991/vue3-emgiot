@@ -21,10 +21,11 @@ const { storeId, userId } = useRoute().params
 const { t: $t } = useI18n()
 
 // Composables
-const { storeMemberInfo, fetchStoreMemberInfo, fnUpdateStoreMemberInfo } = useFetchStoreMember()
+const { storeMemberInfo, fetchStoreMemberInfo, fnUpdateStoreMemberInfo, fnDeleteStoreMember } =
+  useFetchStoreMember()
 const { modalVisible, openModal, closeModal } = useModal()
 const { pcbsList, userRoleInStoreList, fetchPcbsList, fetchUserRoleInStore } = useDropdown()
-const { changePermissionSetting, resetForbiddenPcbsIfNeeded } = useStoreMember()
+const { changePermissionSetting, updateMemberData } = useStoreMember()
 
 // Refs
 const memberInfoData = ref<StoreMemberInfoDataType>({} as StoreMemberInfoDataType)
@@ -32,6 +33,13 @@ const memberInfoData = ref<StoreMemberInfoDataType>({} as StoreMemberInfoDataTyp
 // Functions
 const updateMemberInfo = useDebounce((memberInfoData: StoreMemberInfoDataType, storeId: string) => {
   fnUpdateStoreMemberInfo({ ...memberInfoData, storeId })
+}, 500)
+
+const deleteMember = useDebounce((storeId: string, userId: string) => {
+  fnDeleteStoreMember({ storeId, userId }).then((resp) => {
+    if (!resp) return
+    closeModal()
+  })
 }, 500)
 
 // Life Cycle Hooks
@@ -86,13 +94,14 @@ onMounted(async () => {
       <PermissionContainer
         :selected-role="memberInfoData?.roleId || ''"
         :user-role-in-store-list="userRoleInStoreList.data"
+        :is-loading="userRoleInStoreList.isLoading"
         @update:selectedRole="changePermissionSetting($event, memberInfoData)"
       />
 
       <ContentSettingContainer
         :member-info-data="memberInfoData"
         :pcbs-list="pcbsList.data"
-        @change-is-forbidden="resetForbiddenPcbsIfNeeded($event, memberInfoData)"
+        @update:member-info-data="updateMemberData($event, memberInfoData)"
       />
     </div>
 
@@ -108,7 +117,7 @@ onMounted(async () => {
         type="delete"
         size="large"
         ghost
-        @click="openModal"
+        @click="openModal()"
       >
         {{ $t('MemberInfoPage.Button.Delete') }}
       </a-button>
@@ -129,9 +138,11 @@ onMounted(async () => {
 
     <template #footer>
       <div class="delete-member-actions-container">
-        <a-button type="primary">{{
-          $t('MemberInfoPage.Modal.DeleteMember.Button.Confirm')
-        }}</a-button>
+        <a-button
+          type="primary"
+          @click="deleteMember(storeId as string, userId as string)"
+          >{{ $t('MemberInfoPage.Modal.DeleteMember.Button.Confirm') }}</a-button
+        >
         <a-button
           type="primary"
           ghost

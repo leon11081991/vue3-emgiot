@@ -12,8 +12,35 @@ export const useStoreMember = () => {
     memberInfo.forbiddenPcbs.length = 0
   }
 
+  /** 更新使用者資料為布林值的資料 */
+  const updateMemberData = (
+    payload: { value: boolean | string | string[]; key: keyof StoreMemberInfoDataType },
+    memberInfoData: StoreMemberInfoDataType
+  ) => {
+    const { value: val, key } = payload
+
+    if (key === 'isForbidden' && typeof val === 'boolean') {
+      handleIsForbidden(val, key, memberInfoData)
+    }
+
+    if (typeof memberInfoData[key] === typeof val || Array.isArray(val)) {
+      ;(memberInfoData[key] as typeof val) = val
+    }
+  }
+
+  /** 處理啟用裝置啟用 */
+  const handleIsForbidden = (
+    val: boolean,
+    key: keyof StoreMemberInfoDataType,
+    memberInfoData: StoreMemberInfoDataType
+  ) => {
+    if (key !== 'isForbidden') return
+    resetForbiddenPcbsIfNeeded(val, memberInfoData)
+  }
+
   return {
     changePermissionSetting,
-    resetForbiddenPcbsIfNeeded
+    resetForbiddenPcbsIfNeeded,
+    updateMemberData
   }
 }
