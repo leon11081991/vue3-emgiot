@@ -44,6 +44,11 @@
     "Notification": {
       "Button": "確認"
     },
+    "Message":{
+      "CopySuccess":"複製成功",
+      "CopyFailed":"複製失敗",
+      "ClipboardNotSupported":"不支援此瀏覽器複製功能"
+    },
     "Level":{
       "1":"1級",
       "2":"2級",
@@ -156,10 +161,12 @@
       "Delete": "刪除成員"
     },
     "Message":{
-      "UpdateSuccess":"變更成員資訊成功"
+      "UpdateSuccess":"變更成員資訊成功",
+      "DeleteSuccess":"刪除成員成功"
     },
     "PermissionContainer":{
-      "Title":"權限設定"
+      "Title":"權限設定",
+      "WarningMsg":"因於該店家的權限等級，未有可供設定的等級。請切換其他店家。"
     },
     "ContentSettingContainer":{
       "Title":"權限內容設定",
@@ -182,6 +189,11 @@
     }
   },
   "InviteLinkPage": {
-    
+    "QRCodeHint":"邀請碼時效一天，只能提供一人使用。",
+    "TextHint":"邀請您加入雲端掌櫃，請點選下方連結接受邀請。",
+    "Button":{
+      "Copy":"複製內容",
+      "Return":"返回"
+    }
   }
 }
