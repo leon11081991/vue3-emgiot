@@ -16,4 +16,9 @@ export class GoodsServices extends ApiFactory {
   add = async (params: BaseAddGoodsInfoType): Promise<ApiResponse> => {
     return await this.post<unknown, ApiResponse>(GoodsEnums.add, params)
   }
+
+  /* 刪除商品 */
+  delete = async <Response = ApiResponse>(params: string): Promise<Response> => {
+    return await super.delete<unknown, Response>(GoodsEnums.delete, params)
+  }
 }

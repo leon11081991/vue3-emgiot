@@ -35,4 +35,16 @@ export class ApiFactory {
   ): Promise<Response> {
     return axios.put(`${this.apiUrl}/${url}`, JSON.stringify(body), config)
   }
+
+  /** DELETE 方法 */
+  protected delete<Body, Response = ApiResponse>(
+    url: string,
+    body: Body,
+    config?: AxiosRequestConfig
+  ): Promise<Response> {
+    return axios.delete(`${this.apiUrl}/${url}`, {
+      ...config,
+      data: body
+    })
+  }
 }

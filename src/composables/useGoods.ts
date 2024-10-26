@@ -38,8 +38,25 @@ export const useGoods = () => {
     }
   }
 
+  /** 刪除商品 */
+  const dispatchDeleteGoods = async (params: string) => {
+    try {
+      const { result, isSuccess, message, resultCode } = await api.goods.delete(params)
+
+      if (!isSuccess) {
+        openMessage('error', `${resultCode} - ${message}`)
+        return
+      }
+      openMessage('success', 'success')
+      return isSuccess
+    } catch (e) {
+      catchErrorHandler(e)
+    }
+  }
+
   return {
     dispatchEditGoods,
-    dispatchAddGoods
+    dispatchAddGoods,
+    dispatchDeleteGoods
   }
 }

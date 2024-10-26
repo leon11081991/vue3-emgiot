@@ -5,6 +5,7 @@ import type { BaseGoodsResType } from '@/models/types/dropdown.type'
 import { ref, computed, watchEffect } from 'vue'
 import MoreOperationModal from '@/components/Product/Modal/MoreOperationModal.vue'
 import AddEditGoodsModal from '@/components/Product/Modal/AddEditGoodsModal.vue'
+import DeleteGoodsModal from '@/components/Product/Modal/DeleteGoodsModal.vue'
 import { useModal } from '@/composables/useModal'
 import { useDropdown } from '@/composables/useDropdown'
 
@@ -128,6 +129,15 @@ fetchGoodsList()
       :modal-visible="modalVisible"
       :type="openModalType"
       :goodsInfo="singleGoodsInfo"
+      @close="closeModal"
+      @goods:refresh="fetchGoodsList"
+    />
+
+    <DeleteGoodsModal
+      v-if="isModalVisible.delete"
+      :modal-visible="modalVisible"
+      :type="openModalType"
+      :goods-id="singleGoodsInfo.goodsId"
       @close="closeModal"
       @goods:refresh="fetchGoodsList"
     />
