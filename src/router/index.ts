@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import { authMiddleware } from '@/router/middlewares/auth.middleware'
 import { layoutMiddleware } from '@/router/middlewares/layout.middleware'
+import { memberJoinMiddleware } from '@/router/middlewares/memberJoin.middleware'
 
 import IndexPage from '@/views/IndexPage.vue'
 
@@ -94,7 +95,7 @@ const routes = [
     component: () => import('@/views/MemberJoinPage.vue'),
     meta: {
       layout: 'LayoutBlank',
-      middleware: [authMiddleware, layoutMiddleware]
+      middleware: [memberJoinMiddleware, layoutMiddleware]
     }
   },
   {

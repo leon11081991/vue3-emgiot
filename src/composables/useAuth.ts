@@ -47,7 +47,7 @@ export const useAuth = () => {
   }
 
   /** 處理登入 */
-  const fnLogin = async (params: LoginReqType, isRememberMe: boolean): Promise<void> => {
+  const fnLogin = async (params: LoginReqType, isRememberMe: boolean): Promise<boolean> => {
     try {
       // 處理記住我
       handleRememberMe(params, isRememberMe)
@@ -56,21 +56,21 @@ export const useAuth = () => {
 
       if (!isSuccess) {
         // 失敗：顯示錯誤訊息提示
-        return openNotification(
+        openNotification(
           {
             title: $t('Common.Response.Error'),
             subTitle: `${resultCode} - ${$t(errorMessagesMapping['fnLogin'][resultCode])}`
           },
           'error'
         )
+        return false
       }
 
       userStore.token = result.token
-      return openMessage('success', $t('Common.Result.LoginSuccess'), {}, () => {
-        UtilCommon.goPage('/')
-      })
+      return true
     } catch (e) {
       catchErrorHandler(e)
+      return false
     }
   }
 
