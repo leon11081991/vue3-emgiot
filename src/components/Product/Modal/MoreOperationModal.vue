@@ -9,7 +9,8 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'close'): void
-  (e: 'openModal', action: actionTypes): void
+  (e: 'openModal', action: 'edit' | 'delete'): void
+  (e: 'check:productInfo'): void
 }>()
 
 const closeModal = () => {
@@ -17,6 +18,10 @@ const closeModal = () => {
 }
 
 const emitGoodsEvent = (type: actionTypes) => {
+  if (type === 'check') {
+    emit('check:productInfo')
+    return
+  }
   emit('openModal', type)
 }
 </script>

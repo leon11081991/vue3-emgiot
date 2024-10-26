@@ -21,4 +21,14 @@ export class GoodsServices extends ApiFactory {
   delete = async <Response = ApiResponse>(params: string): Promise<Response> => {
     return await super.delete<unknown, Response>(GoodsEnums.delete, params)
   }
+
+  /* 商品營運數據清單 */
+  operationInfo = async (params: string): Promise<ApiResponse> => {
+    return await this.get<unknown, ApiResponse>(GoodsEnums.info, { input: params })
+  }
+
+  /* 商品營運數據圖表 */
+  operationInfoChart = async (params: string): Promise<ApiResponse> => {
+    return await this.get<unknown, ApiResponse>(GoodsEnums.chart, { input: params })
+  }
 }

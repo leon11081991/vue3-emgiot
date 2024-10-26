@@ -3,5 +3,5 @@ export enum GoodsEnums {
   add = 'PcbGoods/Add', // 新增商品
   delete = 'PcbGoods/Delete', // 刪除商品
   info = 'PcbGoods/GoodsOperationInfo', // 商品營運數據清單
-  disable = 'MachineHome/ClawOperationsInAllStoresChart' // 商品營運數據圖表
+  chart = 'MachineHome/ClawOperationsInAllStoresChart' // 商品營運數據圖表
 }

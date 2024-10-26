@@ -3,6 +3,7 @@
 import type { ProductListModalType } from '@/models/types/modal.types'
 import type { BaseGoodsResType } from '@/models/types/dropdown.type'
 import { ref, computed, watchEffect } from 'vue'
+import { useRouter } from 'vue-router'
 import MoreOperationModal from '@/components/Product/Modal/MoreOperationModal.vue'
 import AddEditGoodsModal from '@/components/Product/Modal/AddEditGoodsModal.vue'
 import DeleteGoodsModal from '@/components/Product/Modal/DeleteGoodsModal.vue'
@@ -15,17 +16,21 @@ const props = defineProps<{
   addModalOpenCount: number
 }>()
 
+const router = useRouter()
+
 /* store 相關 */
 const { modalVisible, openModal, closeModal } = useModal()
 const { goodsList, fetchGoodsList } = useDropdown()
+
+/* 非響應式變數 */
+const ProductInfoChart_link = '/productInfoChart'
 
 /* ref 變數 */
 const isModalVisible = ref<Record<ProductListModalType, boolean>>({
   more: false,
   edit: false,
   delete: false,
-  add: false,
-  check: false
+  add: false
 })
 
 const openModalType = ref('')
@@ -38,8 +43,6 @@ const singleGoodsInfo = ref<BaseGoodsResType>({
 })
 
 /* computed */
-const isProductListEmpty = computed(() => goodsList.value.data.length === 0)
-
 const filteredGoodsList = computed(() =>
   goodsList.value.data.filter((item) => item.goodsName.includes(props.goodsFilter))
 )
@@ -73,6 +76,10 @@ const fnOpenOperationModal = (type: ProductListModalType, item?: BaseGoodsResTyp
   })
 }
 
+const fnCheckProductInfo = () => {
+  router.push(`${ProductInfoChart_link}/${singleGoodsInfo.value.goodsId}`)
+}
+
 /* store 呼叫 */
 fetchGoodsList()
 </script>
@@ -87,7 +94,6 @@ fetchGoodsList()
     </div>
 
     <div class="list-body">
-      <a-empty v-if="isProductListEmpty" />
       <a-list
         :loading="goodsList.isLoading"
         item-layout="horizontal"
@@ -121,6 +127,7 @@ fetchGoodsList()
       v-if="isModalVisible.more"
       :modal-visible="modalVisible"
       @open-modal="fnOpenOperationModal"
+      @check:productInfo="fnCheckProductInfo"
       @close="closeModal"
     />
 
