@@ -64,6 +64,9 @@ const route = useRoute()
 /** Ant Design Button */
 .ant-btn {
   @include base-transition;
+  height: auto;
+  padding-block: 0.75rem;
+  border: none;
 
   &.ant-btn-default {
     background-color: $--color-default;
@@ -82,11 +85,8 @@ const route = useRoute()
   }
 
   &.ant-btn-primary {
-    height: auto;
-    padding-block: 0.75rem;
     background-color: $--color-primary;
     color: $--color-white;
-    border: none;
 
     &:hover {
       background-color: $--color-primary--hover;
@@ -110,6 +110,9 @@ const route = useRoute()
   }
 
   &.ant-btn-secondary {
+    background-color: $--color-secondary;
+    color: $--color-white;
+
     &.ant-btn-background-ghost {
       background-color: $--color-white;
       color: $--color-secondary;
@@ -117,6 +120,19 @@ const route = useRoute()
 
       &:hover {
         background-color: $--color-secondary;
+        color: $--color-white;
+      }
+    }
+  }
+
+  &.ant-btn-success {
+    &.ant-btn-background-ghost {
+      background-color: $--color-white;
+      color: $--color-success;
+      border: 1px solid $--color-success;
+
+      &:hover {
+        background-color: $--color-success;
         color: $--color-white;
       }
     }

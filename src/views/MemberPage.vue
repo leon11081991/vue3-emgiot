@@ -1,42 +1,70 @@
 <script setup lang="ts">
+import { Empty } from 'ant-design-vue'
 import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user.stores'
 import AvatarDisplay from '@/components/Base/AvatarDisplay.vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
+import FloatButton from '@/components/Base/FloatButton.vue'
 import { useFetchStoreMember } from '@/composables/useFetchStoreMember'
+import { useDebounce } from '@/composables/useDebounce'
+import { useMessage } from '@/composables/useMessage'
 
 // composables
 const { t: $t } = useI18n()
 const router = useRouter()
 const userStore = useUserStore()
-const { storeMembers, fnGetStoreMembers } = useFetchStoreMember()
+const { storeMembers, fetchStoreMembers, fnHideIdentity } = useFetchStoreMember()
+const { openMessage } = useMessage()
 
 // refs
 const activeKey = ref([])
 
-const isSelfAccount = (id: string, userId: string) => {
-  return id === userId
+const isSelfAccount = (targetId: string, userId: string) => {
+  return targetId === userId
 }
 
 const goToMemberInfo = (storeId: string, userId: string) => {
-  router.push({ name: 'MemberInfo', params: { storeId: storeId, userId: userId } })
+  router.push({ name: 'MemberInfo', params: { storeId, userId } })
 }
 
-// TODO
-const changeVisibility = (visibility: boolean, storeId: string, userId: string) => {
-  console.log('changeVisibility', visibility, storeId, userId)
+const checkIfCanAccess = (
+  targetRoleOrder: number,
+  userRoleOrder: number,
+  storeId: string,
+  targetId: string,
+  userId: string
+) => {
+  // 目標等級小於使用者等級，才可以訪問；並且不是自己的帳號才可以訪問
+  const canAccess = targetRoleOrder > userRoleOrder
+
+  if (isSelfAccount(targetId, userId)) {
+    return openMessage('warning', $t('MemberPage.Message.IsSelfAccount'))
+  }
+
+  if (!canAccess) {
+    return openMessage('warning', $t('MemberPage.Message.CanNotAccess'))
+  }
+  goToMemberInfo(storeId, targetId)
 }
+
+const changeVisibility = useDebounce((visibility: boolean, storeId: string, userId: string) => {
+  fnHideIdentity({ storeId, isVisible: visibility })
+}, 300)
 
 onMounted(async () => {
-  await fnGetStoreMembers()
+  await fetchStoreMembers()
 })
 </script>
 
 <template>
   <div class="member-page">
     <div class="collapse-container">
+      <a-empty
+        v-if="!storeMembers.data"
+        :image="Empty.PRESENTED_IMAGE_SIMPLE"
+      />
       <a-collapse
         v-for="store in storeMembers.data"
         :key="store.storeId"
@@ -56,7 +84,9 @@ onMounted(async () => {
                 :name="store.storeName"
                 :charNum="2"
               />
-              <h4 class="store-name">雲端掌櫃&nbsp;-&nbsp;{{ store.storeName }}</h4>
+              <h4 class="store-name">
+                {{ $t('Common.AppName') }}&nbsp;-&nbsp;{{ store.storeName }}
+              </h4>
             </div>
           </template>
 
@@ -67,7 +97,15 @@ onMounted(async () => {
             >
               <li
                 class="content-item"
-                @click.prevent="goToMemberInfo(store.storeId, member.userId)"
+                @click.prevent="
+                  checkIfCanAccess(
+                    member.roleOrder,
+                    userStore.userInfo.roleOrder,
+                    store.storeId,
+                    member.userId,
+                    userStore.userInfo.userId
+                  )
+                "
               >
                 <AvatarDisplay
                   size="md"
@@ -78,7 +116,7 @@ onMounted(async () => {
                     <h6 class="member-name">{{ member.userName }}</h6>
                     <div class="member-level">
                       <BaseSvgIcon :iconName="`level-${member.roleOrder}`" />
-                      {{ $t(`MemberPage.Level.${member.roleOrder}`) }}
+                      {{ $t(`Common.Level.${member.roleOrder}`) }}
                     </div>
                   </div>
 
@@ -97,9 +135,9 @@ onMounted(async () => {
                             member.userId
                           )
                       "
-                      >隱身</a-checkbox
+                      >{{ $t('MemberPage.IsVisible.CheckboxLabel') }}</a-checkbox
                     >
-                    <p>階級比你低的無法看見你</p>
+                    <p>{{ $t('MemberPage.IsVisible.HintText') }}</p>
                   </div>
                 </div>
               </li>
@@ -108,6 +146,7 @@ onMounted(async () => {
         </a-collapse-panel>
       </a-collapse>
     </div>
+    <FloatButton @click="router.push({ name: 'AddMember' })" />
   </div>
 </template>
 
@@ -203,6 +242,7 @@ onMounted(async () => {
 
 .member-wrap {
   display: flex;
+  align-items: center;
   gap: 1rem;
 
   .member-container {

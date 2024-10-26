@@ -31,5 +31,6 @@ export type AccountDisableReqType = {
 export type UserInfoDataType = {
   name: string // 名稱
   userId: string // 帳號
+  roleOrder: number // 等級
   photoUrl: string // 大頭貼
 }

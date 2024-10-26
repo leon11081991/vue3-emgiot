@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import { authMiddleware } from '@/router/middlewares/auth.middleware'
 import { layoutMiddleware } from '@/router/middlewares/layout.middleware'
+import { memberJoinMiddleware } from '@/router/middlewares/memberJoin.middleware'
 
 import IndexPage from '@/views/IndexPage.vue'
 
@@ -68,6 +69,33 @@ const routes = [
     meta: {
       layout: 'LayoutDefault',
       middleware: [authMiddleware, layoutMiddleware]
+    }
+  },
+  {
+    path: '/add-member',
+    name: 'AddMember',
+    component: () => import('@/views/AddMemberPage.vue'),
+    meta: {
+      layout: 'LayoutDefault',
+      middleware: [authMiddleware, layoutMiddleware]
+    }
+  },
+  {
+    path: '/invite-link',
+    name: 'InviteLink',
+    component: () => import('@/views/InviteLinkPage.vue'),
+    meta: {
+      layout: 'LayoutDefault',
+      middleware: [authMiddleware, layoutMiddleware]
+    }
+  },
+  {
+    path: '/member-join',
+    name: 'MemberJoin',
+    component: () => import('@/views/MemberJoinPage.vue'),
+    meta: {
+      layout: 'LayoutBlank',
+      middleware: [memberJoinMiddleware, layoutMiddleware]
     }
   },
   {

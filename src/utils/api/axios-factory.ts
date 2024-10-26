@@ -43,8 +43,8 @@ export class ApiFactory {
     config?: AxiosRequestConfig
   ): Promise<Response> {
     return axios.delete(`${this.apiUrl}/${url}`, {
-      ...config,
-      data: body
+      data: body,
+      ...config
     })
   }
 }

@@ -22,3 +22,23 @@ export type PcbsResType = {
   machineName: string
   groupName: string
 }
+
+export type UserRoleInStoreReqType = {
+  storeId: string
+}
+
+export type UserRoleInStoreResType = {
+  roleId: string
+  roleName: string
+}
+
+type BaseWifiInfoType = {
+  wifiSSID: string
+  wifiPassword: string
+}
+
+export type StoresItemDataType = {
+  storeId: string
+  storeName: string
+  wifiInfo: BaseWifiInfoType[]
+}
