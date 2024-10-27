@@ -126,6 +126,15 @@ const routes = [
     }
   },
   {
+    path: '/productInfoChart/:goodsId',
+    name: 'ProductInfoChart',
+    component: () => import('@/views/ProductInfoChartPage.vue'),
+    meta: {
+      layout: 'LayoutDefault',
+      middleware: [authMiddleware, layoutMiddleware]
+    }
+  },
+  {
     path: '/message',
     name: 'Message',
     component: () => import('@/views/MessagePage.vue'),

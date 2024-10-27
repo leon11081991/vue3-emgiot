@@ -3,3 +3,4 @@ export type DashboardModalType =
   | 'clawStoreFilter'
   | 'updateStoreFilter'
   | 'coinStoreFilter'
+export type ProductListModalType = 'more' | 'add' | 'edit' | 'delete'
