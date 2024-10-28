@@ -4,3 +4,4 @@ export type DashboardModalType =
   | 'updateStoreFilter'
   | 'coinStoreFilter'
 export type ProductListModalType = 'more' | 'add' | 'edit' | 'delete'
+export type GroupListModalType = 'add' | 'more' | 'edit' | 'delete'

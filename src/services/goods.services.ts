@@ -1,5 +1,5 @@
 import { type ApiResponse, ApiFactory } from '@/utils/api'
-import type { BaseAddGoodsInfoType, BaseEditGoodsInfoType } from '@/models/types/goods.type'
+import type { BaseAddGoodsInfoType, BaseEditGoodsInfoType } from '@/models/types/goods.types'
 import { GoodsEnums } from '@/constants/enums/api/goods.enum'
 
 export class GoodsServices extends ApiFactory {

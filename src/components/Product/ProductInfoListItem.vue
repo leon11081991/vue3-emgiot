@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { BaseProductInfoListType } from '@/models/types/goods.type'
+import type { BaseProductInfoListType } from '@/models/types/goods.types'
 import { useI18n } from 'vue-i18n'
 
 /* defineProps */
