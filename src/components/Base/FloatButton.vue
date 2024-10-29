@@ -28,7 +28,10 @@ const click = (): void => {
     @click="click"
   >
     <template #icon>
-      <BaseSvgIcon :icon-name="floatButtonProps.iconName" />
+      <BaseSvgIcon
+        :icon-name="floatButtonProps.iconName"
+        color="white"
+      />
     </template>
   </a-float-button>
 </template>
