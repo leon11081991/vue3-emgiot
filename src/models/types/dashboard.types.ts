@@ -89,17 +89,29 @@ export type SelectedGroupAndGoodsRemoveType = {
   groupsDDLFilter: number
 }
 
-type BaseMachineActionType =
-  | 'restock'
-  | 'withdraw'
-  | 'lock'
-  | 'unlock'
-  | 'errorReset'
-  | 'M1Reset'
-  | 'M2Reset'
+export type BaseMachineActionType =
+  | 'restock' // 選物機補幣
+  | 'withdraw' // 兌幣機退幣
+  | 'lock' // 兌幣機關閉
+  | 'unlock' // 兌幣機開鎖
+  | 'errorReset' // 兌幣機故障消除
+  | 'M1Reset' // 機械錶1重置
+  | 'M2Reset' // 機械錶2重置
 
-export type UpdateMachineActionReqType = {
-  pcbId: string
+type BaseMachineActionData = {
   action: BaseMachineActionType
   count: number
+}
+
+export type UpdateMachineActionDataType = BaseMachineActionData & {
+  pcbId: string | string[]
+}
+
+export type UpdateMachineActionReqType = BaseMachineActionData & {
+  pcbId: string
+}
+
+export type AddNewMachineDataType = {
+  machineName: string
+  qrcode: string
 }

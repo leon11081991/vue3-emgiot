@@ -42,7 +42,7 @@ export class DashboardServices extends ApiFactory {
   }
 
   /** 機台操作 */
-  updateMachineAction = async (params: UpdateMachineActionReqType): Promise<ApiResponse> => {
+  updateMachineAction = async (params: UpdateMachineActionReqType[]): Promise<ApiResponse> => {
     return await this.post<unknown, ApiResponse>(DashboardEnum.machineAction, params)
   }
 }
