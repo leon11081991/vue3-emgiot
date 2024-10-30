@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 // import
-import type { BaseProductInfoChartResType } from '@/models/types/goods.type'
+import type { BaseProductInfoChartResType } from '@/models/types/goods.types'
 import type { ChartOptions, ChartData } from 'chart.js'
 import { ref, computed } from 'vue'
 import { Bar } from 'vue-chartjs'

@@ -76,9 +76,9 @@ const isTodayData = computed(() => {
 })
 
 // Calculated data
-const revenueTotal = computed(() => `$${getTotalForDateRange('revenue').value}`)
+const revenueTotal = computed(() => `${getTotalForDateRange('revenue').value}`)
 const prizeWinCountTotal = getTotalForDateRange('prizeWinCount')
-const profitTotal = computed(() => `$${getTotalForDateRange('profit').value}`)
+const profitTotal = computed(() => `${getTotalForDateRange('profit').value}`)
 const coinExchangedTotal = computed(() => {
   const coinMachineData = operationChart.value.data.coinMachine || []
   const todayCoinData = getEntriesWithinDateRange(coinMachineData, props.startDate, props.endDate)
@@ -152,7 +152,7 @@ fetchOperationCoinChart({
         <div class="chartData-container">
           <div class="data-title">
             <div class="title">
-              出貨
+              出貨成本
               <BaseSvgIcon
                 iconName="dropdown"
                 color="white"

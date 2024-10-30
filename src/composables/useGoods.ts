@@ -3,7 +3,7 @@ import type {
   BaseAddGoodsInfoType,
   BaseProductInfoListType,
   BaseProductInfoChartResType
-} from '@/models/types/goods.type'
+} from '@/models/types/goods.types'
 import { ref } from 'vue'
 import { api } from '@/services'
 import { useMessage } from '@/composables/useMessage'
