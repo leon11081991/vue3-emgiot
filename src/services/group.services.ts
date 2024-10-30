@@ -14,7 +14,7 @@ export class GroupServices extends ApiFactory {
 
   /* 重新分類機台群組 */
   reArrangeGroup = async (params: ReArrangeGroupReqType): Promise<ApiResponse> => {
-    return await this.post<unknown, ApiResponse>(GroupEnums.reArrange, params)
+    return await this.put<unknown, ApiResponse>(GroupEnums.reArrange, params)
   }
 
   /* 新增機台自訂分類 */

@@ -43,9 +43,9 @@ const calculateTotalForToday = (key: OperationDataKey) => {
   })
 }
 
-const revenueData = computed(() => `$${calculateTotalForToday('revenue').value}`)
+const revenueData = computed(() => `${calculateTotalForToday('revenue').value}`)
 const prizeWinCount = calculateTotalForToday('prizeWinCount')
-const profit = computed(() => `$${calculateTotalForToday('profit').value}`)
+const profit = computed(() => `${calculateTotalForToday('profit').value}`)
 
 // function
 function fnChangeTab(topic: string) {
@@ -92,7 +92,7 @@ fnGetProductOperationInfoChart(props.goodsId)
         <div class="chartData-container">
           <div class="data-title">
             <div class="title">
-              出貨
+              出貨成本
               <BaseSvgIcon
                 iconName="dropdown"
                 color="white"

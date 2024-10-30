@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import type { GroupListModalType } from '@/models/types/modal.types'
-import type { BasePcbGroupResType } from '@/models/types/group.types'
-import { v4 as uuidv4 } from 'uuid'
+import type {
+  BasePcbGroupResType,
+  ReArrangeDataType,
+  BaseReArrangeGroupReqType
+} from '@/models/types/group.types'
 import { ref, onMounted } from 'vue'
 import GroupList from '@/components/GroupEditPage/GroupList.vue'
 import AddEditGroupModal from '@/components/GroupEditPage/Modal/AddEditGroupModal.vue'
@@ -20,6 +23,7 @@ const { groupList, fnGetGroupList, fnReArrangeGroupList } = useGroup()
 
 /* 非響應式數據 */
 const title = '編輯自訂分類'
+const skeletonCount = 20
 
 /* 響應式數據 */
 const isModalVisible = ref<Record<GroupListModalType, boolean>>({
@@ -34,10 +38,11 @@ const singleGroupInfo = ref<BasePcbGroupResType>({
   groupName: null,
   pcbs: []
 })
+const isReArrangeBtn_visible = ref(false)
+const reArrange_obj = ref<BaseReArrangeGroupReqType[]>([])
+const collapseCount = ref(0)
 
 /* function */
-const generateUniqueKey = () => uuidv4()
-
 const resetModalVisible = (
   modalVisibility: Record<GroupListModalType, boolean>
 ): Record<GroupListModalType, boolean> => {
@@ -45,14 +50,6 @@ const resetModalVisible = (
     modalVisibility[key as GroupListModalType] = false
   })
   return modalVisibility
-}
-
-const fnHandleOpenModal = (type: GroupListModalType): void => {
-  isModalVisible.value = resetModalVisible(isModalVisible.value)
-
-  openModal(() => {
-    isModalVisible.value[type] = true
-  })
 }
 
 const fnOpenOperationModal = (type: GroupListModalType, item?: BasePcbGroupResType): void => {
@@ -72,25 +69,88 @@ const fnOpenOperationModal = (type: GroupListModalType, item?: BasePcbGroupResTy
   })
 }
 
+const fnHandleReArrangePcbs = (list: ReArrangeDataType) => {
+  if (!isReArrangeBtn_visible.value) {
+    isReArrangeBtn_visible.value = true
+  }
+
+  const groupIndex = groupList.value.data.findIndex((group) => group.groupId === list.groupId)
+
+  if (groupIndex !== -1) {
+    groupList.value.data[groupIndex].pcbs = list.pcbs
+  }
+}
+
+const fnHandleReArrangeGroup = async () => {
+  reArrange_obj.value = groupList.value.data
+    .map((item) => {
+      if (item.groupId) {
+        return {
+          groupId: item.groupId,
+          pcbs: item.pcbs.map((pcb) => pcb.pcbId)
+        }
+      } else {
+        return undefined
+      }
+    })
+    .filter((item): item is { groupId: string; pcbs: string[] } => item !== undefined)
+
+  const res = await fnReArrangeGroupList(reArrange_obj.value)
+  if (res) {
+    collapseCount.value++
+    fnCollapseGroupList()
+  }
+}
+
+const fnCollapseGroupList = () => {
+  isReArrangeBtn_visible.value = false
+}
+
 fnGetGroupList()
 
 onMounted(() => {
   updateHeaderTitle(title)
-
-  // rearrange
-  // fnReArrangeGroupList()
 })
 </script>
 
 <template>
   <div class="group-edit-page">
-    <!-- groupList的more op之後移除  -->
-    <GroupList
-      v-for="item in groupList.data"
-      :key="generateUniqueKey()"
-      :list="item"
-      @click="fnOpenOperationModal('more', item)"
-    />
+    <div class="groupList-item-container">
+      <a-skeleton
+        avatar
+        :title="false"
+        :loading="groupList.isLoading"
+        :active="true"
+        v-for="item in skeletonCount"
+        :key="item"
+      >
+      </a-skeleton>
+      <GroupList
+        v-for="item in groupList.data"
+        :key="item.groupId || 'default'"
+        :collapse="collapseCount"
+        :list="item"
+        @open-modal:more="fnOpenOperationModal('more', item)"
+        @update:group-list="fnHandleReArrangePcbs"
+      />
+    </div>
+    <div
+      v-show="isReArrangeBtn_visible"
+      class="reArrangeBtn-container"
+    >
+      <a-button
+        type="primary confirm-btn btn"
+        @click="fnHandleReArrangeGroup"
+        >確定</a-button
+      >
+      <a-button
+        class="cancel-btn btn"
+        type="outlined"
+        @click="fnCollapseGroupList"
+      >
+        取消
+      </a-button>
+    </div>
     <FloatButton @click="fnOpenOperationModal('add')" />
     <MoreOperationModal
       v-if="isModalVisible.more"
@@ -116,4 +176,30 @@ onMounted(() => {
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.groupList-item-container {
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  row-gap: 1rem;
+  @media screen and (max-width: 468px) {
+    width: 95%;
+  }
+}
+.reArrangeBtn-container {
+  width: 80%;
+  padding: 1.5rem 0;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 16px;
+  .btn {
+    width: 100%;
+  }
+  @media screen and (max-width: 468px) {
+    width: 95%;
+  }
+}
+</style>
