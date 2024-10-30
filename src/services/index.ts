@@ -3,9 +3,11 @@ import { AuthServices } from '@/services/auth.services'
 import { DashboardServices } from '@/services/dashboard.services'
 import { StoreServices } from '@/services/store.services'
 import { UserServices } from '@/services/user.services'
-import { StoreMemberService } from '@/services/store-member.services'
+import { StoreMemberService } from '@/services/storeMember.services'
 import { DropdownServices } from '@/services/dropdown.services'
 import { PcbRegisterServices } from '@/services/pcb-register.services'
+import { GoodsServices } from '@/services/goods.services'
+import { GroupServices } from '@/services/group.services'
 
 const api = {
   test: new TestService(), // 測試範例
@@ -15,7 +17,9 @@ const api = {
   user: new UserServices(), // 使用者
   storeMember: new StoreMemberService(), // 成員
   dropdown: new DropdownServices(), // 下拉選單
-  pcbRegister: new PcbRegisterServices() // 機台
+  pcbRegister: new PcbRegisterServices(), // 機台
+  goods: new GoodsServices(), // 商品
+  group: new GroupServices() // 群組
 }
 
 export { api }

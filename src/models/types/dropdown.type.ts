@@ -7,6 +7,8 @@ export type BaseGoodsResType = {
   goodsId: string
   goodsName: string
   cost: number
+  isSpecial: boolean
+  forbiddenStores: string[]
 }
 
 export type PcbsReqType = {
@@ -19,4 +21,24 @@ export type PcbsResType = {
   dueDate: string
   machineName: string
   groupName: string
+}
+
+export type UserRoleInStoreReqType = {
+  storeId: string
+}
+
+export type UserRoleInStoreResType = {
+  roleId: string
+  roleName: string
+}
+
+type BaseWifiInfoType = {
+  wifiSSID: string
+  wifiPassword: string
+}
+
+export type StoresItemDataType = {
+  storeId: string
+  storeName: string
+  wifiInfo: BaseWifiInfoType[]
 }

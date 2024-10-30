@@ -7,21 +7,25 @@ import type {
 import { ValidationTypeEnums } from '@/constants/enums/validator.enums'
 import { onMounted, ref } from 'vue'
 import { Form } from 'ant-design-vue'
+import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import { loginPageTabBarStyleConfig } from '@/constants/configs/login.config'
 import { useAuth } from '@/composables/useAuth'
 import { useModal } from '@/composables/useModal'
 import { useValidator } from '@/composables/useValidator'
+import { useMessage } from '@/composables/useMessage'
 import { UtilCommon } from '@/utils/utilCommon'
 
 type TabKey = 'login' | 'register'
 type ButtonFieldType = 'login' | 'register' | 'forgotPassword'
 
+const router = useRouter()
 const { t: $t } = useI18n()
 const { loadLoginInfo, fnLogin, fnSignUp, fnForgotPassword } = useAuth()
 const { modalVisible, openModal, closeModal } = useModal()
 const { validateErrorMessage, validate, validateConfirmPassword } = useValidator()
+const { openMessage } = useMessage()
 
 // constants
 const maxLength = 10
@@ -113,9 +117,27 @@ const onLoginFinish = (values: LoginDataType) => {
       password: values.password
     },
     values.rememberMe
-  ).finally(() => {
-    isButtonLoading.value.login = false
-  })
+  )
+    .then((resp) => {
+      if (!resp) return
+
+      // 成員加入流程
+      const nextToMemberJoinPage = UtilCommon.getLocalStorage<string>('member-join')
+      if (nextToMemberJoinPage) {
+        openMessage('success', '即將為您跳轉至成員加入', {}, () => {
+          UtilCommon.goPage(`/member-join?inviteKeyring=${nextToMemberJoinPage}`)
+        })
+        return
+      }
+
+      // 一般登入流程
+      openMessage('success', $t('Common.Result.LoginSuccess'), {}, () => {
+        router.push({ name: 'Home' })
+      })
+    })
+    .finally(() => {
+      isButtonLoading.value.login = false
+    })
 }
 
 const onRegisterFinish = (values: SignUpDataType) => {

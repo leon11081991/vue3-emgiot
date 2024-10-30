@@ -12,7 +12,8 @@
   --color-gray-400: #e6e6e6;
   --color-gray-300: #efefef;
 
-  --color-transparent: rgba(0, 0, 0, 0) --header-height: 60px;
+  --color-transparent: rgba(0, 0, 0, 0);
+  --header-height: 60px;
 
   --bar-default-color: #84bfff;
   --bar-target-color: #c89600;
@@ -38,7 +39,8 @@ $--color-primary--light: #587898;
 $--color-primary--light--hover: darken($--color-primary--light, 10%);
 $--color-primary--light--disabled: #a0b2c4;
 
-$--color-secondary: #00b450;
+$--color-secondary: #589B9B;
+$--color-secondary--hover: darken($--color-secondary, 5%);
 
 $--color-tertiary: #463c96;
 $--color-tertiary--light: #9b8cc7;

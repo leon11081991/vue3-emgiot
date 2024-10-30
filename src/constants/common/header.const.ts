@@ -17,6 +17,14 @@ export const headerTitleList = [
     'header-title': '成員資訊'
   },
   {
+    name: 'AddMember',
+    'header-title': '邀請新成員'
+  },
+  {
+    name: 'InviteLink',
+    'header-title': '發送連結'
+  },
+  {
     name: 'GroupEdit',
     'header-title': '編輯自訂分類'
   },
