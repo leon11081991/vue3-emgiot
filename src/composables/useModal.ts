@@ -15,8 +15,12 @@ export const useModal = () => {
   }
 
   /** 關閉 modal */
-  const closeModal = () => {
+  const closeModal = (callback?: () => void): void => {
     modalVisible.value = false
+
+    if (callback) {
+      callback()
+    }
   }
 
   return {

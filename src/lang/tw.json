@@ -63,6 +63,96 @@
     "Tabs": {
       "Claw": "選物販賣機",
       "Coin": "兌幣機"
+    },
+    "Modal":{
+      "BatchModal":{
+        "Title":{
+          "Default":"批量操作",
+          "Claw":"遠端補幣",
+          "Coin":"遠端退幣"
+        },
+        "Step1":
+        {
+          "Content":"請選擇要進行操作的機台",
+          "SearchPlaceholder":"搜尋機台名稱",
+          "Button":{
+            "CheckAll":"全部選擇",
+            "UncheckAll":"全部取消"
+          }
+        },
+        "Step3":{
+          "Content":{
+            "Claw":"請確認是否對所選的機台進行補幣？",
+            "Coin":"請確認是否對所選的機台進行退幣？"
+          },
+          "CountLabel": {
+            "Claw":"累保金額",
+            "Coin":"已兌換量"
+          }
+        },
+        "Button":{
+          "Confirm":"確認",
+          "Cancel":"取消"
+        }
+      },
+      "ReplenishCoins":{
+        "Title":{
+          "Claw":"遠端補幣",
+          "Coin":"遠端退幣"
+        },
+        "Content":"請選擇數量",
+        "Button":{
+          "Confirm":"確認",
+          "Cancel":"取消"
+        }
+      },
+      "EditMachine":{
+        "Title":"編輯機台名稱",
+        "Button":{
+          "Confirm":"確認"
+        }
+      },
+      "RemoteUnlock":{
+        "Title":"遠端開鎖",
+        "Content":"請選擇開鎖秒數",
+        "Button":{
+          "Confirm":"確認",
+          "Cancel":"取消"
+        }
+      },
+      "ErrorReset":{
+        "Title":"遠端故障消除",
+        "Content":"確定要進行遠端故障消除嗎？ ",
+        "Button":{
+          "Confirm":"確認",
+          "Cancel":"取消"
+        }
+      },
+      "SecurityStatus":{
+        "Title":"保全狀態",
+        "Content":"確定要關閉保全功能嗎？",
+        "Button":{
+          "Confirm":"確認",
+          "Cancel":"取消"
+        }
+      },
+      "OtherActions":{
+        "Title":"其他操作",
+        "IdNumberLabel":"機台序號",
+        "EditMachineLabel":"編輯機台名稱",
+        "ChangeProductLabel":"更換產品",
+        "RemoteUnlockLabel":"遠端開鎖",
+        "ErrorResetLabel":"遠端故障消除"
+      }
+    },
+    "MachineAction":{
+      "Restock": "選物機補幣",
+      "Withdraw": "兌幣機退幣",
+      "Lock": "兌幣機關閉",
+      "Unlock": "兌幣機開鎖",
+      "ErrorReset": "兌幣機故障消除",
+      "M1Reset": "機械錶1重置",
+      "M2Reset": "機械錶2重置"
     }
   },
   "LoginPage": {

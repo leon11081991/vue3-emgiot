@@ -1,5 +1,13 @@
 export type DashboardModalType =
+  | 'addNewMachine'
   | 'batch'
+  | 'replenishCoins'
+  | 'moreOperation'
+  | 'editMachine'
+  | 'changeProduct'
+  | 'remoteUnlock'
+  | 'errorReset'
+  | 'securityStatus'
   | 'clawStoreFilter'
   | 'updateStoreFilter'
   | 'coinStoreFilter'
