@@ -16,6 +16,8 @@ const props = withDefaults(
   }
 )
 
+const rootStyles = getComputedStyle(document.documentElement)
+
 const iconName = computed(() => `#icon-${props.iconName}`)
 const classes = computed(() => {
   return {
@@ -26,16 +28,15 @@ const classes = computed(() => {
 const color = computed(() => {
   switch (props.color) {
     case 'primary':
-      // return '#0064c8'
-      return '#0064c8'
+      return rootStyles.getPropertyValue('--color-primary').trim()
     case 'secondary':
-      return '#00b450'
+      return rootStyles.getPropertyValue('--color-secondary').trim()
     case 'tertiary':
-      return '#463c96'
+      return rootStyles.getPropertyValue('--color-tertiary').trim()
     case 'white':
-      return '#fff'
+      return rootStyles.getPropertyValue('--color-white').trim()
     default:
-      return '#0064c8'
+      return rootStyles.getPropertyValue('--color-primary').trim()
   }
 })
 </script>
