@@ -53,7 +53,6 @@ export const useGroup = () => {
     }
   }
 
-
   /* 新增機台自訂分類 */
   const fnAddGroupList = async (params: string) => {
     try {

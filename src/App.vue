@@ -110,6 +110,7 @@ const route = useRoute()
   }
 
   &.ant-btn-secondary {
+    padding-block: 0.5rem;
     background-color: $--color-secondary;
     color: $--color-white;
 

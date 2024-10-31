@@ -21,7 +21,15 @@ import UpdateRecord from '@/components/DashboardPage/UpdateRecord.vue'
 import ClawTabList from '@/components/DashboardPage/ClawTabList.vue'
 import FloatButton from '@/components/Base/FloatButton.vue'
 import DashboardBarChart from '@/components/BarChart/DashboardBarChart.vue'
+import AddNewMachineModal from '@/components/DashboardPage/Modal/AddNewMachineModal.vue'
 import BatchModal from '@/components/DashboardPage/Modal/BatchModal.vue'
+import ReplenishCoinsModal from '@/components/DashboardPage/Modal/ReplenishCoinsModal.vue'
+import MoreOperationModal from '@/components/DashboardPage/Modal/MoreOperationModal.vue'
+import EditMachineModal from '@/components/DashboardPage/Modal/EditMachineModal.vue'
+import ChangeProductModal from '@/components/DashboardPage/Modal/ChangeProductModal.vue'
+import RemoteUnlockModal from '@/components/DashboardPage/Modal/RemoteUnlockModal.vue'
+import ErrorResetModal from '@/components/DashboardPage/Modal/ErrorResetModal.vue'
+import SecurityStatusModal from '@/components/DashboardPage/Modal/SecurityStatusModal.vue'
 import ClawStoreFilterModal from '@/components/DashboardPage/Modal/ClawStoreFilterModal.vue'
 import CoinStoreFilterModal from '@/components/DashboardPage/Modal/CoinStoreFilterModal.vue'
 import UpdateStoreModal from '@/components/DashboardPage/Modal/UpdateStoreModal.vue'
@@ -79,7 +87,15 @@ const clawActiveKey = ref([])
 const coinActiveKey = ref([])
 
 const isModalVisible = ref<Record<DashboardModalType, boolean>>({
+  addNewMachine: false,
   batch: false,
+  replenishCoins: false,
+  moreOperation: false,
+  editMachine: false,
+  changeProduct: false,
+  remoteUnlock: false,
+  errorReset: false,
+  securityStatus: false,
   clawStoreFilter: false,
   updateStoreFilter: false,
   coinStoreFilter: false
@@ -88,7 +104,6 @@ const isModalVisible = ref<Record<DashboardModalType, boolean>>({
 const storeId = ref<string>(
   UtilCommon.getLocalStorage<StoreInfoStorageDataType>('store-info')?.storeId || ''
 )
-const batchSearchParam = ref<string>('')
 const batchCheckedList = ref<string[]>([])
 const listData = ref<ClawOperationsInfoResType[] | CoinOperationsInfoResType[]>([])
 
@@ -102,6 +117,8 @@ const removeSelected = ref<SelectedGroupAndGoodsRemoveType>({
   groupsDDLFilter: 0
 })
 
+const selectedMachineType = ref<0 | 1>(0)
+const selectedMachineId = ref<string | string[] | null>(null)
 const selectedGroupAndGoods = ref<SelectedGroupAndGoodsType>({
   groupName: '',
   goodsName: '',
@@ -138,6 +155,15 @@ const storeName = computed(() => {
 })
 
 /* function */
+const initSelectedMachineId = (): void => {
+  selectedMachineId.value = null
+}
+
+const handleMachineIdClicked = (machineId: string | string[] | null): void => {
+  if (!machineId) return
+  selectedMachineId.value = machineId
+}
+
 const resetModalVisible = (
   modalVisibility: Record<DashboardModalType, boolean>
 ): Record<DashboardModalType, boolean> => {
@@ -149,6 +175,11 @@ const resetModalVisible = (
 
 const handleOpenModal = (type: DashboardModalType, machineType?: 0 | 1): void => {
   isModalVisible.value = resetModalVisible(isModalVisible.value)
+  initSelectedMachineId()
+
+  if (machineType !== undefined) {
+    selectedMachineType.value = machineType
+  }
 
   if (type === 'batch') {
     fetchPcbsList(storeId.value, machineType || 0)
@@ -212,15 +243,6 @@ const handleToggleTab = async (
 
     return
   }
-}
-
-const updateCheckedList = (val: string[]) => {
-  console.log('updateCheckedList!!!!', val)
-  batchCheckedList.value = val
-}
-
-const clearCheckedList = (checkedList: string[]) => {
-  checkedList = []
 }
 
 const fnResetClawData = (data?: RefreshClawDashboardType) => {
@@ -379,6 +401,7 @@ onMounted(async () => {
           v-if="selectedTab === 'coin'"
           ghost
           type="secondary"
+          @click="handleOpenModal('batch', 1)"
           >批量退幣</a-button
         >
       </div>
@@ -416,6 +439,7 @@ onMounted(async () => {
     </div>
 
     <div class="list-container">
+      {{ selectedMachineId }}
       <transition
         :name="transitionName"
         mode="out-in"
@@ -424,24 +448,88 @@ onMounted(async () => {
           <component
             :is="tabComps[selectedTab]"
             :active-key="selectedTab === 'claw' ? clawActiveKey : coinActiveKey"
-            :data="listData || []"
+            :data="listData"
+            @open-modal="handleOpenModal"
+            @machine-id-clicked="handleMachineIdClicked"
           />
         </KeepAlive>
       </transition>
     </div>
 
-    <FloatButton />
+    <FloatButton
+      size="xl"
+      @click="handleOpenModal('addNewMachine')"
+    />
   </div>
+
+  <AddNewMachineModal
+    v-if="isModalVisible.addNewMachine"
+    :modal-visible="modalVisible"
+    @close="closeModal"
+  />
 
   <BatchModal
     v-if="isModalVisible.batch"
     :modal-visible="modalVisible"
-    :search-value="batchSearchParam"
     :checked-list="batchCheckedList"
-    :list-data="pcbsList.data"
-    @close="closeModal()"
-    @update:checked-list="updateCheckedList"
-    @clear-checked-list="clearCheckedList(batchCheckedList)"
+    :pcb-list="pcbsList"
+    :list-data="listData"
+    :selected-tab="selectedTab"
+    @close="closeModal"
+    @refresh="handleToggleTab(selectedTab)"
+  />
+
+  <ReplenishCoinsModal
+    v-if="isModalVisible.replenishCoins"
+    :modal-visible="modalVisible"
+    :selected-machine-id="selectedMachineId"
+    :machine-type="selectedMachineType"
+    @close="closeModal(initSelectedMachineId)"
+  />
+
+  <MoreOperationModal
+    v-if="isModalVisible.moreOperation"
+    :modal-visible="modalVisible"
+    :selected-machine-id="selectedMachineId"
+    :machine-type="selectedMachineType"
+    @close="closeModal(initSelectedMachineId)"
+    @open-modal="handleOpenModal"
+    @send-machine-id="handleMachineIdClicked"
+  />
+
+  <EditMachineModal
+    v-if="isModalVisible.editMachine"
+    :modal-visible="modalVisible"
+    :selected-machine-id="selectedMachineId"
+    @close="closeModal(initSelectedMachineId)"
+    @refresh="handleToggleTab(selectedTab)"
+  />
+
+  <ChangeProductModal
+    v-if="isModalVisible.changeProduct"
+    :modal-visible="modalVisible"
+    @close="closeModal(initSelectedMachineId)"
+  />
+
+  <RemoteUnlockModal
+    v-if="isModalVisible.remoteUnlock"
+    :modal-visible="modalVisible"
+    :selected-machine-id="selectedMachineId"
+    @close="closeModal(initSelectedMachineId)"
+  />
+
+  <ErrorResetModal
+    v-if="isModalVisible.errorReset"
+    :modal-visible="modalVisible"
+    :selected-machine-id="selectedMachineId"
+    @close="closeModal(initSelectedMachineId)"
+  />
+
+  <SecurityStatusModal
+    v-if="isModalVisible.securityStatus"
+    :modal-visible="modalVisible"
+    :selected-machine-id="selectedMachineId"
+    @close="closeModal(initSelectedMachineId)"
   />
 
   <ClawStoreFilterModal

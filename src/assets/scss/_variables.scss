@@ -1,11 +1,14 @@
 :root {
-  --color-primary: #0064c8;
+  --color-primary: #1FA29A;;
   --color-secondary: #00b450;
+  --color-tertiary: #463c96;
 
   --color-success: #67c23a;
   --color-warning: #e6a23c;
   --color-danger: #f56c6c;
   --color-error: #f56c6c;
+
+  --color-white: #ffffff;
 
   --color-gray-600: #898989;
   --color-gray-500: #c4c4c4;
@@ -32,14 +35,14 @@
 }
 
 /** 主題色 */
-$--color-primary: #0064c8;
+$--color-primary: #1FA29A;
 $--color-primary--hover: darken($--color-primary, 5%);
-$--color-primary--disabled: #6e96b4;
-$--color-primary--light: #587898;
+$--color-primary--disabled: rgba($--color-primary, 0.5);
+$--color-primary--light: #01B9BB;
 $--color-primary--light--hover: darken($--color-primary--light, 10%);
-$--color-primary--light--disabled: #a0b2c4;
+$--color-primary--light--disabled: rgba($--color-primary--light, 0.5);
 
-$--color-secondary: #589B9B;
+$--color-secondary: #00b450;
 $--color-secondary--hover: darken($--color-secondary, 5%);
 
 $--color-tertiary: #463c96;
@@ -67,7 +70,7 @@ $--color-gray-300: #efefef;
 
 $--color-white: #ffffff;
 
-$--background-color-base: #f3f3f3;
+$--background-color-base: $--color-white;
 
 /* index page 顏色*/
 $--color-border: #c8c8c8;

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { ClawOperationsInfoResType } from '@/models/types/dashboard.types'
+import type { DashboardModalType } from '@/models/types/modal.types'
 import { ref, withDefaults } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import { UtilCommon } from '@/utils/utilCommon'
@@ -17,8 +18,11 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   (e: 'update:activeKey', value: string[]): void
+  (e: 'openModal', type: DashboardModalType, machineType?: 0 | 1): void
+  (e: 'machineIdClicked', id: string): void
 }>()
 
+const clawMachineType = 0
 const clawActiveKey = ref(props.activeKey)
 
 const updateValue = (value: string[]) => {
@@ -42,12 +46,13 @@ const updateValue = (value: string[]) => {
         v-if="data && data.length > 0"
         class="list-collapse"
         v-model:activeKey="clawActiveKey"
+        :accordion="true"
         :bordered="false"
       >
         <a-collapse-panel
           class="list-collapse-panel"
           v-for="item in data"
-          :key="item.pcbId"
+          :key="item?.pcbId"
           @change="updateValue"
         >
           <template #header>
@@ -72,11 +77,11 @@ const updateValue = (value: string[]) => {
           </template>
           <div class="item-action-content claw">
             <div class="item-section">
-              <span>${{ item?.cashboxAmount }}</span>
+              <span class="amount">${{ item?.cashboxAmount }}</span>
               <span>錢箱累積</span>
             </div>
             <div class="item-section">
-              <span>${{ item?.cumulativeAmount }}</span>
+              <span class="amount">${{ item?.cumulativeAmount }}</span>
               <span>累保金額</span>
             </div>
             <div class="item-section action-button">
@@ -86,14 +91,26 @@ const updateValue = (value: string[]) => {
               />
               <span>帳務查詢</span>
             </div>
-            <div class="item-section action-button">
+            <div
+              class="item-section action-button"
+              @click="
+                emit('openModal', 'replenishCoins', clawMachineType),
+                  emit('machineIdClicked', item?.pcbId)
+              "
+            >
               <BaseSvgIcon
                 iconName="replenish-coins"
                 size="lg"
               />
               <span>遠端補幣</span>
             </div>
-            <div class="item-section action-button">
+            <div
+              class="item-section action-button"
+              @click="
+                emit('openModal', 'moreOperation', clawMachineType),
+                  emit('machineIdClicked', item?.pcbId)
+              "
+            >
               <BaseSvgIcon
                 iconName="more-actions"
                 size="lg"
@@ -190,6 +207,13 @@ const updateValue = (value: string[]) => {
       & > .item-section {
         flex: 1;
         color: $--color-gray-600;
+      }
+
+      .item-section {
+        .amount {
+          color: $--color-primary;
+          font-weight: 700;
+        }
       }
 
       .action-button {

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { CoinOperationsInfoResType } from '@/models/types/dashboard.types'
+import type { DashboardModalType } from '@/models/types/modal.types'
 import { ref } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import { UtilCommon } from '@/utils/utilCommon'
@@ -17,8 +18,11 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   (e: 'update:activeKey', value: string[]): void
+  (e: 'openModal', type: DashboardModalType, machineType?: 0 | 1): void
+  (e: 'machineIdClicked', id: string): void
 }>()
 
+const coinMachineType = 1
 const coinActiveKey = ref(props.activeKey)
 
 const updateValue = (value: string[]) => {
@@ -41,12 +45,13 @@ const updateValue = (value: string[]) => {
         v-if="data && data.length > 0"
         class="list-collapse"
         v-model:activeKey="coinActiveKey"
+        :accordion="true"
         :bordered="false"
       >
         <a-collapse-panel
           class="list-collapse-panel"
           v-for="item in data"
-          :key="item.pcbId"
+          :key="item?.pcbId"
           @change="updateValue"
         >
           <template #header>
@@ -86,21 +91,39 @@ const updateValue = (value: string[]) => {
               />
               <span>帳務查詢</span>
             </div>
-            <div class="item-section action-button">
+            <div
+              class="item-section action-button"
+              @click="
+                emit('openModal', 'securityStatus', coinMachineType),
+                  emit('machineIdClicked', item?.pcbId)
+              "
+            >
               <BaseSvgIcon
                 iconName="lock"
                 size="lg"
               />
               <span>關閉</span>
             </div>
-            <div class="item-section action-button">
+            <div
+              class="item-section action-button"
+              @click="
+                emit('openModal', 'replenishCoins', coinMachineType),
+                  emit('machineIdClicked', item?.pcbId)
+              "
+            >
               <BaseSvgIcon
                 iconName="replenish-coins"
                 size="lg"
               />
-              <span>遠端補幣</span>
+              <span>遠端退幣</span>
             </div>
-            <div class="item-section action-button">
+            <div
+              class="item-section action-button"
+              @click="
+                emit('openModal', 'moreOperation', coinMachineType),
+                  emit('machineIdClicked', item?.pcbId)
+              "
+            >
               <BaseSvgIcon
                 iconName="more-actions"
                 size="lg"

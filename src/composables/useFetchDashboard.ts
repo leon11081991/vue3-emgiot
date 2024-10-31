@@ -4,14 +4,19 @@ import type {
   GetClawOperationsInfoReqType,
   GetCoinOperationsInfoReqType,
   GetOperationChartReqType,
-  OperationChartResType
+  OperationChartResType,
+  BaseMachineActionType
 } from '@/models/types/dashboard.types'
 import { ref } from 'vue'
 import { api } from '@/services'
+import { useI18n } from 'vue-i18n'
 import { useMessage } from '@/composables/useMessage'
 import { catchErrorHandler } from '@/utils/api/error-handler'
+import { DashboardDto } from '@/utils/api/dto/dashboard.dto'
+import { machineActionMapping } from '@/constants/mappings/dashboard.mapping'
 
 export const useFetchDashboard = () => {
+  const { t: $t } = useI18n()
   const { openMessage } = useMessage()
 
   // TODO: 待優化
@@ -123,6 +128,36 @@ export const useFetchDashboard = () => {
     }
   }
 
+  /** 處理機台操作 */
+  const fnUpdateMachineAction = async (
+    pcbId: string | string[],
+    action: BaseMachineActionType,
+    count: number
+  ): Promise<boolean> => {
+    try {
+      const { result, isSuccess, resultCode, message } = await api.dashboard.updateMachineAction(
+        DashboardDto.FormattedUpdateMachineActionData({
+          pcbId,
+          action,
+          count
+        })
+      )
+
+      if (!isSuccess) {
+        openMessage('error', `${resultCode} - ${message}`)
+        return false
+      }
+
+      const machineAction = machineActionMapping[action]
+
+      openMessage('success', `${machineAction}  ${$t('Common.Response.Success')}`)
+      return true
+    } catch (e) {
+      catchErrorHandler(e)
+      return false
+    }
+  }
+
   return {
     operationChart,
     clawOperationsInfo,
@@ -130,6 +165,7 @@ export const useFetchDashboard = () => {
     fetchCoinOperationsInfo,
     fetchClawOperationsInfo,
     fetchOperationClawChart,
-    fetchOperationCoinChart
+    fetchOperationCoinChart,
+    fnUpdateMachineAction
   }
 }
