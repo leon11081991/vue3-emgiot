@@ -1,10 +1,19 @@
 import { type ApiResponse, ApiFactory } from '@/utils/api'
-import type { UpdatePcbNameReqType, UpdateGoodsReqType } from '@/models/types/pcbRegister.types'
+import type {
+  BindingPcbReqType,
+  UpdatePcbNameReqType,
+  UpdateGoodsReqType
+} from '@/models/types/pcbRegister.types'
 import { PcbRegisterEnums } from '@/constants/enums/api/pcbRegister.enums'
 
 export class PcbRegisterServices extends ApiFactory {
   constructor() {
     super('')
+  }
+
+  /** 機台新增（預綁定） */
+  bindingPcb = async (body: BindingPcbReqType) => {
+    return await this.post<BindingPcbReqType, ApiResponse>(PcbRegisterEnums.bindingPcb, body)
   }
 
   /** 編輯機台名稱 */

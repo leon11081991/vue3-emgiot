@@ -65,6 +65,20 @@
       "Coin": "兌幣機"
     },
     "Modal":{
+      "AddNewMachine":{
+        "Title":{
+          "Default":"新增機台",
+          "QRCode":"掃描二維碼"
+        },
+        "Placeholder":{
+          "MachineName":"請輸入名稱",
+          "QRCode":"手動需入序號或掃描二維碼"
+        },
+        "Button":{
+          "Confirm":"確認",
+          "GoBack":"返回"
+        }
+      },
       "BatchModal":{
         "Title":{
           "Default":"批量操作",

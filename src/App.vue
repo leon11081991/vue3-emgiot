@@ -411,8 +411,8 @@ const route = useRoute()
     width: $--radio-checkbox-size;
     height: $--radio-checkbox-size;
     background-color: $--color-primary;
-    margin-block-start: $--radio-checkbox-size / 2 * -1;
-    margin-inline-start: $--radio-checkbox-size / 2 * -1;
+    margin-block-start: calc($--radio-checkbox-size / 2) * -1;
+    margin-inline-start: calc($--radio-checkbox-size / 2) * -1;
   }
 }
 
