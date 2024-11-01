@@ -395,15 +395,17 @@ onMounted(async () => {
           ghost
           type="secondary"
           @click="handleOpenModal('batch', 0)"
-          >批量補幣</a-button
         >
+          {{ $t('DashboardPage.Button.BatchForClawMachine') }}
+        </a-button>
         <a-button
           v-if="selectedTab === 'coin'"
           ghost
           type="secondary"
           @click="handleOpenModal('batch', 1)"
-          >批量退幣</a-button
         >
+          {{ $t('DashboardPage.Button.BatchForCoinMachine') }}
+        </a-button>
       </div>
 
       <div class="filtered-tags-container">
@@ -508,6 +510,9 @@ onMounted(async () => {
   <ChangeProductModal
     v-if="isModalVisible.changeProduct"
     :modal-visible="modalVisible"
+    :list-data="listData"
+    :selected-machine-id="selectedMachineId"
+    :selected-tab="selectedTab"
     @close="closeModal(initSelectedMachineId)"
   />
 

@@ -27,8 +27,13 @@ export class DropdownServices extends ApiFactory {
     return await this.get<unknown, ApiResponse>(DropdownEnum.userRoleInStore, storeId)
   }
 
-  /** 可用店家 */
+  /** 取得可用店家 */
   getStores = async () => {
     return await this.get<unknown, ApiResponse>(DropdownEnum.getStores)
+  }
+
+  /** 取得商品下拉清單 */
+  getGoodsDDL = () => {
+    return this.get<unknown, ApiResponse>(DropdownEnum.getGoodsDDL)
   }
 }

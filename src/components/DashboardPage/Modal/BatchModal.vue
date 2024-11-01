@@ -8,6 +8,7 @@ import { ref, computed } from 'vue'
 import SearchInput from '@/components/Base/SearchInput.vue'
 import ReplenishCoinsModalContent from '@/components/DashboardPage/Modal/ReplenishCoinsModalContent.vue'
 import { useFetchDashboard } from '@/composables/useFetchDashboard'
+import { useDashboard } from '@/composables/useDashboard'
 import { UtilCommon } from '@/utils/utilCommon'
 import { getI18nTranslate } from '@/utils/i18nUtils'
 
@@ -18,6 +19,7 @@ type AmountMapping = {
 
 const { t: $t } = useI18n()
 const { fnUpdateMachineAction } = useFetchDashboard()
+const { findItemData } = useDashboard()
 
 const props = defineProps<{
   modalVisible: boolean
@@ -92,13 +94,6 @@ const changeModalStep = (val: number) => {
 
 const updateCount = (value: number) => {
   count.value = value
-}
-
-const findItemData = (
-  listData: ClawOperationsInfoResType[] | CoinOperationsInfoResType[],
-  id: string
-) => {
-  return listData.find((item) => item.pcbId === id)
 }
 
 const getDynamicAmount = <T extends 'claw' | 'coin'>(

@@ -42,3 +42,10 @@ export type StoresItemDataType = {
   storeName: string
   wifiInfo: BaseWifiInfoType[]
 }
+
+type BaseGoodsDDLResType = {
+  goodsId: string
+  goodsName: string
+}
+
+export type GoodsDDLReqType = BaseGoodsDDLResType[]

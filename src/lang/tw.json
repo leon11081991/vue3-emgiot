@@ -143,6 +143,13 @@
         "ChangeProductLabel":"更換產品",
         "RemoteUnlockLabel":"遠端開鎖",
         "ErrorResetLabel":"遠端故障消除"
+      },
+      "ChangeProduct":{
+        "Title":"更換產品",
+        "SearchPlaceholder":"搜尋商品名稱",
+        "Button":{
+          "Confirm":"確認"
+        }
       }
     },
     "MachineAction":{
@@ -153,6 +160,10 @@
       "ErrorReset": "兌幣機故障消除",
       "M1Reset": "機械錶1重置",
       "M2Reset": "機械錶2重置"
+    },
+    "Button":{
+      "BatchForClawMachine":"批量補幣",
+      "BatchForCoinMachine":"批量退幣"
     }
   },
   "LoginPage": {
