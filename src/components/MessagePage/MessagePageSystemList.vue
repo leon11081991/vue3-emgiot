@@ -88,7 +88,7 @@ onMounted(() => {
       </div>
     </div>
     <div
-      v-else
+      v-else-if="notificationInfo.data?.items && notificationInfo.data.items.length === 0"
       class="noData"
     >
       {{ '無資料' }}
