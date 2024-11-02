@@ -57,7 +57,10 @@ onMounted(() => {
       <div class="header-item eventName">{{ 'event.content' }}</div>
       <div class="header-item date">{{ '時間' }}</div>
     </div>
-    <div class="list-body">
+    <div
+      v-if="notificationInfo.data?.items && notificationInfo.data.items.length !== 0"
+      class="list-body"
+    >
       <div
         class="list-body-item"
         v-for="item in notificationInfo.data.items"
@@ -80,6 +83,12 @@ onMounted(() => {
           {{ getTargetDateTime(item.date) }}
         </div>
       </div>
+    </div>
+    <div
+      v-else
+      class="noData"
+    >
+      {{ '無資料' }}
     </div>
     <div ref="observer"></div>
   </div>
@@ -158,5 +167,10 @@ onMounted(() => {
     padding: 0.25rem;
     color: $--color-primary;
   }
+}
+.noData {
+  padding: 1rem;
+  font-size: 16px;
+  text-align: center;
 }
 </style>

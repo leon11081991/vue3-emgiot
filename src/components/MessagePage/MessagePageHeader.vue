@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watchEffect, defineModel } from 'vue'
+import { ref, watchEffect } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import { useMessagePage } from '@/composables/useMessagePage'
 
