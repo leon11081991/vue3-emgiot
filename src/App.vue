@@ -391,4 +391,32 @@ const route = useRoute()
     display: none;
   }
 }
+
+/** Ant Design Radio */
+.ant-radio-wrapper {
+  color: $--color-primary;
+
+  &:hover {
+    .ant-radio-inner {
+      border-color: $--color-primary;
+    }
+  }
+}
+
+.ant-radio-input:checked + .ant-radio-inner {
+  border-color: $--color-gray-500;
+  background-color: $--color-white;
+
+  &:after {
+    width: $--radio-checkbox-size;
+    height: $--radio-checkbox-size;
+    background-color: $--color-primary;
+    margin-block-start: calc($--radio-checkbox-size / 2) * -1;
+    margin-inline-start: calc($--radio-checkbox-size / 2) * -1;
+  }
+}
+
+.ant-radio-input:checked:hover + .ant-radio-inner {
+  border-color: $--color-primary;
+}
 </style>

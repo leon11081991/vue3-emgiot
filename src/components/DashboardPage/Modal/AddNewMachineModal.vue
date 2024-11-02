@@ -1,8 +1,18 @@
 <script setup lang="ts">
-import type { AddNewMachineDataType } from '@/models/types/dashboard.types'
+import type { DetectedCode } from '@/models/interfaces/qrCode.interface'
+import type { BindingPcbDataType } from '@/models/types/pcbRegister.types'
+import { useI18n } from 'vue-i18n'
 import { ref } from 'vue'
-// import { QrcodeStream } from 'vue-qrcode-reader'
+import { QrcodeStream } from 'vue-qrcode-reader'
+import BaseLoading from '@/components/Base/BaseLoading.vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
+import { useQRCode } from '@/composables/useQRCode'
+import { useFetchPcbRegister } from '@/composables/useFetchPcbRegister'
+import { UtilCommon } from '@/utils/utilCommon'
+
+const { t: $t } = useI18n()
+const { trackFunctions, error: QRCodeError, onError, onDetect } = useQRCode()
+const { fnBindingPcb } = useFetchPcbRegister()
 
 const props = defineProps<{
   modalVisible: boolean
@@ -14,111 +24,70 @@ const emit = defineEmits<{
 
 const maxLength = 10
 const isButtonLoading = ref<boolean>(false)
-const isShowQrCodeReader = ref<boolean>(false)
-const newMachine = ref<AddNewMachineDataType>({
+const showQrCodeReader = ref<boolean>(false)
+const cameraLoading = ref<boolean>(true)
+const cameraPaused = ref<boolean>(false)
+const showScanConfirmation = ref<boolean>(false)
+const newMachine = ref<BindingPcbDataType>({
   machineName: '',
   qrcode: ''
 })
 
-const selectedConstraints = ref({ facingMode: 'environment' })
-const defaultConstraintOptions = [
-  { label: 'rear camera', constraints: { facingMode: 'environment' } },
-  { label: 'front camera', constraints: { facingMode: 'user' } }
-]
-const constraintOptions = ref(defaultConstraintOptions)
-const error = ref('')
+const modalTitle = (showQRCode: boolean) => {
+  if (showQRCode) {
+    return $t('DashboardPage.Modal.AddNewMachine.Title.QRCode')
+  }
+  return $t('DashboardPage.Modal.AddNewMachine.Title.Default')
+}
+
+const initStatus = () => {
+  newMachine.value = {
+    machineName: '',
+    qrcode: ''
+  }
+  showQrCodeReader.value = false
+  cameraLoading.value = true
+}
 
 const closeModal = () => {
+  initStatus()
   emit('close')
 }
 
-const openQrCodeReader = () => {
-  isShowQrCodeReader.value = true
+const openQRCodeReader = () => {
+  showQrCodeReader.value = true
 }
 
-const barcodeFormats = ref({
-  aztec: false,
-  code_128: false,
-  code_39: false,
-  code_93: false,
-  codabar: false,
-  databar: false,
-  databar_expanded: false,
-  data_matrix: false,
-  dx_film_edge: false,
-  ean_13: false,
-  ean_8: false,
-  itf: false,
-  maxi_code: false,
-  micro_qr_code: false,
-  pdf417: false,
-  qr_code: true,
-  rm_qr_code: false,
-  upc_a: false,
-  upc_e: false,
-  linear_codes: false,
-  matrix_codes: false
-})
-// const selectedBarcodeFormats = computed(() => {
-//   return Object.keys(barcodeFormats.value).filter((format) => barcodeFormats.value[format])
-// })
+const onCameraOn = () => {
+  cameraLoading.value = false
+  showScanConfirmation.value = false
+}
 
-// const onDetect = (detectedCodes) => {
-//   console.log(detectedCodes)
-//   newMachine.value.qrcode = JSON.stringify(detectedCodes.map((code) => code.rawValue))
-// }
+const onCameraOff = () => {
+  showScanConfirmation.value = true
+}
 
-// async function onCameraReady() {
-//   // NOTE: on iOS we can't invoke `enumerateDevices` before the user has given
-//   // camera access permission. `QrcodeStream` internally takes care of
-//   // requesting the permissions. The `camera-on` event should guarantee that this
-//   // has happened.
-//   const devices = await navigator.mediaDevices.enumerateDevices()
-//   const videoDevices = devices.filter(({ kind }) => kind === 'videoinput')
+const handleDetected = async (detectedCodes: DetectedCode[]) => {
+  newMachine.value.qrcode = onDetect(detectedCodes)[0]
 
-//   constraintOptions.value = [
-//     ...defaultConstraintOptions,
-//     ...videoDevices.map(({ deviceId, label }) => ({
-//       label: `${label} (ID: ${deviceId})`,
-//       constraints: { deviceId }
-//     }))
-//   ]
+  cameraPaused.value = true
 
-//   error.value = ''
-// }
+  window.setTimeout(() => {
+    cameraPaused.value = false
+    showQrCodeReader.value = false
+  }, 1000)
+}
 
-// function onError(err) {
-//   error.value = `[${err.name}]: `
-
-//   if (err.name === 'NotAllowedError') {
-//     error.value += 'you need to grant camera access permission'
-//   } else if (err.name === 'NotFoundError') {
-//     error.value += 'no camera on this device'
-//   } else if (err.name === 'NotSupportedError') {
-//     error.value += 'secure context required (HTTPS, localhost)'
-//   } else if (err.name === 'NotReadableError') {
-//     error.value += 'is the camera already in use?'
-//   } else if (err.name === 'OverconstrainedError') {
-//     error.value += 'installed cameras are not suitable'
-//   } else if (err.name === 'StreamApiNotSupportedError') {
-//     error.value += 'Stream API is not supported in this browser'
-//   } else if (err.name === 'InsecureContextError') {
-//     error.value +=
-//       'Camera access is only permitted in secure context. Use HTTPS or localhost rather than HTTP.'
-//   } else {
-//     error.value += err.message
-//   }
-// }
-
-// const onDetect = (result: string) => {
-//   newMachine.value.qrcode = result
-//   isShowQrCodeReader.value = false
-// }
-
-const onFinish = (values: AddNewMachineDataType) => {
+const onFinish = (values: BindingPcbDataType) => {
   isButtonLoading.value = true
-  console.log('onFinish', values)
-  isButtonLoading.value = false
+  fnBindingPcb(values)
+    .then((resp) => {
+      if (!resp) return
+      closeModal()
+    })
+    .finally(() => {
+      isButtonLoading.value = false
+    })
 }
 </script>
 
@@ -131,27 +100,29 @@ const onFinish = (values: AddNewMachineDataType) => {
   >
     <template #title>
       <div class="modal-header modal-header-primary">
-        <span class="modal-title">{{ '新增機台' }}</span>
+        <span class="modal-title">{{ modalTitle(showQrCodeReader) }}</span>
       </div>
     </template>
 
     <div class="add-new-machine-modal-content">
       <a-form
+        v-if="!showQrCodeReader"
         :model="newMachine"
         name="addNewMachine_form"
+        class="add-new-machine-form"
         autocomplete="off"
         @finish="onFinish"
       >
         <a-form-item
           name="machineName"
-          :rules="[{ required: true, message: 'Please input your username!' }]"
+          :rules="[{ required: true, message: '未輸入名稱' }]"
         >
           <div class="machine-container">
             <a-input
               v-model:value="newMachine.machineName"
               class="input-field"
               size="large"
-              placeholder="請輸入名稱"
+              :placeholder="$t('DashboardPage.Modal.AddNewMachine.Placeholder.MachineName')"
               :maxlength="maxLength"
             />
             <div class="count-nums">
@@ -162,18 +133,18 @@ const onFinish = (values: AddNewMachineDataType) => {
 
         <a-form-item
           name="qrcode"
-          :rules="[{ required: true, message: 'Please input your qrcode!' }]"
+          :rules="[{ required: true, message: '未輸入' }]"
         >
           <div class="scan-container">
             <a-input
               v-model:value="newMachine.qrcode"
               class="input-field"
               size="large"
-              placeholder="手動需入序號或掃描二維碼"
+              :placeholder="$t('DashboardPage.Modal.AddNewMachine.Placeholder.QRCode')"
             />
             <div
               class="scan-button"
-              @click="openQrCodeReader"
+              @click="openQRCodeReader"
             >
               <BaseSvgIcon
                 iconName="scan"
@@ -185,36 +156,73 @@ const onFinish = (values: AddNewMachineDataType) => {
 
         <a-form-item>
           <a-button
-            class="submit-btn"
+            class="modal-btn"
             type="primary"
             size="large"
+            :disabled="
+              UtilCommon.checkIsEmpty(newMachine.machineName) ||
+              UtilCommon.checkIsEmpty(newMachine.qrcode)
+            "
             :loading="isButtonLoading"
             html-type="submit"
-            >{{ '確認' }}</a-button
           >
+            {{ $t('DashboardPage.Modal.AddNewMachine.Button.Confirm') }}
+          </a-button>
         </a-form-item>
       </a-form>
+
+      <div
+        v-else
+        class="qr-code-reader-content"
+      >
+        <div class="qr-code-reader">
+          <qrcode-stream
+            :paused="cameraPaused"
+            :track="trackFunctions['outline']"
+            @error="onError"
+            @camera-on="onCameraOn"
+            @camera-off="onCameraOff"
+            @detect="handleDetected"
+          >
+            <BaseLoading
+              v-if="cameraLoading"
+              position="absolute"
+            />
+            <div
+              v-show="showScanConfirmation"
+              class="reader-confirmation"
+            >
+              <BaseSvgIcon
+                iconName="success"
+                size="xl"
+              />
+            </div>
+          </qrcode-stream>
+        </div>
+
+        <a-button
+          class="modal-btn"
+          type="primary"
+          size="large"
+          ghost
+          @click="initStatus"
+        >
+          {{ $t('DashboardPage.Modal.AddNewMachine.Button.GoBack') }}
+        </a-button>
+      </div>
     </div>
-
-    {{ newMachine.qrcode }}
-
-    <!-- <qrcode-stream
-      v-if="isShowQrCodeReader"
-      @error="onError"
-      @detect="onDetect"
-      @camera-on="onCameraReady"
-    /> -->
   </a-modal>
 </template>
 
 <style lang="scss" scoped>
 .add-new-machine-modal {
+  background-color: #35495e;
   .count-nums {
     text-align: right;
     color: $--color-gray-600;
   }
 
-  .submit-btn {
+  .modal-btn {
     width: 100%;
   }
 }
@@ -223,5 +231,32 @@ const onFinish = (values: AddNewMachineDataType) => {
   display: flex;
   align-items: center;
   gap: 1rem;
+
+  .scan-button {
+    cursor: pointer;
+  }
+}
+
+.qr-code-reader-content {
+  .qr-code-reader {
+    position: relative;
+    margin-block: 1rem;
+
+    .reader-confirmation {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+
+      background-color: rgba(255, 255, 255, 0.8);
+
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: center;
+      align-items: center;
+
+      .svg-icon {
+      }
+    }
+  }
 }
 </style>

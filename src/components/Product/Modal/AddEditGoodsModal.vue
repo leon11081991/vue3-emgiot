@@ -257,7 +257,7 @@ fetchStoresListInfo()
     color: $--color-border;
   }
   :deep(.ant-radio-wrapper) {
-    font-size: 16px;
+    font-size: 1rem;
     color: $--color-primary;
   }
 }

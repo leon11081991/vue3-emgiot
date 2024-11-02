@@ -110,8 +110,3 @@ export type UpdateMachineActionDataType = BaseMachineActionData & {
 export type UpdateMachineActionReqType = BaseMachineActionData & {
   pcbId: string
 }
-
-export type AddNewMachineDataType = {
-  machineName: string
-  qrcode: string
-}

@@ -3,7 +3,8 @@ import type {
   BaseGoodsResType,
   PcbsResType,
   UserRoleInStoreResType,
-  StoresItemDataType
+  StoresItemDataType,
+  GoodsDDLReqType
 } from '@/models/types/dropdown.type'
 import { ref } from 'vue'
 import { api } from '@/services'
@@ -50,12 +51,21 @@ export const useDropdown = () => {
     isLoading: true
   })
 
-  //
+  // 可用店家
   const storesList = ref<{
     data: StoresItemDataType[]
     isLoading: boolean
   }>({
     data: [],
+    isLoading: true
+  })
+
+  // 可用商品
+  const goodsDDLList = ref<{
+    data: GoodsDDLReqType
+    isLoading: boolean
+  }>({
+    data: [] as GoodsDDLReqType,
     isLoading: true
   })
 
@@ -137,12 +147,13 @@ export const useDropdown = () => {
   }
 
   /** 處理可用店家 */
-  const fetchStoresList = async () => {
+  const fetchStoresList = async (): Promise<void> => {
     try {
       const { result, isSuccess, message, resultCode } = await api.dropdown.getStores()
 
       if (!isSuccess) {
-        return openMessage('error', `${resultCode} - ${message}`)
+        openMessage('error', `${resultCode} - ${message}`)
+        return
       }
 
       storesList.value.data = result['stores']
@@ -153,16 +164,36 @@ export const useDropdown = () => {
     }
   }
 
+  /** 處理可用商品 */
+  const fetchGoodsDDLList = async (): Promise<void> => {
+    try {
+      const { result, isSuccess, message, resultCode } = await api.dropdown.getGoodsDDL()
+
+      if (!isSuccess) {
+        openMessage('error', `${resultCode} - ${message}`)
+        return
+      }
+
+      goodsDDLList.value.data = result
+    } catch (e) {
+      catchErrorHandler(e)
+    } finally {
+      goodsDDLList.value.isLoading = false
+    }
+  }
+
   return {
     groupsDDLList,
     goodsList,
     pcbsList,
     userRoleInStoreList,
     storesList,
+    goodsDDLList,
     fetchGroupsDDLList,
     fetchGoodsList,
     fetchPcbsList,
     fetchUserRoleInStore,
-    fetchStoresList
+    fetchStoresList,
+    fetchGoodsDDLList
   }
 }
