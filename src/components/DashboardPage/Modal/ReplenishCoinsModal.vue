@@ -74,34 +74,6 @@ const handleReplenishCoins = async (
       @update:count="updateCount"
     />
 
-    <!-- <div class="replenish-coins-modal-content">
-      <div class="title">{{ $t('DashboardPage.Modal.ReplenishCoins.Content') }}</div>
-      <div class="input-container">
-        <div
-          class="minus-button"
-          @click="minusCount"
-        >
-          <BaseSvgIcon iconName="minus" />
-        </div>
-
-        <div class="count">
-          <a-input-number
-            v-model:value="count"
-            :controls="false"
-            :defaultValue="minCount"
-            :min="minCount"
-            :max="maxCount"
-          />
-        </div>
-        <div
-          class="add-button"
-          @click="addCount"
-        >
-          <BaseSvgIcon iconName="add" />
-        </div>
-      </div>
-    </div> -->
-
     <template #footer>
       <div class="button-group">
         <a-button

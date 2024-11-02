@@ -65,6 +65,20 @@
       "Coin": "兌幣機"
     },
     "Modal":{
+      "AddNewMachine":{
+        "Title":{
+          "Default":"新增機台",
+          "QRCode":"掃描二維碼"
+        },
+        "Placeholder":{
+          "MachineName":"請輸入名稱",
+          "QRCode":"手動需入序號或掃描二維碼"
+        },
+        "Button":{
+          "Confirm":"確認",
+          "GoBack":"返回"
+        }
+      },
       "BatchModal":{
         "Title":{
           "Default":"批量操作",
@@ -143,6 +157,13 @@
         "ChangeProductLabel":"更換產品",
         "RemoteUnlockLabel":"遠端開鎖",
         "ErrorResetLabel":"遠端故障消除"
+      },
+      "ChangeProduct":{
+        "Title":"更換產品",
+        "SearchPlaceholder":"搜尋商品名稱",
+        "Button":{
+          "Confirm":"確認"
+        }
       }
     },
     "MachineAction":{
@@ -153,6 +174,10 @@
       "ErrorReset": "兌幣機故障消除",
       "M1Reset": "機械錶1重置",
       "M2Reset": "機械錶2重置"
+    },
+    "Button":{
+      "BatchForClawMachine":"批量補幣",
+      "BatchForCoinMachine":"批量退幣"
     }
   },
   "LoginPage": {

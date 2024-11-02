@@ -56,13 +56,14 @@ const updateValue = (value: string[]) => {
         >
           <template #header>
             <div class="item-main-content coin">
-              <div class="item-section">
+              <div class="item-section machine-name">
                 <span class="item-category">{{ item?.pcbGroupName }}</span>
                 <span class="item-id">
-                  <span
+                  <!-- <span
                     class="status"
                     :class="item?.connectionStatus === 1 ? 'online' : 'offline'"
-                  ></span>
+                  ></span> -->
+                  <BaseSvgIcon :iconName="`wifi-status-${item?.connectionStatus}`" />
                   {{ UtilCommon.ellipsisText(item?.pcbName, 10) }}
                 </span>
               </div>
@@ -179,6 +180,10 @@ const updateValue = (value: string[]) => {
         color: $--color-primary;
       }
 
+      .machine-name {
+        align-items: flex-start;
+      }
+
       .item-category {
         padding: 0.25rem 0.5rem;
         background-color: $--color-primary;
@@ -187,33 +192,9 @@ const updateValue = (value: string[]) => {
       }
 
       .item-id {
-        position: relative;
-
-        .offline {
-          position: absolute;
-          content: '';
-          width: 0.3rem;
-          height: 0.3rem;
-          border-radius: $--border-radius-circle;
-          background-color: $--color-error;
-
-          top: 50%;
-          left: -0.5rem;
-          transform: translateY(-50%);
-        }
-
-        .online {
-          position: absolute;
-          content: '';
-          width: 0.3rem;
-          height: 0.3rem;
-          border-radius: $--border-radius-circle;
-          background-color: $--color-success;
-
-          top: 50%;
-          left: -0.5rem;
-          transform: translateY(-50%);
-        }
+        display: flex;
+        align-items: center;
+        min-height: 1.25rem;
       }
     }
 
