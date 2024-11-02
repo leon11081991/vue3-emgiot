@@ -514,6 +514,7 @@ onMounted(async () => {
     :selected-machine-id="selectedMachineId"
     :selected-tab="selectedTab"
     @close="closeModal(initSelectedMachineId)"
+    @refresh="handleToggleTab(selectedTab)"
   />
 
   <RemoteUnlockModal
