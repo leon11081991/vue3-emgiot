@@ -57,13 +57,10 @@ const updateValue = (value: string[]) => {
         >
           <template #header>
             <div class="item-main-content claw">
-              <div class="item-section">
+              <div class="item-section machine-name">
                 <span class="item-category group-tag">{{ item?.pcbGroupName }}</span>
                 <div class="item-id">
-                  <span
-                    class="status"
-                    :class="item?.connectionStatus === 1 ? 'online' : 'offline'"
-                  ></span>
+                  <BaseSvgIcon :iconName="`wifi-status-${item?.connectionStatus}`" />
                   {{ UtilCommon.ellipsisText(item?.pcbName, 10) }}
                 </div>
               </div>
@@ -166,35 +163,14 @@ const updateValue = (value: string[]) => {
         color: $--color-primary;
       }
 
+      .machine-name {
+        align-items: flex-start;
+      }
+
       .item-id {
-        position: relative;
+        display: flex;
+        align-items: center;
         min-height: 1.25rem;
-
-        .offline {
-          position: absolute;
-          content: '';
-          width: 0.3rem;
-          height: 0.3rem;
-          border-radius: $--border-radius-circle;
-          background-color: $--color-error;
-
-          top: 50%;
-          left: -0.5rem;
-          transform: translateY(-50%);
-        }
-
-        .online {
-          position: absolute;
-          content: '';
-          width: 0.3rem;
-          height: 0.3rem;
-          border-radius: $--border-radius-circle;
-          background-color: $--color-success;
-
-          top: 50%;
-          left: -0.5rem;
-          transform: translateY(-50%);
-        }
       }
     }
 
