@@ -6,6 +6,7 @@ import { useDate } from '@/composables/useDate'
 /* 非響應式變數 */
 const { notificationInfo, getNotificationInfo } = useMessagePage()
 const { getTargetDateTime } = useDate()
+const skeletonCount = 20
 
 /* 響應式變數 */
 const type = defineModel<number>('type')
@@ -36,6 +37,10 @@ const createObserver = () => {
   })
 }
 
+const formatEventContent = (content: string) => {
+  return content.replace(/\n/g, '<br>')
+}
+
 watchEffect(() => {
   if (pageIndex.value) {
     getNotificationInfo({
@@ -57,41 +62,51 @@ onMounted(() => {
       <div class="header-item eventName">{{ 'event.content' }}</div>
       <div class="header-item date">{{ '時間' }}</div>
     </div>
-    <div
-      v-if="notificationInfo.data?.items && notificationInfo.data.items.length !== 0"
-      class="list-body"
-    >
+    <div v-if="notificationInfo.isLoading">
+      <a-skeleton
+        active
+        v-for="item in skeletonCount"
+        :key="item"
+        :paragraph="{ rows: 2 }"
+        class="skeleton"
+      />
+    </div>
+    <div v-else>
       <div
-        class="list-body-item"
-        v-for="item in notificationInfo.data.items"
-        :key="item.eventId"
+        v-if="notificationInfo.data?.items && notificationInfo.data.items.length !== 0"
+        class="list-body"
       >
-        <div class="item-section">
-          <div class="machineInfo">
-            <div class="storeName">
-              {{ item.storeName }}
-            </div>
-            <div class="machineName">
-              {{ item.machineName }}
+        <div
+          class="list-body-item"
+          v-for="item in notificationInfo.data.items"
+          :key="item.eventId"
+        >
+          <div class="item-section">
+            <div class="machineInfo">
+              <div class="storeName">
+                {{ item.storeName }}
+              </div>
+              <div class="machineName">
+                {{ item.machineName }}
+              </div>
             </div>
           </div>
-        </div>
-        <div
-          class="item-section"
-          :class="{ error: item.eventContent.includes('斷線') }"
-        >
-          {{ item.eventContent }}
-        </div>
-        <div class="item-section">
-          {{ getTargetDateTime(item.date) }}
+          <div
+            class="item-section"
+            :class="{ error: item.eventContent.includes('斷線') }"
+            v-html="formatEventContent(item.eventContent)"
+          ></div>
+          <div class="item-section">
+            {{ getTargetDateTime(item.date) }}
+          </div>
         </div>
       </div>
-    </div>
-    <div
-      v-else-if="notificationInfo.data?.items && notificationInfo.data.items.length === 0"
-      class="noData"
-    >
-      {{ '無資料' }}
+      <div
+        v-else-if="notificationInfo.data?.items && notificationInfo.data.items.length === 0"
+        class="noData"
+      >
+        {{ '無資料' }}
+      </div>
     </div>
     <div ref="observer"></div>
   </div>
@@ -174,9 +189,14 @@ onMounted(() => {
     color: $--color-primary;
   }
 }
+
 .noData {
   padding: 1rem;
   font-size: 16px;
   text-align: center;
+}
+
+.skeleton {
+  padding: 1rem;
 }
 </style>
