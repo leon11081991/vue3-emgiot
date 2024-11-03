@@ -8,6 +8,7 @@ import { DropdownServices } from '@/services/dropdown.services'
 import { PcbRegisterServices } from '@/services/pcb-register.services'
 import { GoodsServices } from '@/services/goods.services'
 import { GroupServices } from '@/services/group.services'
+import { MessagePageServices } from '@/services/messagePage.services'
 
 const api = {
   test: new TestService(), // 測試範例
@@ -19,7 +20,8 @@ const api = {
   dropdown: new DropdownServices(), // 下拉選單
   pcbRegister: new PcbRegisterServices(), // 機台
   goods: new GoodsServices(), // 商品
-  group: new GroupServices() // 群組
+  group: new GroupServices(), // 群組
+  message: new MessagePageServices() // 營業訊息
 }
 
 export { api }
