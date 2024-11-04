@@ -1,6 +1,6 @@
 {
   "ErrorMessage": {
-    "UserNotFound": "用戶不存在",
+    "UserNotFound": "用戶不存在，或請檢查帳號是否正確。",
     "ServerError": "伺服器錯誤，請稍後再試",
     "WrongUserIdAndPassword": "帳號或密碼錯誤。",
     "DuplicateUserId": "此帳號已被註冊。",
@@ -18,10 +18,10 @@
       "TokenExpired": "登入已過期，請重新登入",
       "LoginSuccess": "登入成功，即將前往首頁...",
       "LogoutSuccess": "登出成功",
-      "SignUpSuccess": "系統寄出[驗證信]至您的電子郵件地址。請依郵件內容，點擊下面的連結完成完成Email驗證。",
+      "SignUpSuccess": "系統寄出[驗證信]至您的電子郵件地址。請依郵件內容，點擊連結完成完成Email驗證。",
       "ForgotPasswordSuccess": "發送信件成功，請使用信件內連結重設密碼。",
       "ChangePasswordSuccess": "密碼變更成功",
-      "ValidateSuccess": "驗證成功，即將前往登入頁..."
+      "ValidateSuccess": "驗證成功，立刻前往首頁登入！"
       
     },
     "Response": {

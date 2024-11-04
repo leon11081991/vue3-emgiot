@@ -47,7 +47,7 @@ const registerFormModel = ref<SignUpDataType>({
   userId: '',
   password: '',
   confirmPassword: '',
-  realName: ''
+  name: ''
 })
 const forgotPasswordFormModel = ref<ForgotPasswordReqType>({
   userId: ''
@@ -99,13 +99,13 @@ const validateValue = (type: keyof typeof ValidationTypeEnums, value: string): b
 }
 
 const checkRegisterButtonDisabled = (): boolean => {
-  const { userId, password, confirmPassword, realName } = registerFormModel.value
+  const { userId, password, confirmPassword, name } = registerFormModel.value
 
   return !(
     userId.trim().length > 0 &&
     password.trim().length > 0 &&
     confirmPassword.trim().length > 0 &&
-    realName.trim().length > 0
+    name.trim().length > 0
   )
 }
 
@@ -448,7 +448,7 @@ onMounted(() => {
             </a-form-item>
 
             <a-form-item
-              name="realName"
+              name="name"
               validateTrigger="blur"
               :rules="[{ required: true, message: $t('LoginPage.ValidateMessage.Required') }]"
             >
@@ -457,7 +457,7 @@ onMounted(() => {
                   class="base-input"
                   :placeholder="$t('SignUpPage.SignUp.UserInfo')"
                   :maxLength="maxLength"
-                  v-model:value="registerFormModel.realName"
+                  v-model:value="registerFormModel.name"
                 >
                   <template #prefix>
                     <BaseSvgIcon iconName="profile" />

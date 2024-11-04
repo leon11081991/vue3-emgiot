@@ -15,7 +15,7 @@ export type GoogleLoginReqType = {
 }
 
 export type SignUpReqType = LoginReqType & {
-  realName: string // 真實姓名
+  name: string // 真實姓名
 }
 
 export type SignUpDataType = SignUpReqType & {
