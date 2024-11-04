@@ -45,6 +45,15 @@ const routes = [
     }
   },
   {
+    path: '/account-inquiry/:machineType/:pcbId/:startDate/:endDate',
+    name: 'AccountInquiry',
+    component: () => import('@/views/DashboardAccountInquiryPage.vue'),
+    meta: {
+      layout: 'LayoutDefault',
+      middleware: [authMiddleware, layoutMiddleware]
+    }
+  },
+  {
     path: '/profile',
     name: 'Profile',
     component: () => import('@/views/ProfilePage.vue'),

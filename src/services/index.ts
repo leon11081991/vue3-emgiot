@@ -9,6 +9,7 @@ import { PcbRegisterServices } from '@/services/pcb-register.services'
 import { GoodsServices } from '@/services/goods.services'
 import { GroupServices } from '@/services/group.services'
 import { MessagePageServices } from '@/services/messagePage.services'
+import { DashboardAccountInquiryServices } from '@/services/dashoboard-account-inquiry.services'
 
 const api = {
   test: new TestService(), // 測試範例
@@ -21,7 +22,8 @@ const api = {
   pcbRegister: new PcbRegisterServices(), // 機台
   goods: new GoodsServices(), // 商品
   group: new GroupServices(), // 群組
-  message: new MessagePageServices() // 營業訊息
+  message: new MessagePageServices(), // 營業訊息
+  dashboardAccountInquiry: new DashboardAccountInquiryServices() // 控制台:帳務查詢
 }
 
 export { api }

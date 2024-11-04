@@ -7,6 +7,11 @@ import type {
   OperationChartResType,
   BaseMachineActionType
 } from '@/models/types/dashboard.types'
+import type {
+  MachineOperationsDetailReqType,
+  BaseRecordType,
+  GetClawGoodsRecordResType
+} from '@/models/types/machine.types'
 import { ref } from 'vue'
 import { api } from '@/services'
 import { useI18n } from 'vue-i18n'
@@ -55,6 +60,26 @@ export const useFetchDashboard = () => {
     data: [],
     isLoading: true
   })
+
+  /** 選物機帳務清單 */
+  const clawOperationsDetailRecords = ref<{
+    data: BaseRecordType[]
+    isLoading: boolean
+  }>({
+    data: [],
+    isLoading: true
+  })
+
+  /** 選物機商品紀錄清單 */
+  const clawGoodsRecords = ref<{
+    data: GetClawGoodsRecordResType
+    isLoading: boolean
+  }>({
+    data: [],
+    isLoading: true
+  })
+
+  /** 選物機商品紀錄清單 */
 
   const fetchOperationClawChart = async (params: GetOperationChartReqType) => {
     try {
@@ -135,7 +160,7 @@ export const useFetchDashboard = () => {
     count: number
   ): Promise<boolean> => {
     try {
-      const { result, isSuccess, resultCode, message } = await api.dashboard.updateMachineAction(
+      const { isSuccess, resultCode, message } = await api.dashboard.updateMachineAction(
         DashboardDto.FormattedUpdateMachineActionData({
           pcbId,
           action,
@@ -158,14 +183,59 @@ export const useFetchDashboard = () => {
     }
   }
 
+  /** (帳務查詢)處理取得選物機帳務清單 */
+  const fnGetClawOperationsDetail = async (params: MachineOperationsDetailReqType) => {
+    try {
+      const { result, isSuccess, message, resultCode } =
+        await api.dashboardAccountInquiry.getClawOperationsDetail(params)
+
+      if (!isSuccess) {
+        openMessage('error', `${resultCode} - ${message}`)
+        return
+      }
+
+      // 如果result為空則回傳空陣列
+      if (result) {
+        clawOperationsDetailRecords.value.data = result.records
+      }
+    } catch (e) {
+      catchErrorHandler(e)
+    } finally {
+      clawOperationsDetailRecords.value.isLoading = false
+    }
+  }
+
+  /** (帳務查詢)處理取得選物機商品紀錄清單 */
+  const fnGetClawGoodsRecord = async (params: MachineOperationsDetailReqType) => {
+    try {
+      const { result, isSuccess, message, resultCode } =
+        await api.dashboardAccountInquiry.getClawGoodsRecord(params)
+
+      if (!isSuccess) {
+        openMessage('error', `${resultCode} - ${message}`)
+        return
+      }
+
+      clawGoodsRecords.value.data = result
+    } catch (e) {
+      catchErrorHandler(e)
+    } finally {
+      clawGoodsRecords.value.isLoading = false
+    }
+  }
+
   return {
     operationChart,
     clawOperationsInfo,
     coinOperationsInfo,
+    clawOperationsDetailRecords,
+    clawGoodsRecords,
     fetchCoinOperationsInfo,
     fetchClawOperationsInfo,
     fetchOperationClawChart,
     fetchOperationCoinChart,
-    fnUpdateMachineAction
+    fnUpdateMachineAction,
+    fnGetClawOperationsDetail,
+    fnGetClawGoodsRecord
   }
 }

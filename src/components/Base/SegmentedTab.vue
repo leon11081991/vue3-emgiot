@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { Tab } from '@/models/interfaces/tab.interface'
-import type { DashboardTabType } from '@/models/types/dashboard.types'
+import type { DashboardTabType, AccountInquiryTabType } from '@/models/types/dashboard.types'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 
 const segmentedTabProps = defineProps<{
-  tabOptions: Tab<DashboardTabType>[]
+  tabOptions: Tab<DashboardTabType | AccountInquiryTabType>[]
 }>()
 
 const emit = defineEmits<{

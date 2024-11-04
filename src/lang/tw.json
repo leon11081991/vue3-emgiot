@@ -13,6 +13,7 @@
   },
   "Common": {
     "AppName": "雲端掌櫃",
+    "Store":"店",
     "Result": {
       "NotLogin": "請先登入...",
       "TokenExpired": "登入已過期，請重新登入",
@@ -53,6 +54,13 @@
       "1":"1級",
       "2":"2級",
       "3":"3級"
+    },
+    "Select":{
+      "RecentRecords":{
+        "3": "最近3筆記錄",
+        "5": "最近5筆記錄",
+        "10": "最近10筆記錄"
+      }
     }
   },
   "HomePage": {
@@ -178,6 +186,13 @@
     "Button":{
       "BatchForClawMachine":"批量補幣",
       "BatchForCoinMachine":"批量退幣"
+    }
+  },
+  "AccountInquiryPage": {
+    "Tabs": {
+      "AccountInquiry": "帳務查詢",
+      "ProductRecord": "商品紀錄",
+      "EventRecord": "事件紀錄"
     }
   },
   "LoginPage": {

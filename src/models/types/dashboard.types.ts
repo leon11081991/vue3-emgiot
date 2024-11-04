@@ -1,4 +1,5 @@
 export type DashboardTabType = 'claw' | 'coin'
+export type AccountInquiryTabType = 'accountInquiry' | 'productRecord' | 'eventRecord'
 
 type BaseOperationsInfoReqType = {
   startDate: string // 開始時間

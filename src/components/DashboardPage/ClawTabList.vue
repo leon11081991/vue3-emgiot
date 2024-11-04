@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ClawOperationsInfoResType } from '@/models/types/dashboard.types'
+import type { DashboardTabType, ClawOperationsInfoResType } from '@/models/types/dashboard.types'
 import type { DashboardModalType } from '@/models/types/modal.types'
 import { ref, withDefaults } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
@@ -20,6 +20,7 @@ const emit = defineEmits<{
   (e: 'update:activeKey', value: string[]): void
   (e: 'openModal', type: DashboardModalType, machineType?: 0 | 1): void
   (e: 'machineIdClicked', id: string): void
+  (e: 'goToAccountInquiry', machineType: DashboardTabType, id: string): void
 }>()
 
 const clawMachineType = 0
@@ -81,7 +82,10 @@ const updateValue = (value: string[]) => {
               <span class="amount">${{ item?.cumulativeAmount }}</span>
               <span>累保金額</span>
             </div>
-            <div class="item-section action-button">
+            <div
+              class="item-section action-button"
+              @click="emit('goToAccountInquiry', 'claw', item?.pcbId)"
+            >
               <BaseSvgIcon
                 iconName="accounts"
                 size="lg"
