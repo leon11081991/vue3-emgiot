@@ -10,7 +10,7 @@ export const errorMessagesMapping: Record<string, any> = {
     '400': 'ErrorMessage.UserNotFound' // TODO: 狀態碼需要確認
   },
   fnSignUp: {
-    null: 'ErrorMessage.DuplicateUserId' // TODO: 目前回傳的是 null，等後端定義
+    '4003': 'ErrorMessage.DuplicateUserId'
   },
   fnSignUpValidate: {
     null: 'ErrorMessage.ValidationCodeIncorrect' // TODO: 目前回傳的是 null，等後端定義

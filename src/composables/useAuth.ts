@@ -77,13 +77,18 @@ export const useAuth = () => {
   /** 處理註冊 */
   const fnSignUp = async (params: SignUpReqType): Promise<boolean> => {
     try {
-      const { userId, password, realName } = params
-      const { isSuccess, resultCode } = await api.auth.signIn({ userId, password, realName })
+      const { userId, password, name } = params
+      const { isSuccess, resultCode } = await api.auth.signIn({ userId, password, name })
 
       if (!isSuccess) {
         // 失敗：顯示錯誤訊息提示
-        // TODO: 錯誤處理，目前沒有提供對應的狀態碼錯誤
-        openMessage('error', `${resultCode} - ${$t(errorMessagesMapping['fnSignUp'][resultCode])}`)
+        openNotification(
+          {
+            subTitle: `${resultCode} - ${$t(errorMessagesMapping['fnSignUp'][resultCode])}`
+          },
+          'error',
+          'top'
+        )
         return false
       }
 
