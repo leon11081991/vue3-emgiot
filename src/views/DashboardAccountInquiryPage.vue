@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import type { Tab } from '@/models/interfaces/tab.interface'
 import type { DashboardTabType, AccountInquiryTabType } from '@/models/types/dashboard.types'
-import type { BaseRecordType, GetClawGoodsRecordResType } from '@/models/types/machine.types'
+import type {
+  ClawOperationsDetailResType,
+  CoinOperationsDetailResType,
+  GetClawGoodsRecordResType,
+  MachineEventRecordsResType
+} from '@/models/types/machine.types'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { type DefineComponent, ref, onMounted, defineAsyncComponent } from 'vue'
@@ -15,7 +20,7 @@ import { createAccountInquiryTabs } from '@/constants/dashboard.const'
 
 /* type */
 type AccountInquiryTabCompType = DefineComponent<
-  { data: BaseRecordType[]; isLoading: boolean },
+  { data: ClawOperationsDetailResType | CoinOperationsDetailResType; isLoading: boolean },
   {},
   {},
   any
@@ -27,8 +32,7 @@ type ProductRecordTabCompType = DefineComponent<
   any
 >
 type EventRecordTabCompType = DefineComponent<
-  // { activeKey: string[]; data: CoinOperationsInfoResType[] },
-  {},
+  { data: MachineEventRecordsResType; isLoading: boolean },
   {},
   any
 >
@@ -38,10 +42,14 @@ const route = useRoute()
 const { updateHeaderTitle } = useHeader()
 const { storeName } = useDashboard()
 const {
-  // clawOperationsDetailRecords,
+  clawOperationsDetailRecords,
+  coinOperationsDetailRecords,
   clawGoodsRecords,
+  machineEventRecords,
   fnGetClawOperationsDetail,
-  fnGetClawGoodsRecord
+  fnGetCoinOperationsDetail,
+  fnGetClawGoodsRecord,
+  fnGetMachineEventRecord
 } = useFetchDashboard()
 
 /* 子組件 ref */
@@ -70,7 +78,7 @@ const startDate = ref(route.params.startDate as string)
 const endDate = ref(route.params.endDate as string)
 
 const tabOptions = ref<Tab<AccountInquiryTabType>[]>(createAccountInquiryTabs($t, machineType))
-const selectedTab = ref<AccountInquiryTabType>(tabOptions.value[1].value) //TODO:要改為0
+const selectedTab = ref<AccountInquiryTabType>(tabOptions.value[0].value)
 
 const isLoading = ref<boolean>(false)
 const listData = ref()
@@ -79,12 +87,36 @@ const fnResetData = () => {
   // TODO
 }
 
-const handleToggleTab = async (tab: AccountInquiryTabType) => {
+const getMachineOperationsDetail = async (machineType: DashboardTabType) => {
+  if (machineType === 'claw') {
+    await fnGetClawOperationsDetail({
+      pcbId,
+      startDate: startDate.value,
+      endDate: endDate.value
+    })
+    listData.value = clawOperationsDetailRecords.value.data
+    isLoading.value = clawOperationsDetailRecords.value.isLoading
+    return
+  }
+
+  if (machineType === 'coin') {
+    await fnGetCoinOperationsDetail({
+      pcbId,
+      startDate: startDate.value,
+      endDate: endDate.value
+    })
+    listData.value = coinOperationsDetailRecords.value.data
+    isLoading.value = coinOperationsDetailRecords.value.isLoading
+    return
+  }
+}
+
+const handleToggleTab = async (tab: AccountInquiryTabType, machineType: DashboardTabType) => {
   console.log('handleToggleTab', tab)
   isLoading.value = true
   if (tab === 'accountInquiry') {
-    // TODO
     console.log('handleToggleTab accountInquiry')
+    getMachineOperationsDetail(machineType)
   }
 
   if (tab === 'productRecord') {
@@ -98,8 +130,16 @@ const handleToggleTab = async (tab: AccountInquiryTabType) => {
   }
 
   if (tab === 'eventRecord') {
-    // TODO
-    console.log('handleToggleTab eventRecord')
+    await fnGetMachineEventRecord(
+      {
+        pcbId,
+        startDate: startDate.value,
+        endDate: endDate.value
+      },
+      machineType
+    )
+    listData.value = machineEventRecords.value.data
+    isLoading.value = machineEventRecords.value.isLoading
   }
 
   isLoading.value = false
@@ -107,18 +147,18 @@ const handleToggleTab = async (tab: AccountInquiryTabType) => {
 
 /* 生命週期 (Lifecycle hooks) */
 onMounted(() => {
+  isLoading.value = true
   updateHeaderTitle($t('DashboardPage.HeaderTitle') + storeName.value) // 設定動態 header title
 
-  fnGetClawOperationsDetail({
-    pcbId,
-    startDate: startDate.value,
-    endDate: endDate.value
-  }).then(() => {})
+  getMachineOperationsDetail(machineType)
 })
 </script>
 
 <template>
   <div class="account-inquiry-page">
+    {{ machineType }}
+    {{ startDate }}
+    {{ endDate }}
     <!-- Chart -->
 
     <UpdateRecord @update="fnResetData" />
@@ -126,16 +166,16 @@ onMounted(() => {
     <SegmentedTab
       v-model:value="selectedTab"
       :tabOptions="tabOptions"
-      @change="handleToggleTab(selectedTab)"
+      @change="handleToggleTab(selectedTab, machineType)"
     />
-    {{ startDate }}
-    {{ endDate }}
+
     <div class="content-container">
       <KeepAlive>
         <component
           :is="tabComps[selectedTab]"
           :data="listData"
           :is-loading="isLoading"
+          :machine-type="machineType"
         />
       </KeepAlive>
     </div>

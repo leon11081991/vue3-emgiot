@@ -9,8 +9,10 @@ import type {
 } from '@/models/types/dashboard.types'
 import type {
   MachineOperationsDetailReqType,
-  BaseRecordType,
-  GetClawGoodsRecordResType
+  ClawOperationsDetailResType,
+  CoinOperationsDetailResType,
+  GetClawGoodsRecordResType,
+  MachineEventRecordsResType
 } from '@/models/types/machine.types'
 import { ref } from 'vue'
 import { api } from '@/services'
@@ -63,10 +65,19 @@ export const useFetchDashboard = () => {
 
   /** 選物機帳務清單 */
   const clawOperationsDetailRecords = ref<{
-    data: BaseRecordType[]
+    data: ClawOperationsDetailResType
     isLoading: boolean
   }>({
-    data: [],
+    data: {} as ClawOperationsDetailResType,
+    isLoading: true
+  })
+
+  /** 兌幣機帳務清單 */
+  const coinOperationsDetailRecords = ref<{
+    data: CoinOperationsDetailResType
+    isLoading: boolean
+  }>({
+    data: {} as CoinOperationsDetailResType,
     isLoading: true
   })
 
@@ -79,8 +90,16 @@ export const useFetchDashboard = () => {
     isLoading: true
   })
 
-  /** 選物機商品紀錄清單 */
+  /** 事件紀錄清單 */
+  const machineEventRecords = ref<{
+    data: MachineEventRecordsResType
+    isLoading: boolean
+  }>({
+    data: [],
+    isLoading: true
+  })
 
+  /** 選物機商品紀錄清單 */
   const fetchOperationClawChart = async (params: GetOperationChartReqType) => {
     try {
       const { result, isSuccess } = await api.dashboard.getOperationClawChart(params)
@@ -194,14 +213,30 @@ export const useFetchDashboard = () => {
         return
       }
 
-      // 如果result為空則回傳空陣列
-      if (result) {
-        clawOperationsDetailRecords.value.data = result.records
-      }
+      clawOperationsDetailRecords.value.data = result
     } catch (e) {
       catchErrorHandler(e)
     } finally {
       clawOperationsDetailRecords.value.isLoading = false
+    }
+  }
+
+  /** (帳務查詢)處理取得兌幣機帳務清單 */
+  const fnGetCoinOperationsDetail = async (params: MachineOperationsDetailReqType) => {
+    try {
+      const { result, isSuccess, message, resultCode } =
+        await api.dashboardAccountInquiry.getCoinOperationsDetail(params)
+
+      if (!isSuccess) {
+        openMessage('error', `${resultCode} - ${message}`)
+        return
+      }
+
+      coinOperationsDetailRecords.value.data = result
+    } catch (e) {
+      catchErrorHandler(e)
+    } finally {
+      coinOperationsDetailRecords.value.isLoading = false
     }
   }
 
@@ -224,18 +259,49 @@ export const useFetchDashboard = () => {
     }
   }
 
+  /** (帳務查詢)處理取得選物機或兌幣機事件紀錄清單 */
+  const fnGetMachineEventRecord = async (
+    params: MachineOperationsDetailReqType,
+    machineType: 'claw' | 'coin'
+  ) => {
+    try {
+      const apiCall =
+        machineType === 'claw'
+          ? api.dashboardAccountInquiry.getClawEventRecord
+          : api.dashboardAccountInquiry.getCoinEventRecord
+
+      const { result, isSuccess, message, resultCode } = await apiCall(params)
+
+      if (!isSuccess) {
+        openMessage('error', `${resultCode} - ${message}`)
+        return
+      }
+
+      machineEventRecords.value.data = result
+      console.log('fnGetMachineEventRecord', result)
+    } catch (e) {
+      catchErrorHandler(e)
+    } finally {
+      machineEventRecords.value.isLoading = false
+    }
+  }
+
   return {
     operationChart,
     clawOperationsInfo,
     coinOperationsInfo,
     clawOperationsDetailRecords,
+    coinOperationsDetailRecords,
     clawGoodsRecords,
+    machineEventRecords,
     fetchCoinOperationsInfo,
     fetchClawOperationsInfo,
     fetchOperationClawChart,
     fetchOperationCoinChart,
     fnUpdateMachineAction,
     fnGetClawOperationsDetail,
-    fnGetClawGoodsRecord
+    fnGetCoinOperationsDetail,
+    fnGetClawGoodsRecord,
+    fnGetMachineEventRecord
   }
 }

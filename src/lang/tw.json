@@ -193,6 +193,16 @@
       "AccountInquiry": "帳務查詢",
       "ProductRecord": "商品紀錄",
       "EventRecord": "事件紀錄"
+    },
+    "EventRecord":{
+      "ConnectionStatus": "連線狀態",
+      "Dispatch": "電眼出貨",
+      "CashBoxCollection": "錢箱收款",
+      "CoinRefillEvent": "補幣事件",
+      "CoinDispenseEvent": "出幣事件",
+      "CoinReturnEvent": "退幣事件",
+      "InventoryReport": "庫存回報",
+      "StatusReport": "狀態回報"
     }
   },
   "LoginPage": {

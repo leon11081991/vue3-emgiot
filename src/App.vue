@@ -301,6 +301,7 @@ const route = useRoute()
     display: flex;
     align-items: center;
     width: 100%;
+    border: 1px solid $--color-tertiary;
 
     .tab-label {
       flex: 1;

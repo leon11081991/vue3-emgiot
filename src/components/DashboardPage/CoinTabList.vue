@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { CoinOperationsInfoResType } from '@/models/types/dashboard.types'
+import type { DashboardTabType, CoinOperationsInfoResType } from '@/models/types/dashboard.types'
 import type { DashboardModalType } from '@/models/types/modal.types'
 import { ref } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
@@ -20,6 +20,7 @@ const emit = defineEmits<{
   (e: 'update:activeKey', value: string[]): void
   (e: 'openModal', type: DashboardModalType, machineType?: 0 | 1): void
   (e: 'machineIdClicked', id: string): void
+  (e: 'goToAccountInquiry', machineType: DashboardTabType, id: string): void
 }>()
 
 const coinMachineType = 1
@@ -59,10 +60,6 @@ const updateValue = (value: string[]) => {
               <div class="item-section machine-name">
                 <span class="item-category">{{ item?.pcbGroupName }}</span>
                 <span class="item-id">
-                  <!-- <span
-                    class="status"
-                    :class="item?.connectionStatus === 1 ? 'online' : 'offline'"
-                  ></span> -->
                   <BaseSvgIcon :iconName="`wifi-status-${item?.connectionStatus}`" />
                   {{ UtilCommon.ellipsisText(item?.pcbName, 10) }}
                 </span>
@@ -85,7 +82,10 @@ const updateValue = (value: string[]) => {
             </div>
           </template>
           <div class="item-action-content coin">
-            <div class="item-section action-button">
+            <div
+              class="item-section action-button"
+              @click="emit('goToAccountInquiry', 'coin', item?.pcbId)"
+            >
               <BaseSvgIcon
                 iconName="accounts"
                 size="lg"
