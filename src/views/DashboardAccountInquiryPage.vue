@@ -9,13 +9,17 @@ import type {
 } from '@/models/types/machine.types'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
-import { type DefineComponent, ref, onMounted, defineAsyncComponent } from 'vue'
+import { type DefineComponent, ref, onMounted, defineAsyncComponent, computed } from 'vue'
+import RevenueCard from '@/components/DashboardAccountInquiryPage/RevenueCard.vue'
 import UpdateRecord from '@/components/DashboardPage/UpdateRecord.vue'
 import SegmentedTab from '@/components/Base/SegmentedTab.vue'
 import AccountInquiryContent from '@/components/DashboardAccountInquiryPage/AccountInquiryContent.vue'
+import AccountInquiryFilterModal from '@/components/DashboardAccountInquiryPage/Modal/AccountInquiryFilterModal.vue'
+import { useModal } from '@/composables/useModal'
 import { useHeader } from '@/composables/useHeader'
 import { useDashboard } from '@/composables/useDashboard'
 import { useFetchDashboard } from '@/composables/useFetchDashboard'
+import { useDate } from '@/composables/useDate'
 import { createAccountInquiryTabs } from '@/constants/dashboard.const'
 
 /* type */
@@ -37,6 +41,7 @@ type EventRecordTabCompType = DefineComponent<
   any
 >
 
+/* 非響應式變數 */
 const { t: $t } = useI18n()
 const route = useRoute()
 const { updateHeaderTitle } = useHeader()
@@ -51,6 +56,14 @@ const {
   fnGetClawGoodsRecord,
   fnGetMachineEventRecord
 } = useFetchDashboard()
+const { modalVisible, openModal, closeModal } = useModal()
+const { today, calculateDate } = useDate()
+const initialEndDate = today()
+const initialStartDate = calculateDate(initialEndDate, 'backward', 7)
+const endDate = ref(initialEndDate)
+const startDate = ref(initialStartDate)
+const machineType: DashboardTabType = route.params.machineType as DashboardTabType
+const pcbId = route.params.pcbId as string
 
 /* 子組件 ref */
 const tabComps: Record<
@@ -72,19 +85,57 @@ const tabComps: Record<
   }) as EventRecordTabCompType
 }
 
-const machineType: DashboardTabType = route.params.machineType as DashboardTabType
-const pcbId = route.params.pcbId as string
-const startDate = ref(route.params.startDate as string)
-const endDate = ref(route.params.endDate as string)
-
 const tabOptions = ref<Tab<AccountInquiryTabType>[]>(createAccountInquiryTabs($t, machineType))
 const selectedTab = ref<AccountInquiryTabType>(tabOptions.value[0].value)
 
 const isLoading = ref<boolean>(false)
 const listData = ref()
 
-const fnResetData = () => {
-  // TODO
+const isModalVisible = ref(false)
+const resetKey = ref(0)
+
+/* computed */
+const revenueCardData = computed(() => {
+  if (!listData.value) return null
+  if (machineType === 'claw') {
+    const data = listData.value as ClawOperationsDetailResType
+
+    const totalRevenue = data.records.reduce((acc, curr) => acc + curr.revenue, 0)
+    const prizeWinCount = data.records.reduce((acc, curr) => acc + curr.prizeWinCount, 0)
+    const averagePrizeWinCount = prizeWinCount > 0 ? totalRevenue / prizeWinCount : 0
+    const profit = data.records.reduce((acc, curr) => acc + curr.profit, 0)
+
+    return {
+      pcbName: data.pcbName,
+      totalRevenue,
+      prizeWinCount,
+      averagePrizeWinCount,
+      profit
+    }
+  } else if (machineType === 'coin') {
+    const data = listData.value as CoinOperationsDetailResType
+
+    const coinExchanged = data.coinExchanged
+    const coinRemaining = data.coinRemaining
+    const totalExchangeCoinCount = data.records.reduce((acc, curr) => acc + curr.exchangeCount, 0)
+
+    return {
+      coinExchanged: coinExchanged,
+      coinRemaining: coinRemaining,
+      totalExchangeCoinCount: totalExchangeCoinCount
+    }
+  }
+  return null
+})
+
+const fnResetData = (data?: { startDate: string; endDate: string }) => {
+  startDate.value = data?.startDate || initialStartDate
+  endDate.value = data?.endDate || initialEndDate
+
+  if (!data) {
+    resetKey.value += 1
+  }
+  getMachineOperationsDetail(machineType)
 }
 
 const getMachineOperationsDetail = async (machineType: DashboardTabType) => {
@@ -145,6 +196,22 @@ const handleToggleTab = async (tab: AccountInquiryTabType, machineType: Dashboar
   isLoading.value = false
 }
 
+const resetModalVisible = (modalVisibility: boolean): boolean => {
+  return modalVisibility
+}
+
+const handleOpenModal = (): void => {
+  isModalVisible.value = resetModalVisible(isModalVisible.value)
+
+  openModal(() => {
+    isModalVisible.value = true
+  })
+}
+
+const fnRefreshDashboard = (data: { startDate: string; endDate: string }) => {
+  fnResetData(data)
+}
+
 /* 生命週期 (Lifecycle hooks) */
 onMounted(() => {
   isLoading.value = true
@@ -156,6 +223,20 @@ onMounted(() => {
 
 <template>
   <div class="account-inquiry-page">
+    <RevenueCard
+      v-if="revenueCardData"
+      @open:date-modal="handleOpenModal"
+      :type="machineType"
+      :data="revenueCardData"
+    />
+    <a-skeleton-button
+      v-else
+      class="customSkeleton"
+      :active="true"
+      size="large"
+      shape="default"
+      :block="true"
+    />
     {{ machineType }}
     {{ startDate }}
     {{ endDate }}
@@ -172,6 +253,7 @@ onMounted(() => {
     <div class="content-container">
       <KeepAlive>
         <component
+          v-if="listData"
           :is="tabComps[selectedTab]"
           :data="listData"
           :is-loading="isLoading"
@@ -179,11 +261,21 @@ onMounted(() => {
         />
       </KeepAlive>
     </div>
+    <AccountInquiryFilterModal
+      v-if="isModalVisible"
+      :modal-visible="modalVisible"
+      :resetAll="resetKey"
+      @close="closeModal()"
+      @refresh:account-inquiry-dashboard="fnRefreshDashboard"
+    />
   </div>
 </template>
 
 <style lang="scss" scoped>
 .content-container {
   margin-top: 1.5rem;
+}
+.customSkeleton {
+  height: 150px;
 }
 </style>

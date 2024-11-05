@@ -183,7 +183,7 @@ const handleGoToAccountInquiry = (machineType: DashboardTabType, pcbId: string):
   console.log('handleGoToAccountInquiry', pcbId)
   router.push({
     name: 'AccountInquiry',
-    params: { machineType, pcbId, startDate: startDate.value, endDate: endDate.value }
+    params: { machineType, pcbId }
   })
 }
 

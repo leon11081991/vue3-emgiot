@@ -45,7 +45,7 @@ const routes = [
     }
   },
   {
-    path: '/account-inquiry/:machineType/:pcbId/:startDate/:endDate',
+    path: '/account-inquiry/:machineType/:pcbId',
     name: 'AccountInquiry',
     component: () => import('@/views/DashboardAccountInquiryPage.vue'),
     meta: {

@@ -1,13 +1,7 @@
 <script setup lang="ts">
 /* import */
-import type {
-  RefreshCoinDashboardType,
-  SelectedGroupAndGoodsRemoveType
-} from '@/models/types/dashboard.types'
-import { ref, computed, onMounted, onBeforeUnmount, h, watchEffect } from 'vue'
-import { CaretDownOutlined } from '@ant-design/icons-vue'
+import { ref, computed, onMounted, onBeforeUnmount, watchEffect } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
-import { useDropdown } from '@/composables/useDropdown'
 import { QDate } from 'quasar'
 import { useDate } from '@/composables/useDate'
 
@@ -16,24 +10,21 @@ import '@quasar/extras/material-icons/material-icons.css'
 
 /* type */
 type PickerType = 'start' | 'end' | 'range'
-type SelectType = 'group'
 
 /* Props (defineProps) */
 const props = defineProps<{
   modalVisible: boolean
   resetAll: number
-  removeSelected: SelectedGroupAndGoodsRemoveType
 }>()
 
 /* Emits Events (defineEmits) */
 const emit = defineEmits<{
   (e: 'close'): void
-  (e: 'refresh:coinStoreDashboard', value: RefreshCoinDashboardType): void
+  (e: 'refresh:account-inquiry-dashboard', value: { startDate: string; endDate: string }): void
 }>()
 
 /* 非響應式變數 */
 const { today, calculateDate, getDaysInTwoMonths, getThreeMonthsAgo } = useDate()
-const { groupsDDLList, fetchGroupsDDLList } = useDropdown()
 
 const DAYS_IN_WEEK = 6
 const TODAY = 0
@@ -44,9 +35,6 @@ const dateRangePickerConfig = {
   一週: DAYS_IN_WEEK,
   一個月: getDaysInTwoMonths()
 }
-const groupDefaultName = '分類'
-let resetGroupNameCount = 0
-let resetGroupsDDLFilter = 0
 
 /* ref 變數 */
 const startDate = ref<string | null>(today())
@@ -56,7 +44,6 @@ const tempRangeDate = ref({ from: '', to: '' })
 const rangePickerActiveItem = ref('今日')
 
 const groupsDDLFilter = ref('')
-const groupName = ref(groupDefaultName)
 const picker = ref({
   start: false,
   end: false,
@@ -66,18 +53,7 @@ const picker = ref({
 const isFirstTimeSelectRangePicker = ref(false)
 const isConfirmFilterCondition = ref(false)
 
-const isDropdownOpen = ref({
-  group: false
-})
-
 /* computed */
-// 動態根據下拉選單狀態更改圖標
-const customIcon = (selectType: SelectType) => {
-  return h(CaretDownOutlined, {
-    class: isDropdownOpen.value[selectType] ? 'rotate-up' : ''
-  })
-}
-
 const isRangeDateSelected = computed(() =>
   typeof rangeDate.value === 'object'
     ? rangeDate.value?.from || rangeDate.value?.to
@@ -94,7 +70,6 @@ const resetFilter = () => {
   startDate.value = today()
   endDate.value = today()
   groupsDDLFilter.value = ''
-  groupName.value = groupDefaultName
   isFirstTimeSelectRangePicker.value = false
 }
 
@@ -105,13 +80,11 @@ const closeModal = () => {
   emit('close')
 }
 
-const filterCoinDashboardData = () => {
+const filterClawDashboardData = () => {
   isConfirmFilterCondition.value = true
-  emit('refresh:coinStoreDashboard', {
+  emit('refresh:account-inquiry-dashboard', {
     startDate: startDate.value || '',
-    endDate: endDate.value || '',
-    groupsDDLFilter: groupsDDLFilter.value || '',
-    groupName: groupName.value === groupDefaultName ? '' : groupName.value || ''
+    endDate: endDate.value || ''
   })
   closeModal()
 }
@@ -162,19 +135,6 @@ const confirmRangeDate = () => {
   toggleDatePicker('range')
 }
 
-const toggleDropdownVisibility = (visible: boolean, selectType: 'group') => {
-  isDropdownOpen.value[selectType] = visible
-}
-
-const handleInputChange = (e: Event) => {
-  const target = e.target as HTMLInputElement
-  groupsDDLFilter.value = target.value
-}
-
-const selectGroup = (data: string) => {
-  groupName.value = data
-}
-
 const handleClickOutside = (event: MouseEvent) => {
   const target = event.target as HTMLElement
   const datePickerElements = ['.datePickerCom', '.dateData', '.q-date', '.q-date__calendar']
@@ -192,21 +152,6 @@ watchEffect(() => {
     isConfirmFilterCondition.value = false
     resetFilter()
   }
-
-  if (
-    props.removeSelected['groupName'] &&
-    props.removeSelected['groupName'] !== resetGroupNameCount
-  ) {
-    groupName.value = groupDefaultName
-    resetGroupNameCount++
-  }
-  if (
-    props.removeSelected['groupsDDLFilter'] &&
-    props.removeSelected['groupsDDLFilter'] !== resetGroupsDDLFilter
-  ) {
-    groupsDDLFilter.value = ''
-    resetGroupsDDLFilter++
-  }
 })
 
 /* 生命週期 (Lifecycle hooks) */
@@ -217,8 +162,6 @@ onMounted(() => {
 onBeforeUnmount(() => {
   document.removeEventListener('click', handleClickOutside)
 })
-
-fetchGroupsDDLList()
 </script>
 
 <template>
@@ -346,46 +289,12 @@ fetchGroupsDDLList()
         {{ label }}
       </div>
     </div>
-
-    <div class="search-action-container">
-      <a-input
-        class="search-input"
-        :value="groupsDDLFilter"
-        @change="handleInputChange"
-        placeholder="機台"
-      >
-        <template #prefix>
-          <BaseSvgIcon iconName="magnifier" />
-        </template>
-      </a-input>
-    </div>
-
-    <div class="select-container">
-      <a-select
-        v-if="groupsDDLList?.data"
-        class="select-item group-container"
-        :placeholder="groupDefaultName"
-        :value="groupName"
-        :suffixIcon="customIcon('group')"
-        size="large"
-        @change="selectGroup"
-        @dropdownVisibleChange="(visible: boolean) => toggleDropdownVisibility(visible, 'group')"
-      >
-        <a-select-option
-          v-for="groupsDDL in groupsDDLList.data"
-          :key="groupsDDL.groupId"
-          :value="groupsDDL.groupName"
-        >
-          {{ groupsDDL.groupName }}
-        </a-select-option>
-      </a-select>
-    </div>
     <template #footer>
       <div class="button-group">
         <a-button
           class="confirm-btn btn"
           type="primary"
-          @click="filterCoinDashboardData"
+          @click="filterClawDashboardData"
         >
           確認
         </a-button>
@@ -402,25 +311,6 @@ fetchGroupsDDLList()
 </template>
 
 <style lang="scss" scoped>
-.search-action-container {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-
-  .search-action-title {
-    color: $--color-gray-700;
-  }
-  .search-input {
-    &.ant-input-affix-wrapper {
-      background-color: $--background-color-base;
-
-      :deep(.ant-input) {
-        background-color: $--background-color-base;
-      }
-    }
-  }
-}
-
 .datePicker-container {
   display: flex;
   align-items: center;

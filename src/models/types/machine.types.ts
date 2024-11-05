@@ -45,3 +45,17 @@ type BaseMachineEventRecordResType = {
 }
 
 export type MachineEventRecordsResType = BaseMachineEventRecordResType[]
+
+export type clawMachineCardType = {
+  pcbName: string
+  totalRevenue: number
+  prizeWinCount: number
+  averagePrizeWinCount: number
+  profit: number
+}
+
+export type coinMachineCardType = {
+  coinExchanged: number
+  coinRemaining: number
+  totalExchangeCoinCount: number
+}
