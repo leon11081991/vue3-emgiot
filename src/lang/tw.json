@@ -194,6 +194,12 @@
       "ProductRecord": "商品紀錄",
       "EventRecord": "事件紀錄"
     },
+    "ContentHeader":{
+      "Date": "日期",
+      "PrizeWinCount": "出貨",
+      "Revenue": "營收",
+      "ExchangeCount": "兌幣量"
+    },
     "EventRecord":{
       "ConnectionStatus": "連線狀態",
       "Dispatch": "電眼出貨",
@@ -203,6 +209,11 @@
       "CoinReturnEvent": "退幣事件",
       "InventoryReport": "庫存回報",
       "StatusReport": "狀態回報"
+    },
+    "ListType":{
+      "Day": "日帳",
+      "Week": "週帳",
+      "Month": "月帳"
     }
   },
   "LoginPage": {

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { DashboardTabType, ClawOperationsInfoResType } from '@/models/types/dashboard.types'
+import type { MachineType } from '@/models/types/machine.types'
+import type { ClawOperationsInfoResType } from '@/models/types/dashboard.types'
 import type { DashboardModalType } from '@/models/types/modal.types'
 import { ref, withDefaults } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
@@ -20,7 +21,7 @@ const emit = defineEmits<{
   (e: 'update:activeKey', value: string[]): void
   (e: 'openModal', type: DashboardModalType, machineType?: 0 | 1): void
   (e: 'machineIdClicked', id: string): void
-  (e: 'goToAccountInquiry', machineType: DashboardTabType, id: string): void
+  (e: 'goToAccountInquiry', machineType: MachineType, id: string): void
 }>()
 
 const clawMachineType = 0

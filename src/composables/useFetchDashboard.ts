@@ -1,3 +1,4 @@
+import type { MachineType } from '@/models/types/machine.types'
 import type {
   ClawOperationsInfoResType,
   CoinOperationsInfoResType,
@@ -251,7 +252,7 @@ export const useFetchDashboard = () => {
         return
       }
 
-      clawGoodsRecords.value.data = result
+      clawGoodsRecords.value.data = result ?? []
     } catch (e) {
       catchErrorHandler(e)
     } finally {
@@ -262,7 +263,7 @@ export const useFetchDashboard = () => {
   /** (帳務查詢)處理取得選物機或兌幣機事件紀錄清單 */
   const fnGetMachineEventRecord = async (
     params: MachineOperationsDetailReqType,
-    machineType: 'claw' | 'coin'
+    machineType: MachineType
   ) => {
     try {
       const apiCall =
@@ -277,8 +278,7 @@ export const useFetchDashboard = () => {
         return
       }
 
-      machineEventRecords.value.data = result
-      console.log('fnGetMachineEventRecord', result)
+      machineEventRecords.value.data = result ?? []
     } catch (e) {
       catchErrorHandler(e)
     } finally {

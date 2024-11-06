@@ -1,3 +1,5 @@
+export type MachineType = 'claw' | 'coin'
+
 // 選物機和兌幣機共用
 export type MachineOperationsDetailReqType = {
   pcbId: string

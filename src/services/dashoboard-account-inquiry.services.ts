@@ -2,7 +2,6 @@ import type { MachineOperationsDetailReqType } from '@/models/types/machine.type
 import { type ApiResponse, ApiFactory } from '@/utils/api'
 import { ClawMachineEnum } from '@/constants/enums/api/clawMachine.enums'
 import { CoinMachineEnum } from '@/constants/enums/api/coinMachine.enums'
-// import { CoinMachineEnum } from '@/constants/enums/api/coinMachine.enums'
 
 export class DashboardAccountInquiryServices extends ApiFactory {
   constructor() {

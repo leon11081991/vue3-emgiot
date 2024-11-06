@@ -1,4 +1,6 @@
-export type DashboardTabType = 'claw' | 'coin'
+import type { MachineType } from '@/models/types/machine.types'
+
+export type DashboardTabType = MachineType
 export type AccountInquiryTabType = 'accountInquiry' | 'productRecord' | 'eventRecord'
 
 type BaseOperationsInfoReqType = {

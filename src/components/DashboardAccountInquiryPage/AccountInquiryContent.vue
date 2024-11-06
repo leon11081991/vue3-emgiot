@@ -1,46 +1,44 @@
 <script setup lang="ts">
-import type { DashboardTabType } from '@/models/types/dashboard.types'
+import type { MachineType } from '@/models/types/machine.types'
 import type {
   BaseClawRecordType,
   BaseCoinRecordType,
   ClawOperationsDetailResType,
   CoinOperationsDetailResType
 } from '@/models/types/machine.types'
+import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { ref, computed } from 'vue'
 import { useDate } from '@/composables/useDate'
+import { LIST_TYPE } from '@/constants/common/option.const'
 
 type ListType = 'day' | 'week' | 'month'
 
-const props = defineProps<{
-  data: ClawOperationsDetailResType | CoinOperationsDetailResType
-}>()
-
-const LIST_TYPE = [
+const props = withDefaults(
+  defineProps<{
+    data: ClawOperationsDetailResType | CoinOperationsDetailResType
+  }>(),
   {
-    value: 'day',
-    label: '日帳'
-  },
-  {
-    value: 'week',
-    label: '週帳'
-  },
-  {
-    value: 'month',
-    label: '月帳'
+    data() {
+      return {} as ClawOperationsDetailResType | CoinOperationsDetailResType
+    }
   }
-]
+)
 
+const { t: $t } = useI18n()
 const route = useRoute()
 const { formatDate } = useDate()
 
-const machineType = route.params.machineType as DashboardTabType
+// 非響應式變數
+const machineType = route.params.machineType as MachineType
 
+// ref 變數
 const selectedType = ref<ListType>('day')
 const accountList = computed(() => {
   return props.data?.records
 })
 
+// function
 const getDate = (date: string | null) => {
   if (!date) return ''
   return formatDate(date, 'YYYY-MM-DD')
@@ -49,8 +47,6 @@ const getDate = (date: string | null) => {
 
 <template>
   <div class="account-inquiry-content">
-    {{ props.data }}
-
     <div class="list-container">
       <div class="list-action">
         <label
@@ -74,34 +70,38 @@ const getDate = (date: string | null) => {
           class="content-header"
           :class="machineType"
         >
-          <div class="date-header">日期</div>
+          <div class="date-header">{{ $t('AccountInquiryPage.ContentHeader.Date') }}</div>
           <template v-if="machineType === 'claw'">
-            <div class="count-header">出貨</div>
-            <div class="count-header">營收</div>
+            <div class="count-header">
+              {{ $t('AccountInquiryPage.ContentHeader.PrizeWinCount') }}
+            </div>
+            <div class="count-header">{{ $t('AccountInquiryPage.ContentHeader.Revenue') }}</div>
           </template>
           <template v-if="machineType === 'coin'">
-            <div class="count-header">兌幣量</div>
+            <div class="count-header">
+              {{ $t('AccountInquiryPage.ContentHeader.ExchangeCount') }}
+            </div>
           </template>
         </div>
         <ul class="content-list">
           <li
             v-for="item in accountList"
             :key="item.date"
+            :class="machineType"
             class="content-item"
           >
             <div class="date">{{ getDate(item?.date) }}</div>
-            <div
-              v-if="machineType === 'claw'"
-              class="count"
-            >
-              100
-            </div>
-            <div
-              v-if="machineType === 'coin'"
-              class="count"
-            >
-              {{ (item as BaseCoinRecordType)?.exchangeCount }}
-            </div>
+            <template v-if="machineType === 'claw'">
+              <div class="count prizeWinCount">
+                {{ (item as BaseClawRecordType)?.prizeWinCount }}
+              </div>
+              <div class="count revenue">{{ (item as BaseClawRecordType)?.revenue }}</div>
+            </template>
+            <template v-if="machineType === 'coin'">
+              <div class="count exchangeCount">
+                {{ (item as BaseCoinRecordType)?.exchangeCount }}
+              </div>
+            </template>
           </li>
         </ul>
       </div>
@@ -132,10 +132,6 @@ const getDate = (date: string | null) => {
       color: $--color-primary;
       text-align: center;
       cursor: pointer;
-
-      // @include media-breakpoint-down(sm) {
-      //   font-size: 0.875rem;
-      // }
 
       &:hover {
         background-color: rgba($--color-primary--hover, 0.8);
@@ -188,9 +184,16 @@ const getDate = (date: string | null) => {
 
   .content-item {
     display: grid;
-    grid-template-columns: 1fr 1fr;
     text-align: center;
     color: $--color-gray-700;
+
+    &.claw {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    &.coin {
+      grid-template-columns: 1fr 1fr;
+    }
   }
 }
 </style>

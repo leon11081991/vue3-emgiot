@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Tab } from '@/models/interfaces/tab.interface'
-import type { DashboardTabType, AccountInquiryTabType } from '@/models/types/dashboard.types'
+import type { MachineType } from '@/models/types/machine.types'
+import type { AccountInquiryTabType } from '@/models/types/dashboard.types'
 import type {
   ClawOperationsDetailResType,
   CoinOperationsDetailResType,
@@ -62,7 +63,7 @@ const initialEndDate = today()
 const initialStartDate = calculateDate(initialEndDate, 'backward', 7)
 const endDate = ref(initialEndDate)
 const startDate = ref(initialStartDate)
-const machineType: DashboardTabType = route.params.machineType as DashboardTabType
+const machineType: MachineType = route.params.machineType as MachineType
 const pcbId = route.params.pcbId as string
 
 /* 子組件 ref */
@@ -85,25 +86,27 @@ const tabComps: Record<
   }) as EventRecordTabCompType
 }
 
+/* ref 變數 */
 const tabOptions = ref<Tab<AccountInquiryTabType>[]>(createAccountInquiryTabs($t, machineType))
 const selectedTab = ref<AccountInquiryTabType>(tabOptions.value[0].value)
 
 const isLoading = ref<boolean>(false)
 const listData = ref()
+const cardData = ref<ClawOperationsDetailResType | CoinOperationsDetailResType>()
 
 const isModalVisible = ref(false)
 const resetKey = ref(0)
 
 /* computed */
 const revenueCardData = computed(() => {
-  if (!listData.value) return null
+  if (!cardData.value) return null
   if (machineType === 'claw') {
-    const data = listData.value as ClawOperationsDetailResType
+    const data = cardData.value as ClawOperationsDetailResType
 
-    const totalRevenue = data.records.reduce((acc, curr) => acc + curr.revenue, 0)
-    const prizeWinCount = data.records.reduce((acc, curr) => acc + curr.prizeWinCount, 0)
+    const totalRevenue = data.records?.reduce((acc, curr) => acc + curr.revenue, 0)
+    const prizeWinCount = data.records?.reduce((acc, curr) => acc + curr.prizeWinCount, 0)
     const averagePrizeWinCount = prizeWinCount > 0 ? totalRevenue / prizeWinCount : 0
-    const profit = data.records.reduce((acc, curr) => acc + curr.profit, 0)
+    const profit = data.records?.reduce((acc, curr) => acc + curr.profit, 0)
 
     return {
       pcbName: data.pcbName,
@@ -113,11 +116,11 @@ const revenueCardData = computed(() => {
       profit
     }
   } else if (machineType === 'coin') {
-    const data = listData.value as CoinOperationsDetailResType
+    const data = cardData.value as CoinOperationsDetailResType
 
     const coinExchanged = data.coinExchanged
     const coinRemaining = data.coinRemaining
-    const totalExchangeCoinCount = data.records.reduce((acc, curr) => acc + curr.exchangeCount, 0)
+    const totalExchangeCoinCount = data.records?.reduce((acc, curr) => acc + curr.exchangeCount, 0)
 
     return {
       coinExchanged: coinExchanged,
@@ -138,7 +141,7 @@ const fnResetData = (data?: { startDate: string; endDate: string }) => {
   getMachineOperationsDetail(machineType)
 }
 
-const getMachineOperationsDetail = async (machineType: DashboardTabType) => {
+const getMachineOperationsDetail = async (machineType: MachineType) => {
   if (machineType === 'claw') {
     await fnGetClawOperationsDetail({
       pcbId,
@@ -147,6 +150,7 @@ const getMachineOperationsDetail = async (machineType: DashboardTabType) => {
     })
     listData.value = clawOperationsDetailRecords.value.data
     isLoading.value = clawOperationsDetailRecords.value.isLoading
+    cardData.value = clawOperationsDetailRecords.value.data
     return
   }
 
@@ -162,12 +166,14 @@ const getMachineOperationsDetail = async (machineType: DashboardTabType) => {
   }
 }
 
-const handleToggleTab = async (tab: AccountInquiryTabType, machineType: DashboardTabType) => {
+const handleToggleTab = async (tab: AccountInquiryTabType, machineType: MachineType) => {
   console.log('handleToggleTab', tab)
   isLoading.value = true
   if (tab === 'accountInquiry') {
     console.log('handleToggleTab accountInquiry')
     getMachineOperationsDetail(machineType)
+
+    return
   }
 
   if (tab === 'productRecord') {
@@ -176,8 +182,11 @@ const handleToggleTab = async (tab: AccountInquiryTabType, machineType: Dashboar
       startDate: startDate.value,
       endDate: endDate.value
     })
+    console.log('clawGoodsRecords.value.data', clawGoodsRecords.value.data)
     listData.value = clawGoodsRecords.value.data
     isLoading.value = clawGoodsRecords.value.isLoading
+
+    return
   }
 
   if (tab === 'eventRecord') {
@@ -191,9 +200,9 @@ const handleToggleTab = async (tab: AccountInquiryTabType, machineType: Dashboar
     )
     listData.value = machineEventRecords.value.data
     isLoading.value = machineEventRecords.value.isLoading
-  }
 
-  isLoading.value = false
+    return
+  }
 }
 
 const resetModalVisible = (modalVisibility: boolean): boolean => {
@@ -237,10 +246,6 @@ onMounted(() => {
       shape="default"
       :block="true"
     />
-    {{ machineType }}
-    {{ startDate }}
-    {{ endDate }}
-    <!-- Chart -->
 
     <UpdateRecord @update="fnResetData" />
 
@@ -251,15 +256,15 @@ onMounted(() => {
     />
 
     <div class="content-container">
-      <KeepAlive>
-        <component
-          v-if="listData"
-          :is="tabComps[selectedTab]"
-          :data="listData"
-          :is-loading="isLoading"
-          :machine-type="machineType"
-        />
-      </KeepAlive>
+      <!-- <KeepAlive> -->
+      <component
+        v-if="listData"
+        :is="tabComps[selectedTab]"
+        :data="listData"
+        :is-loading="isLoading"
+        :machine-type="machineType"
+      />
+      <!-- </KeepAlive> -->
     </div>
     <AccountInquiryFilterModal
       v-if="isModalVisible"

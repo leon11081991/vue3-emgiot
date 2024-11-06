@@ -1,16 +1,21 @@
 <script setup lang="ts">
+import type { MachineType } from '@/models/types/machine.types'
 import type { MachineEventRecordsResType } from '@/models/types/machine.types'
 import { computed, ref } from 'vue'
 import BaseLoading from '@/components/Base/BaseLoading.vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import { useDate } from '@/composables/useDate'
 import { CLAW_EVENT_OPTIONS, COIN_EVENT_OPTIONS } from '@/constants/common/option.const'
+import {
+  EVENT_RECORD_MAPPING,
+  EVENT_TYPE_ICON_MAPPING
+} from '@/constants/mappings/eventRecord.mapping'
 
 const props = withDefaults(
   defineProps<{
     data: MachineEventRecordsResType
     isLoading: boolean
-    machineType: 'claw' | 'coin'
+    machineType: MachineType
   }>(),
   {
     data: () => [],
@@ -24,10 +29,19 @@ const { getTargetDateTime } = useDate()
 const options = props.machineType === 'claw' ? CLAW_EVENT_OPTIONS : COIN_EVENT_OPTIONS
 
 // ref 變數
-const selectedEvent = ref<number[]>([])
+const selectedEvent = ref<string[]>([])
 const records = computed(() => {
-  return props.data
-  // return props.data?.filter((item) => selectedEvent.value.includes(item.eventCode))
+  if (selectedEvent.value.length === 0) {
+    // 如果沒有選擇任何事件類別，預設為全部顯示
+    return props.data
+  }
+
+  return props.data.filter((item) => {
+    return selectedEvent.value.some((eventKey) => {
+      const eventCodes = EVENT_RECORD_MAPPING[eventKey]
+      return eventCodes && eventCodes.includes(item.eventCode)
+    })
+  })
 })
 </script>
 
@@ -37,7 +51,7 @@ const records = computed(() => {
       <label
         class="action-label"
         v-for="option in options"
-        :key="option.value"
+        :key="option.label"
       >
         <input
           type="checkbox"
@@ -49,12 +63,12 @@ const records = computed(() => {
       </label>
     </div>
 
-    <!-- {{ records }} -->
     <div class="event-container">
       <BaseLoading
         v-if="props.isLoading"
         position="absolute"
       />
+      <a-empty v-if="!props.isLoading && !records?.length" />
       <ul
         v-if="!props.isLoading && records?.length > 0"
         class="event-list"
@@ -65,7 +79,7 @@ const records = computed(() => {
           class="event-item"
         >
           <BaseSvgIcon
-            iconName="coin"
+            :iconName="EVENT_TYPE_ICON_MAPPING[record?.eventCode]"
             size="lg"
           />
           <div class="event-detail">
@@ -77,7 +91,6 @@ const records = computed(() => {
       </ul>
     </div>
   </div>
-  <!-- {{ selectedEvent }} -->
 </template>
 
 <style lang="scss" scoped>

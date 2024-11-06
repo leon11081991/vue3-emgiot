@@ -12,7 +12,7 @@ const props = withDefaults(
     isLoading: boolean
   }>(),
   {
-    data: () => [],
+    data: () => [] as GetClawGoodsRecordResType,
     isLoading: true
   }
 )
@@ -20,7 +20,6 @@ const props = withDefaults(
 const { formatDate } = useDate()
 
 const displayCount = ref<number>(3)
-const checked = ref<boolean>(true)
 
 const records = computed(() => {
   return props.data?.slice(0, displayCount.value)
@@ -30,6 +29,8 @@ const getDate = (date: string | null) => {
   if (!date) return ''
   return formatDate(date, 'YYYY-MM-DD')
 }
+
+console.log('$$')
 </script>
 
 <template>
@@ -51,13 +52,12 @@ const getDate = (date: string | null) => {
         <span class="switch-label">過濾累保金額為0的記錄</span>
       </div> -->
     </div>
-
     <div class="records-container">
-      <a-empty v-if="!records?.length" />
       <BaseLoading
         v-if="props.isLoading"
         position="absolute"
       />
+      <a-empty v-if="!props.isLoading && !records?.length" />
       <ul
         v-if="!props.isLoading && records?.length > 0"
         class="record-list"
