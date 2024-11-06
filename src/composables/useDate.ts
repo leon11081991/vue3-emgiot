@@ -46,18 +46,15 @@ export const useDate = () => {
     days: number,
     type: FormatDateType = 'YYYY-MM-DD'
   ) => {
-    // Parse startDate to dayjs object if it's a string, and validate it
     let date = typeof startDate === 'string' ? dayjs(startDate) : startDate
 
-    // Check if the date is valid
     if (!date.isValid()) {
       throw new Error('Invalid date provided')
     }
 
-    // Calculate the new date using dayjs
-    date = direction === 'backward' ? date.subtract(days, 'day') : date.add(days, 'day')
+    // Include the start date in the calculation
+    date = direction === 'backward' ? date.subtract(days - 1, 'day') : date.add(days - 1, 'day')
 
-    // Format and return the new date
     return date.format(type)
   }
 
