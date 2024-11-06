@@ -8,7 +8,8 @@ import type {
 } from '@/models/types/machine.types'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
-import { ref, computed } from 'vue'
+import { ref, computed, watchEffect } from 'vue'
+import BarLineMixedChart from '@/components/MixedChart/BarLineMixedChart.vue'
 import { useDate } from '@/composables/useDate'
 import { LIST_TYPE } from '@/constants/common/option.const'
 
@@ -37,12 +38,19 @@ const selectedType = ref<ListType>('day')
 const accountList = computed(() => {
   return props.data?.records
 })
+const updateKey = ref(0)
 
 // function
 const getDate = (date: string | null) => {
   if (!date) return ''
   return formatDate(date, 'YYYY-MM-DD')
 }
+
+watchEffect(() => {
+  if (accountList.value) {
+    updateKey.value += 1
+  }
+})
 </script>
 
 <template>
@@ -75,7 +83,9 @@ const getDate = (date: string | null) => {
             <div class="count-header">
               {{ $t('AccountInquiryPage.ContentHeader.PrizeWinCount') }}
             </div>
-            <div class="count-header">{{ $t('AccountInquiryPage.ContentHeader.Revenue') }}</div>
+            <div class="count-header">
+              {{ $t('AccountInquiryPage.ContentHeader.Revenue') }}
+            </div>
           </template>
           <template v-if="machineType === 'coin'">
             <div class="count-header">
@@ -106,6 +116,7 @@ const getDate = (date: string | null) => {
         </ul>
       </div>
     </div>
+    <!-- <BarLineMixedChart :list="accountList" :type="machineType" :key="updateKey" /> -->
   </div>
 </template>
 
