@@ -200,6 +200,7 @@
       "Revenue": "營收",
       "ExchangeCount": "兌幣量"
     },
+    "SwitchLabel": "顯示類型：圖表",
     "WeekTitle": "第 {date} 週",
     "EventRecord":{
       "ConnectionStatus": "連線狀態",

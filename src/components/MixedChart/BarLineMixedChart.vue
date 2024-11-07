@@ -46,7 +46,7 @@ const chartDataConfig =
         {
           type: 'bar' as const,
           label: '營收',
-          data: (props.list as BaseClawRecordType[]).map((item) => item.revenue),
+          data: (props.list as BaseClawRecordType[])?.map((item) => item.revenue),
           backgroundColor: 'rgba(132, 191, 255, 0.5)',
           borderRadius: 5,
           yAxisID: 'y'
@@ -54,7 +54,7 @@ const chartDataConfig =
         {
           type: 'line' as const,
           label: '出貨',
-          data: (props.list as BaseClawRecordType[]).map((item) => item.prizeWinCount),
+          data: (props.list as BaseClawRecordType[])?.map((item) => item.prizeWinCount),
           borderColor: 'rgba(53, 188, 103,0.5)',
           borderWidth: 2,
           pointBackgroundColor: 'rgba(53, 188, 103,0.5)',
@@ -65,7 +65,7 @@ const chartDataConfig =
         {
           type: 'bar' as const,
           label: '兌幣量',
-          data: (props.list as BaseCoinRecordType[]).map((item) => item.exchangeCount),
+          data: (props.list as BaseCoinRecordType[])?.map((item) => item.exchangeCount),
           backgroundColor: 'rgba(132, 191, 255, 0.5)',
           borderRadius: 5,
           yAxisID: 'y'
@@ -74,7 +74,7 @@ const chartDataConfig =
 
 const chartData: ChartData<'bar' | 'line'> = {
   // TODO: type 問題硬解
-  labels: props.list.map((item: BaseCoinRecordType | BaseClawRecordType) =>
+  labels: props.list?.map((item: BaseCoinRecordType | BaseClawRecordType) =>
     formatDate(item.date, 'MM/DD')
   ),
   datasets: chartDataConfig

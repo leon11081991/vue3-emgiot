@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { MachineType } from '@/models/types/machine.types'
+// import type { MachineType } from '@/models/types/machine.types'
 import type {
   BaseClawRecordType,
   BaseCoinRecordType,
@@ -7,26 +7,15 @@ import type {
   CoinOperationsDetailResType
 } from '@/models/types/machine.types'
 import { useI18n } from 'vue-i18n'
-import { useRoute } from 'vue-router'
+// import { useRoute } from 'vue-router'
 import { ref, computed, watchEffect } from 'vue'
 import BarLineMixedChart from '@/components/MixedChart/BarLineMixedChart.vue'
+import BaseSwitch from '@/components/Base/BaseSwitch.vue'
 import { useDate } from '@/composables/useDate'
 import { LIST_TYPE } from '@/constants/common/option.const'
 
 type ListType = 'day' | 'week' | 'month'
 
-// const props = withDefaults(
-//   defineProps<{
-//     data: ClawOperationsDetailResType | CoinOperationsDetailResType
-//     isLoading: boolean
-//     machineType: MachineType
-//   }>(),
-//   {
-//     data() {
-//       return {} as ClawOperationsDetailResType | CoinOperationsDetailResType
-//     }
-//   }
-// )
 const props = defineProps<
   | {
       machineType: 'claw'
@@ -41,11 +30,8 @@ const props = defineProps<
 >()
 
 const { t: $t } = useI18n()
-const route = useRoute()
+// const route = useRoute()
 const { formatDate } = useDate()
-
-// 非響應式變數
-// const machineType = route.params.machineType as MachineType
 
 // ref 變數
 const isTypeChart = ref(true)
@@ -171,11 +157,11 @@ watchEffect(() => {
 <template>
   <div class="account-inquiry-content">
     <div class="action-container">
-      <a-switch
-        v-model:checked="isTypeChart"
-        @change="handleToggleType"
+      <BaseSwitch
+        v-model:value="isTypeChart"
+        :icon-name="'chart-btn'"
       />
-      <span class="checkbox-label">顯示類型：圖表</span>
+      <span class="switch-label">{{ $t('AccountInquiryPage.SwitchLabel') }}</span>
     </div>
 
     <template v-if="isTypeChart">
@@ -259,7 +245,8 @@ watchEffect(() => {
   justify-content: flex-end;
   gap: 0.5rem;
   margin-bottom: 2rem;
-  .checkbox-label {
+
+  .switch-label {
     color: $--color-primary;
   }
 }
