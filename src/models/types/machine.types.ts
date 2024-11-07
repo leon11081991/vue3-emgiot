@@ -25,6 +25,7 @@ export type ClawOperationsDetailResType = {
 }
 
 export type CoinOperationsDetailResType = {
+  pcbName: string
   coinExchanged: number
   coinRemaining: number
   records: BaseCoinRecordType[]
@@ -57,6 +58,7 @@ export type clawMachineCardType = {
 }
 
 export type coinMachineCardType = {
+  pcbName: string
   coinExchanged: number
   coinRemaining: number
   totalExchangeCoinCount: number

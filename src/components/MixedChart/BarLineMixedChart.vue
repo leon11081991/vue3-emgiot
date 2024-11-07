@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Chart } from 'vue-chartjs'
+import type { BaseClawRecordType, BaseCoinRecordType } from '@/models/types/machine.types'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -13,8 +13,9 @@ import {
   type ChartOptions,
   type ChartData
 } from 'chart.js'
+import { Chart } from 'vue-chartjs'
+import { useDate } from '@/composables/useDate'
 
-// 註冊 Chart.js 所需的組件
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -26,35 +27,67 @@ ChartJS.register(
   Legend
 )
 
-// 定義 chartData 的類型
-const chartData: ChartData<'bar' | 'line'> = {
-  labels: ['08/02', '08/04', '08/06', '08/08'],
-  datasets: [
-    {
-      type: 'bar' as const,
-      label: 'Bar Dataset',
-      data: [200, 300, 400, 200],
-      backgroundColor: 'rgba(54, 162, 235, 0.5)',
-      yAxisID: 'y'
-    },
-    {
-      type: 'line' as const,
-      label: 'Line Dataset',
-      data: [150, 250, 600, 250],
-      borderColor: 'green',
-      borderWidth: 2,
-      pointBackgroundColor: 'green',
-      yAxisID: 'y1'
+const props = defineProps<
+  | {
+      type: 'claw'
+      list: BaseClawRecordType[] | Record<string, any>
     }
-  ]
+  | {
+      type: 'coin'
+      list: BaseCoinRecordType[] | Record<string, any>
+    }
+>()
+
+const { formatDate } = useDate()
+
+const chartDataConfig =
+  props.type === 'claw'
+    ? [
+        {
+          type: 'bar' as const,
+          label: '營收',
+          data: (props.list as BaseClawRecordType[]).map((item) => item.revenue),
+          backgroundColor: 'rgba(132, 191, 255, 0.5)',
+          borderRadius: 5,
+          yAxisID: 'y'
+        },
+        {
+          type: 'line' as const,
+          label: '出貨',
+          data: (props.list as BaseClawRecordType[]).map((item) => item.prizeWinCount),
+          borderColor: 'rgba(53, 188, 103,0.5)',
+          borderWidth: 2,
+          pointBackgroundColor: 'rgba(53, 188, 103,0.5)',
+          yAxisID: 'y1'
+        }
+      ]
+    : [
+        {
+          type: 'bar' as const,
+          label: '兌幣量',
+          data: (props.list as BaseCoinRecordType[]).map((item) => item.exchangeCount),
+          backgroundColor: 'rgba(132, 191, 255, 0.5)',
+          borderRadius: 5,
+          yAxisID: 'y'
+        }
+      ]
+
+const chartData: ChartData<'bar' | 'line'> = {
+  // TODO: type 問題硬解
+  labels: props.list.map((item: BaseCoinRecordType | BaseClawRecordType) =>
+    formatDate(item.date, 'MM/DD')
+  ),
+  datasets: chartDataConfig
 }
 
-// 定義 chartOptions 的類型
 const chartOptions: ChartOptions<'bar' | 'line'> = {
   responsive: true,
   scales: {
     x: {
-      display: false
+      display: true,
+      grid: {
+        display: false // 隱藏 y 軸的網格線
+      }
     },
     y: {
       beginAtZero: true,
@@ -71,6 +104,7 @@ const chartOptions: ChartOptions<'bar' | 'line'> = {
   }
 }
 </script>
+
 <template>
   <Chart
     type="bar"
@@ -78,4 +112,3 @@ const chartOptions: ChartOptions<'bar' | 'line'> = {
     :options="chartOptions"
   />
 </template>
-<style lang="scss" scoped></style>

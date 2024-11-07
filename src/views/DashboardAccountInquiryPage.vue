@@ -25,7 +25,11 @@ import { createAccountInquiryTabs } from '@/constants/dashboard.const'
 
 /* type */
 type AccountInquiryTabCompType = DefineComponent<
-  { data: ClawOperationsDetailResType | CoinOperationsDetailResType; isLoading: boolean },
+  {
+    data: ClawOperationsDetailResType | CoinOperationsDetailResType
+    isLoading: boolean
+    machineType: MachineType
+  },
   {},
   {},
   any
@@ -123,6 +127,7 @@ const revenueCardData = computed(() => {
     const totalExchangeCoinCount = data.records?.reduce((acc, curr) => acc + curr.exchangeCount, 0)
 
     return {
+      pcbName: data.pcbName,
       coinExchanged: coinExchanged,
       coinRemaining: coinRemaining,
       totalExchangeCoinCount: totalExchangeCoinCount
@@ -162,6 +167,7 @@ const getMachineOperationsDetail = async (machineType: MachineType) => {
     })
     listData.value = coinOperationsDetailRecords.value.data
     isLoading.value = coinOperationsDetailRecords.value.isLoading
+    cardData.value = coinOperationsDetailRecords.value.data
     return
   }
 }

@@ -101,7 +101,7 @@ const coinData = computed(() => {
 
     <!-- coin type -->
     <div v-else-if="isCoin && coinData">
-      <div class="pcbName">{{ '兌幣機' }}</div>
+      <div class="pcbName">{{ coinData.pcbName }}</div>
       <div class="content">
         <div class="content-header">
           <div class="revenue-summary">

@@ -8,31 +8,47 @@ import type {
 } from '@/models/types/machine.types'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
-import { ref, computed } from 'vue'
+import { ref, computed, watchEffect } from 'vue'
+import BarLineMixedChart from '@/components/MixedChart/BarLineMixedChart.vue'
 import { useDate } from '@/composables/useDate'
 import { LIST_TYPE } from '@/constants/common/option.const'
 
 type ListType = 'day' | 'week' | 'month'
 
-const props = withDefaults(
-  defineProps<{
-    data: ClawOperationsDetailResType | CoinOperationsDetailResType
-  }>(),
-  {
-    data() {
-      return {} as ClawOperationsDetailResType | CoinOperationsDetailResType
+// const props = withDefaults(
+//   defineProps<{
+//     data: ClawOperationsDetailResType | CoinOperationsDetailResType
+//     isLoading: boolean
+//     machineType: MachineType
+//   }>(),
+//   {
+//     data() {
+//       return {} as ClawOperationsDetailResType | CoinOperationsDetailResType
+//     }
+//   }
+// )
+const props = defineProps<
+  | {
+      machineType: 'claw'
+      data: ClawOperationsDetailResType
+      isLoading: boolean
     }
-  }
-)
+  | {
+      machineType: 'coin'
+      data: CoinOperationsDetailResType
+      isLoading: boolean
+    }
+>()
 
 const { t: $t } = useI18n()
 const route = useRoute()
 const { formatDate } = useDate()
 
 // 非響應式變數
-const machineType = route.params.machineType as MachineType
+// const machineType = route.params.machineType as MachineType
 
 // ref 變數
+const isTypeChart = ref(true)
 const selectedType = ref<ListType>('day')
 const accountList = computed(() => {
   if (selectedType.value === 'week') {
@@ -45,8 +61,16 @@ const accountList = computed(() => {
 
   return props.data?.records
 })
+const updateKey = ref(0)
 
 // function
+const handleToggleType = (val: boolean) => {
+  console.log('handleToggleType', val)
+  if (val) {
+    selectedType.value = 'day'
+  }
+}
+
 const getDate = (date: string | null) => {
   if (!date) return ''
   return formatDate(date, 'YYYY-MM-DD')
@@ -71,6 +95,7 @@ const handleDateContent = (type: ListType, date: string | null) => {
   return date
 }
 
+// TODO: type 問題
 const handleWeekData = (records: BaseClawRecordType[] | BaseCoinRecordType[]) => {
   if (!records) return []
 
@@ -107,6 +132,7 @@ const handleWeekData = (records: BaseClawRecordType[] | BaseCoinRecordType[]) =>
   return weeklyData
 }
 
+// TODO: type 問題
 const handleMonthData = (
   records: BaseClawRecordType[] | BaseCoinRecordType[]
 ): BaseClawRecordType[] | BaseCoinRecordType[] => {
@@ -134,76 +160,110 @@ const handleMonthData = (
   })
   return Object.values(monthlyData)
 }
+
+watchEffect(() => {
+  if (accountList.value) {
+    updateKey.value += 1
+  }
+})
 </script>
 
 <template>
   <div class="account-inquiry-content">
-    <div class="list-container">
-      <div class="list-action">
-        <label
-          class="action-label"
-          v-for="type in LIST_TYPE"
-          :for="type.value"
-          :key="type.value"
-        >
-          <input
-            type="radio"
-            :id="type.value"
-            :name="type.value"
-            :value="type.value"
-            v-model="selectedType"
-          />
-          <span>{{ type.label }}</span>
-        </label>
-      </div>
-      <div class="list-content">
-        <div
-          class="content-header"
-          :class="machineType"
-        >
-          <div class="date-header">{{ $t('AccountInquiryPage.ContentHeader.Date') }}</div>
-          <template v-if="machineType === 'claw'">
-            <div class="count-header">
-              {{ $t('AccountInquiryPage.ContentHeader.PrizeWinCount') }}
-            </div>
-            <div class="count-header">{{ $t('AccountInquiryPage.ContentHeader.Revenue') }}</div>
-          </template>
-          <template v-if="machineType === 'coin'">
-            <div class="count-header">
-              {{ $t('AccountInquiryPage.ContentHeader.ExchangeCount') }}
-            </div>
-          </template>
-        </div>
-        <ul class="content-list">
-          {{
-            accountList
-          }}
-          <li
-            v-for="item in accountList"
-            :key="item.date"
-            :class="machineType"
-            class="content-item"
+    <div class="action-container">
+      <a-switch
+        v-model:checked="isTypeChart"
+        @change="handleToggleType"
+      />
+      <span class="checkbox-label">顯示類型：圖表</span>
+    </div>
+
+    <template v-if="isTypeChart">
+      <BarLineMixedChart
+        :list="accountList"
+        :type="machineType"
+        :key="updateKey"
+      />
+    </template>
+
+    <template v-else>
+      <div class="list-container">
+        <div class="list-action">
+          <label
+            class="action-label"
+            v-for="type in LIST_TYPE"
+            :for="type.value"
+            :key="type.value"
           >
-            <div class="date">{{ handleDateContent(selectedType, item?.date) }}</div>
+            <input
+              type="radio"
+              :id="type.value"
+              :name="type.value"
+              :value="type.value"
+              v-model="selectedType"
+            />
+            <span>{{ type.label }}</span>
+          </label>
+        </div>
+        <div class="list-content">
+          <div
+            class="content-header"
+            :class="machineType"
+          >
+            <div class="date-header">{{ $t('AccountInquiryPage.ContentHeader.Date') }}</div>
             <template v-if="machineType === 'claw'">
-              <div class="count prizeWinCount">
-                {{ (item as BaseClawRecordType)?.prizeWinCount }}
+              <div class="count-header">
+                {{ $t('AccountInquiryPage.ContentHeader.PrizeWinCount') }}
               </div>
-              <div class="count revenue">{{ (item as BaseClawRecordType)?.revenue }}</div>
+              <div class="count-header">
+                {{ $t('AccountInquiryPage.ContentHeader.Revenue') }}
+              </div>
             </template>
             <template v-if="machineType === 'coin'">
-              <div class="count exchangeCount">
-                {{ (item as BaseCoinRecordType)?.exchangeCount }}
+              <div class="count-header">
+                {{ $t('AccountInquiryPage.ContentHeader.ExchangeCount') }}
               </div>
             </template>
-          </li>
-        </ul>
+          </div>
+          <ul class="content-list">
+            <li
+              v-for="item in accountList"
+              :key="item.date"
+              :class="machineType"
+              class="content-item"
+            >
+              <div class="date">{{ handleDateContent(selectedType, item?.date) }}</div>
+              <template v-if="machineType === 'claw'">
+                <div class="count prizeWinCount">
+                  {{ (item as BaseClawRecordType)?.prizeWinCount }}
+                </div>
+                <div class="count revenue">{{ (item as BaseClawRecordType)?.revenue }}</div>
+              </template>
+              <template v-if="machineType === 'coin'">
+                <div class="count exchangeCount">
+                  {{ (item as BaseCoinRecordType)?.exchangeCount }}
+                </div>
+              </template>
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
 <style lang="scss" scoped>
+.action-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  .checkbox-label {
+    color: $--color-primary;
+  }
+}
+
 .list-action {
   display: flex;
 
