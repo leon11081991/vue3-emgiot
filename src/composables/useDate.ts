@@ -86,6 +86,11 @@ export const useDate = () => {
     return dayjs().subtract(3, 'month').format('YYYY-MM-DD')
   }
 
+  const getMonth = (date: string | null) => {
+    if (!date) return ''
+    return dayjs(date).format('MM')
+  }
+
   return {
     year,
     month,
@@ -96,6 +101,7 @@ export const useDate = () => {
     getCurrentDateTime,
     getTargetDateTime,
     getDaysInTwoMonths,
-    getThreeMonthsAgo
+    getThreeMonthsAgo,
+    getMonth
   }
 }

@@ -8,7 +8,8 @@ import { useDate } from '@/composables/useDate'
 import { CLAW_EVENT_OPTIONS, COIN_EVENT_OPTIONS } from '@/constants/common/option.const'
 import {
   EVENT_RECORD_MAPPING,
-  EVENT_TYPE_ICON_MAPPING
+  CLAW_EVENT_TYPE_ICON_MAPPING,
+  COIN_EVENT_TYPE_ICON_MAPPING
 } from '@/constants/mappings/eventRecord.mapping'
 
 const props = withDefaults(
@@ -27,6 +28,8 @@ const { getTargetDateTime } = useDate()
 
 // 非響應式變數
 const options = props.machineType === 'claw' ? CLAW_EVENT_OPTIONS : COIN_EVENT_OPTIONS
+const iconMapping =
+  props.machineType === 'claw' ? CLAW_EVENT_TYPE_ICON_MAPPING : COIN_EVENT_TYPE_ICON_MAPPING
 
 // ref 變數
 const selectedEvent = ref<string[]>([])
@@ -79,7 +82,7 @@ const records = computed(() => {
           class="event-item"
         >
           <BaseSvgIcon
-            :iconName="EVENT_TYPE_ICON_MAPPING[record?.eventCode]"
+            :iconName="iconMapping[record?.eventCode]"
             size="lg"
           />
           <div class="event-detail">

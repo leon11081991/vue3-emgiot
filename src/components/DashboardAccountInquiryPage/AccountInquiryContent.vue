@@ -35,6 +35,14 @@ const machineType = route.params.machineType as MachineType
 // ref 變數
 const selectedType = ref<ListType>('day')
 const accountList = computed(() => {
+  if (selectedType.value === 'week') {
+    return handleWeekData(props.data?.records)
+  }
+
+  if (selectedType.value === 'month') {
+    return handleMonthData(props.data?.records)
+  }
+
   return props.data?.records
 })
 
@@ -42,6 +50,89 @@ const accountList = computed(() => {
 const getDate = (date: string | null) => {
   if (!date) return ''
   return formatDate(date, 'YYYY-MM-DD')
+}
+
+const getWeekTitle = (date: string) => {
+  // 如果是中文，則顯示"第X週"，否則顯示"Week X"
+  return $t('AccountInquiryPage.WeekTitle', { date })
+}
+
+const handleDateContent = (type: ListType, date: string | null) => {
+  if (!date) return ''
+
+  if (type === 'day') {
+    return getDate(date)
+  }
+
+  if (type === 'week') {
+    return getWeekTitle(date)
+  }
+
+  return date
+}
+
+const handleWeekData = (records: BaseClawRecordType[] | BaseCoinRecordType[]) => {
+  if (!records) return []
+
+  const weeklyData = []
+  for (let i = 0; i < records.length; i += 7) {
+    // 提取每七個為一組的記錄
+    const weekRecords = records.slice(i, i + 7)
+
+    // 初始化累加結果，並使用該週的第一天作為日期標記
+    const weeklySummary = weekRecords.reduce(
+      (acc, record) => {
+        for (const key in record) {
+          // 若該屬性為 `date`，則以第幾週作為日期標記
+          if (key === 'date' && !acc.date) {
+            acc.date = i / 7 + 1
+          } else {
+            // 對每個屬性進行動態累加，如果是數字類型的屬性
+            acc[key as keyof typeof acc] =
+              (acc[key] || 0) +
+              (typeof record[key as keyof typeof record] === 'number'
+                ? record[key as keyof typeof record]
+                : 0)
+          }
+        }
+        return acc
+      },
+      {} as Record<string, any>
+    )
+
+    // 將該週累加的結果推入陣列
+    weeklyData.push(weeklySummary)
+  }
+
+  return weeklyData
+}
+
+const handleMonthData = (
+  records: BaseClawRecordType[] | BaseCoinRecordType[]
+): BaseClawRecordType[] | BaseCoinRecordType[] => {
+  if (!records) return []
+
+  const monthlyData: Record<string, any> = {}
+
+  records.forEach((record) => {
+    const monthKey = formatDate(record.date, 'YYYY-MM') // Format date to get the month
+
+    if (!monthlyData[monthKey]) {
+      monthlyData[monthKey] = { ...record }
+    } else {
+      for (const key in record) {
+        if (key !== 'date') {
+          monthlyData[monthKey][key] =
+            (monthlyData[monthKey][key] || 0) +
+            (typeof record[key as keyof typeof record] === 'number'
+              ? record[key as keyof typeof record]
+              : 0)
+        }
+      }
+    }
+    monthlyData[monthKey].date = monthKey
+  })
+  return Object.values(monthlyData)
 }
 </script>
 
@@ -84,13 +175,16 @@ const getDate = (date: string | null) => {
           </template>
         </div>
         <ul class="content-list">
+          {{
+            accountList
+          }}
           <li
             v-for="item in accountList"
             :key="item.date"
             :class="machineType"
             class="content-item"
           >
-            <div class="date">{{ getDate(item?.date) }}</div>
+            <div class="date">{{ handleDateContent(selectedType, item?.date) }}</div>
             <template v-if="machineType === 'claw'">
               <div class="count prizeWinCount">
                 {{ (item as BaseClawRecordType)?.prizeWinCount }}
