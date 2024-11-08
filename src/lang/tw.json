@@ -13,6 +13,7 @@
   },
   "Common": {
     "AppName": "雲端掌櫃",
+    "Store":"店",
     "Result": {
       "NotLogin": "請先登入...",
       "TokenExpired": "登入已過期，請重新登入",
@@ -53,6 +54,13 @@
       "1":"1級",
       "2":"2級",
       "3":"3級"
+    },
+    "Select":{
+      "RecentRecords":{
+        "3": "最近3筆記錄",
+        "5": "最近5筆記錄",
+        "10": "最近10筆記錄"
+      }
     }
   },
   "HomePage": {
@@ -178,6 +186,36 @@
     "Button":{
       "BatchForClawMachine":"批量補幣",
       "BatchForCoinMachine":"批量退幣"
+    }
+  },
+  "AccountInquiryPage": {
+    "Tabs": {
+      "AccountInquiry": "帳務查詢",
+      "ProductRecord": "商品紀錄",
+      "EventRecord": "事件紀錄"
+    },
+    "ContentHeader":{
+      "Date": "日期",
+      "PrizeWinCount": "出貨",
+      "Revenue": "營收",
+      "ExchangeCount": "兌幣量"
+    },
+    "SwitchLabel": "顯示類型：圖表",
+    "WeekTitle": "第 {date} 週",
+    "EventRecord":{
+      "ConnectionStatus": "連線狀態",
+      "Dispatch": "電眼出貨",
+      "CashBoxCollection": "錢箱收款",
+      "CoinRefillEvent": "補幣事件",
+      "CoinDispenseEvent": "出幣事件",
+      "CoinReturnEvent": "退幣事件",
+      "InventoryReport": "庫存回報",
+      "StatusReport": "狀態回報"
+    },
+    "ListType":{
+      "Day": "日帳",
+      "Week": "週帳",
+      "Month": "月帳"
     }
   },
   "LoginPage": {

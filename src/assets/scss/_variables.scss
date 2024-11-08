@@ -1,7 +1,7 @@
 :root {
   --color-primary: #1fa29a;
   --color-secondary: #00b450;
-  --color-tertiary: #463c96;
+  --color-tertiary: #0E7778;
 
   --color-success: #67c23a;
   --color-warning: #e6a23c;
@@ -46,10 +46,9 @@ $--color-secondary: #00b450;
 $--color-secondary-light: #75b7b8;
 $--color-secondary--hover: darken($--color-secondary, 5%);
 
-$--color-tertiary: #463c96;
-$--color-tertiary--light: #9b8cc7;
-$--color-tertiary--light--hover: darken($--color-tertiary--light, 10%);
-$--color-tertiary--light--disabled: rgba($--color-tertiary--light, 0.5);
+$--color-tertiary: #0E7778;
+$--color-tertiary--light--hover: darken($--color-tertiary, 10%);
+$--color-tertiary--light--disabled: rgba($--color-tertiary, 0.5);
 
 $--color-default: #5d84a6;
 $--color-default--hover: darken($--color-default, 5%);

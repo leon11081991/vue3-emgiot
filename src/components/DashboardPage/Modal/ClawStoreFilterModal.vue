@@ -101,7 +101,6 @@ const resetFilter = () => {
   groupName.value = groupDefaultName
   goodsName.value = goodsDefaultName
   isFirstTimeSelectRangePicker.value = false
-  console.log('reset全清除是問題')
 }
 
 const closeModal = () => {

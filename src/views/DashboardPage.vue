@@ -34,9 +34,11 @@ import ClawStoreFilterModal from '@/components/DashboardPage/Modal/ClawStoreFilt
 import CoinStoreFilterModal from '@/components/DashboardPage/Modal/CoinStoreFilterModal.vue'
 import UpdateStoreModal from '@/components/DashboardPage/Modal/UpdateStoreModal.vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import { useHeader } from '@/composables/useHeader'
 import { useDate } from '@/composables/useDate'
 import { useFetchDashboard } from '@/composables/useFetchDashboard'
+import { useDashboard } from '@/composables/useDashboard'
 import { useModal } from '@/composables/useModal'
 import { useDropdown } from '@/composables/useDropdown'
 import { createDashboardTabs } from '@/constants/dashboard.const'
@@ -56,10 +58,12 @@ type CoinTabCompType = DefineComponent<
 
 /* 非響應式變數 */
 const { t: $t } = useI18n()
+const router = useRouter()
 const { updateHeaderTitle } = useHeader()
 const { today, calculateDate } = useDate()
 const { clawOperationsInfo, coinOperationsInfo, fetchClawOperationsInfo, fetchCoinOperationsInfo } =
   useFetchDashboard()
+const { storeName } = useDashboard()
 const { modalVisible, openModal, closeModal } = useModal()
 const { pcbsList, fetchPcbsList } = useDropdown()
 
@@ -140,20 +144,6 @@ const filteredGroup = computed(() => {
   )
 })
 
-const storeName = computed(() => {
-  const keyword = '店'
-  const name = localStorage.getItem('storeName')
-
-  if (!name) {
-    return ''
-  }
-
-  const lastChar = name[name.length - 1]
-  const isStoreKeywordExist = lastChar.includes(keyword)
-
-  return isStoreKeywordExist ? name : name + keyword
-})
-
 /* function */
 const initSelectedMachineId = (): void => {
   selectedMachineId.value = null
@@ -186,6 +176,14 @@ const handleOpenModal = (type: DashboardModalType, machineType?: 0 | 1): void =>
   }
   openModal(() => {
     isModalVisible.value[type] = true
+  })
+}
+
+const handleGoToAccountInquiry = (machineType: DashboardTabType, pcbId: string): void => {
+  console.log('handleGoToAccountInquiry', pcbId)
+  router.push({
+    name: 'AccountInquiry',
+    params: { machineType, pcbId }
   })
 }
 
@@ -441,7 +439,6 @@ onMounted(async () => {
     </div>
 
     <div class="list-container">
-      {{ selectedMachineId }}
       <transition
         :name="transitionName"
         mode="out-in"
@@ -453,6 +450,7 @@ onMounted(async () => {
             :data="listData"
             @open-modal="handleOpenModal"
             @machine-id-clicked="handleMachineIdClicked"
+            @go-to-account-inquiry="handleGoToAccountInquiry"
           />
         </KeepAlive>
       </transition>
