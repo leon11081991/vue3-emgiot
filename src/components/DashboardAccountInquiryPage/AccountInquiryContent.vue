@@ -1,13 +1,12 @@
 <script setup lang="ts">
-// import type { MachineType } from '@/models/types/machine.types'
 import type {
   BaseClawRecordType,
   BaseCoinRecordType,
   ClawOperationsDetailResType,
-  CoinOperationsDetailResType
+  CoinOperationsDetailResType,
+  AggregateRecordType
 } from '@/models/types/machine.types'
 import { useI18n } from 'vue-i18n'
-// import { useRoute } from 'vue-router'
 import { ref, computed, watchEffect } from 'vue'
 import BarLineMixedChart from '@/components/MixedChart/BarLineMixedChart.vue'
 import BaseSwitch from '@/components/Base/BaseSwitch.vue'
@@ -67,25 +66,31 @@ const getWeekTitle = (date: string) => {
   return $t('AccountInquiryPage.WeekTitle', { date })
 }
 
-const handleDateContent = (type: ListType, date: string | null) => {
+type DateContentType = string | number | null | undefined
+const handleDateContent = (type: ListType, date: DateContentType) => {
   if (!date) return ''
 
+  const stringDate = typeof date === 'number' ? date.toString() : date
   if (type === 'day') {
-    return getDate(date)
+    return getDate(stringDate)
   }
 
   if (type === 'week') {
-    return getWeekTitle(date)
+    return getWeekTitle(stringDate)
   }
 
   return date
 }
 
-// TODO: type 問題
-const handleWeekData = (records: BaseClawRecordType[] | BaseCoinRecordType[]) => {
+type BaseRecordType = BaseClawRecordType | BaseCoinRecordType
+
+const handleWeekData = (
+  records: BaseRecordType[]
+): Array<Partial<Record<keyof BaseRecordType, number>>> => {
   if (!records) return []
 
-  const weeklyData = []
+  const weeklyData: Array<Partial<Record<keyof BaseRecordType, number>>> = []
+
   for (let i = 0; i < records.length; i += 7) {
     // 提取每七個為一組的記錄
     const weekRecords = records.slice(i, i + 7)
@@ -94,21 +99,19 @@ const handleWeekData = (records: BaseClawRecordType[] | BaseCoinRecordType[]) =>
     const weeklySummary = weekRecords.reduce(
       (acc, record) => {
         for (const key in record) {
+          const value = record[key as keyof typeof record]
+
           // 若該屬性為 `date`，則以第幾週作為日期標記
           if (key === 'date' && !acc.date) {
             acc.date = i / 7 + 1
-          } else {
+          } else if (typeof value === 'number') {
             // 對每個屬性進行動態累加，如果是數字類型的屬性
-            acc[key as keyof typeof acc] =
-              (acc[key] || 0) +
-              (typeof record[key as keyof typeof record] === 'number'
-                ? record[key as keyof typeof record]
-                : 0)
+            acc[key as keyof BaseRecordType] = (acc[key as keyof BaseRecordType] ?? 0) + value
           }
         }
         return acc
       },
-      {} as Record<string, any>
+      {} as Partial<Record<keyof BaseRecordType, number>>
     )
 
     // 將該週累加的結果推入陣列
@@ -118,32 +121,31 @@ const handleWeekData = (records: BaseClawRecordType[] | BaseCoinRecordType[]) =>
   return weeklyData
 }
 
-// TODO: type 問題
-const handleMonthData = (
-  records: BaseClawRecordType[] | BaseCoinRecordType[]
-): BaseClawRecordType[] | BaseCoinRecordType[] => {
+type BaseMonthRecordType = BaseClawRecordType | BaseCoinRecordType
+
+const handleMonthData = (records: BaseMonthRecordType[]): AggregateRecordType[] => {
   if (!records) return []
 
-  const monthlyData: Record<string, any> = {}
+  const monthlyData: Record<string, AggregateRecordType> = {}
 
   records.forEach((record) => {
-    const monthKey = formatDate(record.date, 'YYYY-MM') // Format date to get the month
+    const monthKey = formatDate(record.date, 'YYYY-MM')
 
     if (!monthlyData[monthKey]) {
-      monthlyData[monthKey] = { ...record }
-    } else {
-      for (const key in record) {
-        if (key !== 'date') {
-          monthlyData[monthKey][key] =
-            (monthlyData[monthKey][key] || 0) +
-            (typeof record[key as keyof typeof record] === 'number'
-              ? record[key as keyof typeof record]
-              : 0)
-        }
-      }
+      monthlyData[monthKey] = { date: monthKey }
     }
-    monthlyData[monthKey].date = monthKey
+
+    if ('prizeWinCount' in record) {
+      monthlyData[monthKey].prizeWinCount =
+        (monthlyData[monthKey].prizeWinCount || 0) + record.prizeWinCount
+      monthlyData[monthKey].profit = (monthlyData[monthKey].profit || 0) + record.profit
+      monthlyData[monthKey].revenue = (monthlyData[monthKey].revenue || 0) + record.revenue
+    } else if ('exchangeCount' in record) {
+      monthlyData[monthKey].exchangeCount =
+        (monthlyData[monthKey].exchangeCount || 0) + record.exchangeCount
+    }
   })
+
   return Object.values(monthlyData)
 }
 
@@ -168,6 +170,7 @@ watchEffect(() => {
       <BarLineMixedChart
         :list="accountList"
         :type="machineType"
+        :selectedType="selectedType"
         :key="updateKey"
       />
     </template>
@@ -196,7 +199,9 @@ watchEffect(() => {
             class="content-header"
             :class="machineType"
           >
-            <div class="date-header">{{ $t('AccountInquiryPage.ContentHeader.Date') }}</div>
+            <div class="date-header">
+              {{ $t('AccountInquiryPage.ContentHeader.Date') }}
+            </div>
             <template v-if="machineType === 'claw'">
               <div class="count-header">
                 {{ $t('AccountInquiryPage.ContentHeader.PrizeWinCount') }}
@@ -223,7 +228,9 @@ watchEffect(() => {
                 <div class="count prizeWinCount">
                   {{ (item as BaseClawRecordType)?.prizeWinCount }}
                 </div>
-                <div class="count revenue">{{ (item as BaseClawRecordType)?.revenue }}</div>
+                <div class="count revenue">
+                  {{ (item as BaseClawRecordType)?.revenue }}
+                </div>
               </template>
               <template v-if="machineType === 'coin'">
                 <div class="count exchangeCount">
