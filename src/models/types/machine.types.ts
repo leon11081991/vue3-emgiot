@@ -19,6 +19,14 @@ export type BaseCoinRecordType = {
   exchangeCount: number
 }
 
+export type AggregateRecordType = {
+  date: string
+  prizeWinCount?: number
+  profit?: number
+  revenue?: number
+  exchangeCount?: number
+}
+
 export type ClawOperationsDetailResType = {
   pcbName: string
   records: BaseClawRecordType[]

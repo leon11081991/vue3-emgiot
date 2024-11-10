@@ -286,7 +286,10 @@ onMounted(() => {
 .content-container {
   margin-top: 1.5rem;
 }
-.customSkeleton {
+:deep(.customSkeleton) {
   height: 150px;
+  > span {
+    height: 100% !important;
+  }
 }
 </style>

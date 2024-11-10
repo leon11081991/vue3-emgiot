@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 
-type FormatDateType = 'YYYY-MM-DD' | 'YYYY-MM' | 'MM-DD' | 'YYYY/MM/DD' | 'YYYY/MM' | 'MM/DD'
+type FormatDateType = 'YYYY-MM-DD' | 'YYYY-MM' | 'MM-DD' | 'YYYY/MM/DD' | 'YYYY/MM' | 'MM/DD' | 'MM'
 type Direction = 'forward' | 'backward'
 
 export const useDate = () => {
@@ -34,6 +34,8 @@ export const useDate = () => {
         return date.format('YYYY/MM')
       case 'MM/DD':
         return date.format('MM/DD')
+      case 'MM':
+        return date.format('MM')
       default:
         return ''
     }
