@@ -53,7 +53,8 @@
     "Level":{
       "1":"1級",
       "2":"2級",
-      "3":"3級"
+      "3":"3級",
+      "4":"4級"
     },
     "Select":{
       "RecentRecords":{
@@ -71,6 +72,34 @@
     "Tabs": {
       "Claw": "選物販賣機",
       "Coin": "兌幣機"
+    },
+    "ClawTabList":{
+      "Header": {
+        "PcbName": "機台",
+        "AveragePrizeWinCount": "平均出貨金額",
+        "Revenue": "營收",
+        "PrizeWinCount": "出貨"
+      },
+      "Item": {
+        "CashboxAmount": "錢箱累積",
+        "CumulativeAmount": "累保金額",
+        "AccountInquiry": "帳務查詢",
+        "ReplenishCoins": "遠端補幣",
+        "MoreOperation": "其他操作"
+      }
+    },
+    "CoinTabList":{
+      "Header": {
+        "PcbName": "機台",
+        "ExchangedCount": "兌幣量",
+        "ExchangedRemaining": "已兌/剩餘"
+      },
+      "Item": {
+        "AccountInquiry": "帳務查詢",
+        "SecurityStatus": "關閉",
+        "ReplenishCoins": "遠端退幣",
+        "MoreOperation": "其他操作"
+      }
     },
     "Modal":{
       "AddNewMachine":{
