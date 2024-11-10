@@ -1,10 +1,13 @@
 <script setup lang="ts">
+/* import */
 import type { UserRoleInStoreResType } from '@/models/types/dropdown.type'
 import { useI18n } from 'vue-i18n'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 
+/* i18n */
 const { t: $t } = useI18n()
 
+/* defineProps */
 const props = withDefaults(
   defineProps<{
     selectedRole: string
@@ -17,10 +20,12 @@ const props = withDefaults(
   }
 )
 
+/* defineEmits */
 const emit = defineEmits<{
   (e: 'update:selectedRole', value: string): void
 }>()
 
+/* functions */
 const changeLevel = (val: string) => {
   emit('update:selectedRole', val)
 }

@@ -10,7 +10,7 @@ import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 const { t: $t } = useI18n()
 
 /* 非響應式變數 */
-const searchInputPlaceholder = '搜尋商品名稱'
+const searchInputPlaceholder = $t('ProductPage.Placeholder.Search')
 
 /* ref變數 */
 const goodsFilter = ref('')

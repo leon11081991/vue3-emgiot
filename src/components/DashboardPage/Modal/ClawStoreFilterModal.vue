@@ -4,6 +4,7 @@ import type {
   RefreshClawDashboardType,
   SelectedGroupAndGoodsRemoveType
 } from '@/models/types/dashboard.types'
+import { useI18n } from 'vue-i18n'
 import { ref, computed, onMounted, onBeforeUnmount, h, watchEffect } from 'vue'
 import { CaretDownOutlined } from '@ant-design/icons-vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
@@ -31,6 +32,9 @@ const emit = defineEmits<{
   (e: 'refresh:clawStoreDashboard', value: RefreshClawDashboardType): void
 }>()
 
+/* i18n */
+const { t: $t } = useI18n()
+
 /* 非響應式變數 */
 const { today, calculateDate, getDaysInTwoMonths, getThreeMonthsAgo } = useDate()
 const { groupsDDLList, goodsList, fetchGroupsDDLList, fetchGoodsList } = useDropdown()
@@ -44,8 +48,8 @@ const dateRangePickerConfig = {
   一週: DAYS_IN_WEEK,
   一個月: getDaysInTwoMonths()
 }
-const groupDefaultName = '分類'
-const goodsDefaultName = '商品'
+const groupDefaultName = $t('DashboardPage.Modal.ClawStoreFilter.DropDown.GroupDefaultName')
+const goodsDefaultName = $t('DashboardPage.Modal.ClawStoreFilter.DropDown.GoodsDefaultName')
 let resetGroupNameCount = 0
 let resetGoodsNameCount = 0
 let resetGroupsDDLFilter = 0
@@ -247,7 +251,7 @@ fetchGoodsList()
   >
     <template #title>
       <div class="modal-header modal-header-primary">
-        <span class="modal-title">設定篩選條件</span>
+        <span class="modal-title">{{ $t('DashboardPage.Modal.ClawStoreFilter.Title') }}</span>
       </div>
     </template>
 
@@ -273,7 +277,7 @@ fetchGoodsList()
           @click.stop="toggleDatePicker('start')"
         >
           <div class="dateData-item">
-            開始時間
+            {{ $t('DashboardPage.Modal.ClawStoreFilter.Item.Start') }}
             <div class="date">
               {{ startDate }}
             </div>
@@ -300,7 +304,7 @@ fetchGoodsList()
           @click.stop="toggleDatePicker('end')"
         >
           <div class="dateData-item">
-            結束時間
+            {{ $t('DashboardPage.Modal.ClawStoreFilter.Item.End') }}
             <div class="date">
               {{ endDate }}
             </div>
@@ -335,7 +339,7 @@ fetchGoodsList()
                     v-if="isRangeDateSelected && isFirstTimeSelectRangePicker"
                     @click="confirmRangeDate"
                   >
-                    確認
+                    {{ $t('DashboardPage.Modal.ClawStoreFilter.Button.Confirm') }}
                   </a-button>
                   <a-button
                     v-else
@@ -343,7 +347,7 @@ fetchGoodsList()
                     type="outlined"
                     @click="toggleDatePicker('range')"
                   >
-                    取消
+                    {{ $t('DashboardPage.Modal.ClawStoreFilter.Button.Cancel') }}
                   </a-button>
                 </div>
               </template>
@@ -370,7 +374,7 @@ fetchGoodsList()
         class="search-input"
         :value="groupsDDLFilter"
         @change="handleInputChange"
-        placeholder="機台"
+        :placeholder="$t('DashboardPage.Modal.ClawStoreFilter.Placeholder.Search')"
       >
         <template #prefix>
           <BaseSvgIcon iconName="magnifier" />
@@ -423,14 +427,14 @@ fetchGoodsList()
           type="primary"
           @click="filterClawDashboardData"
         >
-          確認
+          {{ $t('DashboardPage.Modal.ClawStoreFilter.Button.Confirm') }}
         </a-button>
         <a-button
           class="cancel-btn btn"
           type="outlined"
           @click="closeModal"
         >
-          取消
+          {{ $t('DashboardPage.Modal.ClawStoreFilter.Button.Cancel') }}
         </a-button>
       </div>
     </template>

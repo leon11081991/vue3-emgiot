@@ -1,9 +1,12 @@
 <script setup lang="ts">
+/* import */
 import { computed } from 'vue'
 
+/* type */
 type SizeType = 'sm' | 'md' | 'lg' | 'xl'
 type ColorType = 'primary' | 'secondary' | 'tertiary'
 
+/* props(defineProps) */
 const props = withDefaults(
   defineProps<{
     iconName: string
@@ -16,8 +19,10 @@ const props = withDefaults(
   }
 )
 
+/* 非響應式變數 */
 const rootStyles = getComputedStyle(document.documentElement)
 
+/* computed */
 const iconName = computed(() => `#icon-${props.iconName}`)
 const classes = computed(() => {
   return {

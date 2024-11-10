@@ -10,6 +10,7 @@ import { Form } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
+import GoogleButton from '@/components/LoginPage/GoogleButton.vue'
 import { loginPageTabBarStyleConfig } from '@/constants/configs/login.config'
 import { useAuth } from '@/composables/useAuth'
 import { useModal } from '@/composables/useModal'
@@ -298,7 +299,11 @@ onMounted(() => {
 
           <!-- Third Party Login -->
           <div class="third-party-login-container">
-            <a-button
+            <GoogleButton
+              :icon-name="'logo-google'"
+              :text="'使用 Google 登入'"
+            />
+            <!-- <a-button
               class="third-party-btn"
               type="third-party"
             >
@@ -309,7 +314,7 @@ onMounted(() => {
                 />
               </template>
               <span class="text">使用 Google 登入</span>
-            </a-button>
+            </a-button> -->
             <a-button
               class="third-party-btn"
               type="third-party"

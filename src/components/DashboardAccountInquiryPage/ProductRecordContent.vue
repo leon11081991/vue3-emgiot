@@ -1,4 +1,5 @@
 <script setup lang="ts">
+/* import */
 import type { GetClawGoodsRecordResType } from '@/models/types/machine.types'
 import { computed, ref } from 'vue'
 import BaseLoading from '@/components/Base/BaseLoading.vue'
@@ -6,6 +7,7 @@ import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import { useDate } from '@/composables/useDate'
 import { RECENT_RECORDS_SELECT_OPTIONS } from '@/constants/common/select.const'
 
+/* defineProps */
 const props = withDefaults(
   defineProps<{
     data: GetClawGoodsRecordResType
@@ -17,20 +19,22 @@ const props = withDefaults(
   }
 )
 
+/* composables */
 const { formatDate } = useDate()
 
+/* refs */
 const displayCount = ref<number>(3)
 
+/* computed */
 const records = computed(() => {
   return props.data?.slice(0, displayCount.value)
 })
 
+/* functions */
 const getDate = (date: string | null) => {
   if (!date) return ''
   return formatDate(date, 'YYYY-MM-DD')
 }
-
-console.log('$$')
 </script>
 
 <template>

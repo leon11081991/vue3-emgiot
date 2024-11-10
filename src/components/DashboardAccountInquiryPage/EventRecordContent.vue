@@ -1,4 +1,5 @@
 <script setup lang="ts">
+/* import */
 import type { MachineType } from '@/models/types/machine.types'
 import type { MachineEventRecordsResType } from '@/models/types/machine.types'
 import { computed, ref } from 'vue'
@@ -12,6 +13,7 @@ import {
   COIN_EVENT_TYPE_ICON_MAPPING
 } from '@/constants/mappings/eventRecord.mapping'
 
+/* defineProps */
 const props = withDefaults(
   defineProps<{
     data: MachineEventRecordsResType
@@ -24,6 +26,7 @@ const props = withDefaults(
   }
 )
 
+/* composables */
 const { getTargetDateTime } = useDate()
 
 // 非響應式變數

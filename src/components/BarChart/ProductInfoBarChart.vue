@@ -1,5 +1,6 @@
 <script setup lang="ts">
-// import
+/* import */
+import { useI18n } from 'vue-i18n'
 import { ref, computed } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import ProductInfoBaseBarChart from './ProductInfoBaseBarChart.vue'
@@ -15,14 +16,17 @@ const props = defineProps<{
   goodsId: string
 }>()
 
-// 非響應式變數
+/* i18n */
+const { t: $t } = useI18n()
+
+/* 非響應式變數 */
 const TABS = {
   REVENUE: 'revenue',
   PROFIT: 'profit'
 }
 const { productListInfoChart, fnGetProductOperationInfoChart } = useGoods()
 
-// ref 變數
+/* ref 變數 */
 const nowTopic = ref(TABS.REVENUE)
 const updateTime = ref('')
 
@@ -30,7 +34,7 @@ const updateTime = ref('')
 const { today, getCurrentDateTime } = useDate()
 updateTime.value = getCurrentDateTime()
 
-// computed
+/* computed */
 const calculateTotalForToday = (key: OperationDataKey) => {
   return computed(() => {
     const totalData = productListInfoChart.value.data || []
@@ -47,7 +51,7 @@ const revenueData = computed(() => `${calculateTotalForToday('revenue').value}`)
 const prizeWinCount = calculateTotalForToday('prizeWinCount')
 const profit = computed(() => `${calculateTotalForToday('profit').value}`)
 
-// function
+/* function */
 function fnChangeTab(topic: string) {
   nowTopic.value = topic
 }
@@ -62,14 +66,14 @@ fnGetProductOperationInfoChart(props.goodsId)
       :class="{ active: nowTopic === TABS.REVENUE }"
       @click="fnChangeTab(TABS.REVENUE)"
     >
-      營收
+      {{ $t('ProductInfoChartPage.Chart.Tab.Revenue') }}
     </div>
     <div
       class="tab-item profit"
       :class="{ active: nowTopic === TABS.PROFIT }"
       @click="fnChangeTab(TABS.PROFIT)"
     >
-      盈餘
+      {{ $t('ProductInfoChartPage.Chart.Tab.Profit') }}
     </div>
     <div class="goodsName">
       {{ props.title }}
@@ -78,7 +82,12 @@ fnGetProductOperationInfoChart(props.goodsId)
   <div class="bar-chart-container">
     <div class="chart-section">
       <div class="revenue">
-        今日{{ nowTopic === TABS.REVENUE ? '營收' : '盈餘' }}
+        {{ $t('ProductInfoChartPage.Chart.Today')
+        }}{{
+          nowTopic === TABS.REVENUE
+            ? $t('ProductInfoChartPage.Chart.Tab.Revenue')
+            : $t('ProductInfoChartPage.Chart.Tab.Profit')
+        }}
         <p class="revenue-data">
           {{ nowTopic === TABS.REVENUE ? revenueData : profit }}
         </p>
@@ -92,7 +101,7 @@ fnGetProductOperationInfoChart(props.goodsId)
         <div class="chartData-container">
           <div class="data-title">
             <div class="title">
-              出貨成本
+              {{ $t('ProductInfoChartPage.Chart.PrizeWinCount') }}
               <BaseSvgIcon
                 iconName="dropdown"
                 color="white"

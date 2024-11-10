@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 
 type actionTypes = 'edit' | 'delete'
@@ -11,6 +12,8 @@ const emit = defineEmits<{
   (e: 'close'): void
   (e: 'openModal', action: 'edit' | 'delete'): void
 }>()
+
+const { t: $t } = useI18n()
 
 const closeModal = () => {
   emit('close')
@@ -29,7 +32,7 @@ const emitGroupEvent = (type: actionTypes) => {
   >
     <template #title>
       <div class="modal-header modal-header-primary">
-        <span class="modal-title">{{ '更多操作' }}</span>
+        <span class="modal-title">{{ $t('GroupEditPage.Modal.MoreOperation.Title') }}</span>
       </div>
     </template>
     <div class="action-container">
@@ -41,7 +44,7 @@ const emitGroupEvent = (type: actionTypes) => {
           iconName="edit"
           size="lg"
         />
-        {{ '編輯自訂分類名稱' }}
+        {{ $t('GroupEditPage.Modal.MoreOperation.Edit') }}
       </div>
       <div
         class="action-item"
@@ -51,7 +54,7 @@ const emitGroupEvent = (type: actionTypes) => {
           iconName="trash"
           size="lg"
         />
-        {{ '刪除自訂分類名稱' }}
+        {{ $t('GroupEditPage.Modal.MoreOperation.Delete') }}
       </div>
     </div>
     <template #footer></template>

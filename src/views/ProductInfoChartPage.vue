@@ -9,19 +9,19 @@ import UpdateRecord from '@/components/DashboardPage/UpdateRecord.vue'
 import { useHeader } from '@/composables/useHeader'
 import { useGoods } from '@/composables/useGoods'
 
-const route = useRoute()
-
 /* store */
 const { t: $t } = useI18n()
+const route = useRoute()
 const { updateHeaderTitle } = useHeader()
 
 /* 非響應式數據 */
-const title = '商品營運數據圖表'
+const title = $t('ProductInfoChartPage.Title')
 const { productListInfo, fnGetProductOperationInfo } = useGoods()
 
-/* 響應式數據 */
+/* ref 變數 */
 const updateKey = ref(0)
 
+/* computed */
 const goodsId = computed(() =>
   typeof route.params.goodsId === 'string' ? route.params.goodsId : ''
 )
@@ -35,6 +35,7 @@ const fnRefreshData = () => {
 
 fnGetProductOperationInfo(goodsId.value)
 
+/* lifecycle hooks */
 onMounted(() => {
   updateHeaderTitle(title)
 })

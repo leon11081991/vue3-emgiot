@@ -1,10 +1,10 @@
 <script setup lang="ts">
 /* import */
+import { useI18n } from 'vue-i18n'
 import { ref, computed, onMounted, onBeforeUnmount, watchEffect } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import { QDate } from 'quasar'
 import { useDate } from '@/composables/useDate'
-
 import '@/assets/scss/quasar.scss'
 import '@quasar/extras/material-icons/material-icons.css'
 
@@ -22,6 +22,9 @@ const emit = defineEmits<{
   (e: 'close'): void
   (e: 'refresh:account-inquiry-dashboard', value: { startDate: string; endDate: string }): void
 }>()
+
+/* i18n */
+const { t: $t } = useI18n()
 
 /* 非響應式變數 */
 const { today, calculateDate, getDaysInTwoMonths, getThreeMonthsAgo } = useDate()
@@ -172,7 +175,7 @@ onBeforeUnmount(() => {
   >
     <template #title>
       <div class="modal-header modal-header-primary">
-        <span class="modal-title">設定篩選條件</span>
+        <span class="modal-title">{{ $t('AccountInquiryPage.Modal.Filter.Title') }}</span>
       </div>
     </template>
 
@@ -198,7 +201,7 @@ onBeforeUnmount(() => {
           @click.stop="toggleDatePicker('start')"
         >
           <div class="dateData-item">
-            開始時間
+            {{ $t('AccountInquiryPage.Modal.Filter.Item.Start') }}
             <div class="date">
               {{ startDate }}
             </div>
@@ -225,7 +228,7 @@ onBeforeUnmount(() => {
           @click.stop="toggleDatePicker('end')"
         >
           <div class="dateData-item">
-            結束時間
+            {{ $t('AccountInquiryPage.Modal.Filter.Item.End') }}
             <div class="date">
               {{ endDate }}
             </div>
@@ -260,7 +263,7 @@ onBeforeUnmount(() => {
                     v-if="isRangeDateSelected && isFirstTimeSelectRangePicker"
                     @click="confirmRangeDate"
                   >
-                    確認
+                    {{ $t('AccountInquiryPage.Modal.Filter.Button.Confirm') }}
                   </a-button>
                   <a-button
                     v-else
@@ -268,7 +271,7 @@ onBeforeUnmount(() => {
                     type="outlined"
                     @click="toggleDatePicker('range')"
                   >
-                    取消
+                    {{ $t('AccountInquiryPage.Modal.Filter.Button.Cancel') }}
                   </a-button>
                 </div>
               </template>

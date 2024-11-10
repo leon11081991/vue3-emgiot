@@ -1,6 +1,8 @@
 <script setup lang="ts">
+/* import */
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 
+/* props(defineProps) */
 const props = withDefaults(
   defineProps<{
     value: boolean
@@ -11,10 +13,12 @@ const props = withDefaults(
   }
 )
 
+/* emits(defineEmits) */
 const emit = defineEmits<{
   (e: 'update:value', value: boolean): void
 }>()
 
+/* functions */
 const toggleSwitch = () => {
   emit('update:value', !props.value)
 }

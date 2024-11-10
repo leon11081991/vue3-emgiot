@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="notepad-page">notepad</div>
+  <div></div>
 </template>
 
 <style lang="scss" scoped></style>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 /* import */
+import { useI18n } from 'vue-i18n'
 import { ref, h, computed, watchEffect } from 'vue'
 import { CaretDownOutlined } from '@ant-design/icons-vue'
 import type { BaseGoodsResType } from '@/models/types/dropdown.type'
@@ -23,6 +24,8 @@ const emit = defineEmits<{
   (e: 'goods:refresh'): void
 }>()
 
+const { t: $t } = useI18n()
+
 /* store 相關 */
 const { storesListInfo, fetchStoresListInfo } = useFetchStore()
 const { dispatchEditGoods, dispatchAddGoods } = useGoods()
@@ -41,7 +44,11 @@ const isSpecial = ref<boolean>(false)
 
 /* computed */
 const modalTitle = computed(() =>
-  props.type === 'edit' ? '編輯商品' : props.type === 'add' ? '新增商品' : ''
+  props.type === 'edit'
+    ? $t('ProductPage.Modal.AddEditGoods.Title.Edit')
+    : props.type === 'add'
+      ? $t('ProductPage.Modal.AddEditGoods.Title.Add')
+      : ''
 )
 
 const customIcon = computed(() => {
@@ -143,7 +150,7 @@ fetchStoresListInfo()
         :class="{ error: isGoodsNameLenOverRule }"
         :value="goodsNameInput"
         :size="size"
-        placeholder="請輸入名稱"
+        :placeholder="$t('ProductPage.Modal.AddEditGoods.Placeholder.GoodsName')"
         @change="updateGoodsName"
       />
     </div>
@@ -158,7 +165,7 @@ fetchStoresListInfo()
         class="cost-input"
         :value="goodsCost"
         :size="size"
-        placeholder="請輸入商品成本"
+        :placeholder="$t('ProductPage.Modal.AddEditGoods.Placeholder.GoodsCost')"
         @change="updateGoodsCost"
       />
     </div>
@@ -168,7 +175,7 @@ fetchStoresListInfo()
         v-model:value="merchantAllowList"
         mode="multiple"
         :showArrow="showArrow"
-        placeholder="商家勾選"
+        :placeholder="$t('ProductPage.Modal.AddEditGoods.Placeholder.MerchantAllowList')"
         style="width: 100%"
         :options="merchantOptions"
         :size="size"
@@ -177,13 +184,17 @@ fetchStoresListInfo()
       />
     </div>
     <div class="action-container">
-      <div class="goodsType-title">{{ '商品種類' }}</div>
+      <div class="goodsType-title">{{ $t('ProductPage.Modal.AddEditGoods.Content.Title') }}</div>
       <a-radio-group
         v-model:value="isSpecial"
         class="goodsType"
       >
-        <a-radio :value="false">{{ '一般商品' }}</a-radio>
-        <a-radio :value="true">{{ '特殊商品' }}</a-radio>
+        <a-radio :value="false">{{
+          $t('ProductPage.Modal.AddEditGoods.Content.IsNormal')
+        }}</a-radio>
+        <a-radio :value="true">{{
+          $t('ProductPage.Modal.AddEditGoods.Content.IsSpecial')
+        }}</a-radio>
       </a-radio-group>
     </div>
     <template #footer>
@@ -191,8 +202,9 @@ fetchStoresListInfo()
         <a-button
           type="primary confirm-btn btn"
           @click="fnHandleGoods(props.type)"
-          >確定</a-button
         >
+          {{ $t(`ProductPage.Modal.AddEditGoods.Button.Confirm`) }}
+        </a-button>
       </div>
     </template>
   </a-modal>

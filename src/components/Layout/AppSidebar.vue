@@ -81,8 +81,9 @@ const { width } = useDeviceWidth()
         type="primary"
         class="logout-btn"
         @click="fnLogOut()"
-        >登出</a-button
       >
+        {{ $t('Common.Logout') }}
+      </a-button>
     </div>
   </aside>
   <transition name="fade">

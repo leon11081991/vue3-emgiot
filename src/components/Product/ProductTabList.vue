@@ -87,10 +87,12 @@ fetchGoodsList()
 <template>
   <div class="list product-list">
     <div class="list-header product-list-header">
-      <div class="header-item productName">商品</div>
-      <div class="header-item productMark">標記</div>
-      <div class="header-item productCost">成本價</div>
-      <div class="header-item productOperation">更多操作</div>
+      <div class="header-item productName">{{ $t('ProductPage.TabList.Header.ProductName') }}</div>
+      <div class="header-item productMark">{{ $t('ProductPage.TabList.Header.ProductMark') }}</div>
+      <div class="header-item productCost">{{ $t('ProductPage.TabList.Header.ProductCost') }}</div>
+      <div class="header-item productOperation">
+        {{ $t('ProductPage.TabList.Header.ProductOperation') }}
+      </div>
     </div>
 
     <div class="list-body">
@@ -108,7 +110,9 @@ fetchGoodsList()
               active
             >
               <div class="flex-2 list-item">{{ item.goodsName }}</div>
-              <div class="flex-1 list-item">{{ item.isSpecial ? '特' : '' }}</div>
+              <div class="flex-1 list-item">
+                {{ item.isSpecial ? $t('ProductPage.TabList.Item.IsSpecial') : '' }}
+              </div>
               <div class="flex-1 list-item">{{ item.cost }}</div>
             </a-skeleton>
             <template #actions>

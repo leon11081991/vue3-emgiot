@@ -1,15 +1,19 @@
 <script setup lang="ts">
+/* import */
 import type { StoreMemberInfoDataType } from '@/models/types/storeMember.types'
 import { Empty } from 'ant-design-vue'
 import { useI18n } from 'vue-i18n'
 
+/* i18n */
 const { t: $t } = useI18n()
 
+/* defineProps */
 const props = defineProps<{
   memberInfoData: StoreMemberInfoDataType
   pcbsList: any[]
 }>()
 
+/* defineEmits */
 const emit = defineEmits<{
   (
     e: 'update:memberInfoData',
@@ -17,6 +21,7 @@ const emit = defineEmits<{
   ): void
 }>()
 
+/* functions */
 const onUpdateData = (val: boolean | string | string[], key: keyof StoreMemberInfoDataType) => {
   emit('update:memberInfoData', { value: val, key })
 }

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+/* import */
 import type { DetectedCode } from '@/models/interfaces/qrCode.interface'
 import type { BindingPcbDataType } from '@/models/types/pcbRegister.types'
 import { useI18n } from 'vue-i18n'
@@ -10,19 +11,27 @@ import { useQRCode } from '@/composables/useQRCode'
 import { useFetchPcbRegister } from '@/composables/useFetchPcbRegister'
 import { UtilCommon } from '@/utils/utilCommon'
 
+/* i18n */
 const { t: $t } = useI18n()
+
+/* composables */
 const { trackFunctions, error: QRCodeError, onError, onDetect } = useQRCode()
 const { fnBindingPcb } = useFetchPcbRegister()
 
+/* defineProps */
 const props = defineProps<{
   modalVisible: boolean
 }>()
 
+/* defineEmits */
 const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
+/* 非響應式變數 */
 const maxLength = 10
+
+/* refs */
 const isButtonLoading = ref<boolean>(false)
 const showQrCodeReader = ref<boolean>(false)
 const cameraLoading = ref<boolean>(true)
@@ -33,6 +42,7 @@ const newMachine = ref<BindingPcbDataType>({
   qrcode: ''
 })
 
+/* functions */
 const modalTitle = (showQRCode: boolean) => {
   if (showQRCode) {
     return $t('DashboardPage.Modal.AddNewMachine.Title.QRCode')

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+/* import */
 import type { Tab } from '@/models/interfaces/tab.interface'
 import type { MachineType } from '@/models/types/machine.types'
 import type { AccountInquiryTabType } from '@/models/types/dashboard.types'
@@ -46,9 +47,11 @@ type EventRecordTabCompType = DefineComponent<
   any
 >
 
-/* 非響應式變數 */
+/* i18n */
 const { t: $t } = useI18n()
+/* route */
 const route = useRoute()
+/* composables */
 const { updateHeaderTitle } = useHeader()
 const { storeName } = useDashboard()
 const {
@@ -67,6 +70,8 @@ const initialEndDate = today()
 const initialStartDate = calculateDate(initialEndDate, 'backward', 7)
 const endDate = ref(initialEndDate)
 const startDate = ref(initialStartDate)
+
+/* 非響應式變數 */
 const machineType: MachineType = route.params.machineType as MachineType
 const pcbId = route.params.pcbId as string
 
@@ -136,6 +141,7 @@ const revenueCardData = computed(() => {
   return null
 })
 
+/* functions */
 const fnResetData = (data?: { startDate: string; endDate: string }) => {
   startDate.value = data?.startDate || initialStartDate
   endDate.value = data?.endDate || initialEndDate

@@ -60,7 +60,7 @@ const updateWifiPassword = (e: Event) => {
 
 const fnUpdateStoreInfo = async () => {
   if (storeName.value.trim() === '') {
-    openMessage('error', '店家名稱不得為空')
+    openMessage('error', $t('DashboardPage.Modal.UpdateStore.Message.StoreNameRequired'))
     return
   }
 
@@ -71,7 +71,7 @@ const fnUpdateStoreInfo = async () => {
   const res = await updateStore(params)
 
   if (res) {
-    const keyword = '店'
+    const keyword = $t('Common.Store')
     const lastChar = storeName.value[storeName.value.length - 1]
     const isStoreKeywordExist = lastChar.includes(storeName.value)
     const newName = isStoreKeywordExist ? storeName.value : storeName.value + keyword
@@ -98,7 +98,7 @@ onMounted(() => {
   >
     <template #title>
       <div class="modal-header modal-header-primary">
-        <span class="modal-title">{{ '編輯店家' }}</span>
+        <span class="modal-title">{{ $t('DashboardPage.Modal.UpdateStore.Title') }}</span>
       </div>
     </template>
 
@@ -107,7 +107,7 @@ onMounted(() => {
         class="createStore-input"
         :value="storeName"
         :class="{ error: isStoreNameLenOverRule || isStoreNameExisted }"
-        placeholder="請輸入名稱"
+        :placeholder="$t('DashboardPage.Modal.UpdateStore.Placeholder.StoreName')"
         @change="updateStoreValue"
       >
       </a-input>
@@ -121,7 +121,7 @@ onMounted(() => {
       <a-input
         class="createStore-input"
         :value="wifiInfo.wifiSSID"
-        placeholder="請輸入WIFI名稱"
+        :placeholder="$t('DashboardPage.Modal.UpdateStore.Placeholder.WifiSSID')"
         @change="updateWifiSSID"
         @keyup.enter="fnUpdateStoreInfo"
       >
@@ -129,7 +129,7 @@ onMounted(() => {
       <a-input
         class="createStore-input"
         :value="wifiInfo.wifiPassword"
-        placeholder="請輸入WIFI密碼"
+        :placeholder="$t('DashboardPage.Modal.UpdateStore.Placeholder.WifiPassword')"
         @change="updateWifiPassword"
         @keyup.enter="fnUpdateStoreInfo"
       >
@@ -142,7 +142,7 @@ onMounted(() => {
         type="primary"
         @click="fnUpdateStoreInfo"
       >
-        {{ '確認' }}
+        {{ $t('DashboardPage.Modal.UpdateStore.Button.Confirm') }}
       </a-button>
     </template>
   </a-modal>

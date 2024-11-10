@@ -193,7 +193,9 @@ const handleBatchAction = (pcbList: string[], count: number) => {
         </div>
 
         <div class="action-container">
-          <p class="action-text">已選{{ checkedPcbIdList.length }}台</p>
+          <p class="action-text">
+            {{ $t('DashboardPage.Modal.BatchModal.Selected', { count: checkedPcbIdList.length }) }}
+          </p>
 
           <a-button
             ghost

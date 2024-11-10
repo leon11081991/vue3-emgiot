@@ -1,16 +1,15 @@
 <script setup lang="ts">
+/* import */
 import { ref, shallowRef, watchEffect } from 'vue'
 import MessagePageHeader from '@/components/MessagePage/MessagePageHeader.vue'
 import MessagePageSystemList from '@/components/MessagePage/MessagePageSystemList.vue'
 import MessagePageOperationList from '@/components/MessagePage/MessagePageOperationList.vue'
-// import { useI18n } from 'vue-i18n'
 
 /* 非響應式變數 */
 enum NotificationEnumType {
   SYSTEM, // 0 系統訊息
   OPERATION // 1 營業訊息
 }
-// const { t: $t } = useI18n()
 const colorPrimary = '#1FA29A'
 
 /* 響應式變數 */

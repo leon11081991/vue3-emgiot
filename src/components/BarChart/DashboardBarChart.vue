@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// import
+/* import */
 import { ref, computed } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import DashboardBarChart from '@/components/BarChart/DashboardBaseBarChart.vue'
@@ -7,10 +7,10 @@ import type { PropsBarChartType } from '@/models/types/dashboard.types'
 import { useDate } from '@/composables/useDate'
 import { useFetchDashboard } from '@/composables/useFetchDashboard'
 
-// type
+/* type */
 type OperationDataKey = 'revenue' | 'prizeWinCount' | 'profit' | 'coinExchanged'
 
-// defineProps
+/* defineProps */
 const props = defineProps<{
   type: PropsBarChartType
   startDate: string
@@ -18,24 +18,23 @@ const props = defineProps<{
   isInitialChart: boolean
 }>()
 
-// defineEmit
+/* defineEmit */
 const emit = defineEmits<{
   (e: 'update:storeInfo'): void
 }>()
 
-// 非響應式變數
+/* 非響應式變數 */
 const TABS = {
   REVENUE: 'revenue',
   PROFIT: 'profit'
 }
 
-// ref 變數
+/* ref 變數 */
 const currentTab = ref(TABS.REVENUE)
 const lastUpdatedTime = ref('')
 
 // 初始化日期
 const { today, getCurrentDateTime, formatDate } = useDate()
-
 lastUpdatedTime.value = getCurrentDateTime()
 
 // 獲取數據
@@ -85,7 +84,7 @@ const coinExchangedTotal = computed(() => {
   return sumByKey(todayCoinData, 'coinExchanged')
 })
 
-// function
+/* functions */
 const changeTab = (tab: string) => {
   currentTab.value = tab
 }
@@ -94,7 +93,7 @@ const emitUpdateStoreWifiInfo = () => {
   emit('update:storeInfo')
 }
 
-// Lifecycle hooks
+/* lifecycle hooks */
 fetchOperationClawChart({
   startDate: props.startDate,
   endDate: props.endDate

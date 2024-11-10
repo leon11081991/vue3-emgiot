@@ -1,7 +1,11 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import { ref, watchEffect, onMounted, onBeforeUnmount } from 'vue'
 import { useMessagePage } from '@/composables/useMessagePage'
 import { useDate } from '@/composables/useDate'
+
+/* i18n */
+const { t: $t } = useI18n()
 
 /* 非響應式變數 */
 const { notificationInfo, getNotificationInfo } = useMessagePage()
@@ -58,9 +62,9 @@ onMounted(() => {
 <template>
   <div class="list message-list">
     <div class="list-header message-list-header">
-      <div class="header-item machineName">{{ '機台' }}</div>
-      <div class="header-item eventName">{{ 'event.content' }}</div>
-      <div class="header-item date">{{ '時間' }}</div>
+      <div class="header-item machineName">{{ $t('MessagePage.TabList.Header.MachineName') }}</div>
+      <div class="header-item eventName">{{ $t('MessagePage.TabList.Header.EventName') }}</div>
+      <div class="header-item date">{{ $t('MessagePage.TabList.Header.Date') }}</div>
     </div>
     <div v-if="notificationInfo.isLoading">
       <a-skeleton
@@ -105,7 +109,7 @@ onMounted(() => {
         v-else-if="notificationInfo.data?.items && notificationInfo.data.items.length === 0"
         class="noData"
       >
-        {{ '無資料' }}
+        {{ $t('MessagePage.TabList.NoData') }}
       </div>
     </div>
     <div ref="observer"></div>

@@ -12,7 +12,8 @@ import {
 } from 'chart.js'
 import type { ChartOptions, ChartData, ChartDataset } from 'chart.js'
 import { Chart } from 'vue-chartjs'
-import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { computed } from 'vue'
 import { useDate } from '@/composables/useDate'
 import type {
   BaseClawRecordType,
@@ -43,6 +44,7 @@ const props = defineProps<{
   selectedType: 'day' | 'week' | 'month'
 }>()
 
+const { t: $t } = useI18n()
 const { formatDate } = useDate()
 
 const chartDataConfig = computed<ChartDataset<'bar' | 'line', number[]>[]>(() => {
@@ -50,7 +52,7 @@ const chartDataConfig = computed<ChartDataset<'bar' | 'line', number[]>[]>(() =>
     return [
       {
         type: 'bar',
-        label: '營收',
+        label: $t('AccountInquiryPage.BarLineChart.Claw.Label.Revenue'),
         data: props.list?.map((item) => ('revenue' in item ? (item.revenue ?? 0) : 0)),
         backgroundColor: 'rgba(132, 191, 255, 0.5)',
         borderRadius: 5,
@@ -58,7 +60,7 @@ const chartDataConfig = computed<ChartDataset<'bar' | 'line', number[]>[]>(() =>
       },
       {
         type: 'line',
-        label: '出貨',
+        label: $t('AccountInquiryPage.BarLineChart.Claw.Label.PrizeWinCount'),
         data: props.list?.map((item) => ('prizeWinCount' in item ? (item.prizeWinCount ?? 0) : 0)),
         borderColor: 'rgba(53, 188, 103, 0.5)',
         borderWidth: 2,
@@ -70,7 +72,7 @@ const chartDataConfig = computed<ChartDataset<'bar' | 'line', number[]>[]>(() =>
     return [
       {
         type: 'bar',
-        label: '兌幣量',
+        label: $t('AccountInquiryPage.BarLineChart.Coin.Label.ExchangeCount'),
         data: props.list?.map((item) => ('exchangeCount' in item ? (item.exchangeCount ?? 0) : 0)),
         backgroundColor: 'rgba(132, 191, 255, 0.5)',
         borderRadius: 5,
@@ -83,7 +85,7 @@ const chartDataConfig = computed<ChartDataset<'bar' | 'line', number[]>[]>(() =>
 const labels = computed(() => {
   return props.list?.map((item) => {
     if (props.selectedType === 'week' && typeof item.date === 'number') {
-      return `第${item.date}週`
+      return `${$t('AccountInquiryPage.BarLineChart.Week', { week: item.date })}`
     }
 
     if (typeof item.date === 'string') {

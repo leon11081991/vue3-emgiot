@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import { useGroup } from '@/composables/useGroupEdit'
 
 const props = defineProps<{
@@ -10,6 +11,8 @@ const emit = defineEmits<{
   (e: 'close'): void
   (e: 'refresh:grouplist'): void
 }>()
+
+const { t: $t } = useI18n()
 
 const { fnDeleteGroupList } = useGroup()
 
@@ -34,26 +37,27 @@ const fnDeleteGroup = async (groupId: string) => {
   >
     <template #title>
       <div class="modal-header modal-header-primary">
-        <span class="modal-title">{{ '刪除自訂分類' }}</span>
+        <span class="modal-title">{{ $t('GroupEditPage.Modal.DeleteGroup.Title') }}</span>
       </div>
     </template>
     <div class="action-container">
-      {{ '請確認是否刪除自訂分類' }} <br />
-      {{ '該分類內的機台將會被移動至未分類' }}
+      {{ $t('GroupEditPage.Modal.DeleteGroup.Content.First') }} <br />
+      {{ $t('GroupEditPage.Modal.DeleteGroup.Content.Second') }}
     </div>
     <template #footer>
       <div class="button-container">
         <a-button
           type="primary confirm-btn btn"
           @click="fnDeleteGroup(props.groupId)"
-          >確定</a-button
         >
+          {{ $t('GroupEditPage.Modal.DeleteGroup.Button.Confirm') }}
+        </a-button>
         <a-button
           class="cancel-btn btn"
           type="outlined"
           @click="closeModal"
         >
-          取消
+          {{ $t('GroupEditPage.Modal.DeleteGroup.Button.Cancel') }}
         </a-button>
       </div>
     </template>

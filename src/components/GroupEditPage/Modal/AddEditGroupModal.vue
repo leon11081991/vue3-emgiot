@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { BasePcbGroupResType } from '@/models/types/group.types'
+import { useI18n } from 'vue-i18n'
 import { ref, computed, watchEffect } from 'vue'
 import { useMessage } from '@/composables/useMessage'
 import { useGroup } from '@/composables/useGroupEdit'
@@ -16,6 +17,7 @@ const emit = defineEmits<{
 }>()
 
 // store 相關
+const { t: $t } = useI18n()
 const { openMessage } = useMessage()
 const { fnAddGroupList, fnUpdateGroupList } = useGroup()
 
@@ -30,7 +32,11 @@ const groupExistMessage = computed(() => (isGroupNameExisted.value ? '你已建�
 
 /* computed */
 const modalTitle = computed(() =>
-  props.type === 'edit' ? '編輯自訂分類' : props.type === 'add' ? '新增自訂分類' : ''
+  props.type === 'edit'
+    ? $t('GroupEditPage.Modal.AddEditGroup.Title.Edit')
+    : props.type === 'add'
+      ? $t('GroupEditPage.Modal.AddEditGroup.Title.Add')
+      : ''
 )
 
 /* function */
@@ -51,12 +57,12 @@ const updateGroupValue = (e: Event) => {
 
 const fnAddEditGroup = async (type: string) => {
   if (groupName.value.trim() === '') {
-    openMessage('error', '輸入不得為空')
+    openMessage('error', $t('GroupEditPage.Modal.AddEditGroup.Message.Empty'))
     return
   }
 
   if (isGroupNameLenOverRule.value) {
-    openMessage('error', '長度超過10個字')
+    openMessage('error', $t('GroupEditPage.Modal.AddEditGroup.Message.LengthOverRule'))
     return
   }
 
@@ -85,7 +91,6 @@ const fnAddEditGroup = async (type: string) => {
 }
 
 const resetGroupFields = () => {
-  console.log('add')
   groupName.value = ''
 }
 
@@ -120,7 +125,7 @@ watchEffect(() => {
         class="addGroup-input"
         :value="groupName"
         :class="{ error: isGroupNameLenOverRule || isGroupNameExisted }"
-        placeholder="請輸入名稱"
+        :placeholder="$t('GroupEditPage.Modal.AddEditGroup.Placeholder.GroupName')"
         @change="updateGroupValue"
       >
       </a-input>
@@ -139,7 +144,7 @@ watchEffect(() => {
         type="primary"
         @click="fnAddEditGroup(props.type)"
       >
-        {{ '確認' }}
+        {{ $t('GroupEditPage.Modal.AddEditGroup.Button.Confirm') }}
       </a-button>
     </template>
   </a-modal>

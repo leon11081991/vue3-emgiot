@@ -1,7 +1,9 @@
 <script setup lang="ts">
+/* import */
 import type { CSSProperties } from 'vue'
 import { computed } from 'vue'
 
+/* props(defineProps) */
 const props = withDefaults(
   defineProps<{
     position?: string
@@ -15,8 +17,10 @@ const props = withDefaults(
   }
 )
 
+/* 非響應變數 */
 const dotNum = 3
 
+/* computed */
 const style = computed(() => {
   return {
     position: props.position || 'fixed',
