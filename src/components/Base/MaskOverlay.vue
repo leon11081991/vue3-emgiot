@@ -1,4 +1,5 @@
 <script setup lang="ts">
+/* defineProps */
 const props = defineProps<{
   isVisible: boolean
 }>()

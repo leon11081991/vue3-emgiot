@@ -1,17 +1,26 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+/* import */
+import { useI18n } from 'vue-i18n'
+import { ref } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import { useDate } from '@/composables/useDate'
 
-const updateTime = ref('')
-
-const { getCurrentDateTime } = useDate()
-updateTime.value = getCurrentDateTime()
-
+/* defineEmit */
 const updateRecordEmit = defineEmits<{
   (e: 'update'): void
 }>()
 
+/* i18n */
+const { t: $t } = useI18n()
+
+/* ref 變數 */
+const updateTime = ref('')
+
+// 初始化日期
+const { getCurrentDateTime } = useDate()
+updateTime.value = getCurrentDateTime()
+
+/* function */
 const updateClick = () => {
   updateTime.value = getCurrentDateTime()
   updateRecordEmit('update')
@@ -22,7 +31,7 @@ const updateClick = () => {
   <div class="update-record-container">
     <div class="record-detail">
       <div class="updated-time">
-        <span>更新時間 {{ updateTime }}</span>
+        <span>{{ $t('Common.UpdateRecord.Label') }} {{ updateTime }}</span>
       </div>
       <div
         class="update-button"

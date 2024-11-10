@@ -2,6 +2,7 @@
 import type { MachineType } from '@/models/types/machine.types'
 import type { ClawOperationsInfoResType } from '@/models/types/dashboard.types'
 import type { DashboardModalType } from '@/models/types/modal.types'
+import { useI18n } from 'vue-i18n'
 import { ref, withDefaults } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import { UtilCommon } from '@/utils/utilCommon'
@@ -24,6 +25,8 @@ const emit = defineEmits<{
   (e: 'goToAccountInquiry', machineType: MachineType, id: string): void
 }>()
 
+const { t: $t } = useI18n()
+
 const clawMachineType = 0
 const clawActiveKey = ref(props.activeKey)
 
@@ -36,10 +39,14 @@ const updateValue = (value: string[]) => {
 <template>
   <div class="list claw-list">
     <div class="list-header claw">
-      <div class="header-item pcbName">機台</div>
-      <div class="header-item averagePrizeWinCount">平均出貨金額</div>
-      <div class="header-item revenue">營收</div>
-      <div class="header-item prizeWinCount">出貨</div>
+      <div class="header-item pcbName">{{ $t('DashboardPage.ClawTabList.Header.PcbName') }}</div>
+      <div class="header-item averagePrizeWinCount">
+        {{ $t('DashboardPage.ClawTabList.Header.AveragePrizeWinCount') }}
+      </div>
+      <div class="header-item revenue">{{ $t('DashboardPage.ClawTabList.Header.Revenue') }}</div>
+      <div class="header-item prizeWinCount">
+        {{ $t('DashboardPage.ClawTabList.Header.PrizeWinCount') }}
+      </div>
     </div>
 
     <div class="list-body">
@@ -77,11 +84,11 @@ const updateValue = (value: string[]) => {
           <div class="item-action-content claw">
             <div class="item-section">
               <span class="amount">${{ item?.cashboxAmount }}</span>
-              <span>錢箱累積</span>
+              <span>{{ $t('DashboardPage.ClawTabList.Item.CashboxAmount') }}</span>
             </div>
             <div class="item-section">
               <span class="amount">${{ item?.cumulativeAmount }}</span>
-              <span>累保金額</span>
+              <span>{{ $t('DashboardPage.ClawTabList.Item.CumulativeAmount') }}</span>
             </div>
             <div
               class="item-section action-button"
@@ -91,7 +98,7 @@ const updateValue = (value: string[]) => {
                 iconName="accounts"
                 size="lg"
               />
-              <span>帳務查詢</span>
+              <span>{{ $t('DashboardPage.ClawTabList.Item.AccountInquiry') }}</span>
             </div>
             <div
               class="item-section action-button"
@@ -104,7 +111,7 @@ const updateValue = (value: string[]) => {
                 iconName="replenish-coins"
                 size="lg"
               />
-              <span>遠端補幣</span>
+              <span>{{ $t('DashboardPage.ClawTabList.Item.ReplenishCoins') }}</span>
             </div>
             <div
               class="item-section action-button"
@@ -117,7 +124,7 @@ const updateValue = (value: string[]) => {
                 iconName="more-actions"
                 size="lg"
               />
-              <span>其他操作</span>
+              <span>{{ $t('DashboardPage.ClawTabList.Item.MoreOperation') }}</span>
             </div>
           </div>
         </a-collapse-panel>

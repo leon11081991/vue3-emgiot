@@ -1,8 +1,10 @@
 <script setup lang="ts">
+/* import */
 import { computed } from 'vue'
 import { useAvatarLetters } from '@/composables/useAvatarLetters'
 import { useRandomColor } from '@/composables/useRandomColor'
 
+/* props(defineProps) */
 const props = withDefaults(
   defineProps<{
     name: string
@@ -18,11 +20,14 @@ const props = withDefaults(
     size: 'md'
   }
 )
+
+/* composables */
+const { colorHex } = useRandomColor()
+
+/* computed */
 const avatarLetters = computed(() => {
   return useAvatarLetters(props.name, props.charNum).avatarLetters.value
 })
-const { colorHex } = useRandomColor()
-
 const avatarSize = computed(() => {
   switch (props.size) {
     case 'sm':

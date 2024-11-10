@@ -1,12 +1,17 @@
 <script setup lang="ts">
+/* import */
+import { useI18n } from 'vue-i18n'
 import { ref, watchEffect } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import { useMessagePage } from '@/composables/useMessagePage'
 
-/* defineProps */
+/* props(defineProps) */
 const props = defineProps<{
   color: string
 }>()
+
+/* i18n */
+const { t: $t } = useI18n()
 
 /* 非響應式變數 */
 enum NotificationEnumType {
@@ -14,7 +19,7 @@ enum NotificationEnumType {
   OPERATION // 1 營業訊息
 }
 
-const NotificationText_off = '關閉主動通知'
+const NotificationText_off = $t('MessagePage.Message.Close')
 const { notificationSettingsInfo, getNotificationSettings, dispatchEnableNotification } =
   useMessagePage()
 
@@ -23,7 +28,7 @@ const type = defineModel<number>('type')
 const system_checked = ref(false)
 const operation_checked = ref(false)
 
-/* function */
+/* functions */
 const handleNotificationCheckboxChange = async (e: Event, type: NotificationEnumType) => {
   const target = e.target as HTMLInputElement
   const enable = target.checked
@@ -64,7 +69,7 @@ watchEffect(() => {
             size="lg"
             :color="type === NotificationEnumType.SYSTEM ? 'white' : 'primary'"
           />
-          系統訊息
+          {{ $t('MessagePage.Tab.System') }}
         </div>
         <div class="info-checkbox-container">
           <a-config-provider
@@ -94,7 +99,7 @@ watchEffect(() => {
             size="lg"
             :color="type === NotificationEnumType.OPERATION ? 'white' : 'primary'"
           />
-          營業訊息
+          {{ $t('MessagePage.Tab.Operation') }}
         </div>
         <div class="info-checkbox-container">
           <a-config-provider

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+/* import */
 import type { BaseProductInfoListType } from '@/models/types/goods.types'
 import { useI18n } from 'vue-i18n'
 
@@ -16,10 +17,18 @@ const { t: $t } = useI18n()
 <template>
   <div class="list productInfo">
     <div class="list-header productInfo-header">
-      <div class="header-item productInfo-deice">{{ '裝置' }}</div>
-      <div class="header-item productInfo-shipmentAmount">{{ '平均出貨金額' }}</div>
-      <div class="header-item productInfo-revenue">{{ '營收' }}</div>
-      <div class="header-item productInfo-Shipment">{{ '出貨' }}</div>
+      <div class="header-item productInfo-device">
+        {{ $t('ProductInfoChartPage.TabList.Header.Device') }}
+      </div>
+      <div class="header-item productInfo-shipmentAmount">
+        {{ $t('ProductInfoChartPage.TabList.Header.ShipmentAmount') }}
+      </div>
+      <div class="header-item productInfo-revenue">
+        {{ $t('ProductInfoChartPage.TabList.Header.Revenue') }}
+      </div>
+      <div class="header-item productInfo-Shipment">
+        {{ $t('ProductInfoChartPage.TabList.Header.Shipment') }}
+      </div>
     </div>
     <div class="list-body">
       <a-list

@@ -1,6 +1,8 @@
 <script setup lang="ts">
+/* import */
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 
+/* props(defineProps) */
 const floatButtonProps = withDefaults(
   defineProps<{
     iconName?: string
@@ -10,10 +12,12 @@ const floatButtonProps = withDefaults(
   }
 )
 
+/* emits(defineEmits) */
 const floatButtonEmit = defineEmits<{
   (e: 'click'): void
 }>()
 
+/* functions */
 const click = (): void => {
   floatButtonEmit('click')
 }

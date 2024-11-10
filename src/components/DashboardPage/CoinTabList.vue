@@ -36,9 +36,13 @@ const updateValue = (value: string[]) => {
 <template>
   <div class="list coin-list">
     <div class="list-header coin">
-      <div class="header-item pcbName">機台</div>
-      <div class="header-item exchangedCount">兌幣量</div>
-      <div class="header-item exchangedRemaining">已兌/剩餘</div>
+      <div class="header-item pcbName">{{ $t('DashboardPage.CoinTabList.Header.PcbName') }}</div>
+      <div class="header-item exchangedCount">
+        {{ $t('DashboardPage.CoinTabList.Header.ExchangedCount') }}
+      </div>
+      <div class="header-item exchangedRemaining">
+        {{ $t('DashboardPage.CoinTabList.Header.ExchangedRemaining') }}
+      </div>
     </div>
 
     <div class="list-body">
@@ -91,7 +95,7 @@ const updateValue = (value: string[]) => {
                 iconName="accounts"
                 size="lg"
               />
-              <span>帳務查詢</span>
+              <span>{{ $t('DashboardPage.CoinTabList.Item.AccountInquiry') }}</span>
             </div>
             <div
               class="item-section action-button"
@@ -104,7 +108,7 @@ const updateValue = (value: string[]) => {
                 iconName="lock"
                 size="lg"
               />
-              <span>關閉</span>
+              <span>{{ $t('DashboardPage.CoinTabList.Item.SecurityStatus') }}</span>
             </div>
             <div
               class="item-section action-button"
@@ -117,7 +121,7 @@ const updateValue = (value: string[]) => {
                 iconName="replenish-coins"
                 size="lg"
               />
-              <span>遠端退幣</span>
+              <span>{{ $t('DashboardPage.CoinTabList.Item.ReplenishCoins') }}</span>
             </div>
             <div
               class="item-section action-button"
@@ -130,7 +134,7 @@ const updateValue = (value: string[]) => {
                 iconName="more-actions"
                 size="lg"
               />
-              <span>其他操作</span>
+              <span>{{ $t('DashboardPage.CoinTabList.Item.MoreOperation') }}</span>
             </div>
           </div>
         </a-collapse-panel>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 
 type actionTypes = 'edit' | 'check' | 'delete'
@@ -12,6 +13,8 @@ const emit = defineEmits<{
   (e: 'openModal', action: 'edit' | 'delete'): void
   (e: 'check:productInfo'): void
 }>()
+
+const { t: $t } = useI18n()
 
 const closeModal = () => {
   emit('close')
@@ -34,7 +37,7 @@ const emitGoodsEvent = (type: actionTypes) => {
   >
     <template #title>
       <div class="modal-header modal-header-primary">
-        <span class="modal-title">{{ '更多操作' }}</span>
+        <span class="modal-title">{{ $t('ProductPage.Modal.MoreOperation.Title') }}</span>
       </div>
     </template>
     <div class="action-container">
@@ -46,7 +49,7 @@ const emitGoodsEvent = (type: actionTypes) => {
           iconName="edit"
           size="lg"
         />
-        編輯商品
+        {{ $t('ProductPage.Modal.MoreOperation.Edit') }}
       </div>
       <div
         class="action-item"
@@ -56,7 +59,7 @@ const emitGoodsEvent = (type: actionTypes) => {
           iconName="list"
           size="lg"
         />
-        商品營運數據
+        {{ $t('ProductPage.Modal.MoreOperation.InfoChart') }}
       </div>
       <div
         class="action-item"
@@ -66,7 +69,7 @@ const emitGoodsEvent = (type: actionTypes) => {
           iconName="trash"
           size="lg"
         />
-        刪除商品
+        {{ $t('ProductPage.Modal.MoreOperation.Delete') }}
       </div>
     </div>
     <template #footer></template>

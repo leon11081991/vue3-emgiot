@@ -1,9 +1,12 @@
 <script setup lang="ts">
+/* import */
 import { useI18n } from 'vue-i18n'
 import AvatarDisplay from '@/components/Base/AvatarDisplay.vue'
 
+/* i18n */
 const { t: $t } = useI18n()
 
+/* defineProps */
 const props = withDefaults(
   defineProps<{
     storeName: string

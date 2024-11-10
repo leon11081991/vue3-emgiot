@@ -108,15 +108,6 @@ const routes = [
     }
   },
   {
-    path: '/notepad',
-    name: 'Notepad',
-    component: () => import('@/views/NotepadPage.vue'),
-    meta: {
-      layout: 'LayoutDefault',
-      middleware: [authMiddleware, layoutMiddleware]
-    }
-  },
-  {
     path: '/group-edit',
     name: 'GroupEdit',
     component: () => import('@/views/GroupEditPage.vue'),

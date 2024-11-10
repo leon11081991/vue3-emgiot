@@ -5,6 +5,7 @@ import type {
   ReArrangeDataType,
   BaseReArrangeGroupReqType
 } from '@/models/types/group.types'
+import { useI18n } from 'vue-i18n'
 import { ref, onMounted } from 'vue'
 import GroupList from '@/components/GroupEditPage/GroupList.vue'
 import AddEditGroupModal from '@/components/GroupEditPage/Modal/AddEditGroupModal.vue'
@@ -16,6 +17,7 @@ import { useHeader } from '@/composables/useHeader'
 import { useGroup } from '@/composables/useGroupEdit'
 import { useMessage } from '@/composables/useMessage'
 
+const { t: $t } = useI18n()
 const { modalVisible, openModal, closeModal } = useModal()
 const { openMessage } = useMessage()
 const { updateHeaderTitle } = useHeader()
@@ -57,7 +59,7 @@ const fnOpenOperationModal = (type: GroupListModalType, item?: BasePcbGroupResTy
     singleGroupInfo.value = item
 
     if (!item.groupId) {
-      openMessage('error', '未分類群組無法編輯名稱')
+      openMessage('error', $t('GroupEditPage.Message.NoGroupId'))
       return
     }
   }
@@ -141,14 +143,15 @@ onMounted(() => {
       <a-button
         type="primary confirm-btn btn"
         @click="fnHandleReArrangeGroup"
-        >確定</a-button
       >
+        {{ $t('GroupEditPage.Button.Confirm') }}
+      </a-button>
       <a-button
         class="cancel-btn btn"
         type="outlined"
         @click="fnCollapseGroupList"
       >
-        取消
+        {{ $t('GroupEditPage.Button.Cancel') }}
       </a-button>
     </div>
     <FloatButton @click="fnOpenOperationModal('add')" />

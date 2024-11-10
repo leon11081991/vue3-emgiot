@@ -1,21 +1,21 @@
 <script setup lang="ts">
-// import
+/* import */
 import { ref, computed } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import IndexBaseBarChart from './IndexBaseBarChart.vue'
 import { useDate } from '@/composables/useDate'
 import { useFetchStore } from '@/composables/useFetchStore'
 
-// type
+/* type */
 type OperationDataKey = 'revenue' | 'prizeWinCount' | 'profit' | 'coinExchanged'
 
-// 非響應式變數
+/* 非響應式變數 */
 const TABS = {
   REVENUE: 'revenue',
   PROFIT: 'profit'
 }
 
-// ref 變數
+/* ref 變數 */
 const nowTopic = ref(TABS.REVENUE)
 const updateTime = ref('')
 
@@ -26,7 +26,7 @@ updateTime.value = getCurrentDateTime()
 // 獲取數據
 const { operationTotalChart, fetchTotalOperationChart } = useFetchStore()
 
-// computed
+/* computed */
 const calculateTotalForToday = (key: OperationDataKey) => {
   return computed(() => {
     const totalData = operationTotalChart.value.data || []
@@ -44,7 +44,7 @@ const prizeWinCount = calculateTotalForToday('prizeWinCount')
 const profit = computed(() => `${calculateTotalForToday('profit').value}`)
 const coinExchanged = computed(() => `${calculateTotalForToday('coinExchanged').value}`)
 
-// function
+/* functions */
 function fnChangeTab(topic: string) {
   nowTopic.value = topic
 }

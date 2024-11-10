@@ -1,4 +1,5 @@
 <script setup lang="ts">
+/* import */
 import { computed } from 'vue'
 import type { clawMachineCardType, coinMachineCardType } from '@/models/types/machine.types'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
@@ -52,7 +53,9 @@ const coinData = computed(() => {
       <div class="content">
         <div class="content-header">
           <div class="revenue-summary">
-            {{ '期間總營收' }}&nbsp;&nbsp;<span class="price">$ {{ clawData.totalRevenue }}</span>
+            {{ $t('AccountInquiryPage.Chart.Claw.RevenueSummary') }}&nbsp;&nbsp;<span class="price"
+              >$ {{ clawData.totalRevenue }}</span
+            >
           </div>
           <div
             class="filter-button"
@@ -67,7 +70,7 @@ const coinData = computed(() => {
         <div class="content-body">
           <div class="data-title">
             <div class="title">
-              出貨
+              {{ $t('AccountInquiryPage.Chart.Claw.PrizeWinCount') }}
               <BaseSvgIcon
                 iconName="dropdown"
                 color="white"
@@ -77,7 +80,7 @@ const coinData = computed(() => {
           </div>
           <div class="data-title">
             <div class="title">
-              平均出貨金額
+              {{ $t('AccountInquiryPage.Chart.Claw.AveragePrizeWinCount') }}
               <BaseSvgIcon
                 iconName="dropdown"
                 color="white"
@@ -87,7 +90,7 @@ const coinData = computed(() => {
           </div>
           <div class="data-title">
             <div class="title">
-              盈餘
+              {{ $t('AccountInquiryPage.Chart.Claw.Profit') }}
               <BaseSvgIcon
                 iconName="dropdown"
                 color="white"
@@ -105,7 +108,7 @@ const coinData = computed(() => {
       <div class="content">
         <div class="content-header">
           <div class="revenue-summary">
-            {{ '期間兌幣量' }}&nbsp;&nbsp;<span class="count"
+            {{ $t('AccountInquiryPage.Chart.Coin.RevenueSummary') }}&nbsp;&nbsp;<span class="count"
               >$ {{ coinData.totalExchangeCoinCount }}</span
             >
           </div>
@@ -122,7 +125,7 @@ const coinData = computed(() => {
         <div class="content-body">
           <div class="data-title">
             <div class="title">
-              {{ '已兌換量' }}
+              {{ $t('AccountInquiryPage.Chart.Coin.CoinExchanged') }}
               <BaseSvgIcon
                 iconName="dropdown"
                 color="white"
@@ -132,7 +135,7 @@ const coinData = computed(() => {
           </div>
           <div class="data-title">
             <div class="title">
-              {{ '剩餘幣量' }}
+              {{ $t('AccountInquiryPage.Chart.Coin.CoinRemaining') }}
               <BaseSvgIcon
                 iconName="dropdown"
                 color="white"

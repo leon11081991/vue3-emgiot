@@ -1,4 +1,5 @@
 <script setup lang="ts">
+/* import */
 import type { StoreMemberInfoDataType } from '@/models/types/storeMember.types'
 import type { StoresItemDataType } from '@/models/types/dropdown.type'
 import { ref, onMounted } from 'vue'
@@ -12,13 +13,13 @@ import { useStoreMember } from '@/composables/useStoreMember'
 import { useFetchStoreMember } from '@/composables/useFetchStoreMember'
 import { useDropdown } from '@/composables/useDropdown'
 
-// Router
+/* router */
 const router = useRouter()
 
-// i18n
+/* i18n */
 const { t: $t } = useI18n()
 
-// Composables
+/* composables */
 const { changePermissionSetting, updateMemberData } = useStoreMember()
 const { fnAddInviteMember } = useFetchStoreMember()
 const {
@@ -30,7 +31,7 @@ const {
   fetchStoresList
 } = useDropdown()
 
-// Refs
+/* ref 變數 */
 const isButtonLoading = ref<boolean>(false)
 const newMemberInfoData = ref<StoreMemberInfoDataType>({
   userId: '',
@@ -47,7 +48,7 @@ const newMemberInfoData = ref<StoreMemberInfoDataType>({
   isForbidden: false
 } as StoreMemberInfoDataType)
 
-// Functions
+/* functions */
 const onStoreChange = (optionId: string, storeList: StoresItemDataType[]) => {
   const storeInfo = storeList.find((store) => store.storeId === optionId)
 
@@ -74,7 +75,7 @@ const createAddMemberLink = (memberInfo: StoreMemberInfoDataType) => {
     })
 }
 
-// Life Cycle Hooks
+/* Life Cycle Hooks */
 onMounted(async () => {
   await fetchStoresList()
 })
@@ -93,7 +94,7 @@ onMounted(async () => {
           :loading="storesList.isLoading"
           :options="storesList.data"
           :field-names="{ label: 'storeName', value: 'storeId' }"
-          placeholder="請選擇店家"
+          :placeholder="$t('AddMemberPage.Placeholder.SelectStore')"
           @select="onStoreChange($event, storesList.data)"
         >
           <template #suffixIcon>

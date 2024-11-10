@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import { useGoods } from '@/composables/useGoods'
 
 const props = defineProps<{
@@ -11,6 +12,7 @@ const emit = defineEmits<{
   (e: 'goods:refresh'): void
 }>()
 
+const { t: $t } = useI18n()
 const { dispatchDeleteGoods } = useGoods()
 
 const closeModal = () => {
@@ -34,25 +36,26 @@ const fnDeleteGoods = async (goodsId: string) => {
   >
     <template #title>
       <div class="modal-header modal-header-primary">
-        <span class="modal-title">{{ '刪除商品' }}</span>
+        <span class="modal-title">{{ $t('ProductPage.Modal.DeleteGoods.Title') }}</span>
       </div>
     </template>
     <div class="action-container">
-      {{ '請確認是否刪除所選商品' }}
+      {{ $t('ProductPage.Modal.DeleteGoods.Content') }}
     </div>
     <template #footer>
       <div class="button-container">
         <a-button
           type="primary confirm-btn btn"
           @click="fnDeleteGoods(props.goodsId)"
-          >確定</a-button
         >
+          {{ $t('ProductPage.Modal.DeleteGoods.Button.Confirm') }}
+        </a-button>
         <a-button
           class="cancel-btn btn"
           type="outlined"
           @click="closeModal"
         >
-          取消
+          {{ $t('ProductPage.Modal.DeleteGoods.Button.Cancel') }}
         </a-button>
       </div>
     </template>

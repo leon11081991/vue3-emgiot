@@ -1,9 +1,6 @@
 <script setup lang="ts">
-import type {
-  BasePcbGroupResType,
-  BasePcbsInfoType,
-  ReArrangeDataType
-} from '@/models/types/group.types'
+import type { BasePcbGroupResType, ReArrangeDataType } from '@/models/types/group.types'
+import { useI18n } from 'vue-i18n'
 import { ref, computed, watchEffect } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
@@ -20,6 +17,9 @@ const emit = defineEmits<{
   (e: 'update:groupList', list: ReArrangeDataType): void
 }>()
 
+/* i18n */
+const { t: $t } = useI18n()
+
 /* 響應式變數 */
 const accordion_open = ref(false)
 const pcbs = ref([...props.list.pcbs])
@@ -27,10 +27,14 @@ const pcbs = ref([...props.list.pcbs])
 /* computed */
 const groupName = computed(() => props.list.groupName || '未分類')
 const clawMachineCount = computed(
-  () => '選物機-' + props.list.pcbs.filter((item) => item.machineType === 0).length
+  () =>
+    `${$t('GroupEditPage.MachineType.Claw')}-` +
+    props.list.pcbs.filter((item) => item.machineType === 0).length
 )
 const coinMachineCount = computed(
-  () => '兌幣機-' + props.list.pcbs.filter((item) => item.machineType === 1).length
+  () =>
+    `${$t('GroupEditPage.MachineType.Coin')}-` +
+    props.list.pcbs.filter((item) => item.machineType === 1).length
 )
 
 /* function */
@@ -168,7 +172,11 @@ watchEffect(() => {
                 {{ item.machineName }}
               </div>
               <div class="machineType">
-                {{ item.machineType === 0 ? '選物販賣機' : '兌幣機' }}
+                {{
+                  item.machineType === 0
+                    ? $t('GroupEditPage.MachineType.Claw')
+                    : $t('GroupEditPage.MachineType.Coin')
+                }}
               </div>
             </div>
           </div>

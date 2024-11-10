@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-// import
+/* import */
 import { ref, computed } from 'vue'
 import { Bar } from 'vue-chartjs'
 import {
@@ -15,22 +15,22 @@ import type { ChartOptions, ChartData } from 'chart.js'
 import type { StoresTotalResType } from '@/models/types/store.types'
 import { useDate } from '@/composables/useDate'
 
-// Props (defineProps)
+/* Props (defineProps) */
 const props = defineProps<{
   isLoading: Boolean
   data: StoresTotalResType
 }>()
 
-// 非響應式變數
+/* 非響應式變數 */
 const rootStyles = getComputedStyle(document.documentElement)
 const barDefaultColor = rootStyles.getPropertyValue('--bar-default-color').trim()
 const barTargetColor = rootStyles.getPropertyValue('--bar-target-color').trim()
 const revenueBgColor = rootStyles.getPropertyValue('--bg-revenue-color').trim()
 
-// 子組件 ref
+/* 子組件 ref */
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
-// ref 變數
+/* ref 變數 */
 const chartOptions = ref<ChartOptions<'bar'>>({
   responsive: true,
   plugins: {
@@ -80,7 +80,7 @@ const chartOptions = ref<ChartOptions<'bar'>>({
   }
 })
 
-// computed
+/* computed */
 const { formatDate, today } = useDate()
 const chartData = computed<ChartData<'bar'>>(() => {
   const data = props.data

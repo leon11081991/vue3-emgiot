@@ -14,6 +14,7 @@
   "Common": {
     "AppName": "雲端掌櫃",
     "Store":"店",
+    "Logout": "登出",
     "Result": {
       "NotLogin": "請先登入...",
       "TokenExpired": "登入已過期，請重新登入",
@@ -53,7 +54,8 @@
     "Level":{
       "1":"1級",
       "2":"2級",
-      "3":"3級"
+      "3":"3級",
+      "4":"4級"
     },
     "Select":{
       "RecentRecords":{
@@ -61,6 +63,9 @@
         "5": "最近5筆記錄",
         "10": "最近10筆記錄"
       }
+    },
+    "UpdateRecord": {
+      "Label": "更新時間"
     }
   },
   "HomePage": {
@@ -71,6 +76,34 @@
     "Tabs": {
       "Claw": "選物販賣機",
       "Coin": "兌幣機"
+    },
+    "ClawTabList":{
+      "Header": {
+        "PcbName": "機台",
+        "AveragePrizeWinCount": "平均出貨金額",
+        "Revenue": "營收",
+        "PrizeWinCount": "出貨"
+      },
+      "Item": {
+        "CashboxAmount": "錢箱累積",
+        "CumulativeAmount": "累保金額",
+        "AccountInquiry": "帳務查詢",
+        "ReplenishCoins": "遠端補幣",
+        "MoreOperation": "其他操作"
+      }
+    },
+    "CoinTabList":{
+      "Header": {
+        "PcbName": "機台",
+        "ExchangedCount": "兌幣量",
+        "ExchangedRemaining": "已兌/剩餘"
+      },
+      "Item": {
+        "AccountInquiry": "帳務查詢",
+        "SecurityStatus": "關閉",
+        "ReplenishCoins": "遠端退幣",
+        "MoreOperation": "其他操作"
+      }
     },
     "Modal":{
       "AddNewMachine":{
@@ -93,6 +126,7 @@
           "Claw":"遠端補幣",
           "Coin":"遠端退幣"
         },
+        "Selected": "已選 {count} 台",
         "Step1":
         {
           "Content":"請選擇要進行操作的機台",
@@ -115,6 +149,41 @@
         "Button":{
           "Confirm":"確認",
           "Cancel":"取消"
+        }
+      },
+      "ClawStoreFilter": {
+        "Title": "設定篩選條件",
+        "Item": {
+          "Start": "開始時間",
+          "End": "結束時間"
+        },
+        "Placeholder": {
+          "Search": "機台"
+        },
+        "DropDown": {
+          "GroupDefaultName": "分類",
+          "GoodsDefaultName": "商品"
+        },
+        "Button": {
+          "Confirm": "確認",
+          "Cancel": "取消"
+        }
+      },
+      "CoinStoreFilter": {
+        "Title": "設定篩選條件",
+        "Item": {
+          "Start": "開始時間",
+          "End": "結束時間"
+        },
+        "Placeholder": {
+          "Search": "機台"
+        },
+        "DropDown": {
+          "GroupDefaultName": "分類"
+        },
+        "Button": {
+          "Confirm": "確認",
+          "Cancel": "取消"
         }
       },
       "ReplenishCoins":{
@@ -172,6 +241,20 @@
         "Button":{
           "Confirm":"確認"
         }
+      },
+      "UpdateStore": {
+        "Title": "編輯店家",
+        "Placeholder": {
+          "StoreName": "請輸入名稱",
+          "WifiSSID": "請輸入WIFI名稱",
+          "WifiPassword": "請輸入WIFI密碼"
+        },
+        "Button": {
+          "Confirm": "確認"
+        },
+        "Message": {
+          "StoreNameRequired": "店家名稱不得為空"
+        }
       }
     },
     "MachineAction":{
@@ -193,6 +276,46 @@
       "AccountInquiry": "帳務查詢",
       "ProductRecord": "商品紀錄",
       "EventRecord": "事件紀錄"
+    },
+    "Chart": {
+      "Claw":{
+        "RevenueSummary": "期間總營收",
+        "PrizeWinCount": "出貨",
+        "AveragePrizeWinCount": "平均出貨金額",
+        "Profit": "盈餘"
+      },
+      "Coin": {
+        "RevenueSummary": "期間兌幣量",
+        "CoinExchanged": "已兌換量",
+        "CoinRemaining": "剩餘幣量"
+      }
+    },
+    "BarLineChart": {
+      "Claw": {
+        "Label": {
+          "Revenue": "營收",
+          "PrizeWinCount": "出貨"
+        }
+      },
+      "Coin": {
+        "Label": {
+          "ExchangeCount": "兌幣量"
+        }
+      },
+      "Week": "第 {week} 週"
+    },
+    "Modal": {
+      "Filter": {
+        "Title": "設定篩選條件",
+        "Item": {
+          "Start": "開始時間",
+          "End": "結束時間"
+        },
+        "Button": {
+          "Confirm": "確認",
+          "Cancel": "取消"
+        }
+      }
     },
     "ContentHeader":{
       "Date": "日期",
@@ -269,6 +392,23 @@
       "Submit": "送出"
     }
   },
+  "MessagePage": {
+    "Tab": {
+      "System": "系統訊息",
+      "Operation": "營業訊息"
+    },
+    "TabList": {
+      "Header": {
+        "MachineName": "機台",
+        "EventName": "event.content",
+        "Date": "時間"
+      },
+      "NoData": "無資料"
+    },
+    "Message": {
+      "Close": "關閉主動通知"
+    }
+  },
   "ProfilePage": {
     "EditableContainer": {
       "UserNameField": {
@@ -304,6 +444,9 @@
     }
   },
   "AddMemberPage": {
+    "Placeholder": {
+      "SelectStore": "請選擇店家"
+    },
     "Button":{
       "CreateAddMemberLink":"產生邀請連結"
     }
@@ -347,6 +490,123 @@
     "Button":{
       "Copy":"複製內容",
       "Return":"返回"
+    }
+  },
+  "GroupEditPage": {
+    "MachineType": {
+      "Claw": "選物販賣機",
+      "Coin": "兌幣機"
+    },
+    "Button": {
+      "Confirm": "確認",
+      "Cancel": "取消"
+    },
+    "Message": {
+      "NoGroupId": "未分類群組無法編輯名稱"
+    },
+    "Modal": {
+      "MoreOperation": {
+        "Title": "更多操作",
+        "Edit": "編輯自訂分類名稱",
+        "Delete": "刪除自訂分類名稱"
+      },
+      "AddEditGroup": {
+        "Title": {
+          "Edit": "編輯自訂分類",
+          "Add": "新增自訂分類"
+        },
+        "Placeholder": {
+          "GroupName": "請輸入名稱"
+        },
+        "Button": {
+          "Confirm": "確認"
+        },
+        "Message": {
+          "Empty": "輸入不得為空",
+          "LengthOverRule": "長度超過10個字"
+        }
+      },
+      "DeleteGroup": {
+        "Title": "刪除自訂分類",
+        "Content": {
+          "First": "請確認是否刪除自訂分類",
+          "Second": "該分類內的機台將會被移動至未分類"
+        },
+        "Button": {
+          "Confirm": "確認",
+          "Cancel": "取消"
+        }
+      }
+    }
+  },
+  "ProductPage": {
+    "Placeholder": {
+      "Search": "搜尋商品名稱"
+    },
+    "TabList":{
+      "Header": {
+        "ProductName": "商品",
+        "ProductMark": "標記",
+        "ProductCost": "成本價",
+        "ProductOperation": "更多操作"
+      },
+      "Item": {
+        "IsSpecial": "特"
+      }
+    },
+    "Modal": {
+      "MoreOperation": {
+        "Title": "更多操作",
+        "Edit": "編輯商品",
+        "InfoChart": "商品營運數據",
+        "Delete": "刪除商品"
+      },
+      "AddEditGoods": {
+        "Title": {
+          "Edit": "編輯商品",
+          "Add": "新增商品"
+        },
+        "Placeholder": {
+          "GoodsName": "請輸入名稱",
+          "GoodsCost": "請輸入商品成本",
+          "MerchantAllowList": "商家勾選"
+        },
+        "Content": {
+          "Title": "商品種類",
+          "IsSpecial": "特殊商品",
+          "IsNormal": "一般商品"
+        },
+        "Button": {
+          "Confirm": "確認"
+        }
+      },
+      "DeleteGoods": {
+        "Title": "刪除商品",
+        "Content": "請確認是否刪除所選商品",
+        "Button": {
+          "Confirm": "確認",
+          "Cancel": "取消"
+        }
+      }
+    }
+  },
+  "ProductInfoChartPage": {
+    "Title": "商品營運數據圖表",
+    "Chart": {
+      "Tab": {
+        "Revenue": "營收",
+        "Profit": "盈餘"
+      },
+      "Today": "今日",
+      "PrizeWinCount": "出貨成本"
+    },
+    "TabList": {
+      "Header": {
+        "Device": "裝置",
+        "ShipmentAmount": "平均出貨金額",
+        "Revenue": "營收",
+        "Shipment": "出貨"
+      }
     }
   }
 }

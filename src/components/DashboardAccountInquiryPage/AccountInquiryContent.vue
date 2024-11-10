@@ -1,4 +1,5 @@
 <script setup lang="ts">
+/* import */
 import type {
   BaseClawRecordType,
   BaseCoinRecordType,
@@ -13,8 +14,12 @@ import BaseSwitch from '@/components/Base/BaseSwitch.vue'
 import { useDate } from '@/composables/useDate'
 import { LIST_TYPE } from '@/constants/common/option.const'
 
+/* type */
 type ListType = 'day' | 'week' | 'month'
+type BaseRecordType = BaseClawRecordType | BaseCoinRecordType
+type BaseMonthRecordType = BaseClawRecordType | BaseCoinRecordType
 
+/* defineProps */
 const props = defineProps<
   | {
       machineType: 'claw'
@@ -28,13 +33,17 @@ const props = defineProps<
     }
 >()
 
+/* i18n */
 const { t: $t } = useI18n()
-// const route = useRoute()
+
+/* composables */
 const { formatDate } = useDate()
 
-// ref 變數
+/* ref 變數 */
 const isTypeChart = ref(true)
 const selectedType = ref<ListType>('day')
+
+/* computed */
 const accountList = computed(() => {
   if (selectedType.value === 'week') {
     return handleWeekData(props.data?.records)
@@ -48,7 +57,7 @@ const accountList = computed(() => {
 })
 const updateKey = ref(0)
 
-// function
+// functions
 const handleToggleType = (val: boolean) => {
   console.log('handleToggleType', val)
   if (val) {
@@ -81,8 +90,6 @@ const handleDateContent = (type: ListType, date: DateContentType) => {
 
   return date
 }
-
-type BaseRecordType = BaseClawRecordType | BaseCoinRecordType
 
 const handleWeekData = (
   records: BaseRecordType[]
@@ -120,8 +127,6 @@ const handleWeekData = (
 
   return weeklyData
 }
-
-type BaseMonthRecordType = BaseClawRecordType | BaseCoinRecordType
 
 const handleMonthData = (records: BaseMonthRecordType[]): AggregateRecordType[] => {
   if (!records) return []
