@@ -24,7 +24,7 @@ const { updateHeaderTitle } = useHeader()
 const { groupList, fnGetGroupList, fnReArrangeGroupList } = useGroup()
 
 /* 非響應式數據 */
-const title = '編輯自訂分類'
+const headerTitle = $t('GroupEditPage.HeaderTitle')
 const skeletonCount = 20
 
 /* 響應式數據 */
@@ -111,7 +111,7 @@ const fnCollapseGroupList = () => {
 fnGetGroupList()
 
 onMounted(() => {
-  updateHeaderTitle(title)
+  updateHeaderTitle(headerTitle)
 })
 </script>
 

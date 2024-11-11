@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import { ref, computed } from 'vue'
 import { useFetchStore } from '@/composables/useFetchStore'
 import { useMessage } from '@/composables/useMessage'
@@ -12,6 +13,9 @@ const emit = defineEmits<{
   (e: 'close'): void
   (e: 'update:storeList'): void
 }>()
+
+/* i18n */
+const { t: $t } = useI18n()
 
 // store 相關
 const { createNewStore } = useFetchStore()
@@ -32,7 +36,9 @@ const closeModal = () => {
 
 const isStoreNameExisted = ref(false)
 const isStoreNameLenOverRule = computed(() => +storeName.value.length > storeNameMaxLen)
-const storeExistMessage = computed(() => (isStoreNameExisted.value ? '你已建立過相同名稱店家' : ''))
+const storeExistMessage = computed(() =>
+  isStoreNameExisted.value ? $t('HomePage.Modal.CreateStore.Message.StoreExist') : ''
+)
 
 const updateStoreValue = (e: Event) => {
   const value = (e.target as HTMLInputElement).value
@@ -41,12 +47,12 @@ const updateStoreValue = (e: Event) => {
 
 const fnCreateNewStore = async () => {
   if (storeName.value.trim() === '') {
-    openMessage('error', '輸入不得為空')
+    openMessage('error', $t('HomePage.Modal.CreateStore.Message.StoreNameEmpty'))
     return
   }
 
   if (isStoreNameLenOverRule.value) {
-    openMessage('error', '長度超過10個字')
+    openMessage('error', $t('HomePage.Modal.CreateStore.Message.LenOverRule'))
     return
   }
 
@@ -73,7 +79,7 @@ const fnCreateNewStore = async () => {
   >
     <template #title>
       <div class="modal-header modal-header-primary">
-        <span class="modal-title">{{ '新增店家' }}</span>
+        <span class="modal-title">{{ $t('HomePage.Modal.CreateStore.Title') }}</span>
       </div>
     </template>
 
@@ -82,7 +88,7 @@ const fnCreateNewStore = async () => {
         class="createStore-input"
         :value="storeName"
         :class="{ error: isStoreNameLenOverRule || isStoreNameExisted }"
-        placeholder="請輸入名稱"
+        :placeholder="$t('HomePage.Modal.CreateStore.Placeholder.StoreName')"
         @change="updateStoreValue"
       >
       </a-input>

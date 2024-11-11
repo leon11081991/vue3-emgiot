@@ -1,5 +1,6 @@
 <script setup lang="ts">
 /* import */
+import { useI18n } from 'vue-i18n'
 import { ref, computed } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import IndexBaseBarChart from './IndexBaseBarChart.vue'
@@ -14,6 +15,9 @@ const TABS = {
   REVENUE: 'revenue',
   PROFIT: 'profit'
 }
+
+/* i18n */
+const { t: $t } = useI18n()
 
 /* ref 變數 */
 const nowTopic = ref(TABS.REVENUE)
@@ -59,20 +63,23 @@ fetchTotalOperationChart()
       :class="{ active: nowTopic === TABS.REVENUE }"
       @click="fnChangeTab(TABS.REVENUE)"
     >
-      營收
+      {{ $t('HomePage.Chart.Revenue') }}
     </div>
     <div
       class="tab-item profit"
       :class="{ active: nowTopic === TABS.PROFIT }"
       @click="fnChangeTab(TABS.PROFIT)"
     >
-      盈餘
+      {{ $t('HomePage.Chart.Profit') }}
     </div>
   </div>
   <div class="bar-chart-container">
     <div class="chart-section">
       <div class="revenue">
-        今日{{ nowTopic === TABS.REVENUE ? '營收' : '盈餘' }}
+        {{ $t('HomePage.Chart.Today')
+        }}{{
+          nowTopic === TABS.REVENUE ? $t('HomePage.Chart.Revenue') : $t('HomePage.Chart.Profit')
+        }}
         <p class="revenue-data">
           {{ nowTopic === TABS.REVENUE ? revenueData : profit }}
         </p>
@@ -86,7 +93,7 @@ fetchTotalOperationChart()
         <div class="chartData-container">
           <div class="data-title">
             <div class="title">
-              出貨成本
+              {{ $t('HomePage.Chart.PrizeWinCount') }}
               <BaseSvgIcon
                 iconName="dropdown"
                 color="white"
@@ -96,7 +103,7 @@ fetchTotalOperationChart()
           </div>
           <div class="data-title">
             <div class="title">
-              盈餘
+              {{ $t('HomePage.Chart.Profit') }}
               <BaseSvgIcon
                 iconName="dropdown"
                 color="white"
@@ -108,7 +115,7 @@ fetchTotalOperationChart()
           </div>
           <div class="data-title">
             <div class="title">
-              兌幣量
+              {{ $t('HomePage.Chart.CoinExchanged') }}
               <BaseSvgIcon
                 iconName="dropdown"
                 color="white"

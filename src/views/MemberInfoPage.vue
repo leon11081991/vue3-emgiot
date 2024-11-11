@@ -84,7 +84,7 @@ onMounted(async () => {
               <h6 class="user-name">{{ memberInfoData.userName }}</h6>
               <div class="user-level">
                 <BaseSvgIcon :iconName="`level-${memberInfoData.roleOrder}`" />
-                {{ $t(`Common.Level.${memberInfoData.roleOrder}`) }}
+                {{ $t(`Common.Level`, { level: memberInfoData.roleOrder }) }}
               </div>
             </div>
           </div>
