@@ -9,8 +9,8 @@ const messages = {
 
 const i18n = createI18n({
   legacy: false, // 設置為false, 啟用composition API模式
-  locale: 'en', // 設置默認語言
-  fallbackLocale: 'en', // 當前語言沒有對應的語言時，顯示的語言
+  locale: 'tw', // 設置默認語言
+  fallbackLocale: 'tw', // 當前語言沒有對應的語言時，顯示的語言
   globalInjection: true,
   messages
 })
