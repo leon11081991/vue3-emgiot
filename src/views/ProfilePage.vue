@@ -7,7 +7,6 @@ import { useModal } from '@/composables/useModal'
 import { useValidator } from '@/composables/useValidator'
 import { useAuth } from '@/composables/useAuth'
 import { useFetchUser } from '@/composables/useFetchUser'
-import { modalStyleConfig } from '@/constants/configs/profile.config'
 import { ValidationTypeEnums } from '@/constants/enums/validator.enums'
 import { UtilCommon } from '@/utils/utilCommon'
 import { useUserStore } from '@/stores/user.stores'
@@ -292,7 +291,7 @@ const handleConfirmClick = (field: ModalType): void => {
         :loading="isButtonLoading"
         :disabled="checkButtonDisabled(modalType)"
       >
-        {{ modalStyleConfig.okText }}
+        {{ $t('ProfilePage.Modal.PasswordField.Button') }}
       </a-button>
     </template>
   </a-modal>

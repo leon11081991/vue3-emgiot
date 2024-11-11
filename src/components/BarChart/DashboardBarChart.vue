@@ -1,5 +1,6 @@
 <script setup lang="ts">
 /* import */
+import { useI18n } from 'vue-i18n'
 import { ref, computed } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import DashboardBarChart from '@/components/BarChart/DashboardBaseBarChart.vue'
@@ -22,6 +23,9 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'update:storeInfo'): void
 }>()
+
+/* i18n */
+const { t: $t } = useI18n()
 
 /* 非響應式變數 */
 const TABS = {
@@ -111,14 +115,14 @@ fetchOperationCoinChart({
       :class="{ active: currentTab === TABS.REVENUE }"
       @click="changeTab(TABS.REVENUE)"
     >
-      營收
+      {{ $t('DashboardPage.Chart.Revenue') }}
     </div>
     <div
       class="tab-item profit"
       :class="{ active: currentTab === TABS.PROFIT }"
       @click="changeTab(TABS.PROFIT)"
     >
-      盈餘
+      {{ $t('DashboardPage.Chart.Profit') }}
     </div>
     <div
       class="edit-store"
@@ -129,14 +133,21 @@ fetchOperationCoinChart({
         color="white"
         size="sm"
       />
-      編輯店家
+      {{ $t('DashboardPage.Chart.EditStore') }}
     </div>
   </div>
   <div class="bar-chart-container">
     <div class="chart-section">
       <div class="revenue">
-        {{ isTodayData || props.isInitialChart ? '今日' : `${props.startDate} ~ ${props.endDate}`
-        }}{{ currentTab === TABS.REVENUE ? '營收' : '盈餘' }}
+        {{
+          isTodayData || props.isInitialChart
+            ? $t('DashboardPage.Chart.Today')
+            : `${props.startDate} ~ ${props.endDate}`
+        }}{{
+          currentTab === TABS.REVENUE
+            ? $t('DashboardPage.Chart.Revenue')
+            : $t('DashboardPage.Chart.Profit')
+        }}
         <p class="revenue-data">
           {{ currentTab === TABS.REVENUE ? revenueTotal : profitTotal }}
         </p>
@@ -151,7 +162,7 @@ fetchOperationCoinChart({
         <div class="chartData-container">
           <div class="data-title">
             <div class="title">
-              出貨成本
+              {{ $t('DashboardPage.Chart.PrizeWinCount') }}
               <BaseSvgIcon
                 iconName="dropdown"
                 color="white"
@@ -161,7 +172,7 @@ fetchOperationCoinChart({
           </div>
           <div class="data-title">
             <div class="title">
-              盈餘
+              {{ $t('DashboardPage.Chart.Profit') }}
               <BaseSvgIcon
                 iconName="dropdown"
                 color="white"
@@ -171,7 +182,7 @@ fetchOperationCoinChart({
           </div>
           <div class="data-title">
             <div class="title">
-              兌幣量
+              {{ $t('DashboardPage.Chart.CoinExchanged') }}
               <BaseSvgIcon
                 iconName="dropdown"
                 color="white"

@@ -1,35 +1,37 @@
+import { getI18nTranslate } from '@/utils/i18nUtils'
+
 // header的項目
 export const headerTitleList = [
   {
     name: 'Home',
-    'header-title': '首頁'
+    'header-title': ''
   },
   {
     name: 'Profile',
-    'header-title': '個人資料'
+    'header-title': getI18nTranslate('ProfilePage.HeaderTitle')
   },
   {
     name: 'Member',
-    'header-title': '成員管理'
+    'header-title': getI18nTranslate('MemberPage.HeaderTitle')
   },
   {
     name: 'MemberInfo',
-    'header-title': '成員資訊'
+    'header-title': getI18nTranslate('MemberInfoPage.HeaderTitle')
   },
   {
     name: 'AddMember',
-    'header-title': '邀請新成員'
+    'header-title': getI18nTranslate('AddMemberPage.HeaderTitle')
   },
   {
     name: 'InviteLink',
-    'header-title': '發送連結'
+    'header-title': getI18nTranslate('InviteLinkPage.HeaderTitle')
   },
   {
     name: 'GroupEdit',
-    'header-title': '編輯自訂分類'
+    'header-title': getI18nTranslate('GroupEditPage.HeaderTitle')
   },
   {
     name: 'Product',
-    'header-title': '商品列表'
+    'header-title': getI18nTranslate('ProductPage.HeaderTitle')
   }
 ]

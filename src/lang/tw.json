@@ -37,6 +37,13 @@
       "ServerError": "伺服器錯誤",
       "NoNetwork": "請檢查網路連線狀態"
     },
+    "Sidebar": {
+      "Home": "首頁",
+      "Profile": "個人資料",
+      "Member": "成員管理",
+      "GroupEdit": "自訂分類",
+      "Product": "商品管理"
+    },
     "Button": {
       "Add": "新增",
       "Edit": "編輯",
@@ -51,28 +58,50 @@
       "CopyFailed":"複製失敗",
       "ClipboardNotSupported":"不支援此瀏覽器複製功能"
     },
-    "Level":{
-      "1":"1級",
-      "2":"2級",
-      "3":"3級",
-      "4":"4級"
-    },
+    "Level": "{level}級",
     "Select":{
-      "RecentRecords":{
-        "3": "最近3筆記錄",
-        "5": "最近5筆記錄",
-        "10": "最近10筆記錄"
-      }
+      "RecentRecords": "最近{record}筆記錄"
     },
     "UpdateRecord": {
       "Label": "更新時間"
     }
   },
   "HomePage": {
-    "search": "搜尋商家名稱"
+    "Search": "搜尋店名",
+    "Chart": {
+      "Revenue": "營收",
+      "Profit": "盈餘",
+      "Today": "今日",
+      "PrizeWinCount": "出貨成本",
+      "CoinExchanged": "兌幣量"
+    },
+    "Modal": {
+      "CreateStore": {
+        "Title": "新增店家",
+        "Placeholder": {
+          "StoreName": "請輸入名稱"
+        },
+        "Button": {
+          "Confirm": "確認"          
+        },
+        "Message": {
+          "StoreExist": "你已建立過相同名稱店家",
+          "StoreNameEmpty": "輸入不得為空",
+          "LenOverRule": "長度超過10個字"
+        }
+      }
+    }
   },
   "DashboardPage": {
     "HeaderTitle": "雲端掌櫃 - ",
+    "Chart": {
+      "Revenue": "營收",
+      "Profit": "盈餘",
+      "Today": "今日",
+      "EditStore": "編輯店家",
+      "PrizeWinCount": "出貨成本",
+      "CoinExchanged": "兌幣量"
+    },
     "Tabs": {
       "Claw": "選物販賣機",
       "Coin": "兌幣機"
@@ -410,6 +439,7 @@
     }
   },
   "ProfilePage": {
+    "HeaderTitle": "個人資料",
     "EditableContainer": {
       "UserNameField": {
         "Title": "ID"
@@ -434,6 +464,7 @@
     }
   },
   "MemberPage":{
+    "HeaderTitle": "成員管理",
     "IsVisible":{
       "CheckboxLabel":"隱身",
       "HintText":"階級比你低的無法看見你"
@@ -444,6 +475,7 @@
     }
   },
   "AddMemberPage": {
+    "HeaderTitle": "邀請新成員",
     "Placeholder": {
       "SelectStore": "請選擇店家"
     },
@@ -452,6 +484,7 @@
     }
   },
   "MemberInfoPage": {
+    "HeaderTitle": "成員資訊",
     "Button":{
       "Update": "變更",
       "Delete": "刪除成員"
@@ -485,6 +518,7 @@
     }
   },
   "InviteLinkPage": {
+    "HeaderTitle": "發送連結",
     "QRCodeHint":"邀請碼時效一天，只能提供一人使用。",
     "TextHint":"邀請您加入雲端掌櫃，請點選下方連結接受邀請。",
     "Button":{
@@ -493,6 +527,7 @@
     }
   },
   "GroupEditPage": {
+    "HeaderTitle": "編輯自訂分類",
     "MachineType": {
       "Claw": "選物販賣機",
       "Coin": "兌幣機"
@@ -540,6 +575,7 @@
     }
   },
   "ProductPage": {
+    "HeaderTitle": "商品列表",
     "Placeholder": {
       "Search": "搜尋商品名稱"
     },

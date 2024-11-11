@@ -30,7 +30,7 @@ const { modalVisible, openModal, closeModal } = useModal()
 // ref 變數
 const searchInfo = ref({
   keyword: '',
-  placeholder: $t('HomePage.search')
+  placeholder: $t('HomePage.Search')
 })
 const updateKey = ref(0)
 

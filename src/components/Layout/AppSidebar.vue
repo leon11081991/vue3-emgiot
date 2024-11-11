@@ -40,7 +40,7 @@ const { width } = useDeviceWidth()
           <div class="user-level">
             <BaseSvgIcon :iconName="`level-${userStore.userInfo.roleOrder}`" />
             <span class="user-level-text">
-              {{ $t(`Common.Level.${userStore.userInfo.roleOrder}`) }}</span
+              {{ $t(`Common.Level`, { level: userStore.userInfo.roleOrder }) }}</span
             >
           </div>
         </div>
