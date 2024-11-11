@@ -1,13 +1,648 @@
 {
+  "ErrorMessage": {
+    "UserNotFound": "用戶不存在，或請檢查帳號是否正確。",
+    "ServerError": "伺服器錯誤，請稍後再試",
+    "WrongUserIdAndPassword": "帳號或密碼錯誤。",
+    "DuplicateUserId": "此帳號已被註冊。",
+    "GetUserInfoFail": "取得使用者資訊失敗",
+    "ValidationCodeIncorrect": "驗證碼不正確。",
+    "ValidateFail": "驗證失敗，請確認網址是否正確。",
+    "UserNotVerified":"使用者未驗證。",
+    "UpdateUserInfoFail": "請以非數字的字元作為使用者名稱開頭。",
+    "ChangePasswordFail": "密碼變更失敗"
+  },
   "Common": {
+    "AppName": "雲端掌櫃",
+    "Store":"店",
+    "Logout": "登出",
+    "Result": {
+      "NotLogin": "請先登入...",
+      "TokenExpired": "登入已過期，請重新登入",
+      "LoginSuccess": "登入成功，即將前往首頁...",
+      "LogoutSuccess": "登出成功",
+      "SignUpSuccess": "系統寄出[驗證信]至您的電子郵件地址。請依郵件內容，點擊連結完成完成Email驗證。",
+      "ForgotPasswordSuccess": "發送信件成功，請使用信件內連結重設密碼。",
+      "ChangePasswordSuccess": "密碼變更成功",
+      "ValidateSuccess": "驗證成功，立刻前往首頁登入！"
+      
+    },
+    "Response": {
+      "Success": "成功",
+      "Error": "錯誤",
+      "Unauthorized": "未授權，請重新登入",
+      "BadRequest": "請求錯誤",
+      "Forbidden": "拒絕存取",
+      "NotFound": "找不到資源",
+      "InternalError": "伺服器內部錯誤",
+      "ServerError": "伺服器錯誤",
+      "NoNetwork": "請檢查網路連線狀態"
+    },
+    "Sidebar": {
+      "Home": "首頁",
+      "Profile": "個人資料",
+      "Member": "成員管理",
+      "GroupEdit": "自訂分類",
+      "Product": "商品管理"
+    },
     "Button": {
       "Add": "新增",
       "Edit": "編輯",
       "Save": "儲存",
       "Delete": "刪除"
+    },
+    "Notification": {
+      "Button": "確認"
+    },
+    "Message":{
+      "CopySuccess":"複製成功",
+      "CopyFailed":"複製失敗",
+      "ClipboardNotSupported":"不支援此瀏覽器複製功能"
+    },
+    "Level": "{level}級",
+    "Select":{
+      "RecentRecords": "最近{record}筆記錄"
+    },
+    "UpdateRecord": {
+      "Label": "更新時間"
     }
   },
-  "HomeView":{
-    
+  "HomePage": {
+    "Search": "搜尋店名",
+    "Chart": {
+      "Revenue": "營收",
+      "Profit": "盈餘",
+      "Today": "今日",
+      "PrizeWinCount": "出貨成本",
+      "CoinExchanged": "兌幣量"
+    },
+    "Modal": {
+      "CreateStore": {
+        "Title": "新增店家",
+        "Placeholder": {
+          "StoreName": "請輸入名稱"
+        },
+        "Button": {
+          "Confirm": "確認"          
+        },
+        "Message": {
+          "StoreExist": "你已建立過相同名稱店家",
+          "StoreNameEmpty": "輸入不得為空",
+          "LenOverRule": "長度超過10個字"
+        }
+      }
+    }
+  },
+  "DashboardPage": {
+    "HeaderTitle": "雲端掌櫃 - ",
+    "Chart": {
+      "Revenue": "營收",
+      "Profit": "盈餘",
+      "Today": "今日",
+      "EditStore": "編輯店家",
+      "PrizeWinCount": "出貨成本",
+      "CoinExchanged": "兌幣量"
+    },
+    "Tabs": {
+      "Claw": "選物販賣機",
+      "Coin": "兌幣機"
+    },
+    "ClawTabList":{
+      "Header": {
+        "PcbName": "機台",
+        "AveragePrizeWinCount": "平均出貨金額",
+        "Revenue": "營收",
+        "PrizeWinCount": "出貨"
+      },
+      "Item": {
+        "CashboxAmount": "錢箱累積",
+        "CumulativeAmount": "累保金額",
+        "AccountInquiry": "帳務查詢",
+        "ReplenishCoins": "遠端補幣",
+        "MoreOperation": "其他操作"
+      }
+    },
+    "CoinTabList":{
+      "Header": {
+        "PcbName": "機台",
+        "ExchangedCount": "兌幣量",
+        "ExchangedRemaining": "已兌/剩餘"
+      },
+      "Item": {
+        "AccountInquiry": "帳務查詢",
+        "SecurityStatus": "關閉",
+        "ReplenishCoins": "遠端退幣",
+        "MoreOperation": "其他操作"
+      }
+    },
+    "Modal":{
+      "AddNewMachine":{
+        "Title":{
+          "Default":"新增機台",
+          "QRCode":"掃描二維碼"
+        },
+        "Placeholder":{
+          "MachineName":"請輸入名稱",
+          "QRCode":"手動需入序號或掃描二維碼"
+        },
+        "Button":{
+          "Confirm":"確認",
+          "GoBack":"返回"
+        }
+      },
+      "BatchModal":{
+        "Title":{
+          "Default":"批量操作",
+          "Claw":"遠端補幣",
+          "Coin":"遠端退幣"
+        },
+        "Selected": "已選 {count} 台",
+        "Step1":
+        {
+          "Content":"請選擇要進行操作的機台",
+          "SearchPlaceholder":"搜尋機台名稱",
+          "Button":{
+            "CheckAll":"全部選擇",
+            "UncheckAll":"全部取消"
+          }
+        },
+        "Step3":{
+          "Content":{
+            "Claw":"請確認是否對所選的機台進行補幣？",
+            "Coin":"請確認是否對所選的機台進行退幣？"
+          },
+          "CountLabel": {
+            "Claw":"累保金額",
+            "Coin":"已兌換量"
+          }
+        },
+        "Button":{
+          "Confirm":"確認",
+          "Cancel":"取消"
+        }
+      },
+      "ClawStoreFilter": {
+        "Title": "設定篩選條件",
+        "Item": {
+          "Start": "開始時間",
+          "End": "結束時間"
+        },
+        "Placeholder": {
+          "Search": "機台"
+        },
+        "DropDown": {
+          "GroupDefaultName": "分類",
+          "GoodsDefaultName": "商品"
+        },
+        "Button": {
+          "Confirm": "確認",
+          "Cancel": "取消"
+        }
+      },
+      "CoinStoreFilter": {
+        "Title": "設定篩選條件",
+        "Item": {
+          "Start": "開始時間",
+          "End": "結束時間"
+        },
+        "Placeholder": {
+          "Search": "機台"
+        },
+        "DropDown": {
+          "GroupDefaultName": "分類"
+        },
+        "Button": {
+          "Confirm": "確認",
+          "Cancel": "取消"
+        }
+      },
+      "ReplenishCoins":{
+        "Title":{
+          "Claw":"遠端補幣",
+          "Coin":"遠端退幣"
+        },
+        "Content":"請選擇數量",
+        "Button":{
+          "Confirm":"確認",
+          "Cancel":"取消"
+        }
+      },
+      "EditMachine":{
+        "Title":"編輯機台名稱",
+        "Button":{
+          "Confirm":"確認"
+        }
+      },
+      "RemoteUnlock":{
+        "Title":"遠端開鎖",
+        "Content":"請選擇開鎖秒數",
+        "Button":{
+          "Confirm":"確認",
+          "Cancel":"取消"
+        }
+      },
+      "ErrorReset":{
+        "Title":"遠端故障消除",
+        "Content":"確定要進行遠端故障消除嗎？ ",
+        "Button":{
+          "Confirm":"確認",
+          "Cancel":"取消"
+        }
+      },
+      "SecurityStatus":{
+        "Title":"保全狀態",
+        "Content":"確定要關閉保全功能嗎？",
+        "Button":{
+          "Confirm":"確認",
+          "Cancel":"取消"
+        }
+      },
+      "OtherActions":{
+        "Title":"其他操作",
+        "IdNumberLabel":"機台序號",
+        "EditMachineLabel":"編輯機台名稱",
+        "ChangeProductLabel":"更換產品",
+        "RemoteUnlockLabel":"遠端開鎖",
+        "ErrorResetLabel":"遠端故障消除"
+      },
+      "ChangeProduct":{
+        "Title":"更換產品",
+        "SearchPlaceholder":"搜尋商品名稱",
+        "Button":{
+          "Confirm":"確認"
+        }
+      },
+      "UpdateStore": {
+        "Title": "編輯店家",
+        "Placeholder": {
+          "StoreName": "請輸入名稱",
+          "WifiSSID": "請輸入WIFI名稱",
+          "WifiPassword": "請輸入WIFI密碼"
+        },
+        "Button": {
+          "Confirm": "確認"
+        },
+        "Message": {
+          "StoreNameRequired": "店家名稱不得為空"
+        }
+      }
+    },
+    "MachineAction":{
+      "Restock": "選物機補幣",
+      "Withdraw": "兌幣機退幣",
+      "Lock": "兌幣機關閉",
+      "Unlock": "兌幣機開鎖",
+      "ErrorReset": "兌幣機故障消除",
+      "M1Reset": "機械錶1重置",
+      "M2Reset": "機械錶2重置"
+    },
+    "Button":{
+      "BatchForClawMachine":"批量補幣",
+      "BatchForCoinMachine":"批量退幣"
+    }
+  },
+  "AccountInquiryPage": {
+    "Tabs": {
+      "AccountInquiry": "帳務查詢",
+      "ProductRecord": "商品紀錄",
+      "EventRecord": "事件紀錄"
+    },
+    "Chart": {
+      "Claw":{
+        "RevenueSummary": "期間總營收",
+        "PrizeWinCount": "出貨",
+        "AveragePrizeWinCount": "平均出貨金額",
+        "Profit": "盈餘"
+      },
+      "Coin": {
+        "RevenueSummary": "期間兌幣量",
+        "CoinExchanged": "已兌換量",
+        "CoinRemaining": "剩餘幣量"
+      }
+    },
+    "BarLineChart": {
+      "Claw": {
+        "Label": {
+          "Revenue": "營收",
+          "PrizeWinCount": "出貨"
+        }
+      },
+      "Coin": {
+        "Label": {
+          "ExchangeCount": "兌幣量"
+        }
+      },
+      "Week": "第 {week} 週"
+    },
+    "Modal": {
+      "Filter": {
+        "Title": "設定篩選條件",
+        "Item": {
+          "Start": "開始時間",
+          "End": "結束時間"
+        },
+        "Button": {
+          "Confirm": "確認",
+          "Cancel": "取消"
+        }
+      }
+    },
+    "ContentHeader":{
+      "Date": "日期",
+      "PrizeWinCount": "出貨",
+      "Revenue": "營收",
+      "ExchangeCount": "兌幣量"
+    },
+    "SwitchLabel": "顯示類型：圖表",
+    "WeekTitle": "第 {date} 週",
+    "EventRecord":{
+      "ConnectionStatus": "連線狀態",
+      "Dispatch": "電眼出貨",
+      "CashBoxCollection": "錢箱收款",
+      "CoinRefillEvent": "補幣事件",
+      "CoinDispenseEvent": "出幣事件",
+      "CoinReturnEvent": "退幣事件",
+      "InventoryReport": "庫存回報",
+      "StatusReport": "狀態回報"
+    },
+    "ListType":{
+      "Day": "日帳",
+      "Week": "週帳",
+      "Month": "月帳"
+    }
+  },
+  "LoginPage": {
+    "Login": {
+      "TabLabel": "登入",
+      "TextMessage": "歡迎回來",
+      "UserId": "電子信箱",
+      "Password": "密碼",
+      "RememberMe": "記住我",
+      "ForgotPassword": "忘記密碼",
+      "Submit": "登入",
+      "LoginSuccess": "登入成功",
+      "LoginFailed": "登入失敗",
+
+      "LoginValidateMessages": "請填寫"
+    },
+    "Register": {
+      "TabLabel": "註冊",
+      "TextMessage": "歡迎加入",
+      "UserId": "電子信箱",
+      "Validate": "驗證",
+      "Submit": "送出",
+      "RegisterSuccess": "註冊成功",
+      "RegisterFailed": "註冊失敗",
+      "RegisterValidateMessages": "請填寫"
+    },
+    "ForgotPassword": {
+      "Title": "忘記密碼",
+      "UserId": "電子信箱",
+      "Submit": "送出"
+    },
+    "OtherText": {
+      "UseOtherMethods": "使用其他方式登入",
+      "HasNoAccount": "沒有帳號?",
+      "AlreadyHasAccount": "已有帳號?",
+      "ToggleToRegister": "註冊帳號",
+      "ToggleToLogin": "登入帳號"
+    },
+    "ValidateMessage": {
+      "Required": "必填",
+      "ConfirmPasswordError": "與密碼未一致，請重新輸入"
+    }
+  },
+  "SignUpPage": {
+    "HeadingText": "帳號設定",
+    "SignUp": {
+      "UserId": "電子信箱",
+      "Password": "密碼",
+      "VerifyPassword": "確認密碼",
+      "UserInfo": "真實姓名",
+      "Submit": "送出"
+    }
+  },
+  "MessagePage": {
+    "Tab": {
+      "System": "系統訊息",
+      "Operation": "營業訊息"
+    },
+    "TabList": {
+      "Header": {
+        "MachineName": "機台",
+        "EventName": "event.content",
+        "Date": "時間"
+      },
+      "NoData": "無資料"
+    },
+    "Message": {
+      "Close": "關閉主動通知"
+    }
+  },
+  "ProfilePage": {
+    "HeaderTitle": "個人資料",
+    "EditableContainer": {
+      "UserNameField": {
+        "Title": "ID"
+      },
+      "PasswordField": {
+        "Title": "密碼",
+        "Placeholder": "尚未設定密碼",
+        "ChangeButton": "變更"
+      }
+    },
+    "Modal": {
+      "UserNameField": {
+        "Title": "修改個人資料",
+        "Button": "確認"
+      },
+      "PasswordField": {
+        "Title": "修改密碼",
+        "NewPassword": "新密碼",
+        "ConfirmPassword": "確認密碼",
+        "Button": "變更"
+      }
+    }
+  },
+  "MemberPage":{
+    "HeaderTitle": "成員管理",
+    "IsVisible":{
+      "CheckboxLabel":"隱身",
+      "HintText":"階級比你低的無法看見你"
+    },
+    "Message":{
+      "IsSelfAccount":"無法訪問自身帳號。",
+      "CanNotAccess":"無法訪問超過等級或同等級的帳號。"
+    }
+  },
+  "AddMemberPage": {
+    "HeaderTitle": "邀請新成員",
+    "Placeholder": {
+      "SelectStore": "請選擇店家"
+    },
+    "Button":{
+      "CreateAddMemberLink":"產生邀請連結"
+    }
+  },
+  "MemberInfoPage": {
+    "HeaderTitle": "成員資訊",
+    "Button":{
+      "Update": "變更",
+      "Delete": "刪除成員"
+    },
+    "Message":{
+      "UpdateSuccess":"變更成員資訊成功",
+      "DeleteSuccess":"刪除成員成功"
+    },
+    "PermissionContainer":{
+      "Title":"權限設定",
+      "WarningMsg":"因於該店家的權限等級，未有可供設定的等級。請切換其他店家。"
+    },
+    "ContentSettingContainer":{
+      "Title":"權限內容設定",
+      "SettingLabel":{
+        "ForbiddenPcbs":"啟用裝置過濾",
+        "IsGoodsManagement":"商品管理權限",
+        "IsSpecial":"特殊商品可見",
+        "IsInvisibleToThisUser":"屏蔽，對方無法在成員列表看見你"
+      }
+    },
+    "Modal":{
+      "DeleteMember":{
+        "Title": "刪除成員",
+        "Content": "請確認是否將該成員移出此店家?",
+        "Button":{
+          "Confirm": "確認",
+          "Cancel": "取消"
+        }
+      }
+    }
+  },
+  "InviteLinkPage": {
+    "HeaderTitle": "發送連結",
+    "QRCodeHint":"邀請碼時效一天，只能提供一人使用。",
+    "TextHint":"邀請您加入雲端掌櫃，請點選下方連結接受邀請。",
+    "Button":{
+      "Copy":"複製內容",
+      "Return":"返回"
+    }
+  },
+  "GroupEditPage": {
+    "HeaderTitle": "編輯自訂分類",
+    "MachineType": {
+      "Claw": "選物販賣機",
+      "Coin": "兌幣機"
+    },
+    "Button": {
+      "Confirm": "確認",
+      "Cancel": "取消"
+    },
+    "Message": {
+      "NoGroupId": "未分類群組無法編輯名稱"
+    },
+    "Modal": {
+      "MoreOperation": {
+        "Title": "更多操作",
+        "Edit": "編輯自訂分類名稱",
+        "Delete": "刪除自訂分類名稱"
+      },
+      "AddEditGroup": {
+        "Title": {
+          "Edit": "編輯自訂分類",
+          "Add": "新增自訂分類"
+        },
+        "Placeholder": {
+          "GroupName": "請輸入名稱"
+        },
+        "Button": {
+          "Confirm": "確認"
+        },
+        "Message": {
+          "Empty": "輸入不得為空",
+          "LengthOverRule": "長度超過10個字"
+        }
+      },
+      "DeleteGroup": {
+        "Title": "刪除自訂分類",
+        "Content": {
+          "First": "請確認是否刪除自訂分類",
+          "Second": "該分類內的機台將會被移動至未分類"
+        },
+        "Button": {
+          "Confirm": "確認",
+          "Cancel": "取消"
+        }
+      }
+    }
+  },
+  "ProductPage": {
+    "HeaderTitle": "商品列表",
+    "Placeholder": {
+      "Search": "搜尋商品名稱"
+    },
+    "TabList":{
+      "Header": {
+        "ProductName": "商品",
+        "ProductMark": "標記",
+        "ProductCost": "成本價",
+        "ProductOperation": "更多操作"
+      },
+      "Item": {
+        "IsSpecial": "特"
+      }
+    },
+    "Modal": {
+      "MoreOperation": {
+        "Title": "更多操作",
+        "Edit": "編輯商品",
+        "InfoChart": "商品營運數據",
+        "Delete": "刪除商品"
+      },
+      "AddEditGoods": {
+        "Title": {
+          "Edit": "編輯商品",
+          "Add": "新增商品"
+        },
+        "Placeholder": {
+          "GoodsName": "請輸入名稱",
+          "GoodsCost": "請輸入商品成本",
+          "MerchantAllowList": "商家勾選"
+        },
+        "Content": {
+          "Title": "商品種類",
+          "IsSpecial": "特殊商品",
+          "IsNormal": "一般商品"
+        },
+        "Button": {
+          "Confirm": "確認"
+        }
+      },
+      "DeleteGoods": {
+        "Title": "刪除商品",
+        "Content": "請確認是否刪除所選商品",
+        "Button": {
+          "Confirm": "確認",
+          "Cancel": "取消"
+        }
+      }
+    }
+  },
+  "ProductInfoChartPage": {
+    "Title": "商品營運數據圖表",
+    "Chart": {
+      "Tab": {
+        "Revenue": "營收",
+        "Profit": "盈餘"
+      },
+      "Today": "今日",
+      "PrizeWinCount": "出貨成本"
+    },
+    "TabList": {
+      "Header": {
+        "Device": "裝置",
+        "ShipmentAmount": "平均出貨金額",
+        "Revenue": "營收",
+        "Shipment": "出貨"
+      }
+    }
   }
 }

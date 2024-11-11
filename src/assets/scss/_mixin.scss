@@ -1,0 +1,44 @@
+@mixin base-transition {
+  transition: all 0.3s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+@mixin ellipsisText($max-width: 100%, $max-lines: 1, $line-height: 1.5) {
+  text-overflow: ellipsis;
+  max-width: $max-width;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  line-height: $line-height;
+  max-height: $max-lines * $line-height * 1rem;
+}
+
+@mixin media-breakpoint-up($size, $breakpoints: $grid-breakpoints) {
+  @if map-has-key($breakpoints, $size) {
+    $min: map-get($breakpoints, $size);
+    @if $min {
+      @media (min-width: $min) {
+        @content;
+      }
+    } @else {
+      @content;
+    }
+  } @else {
+    @warn 'Invalid breakpoint: #{$size}.';
+  }
+}
+
+@mixin media-breakpoint-down($size, $breakpoints: $grid-breakpoints) {
+  @if map-has-key($breakpoints, $size) {
+    $max: map-get($grid-breakpoints, $size) - 0.02;
+
+    @if $max {
+      @media (max-width: $max) {
+        @content;
+      }
+    } @else {
+      @content;
+    }
+  } @else {
+    @warn 'Invalid breakpoint: #{$size}.';
+  }
+}

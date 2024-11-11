@@ -1,13 +1,648 @@
 {
+  "ErrorMessage": {
+    "UserNotFound": "No account found",
+    "ServerError": "Server error, please try again later.",
+    "WrongUserIdAndPassword": "Incorrect username or password.",
+    "DuplicateUserId": "This account has already been registered.",
+    "GetUserInfoFail": "Failed to retrieve user information.",
+    "ValidationCodeIncorrect": "Incorrect verification code.",
+    "ValidateFail": "Verification failed, please check if the URL is correct.",
+    "UserNotVerified":"User not verified.",
+    "UpdateUserInfoFail": "Please use a non-numeric character to start the username.",
+    "ChangePasswordFail": "Password change failed."
+  },
   "Common": {
+    "AppName": "Cash Claw",
+    "Store":"Store",
+    "Logout": "Logout",
+    "Result": {
+      "NotLogin": "Please log in first...",
+      "TokenExpired": "Token expired, please log in again",
+      "LoginSuccess": "Login successfully...",
+      "LogoutSuccess": "Logout successfully",
+      "SignUpSuccess": "The system has sent a verification email to your inbox. Please follow the instructions in the email and click the link below to complete the email verification.",
+      "ForgotPasswordSuccess": "Email sent successfully. Please use the link in the email to reset your password.",
+      "ChangePasswordSuccess": "Password changed successfully",
+      "ValidateSuccess": "Email verified successfully"
+      
+    },
+    "Response": {
+      "Success": "Success",
+      "Error": "Error",
+      "Unauthorized": "Unauthorized, please log in again",
+      "BadRequest": "Bad request",
+      "Forbidden": "Access denied",
+      "NotFound": "Resource not found",
+      "InternalError": "Internal server error",
+      "ServerError": "Server error",
+      "NoNetwork": "Please check your network connection"
+    },
+    "Sidebar": {
+      "Home": "Home",
+      "Profile": "Personal Information",
+      "Member": "Member Management",
+      "GroupEdit": "Custom Classification",
+      "Product": "Product Management"
+    },
     "Button": {
       "Add": "Add",
       "Edit": "Edit",
       "Save": "Save",
       "Delete": "Delete"
+    },
+    "Notification": {
+      "Button": "Confirm"
+    },
+    "Message":{
+      "CopySuccess":"Copy Success",
+      "CopyFailed":"Copy Failed",
+      "ClipboardNotSupported":"The copy function is not supported in this browser"
+    },
+    "Level":"Level {level}",
+    "Select":{
+      "RecentRecords": "Last {record} Records"
+    },
+    "UpdateRecord": {
+      "Label": "Last Updated"
     }
   },
-  "HomeView":{
-    
+  "HomePage": {
+    "Search": "Search by Store Name",
+    "Chart": {
+      "Revenue": "Revenue",
+      "Profit": "Profit",
+      "Today": "Today's",
+      "PrizeWinCount": "Shipment Volume",
+      "CoinExchanged": "Amount Exchanged"
+    },
+    "Modal": {
+      "CreateStore": {
+        "Title": "Add New Store",
+        "Placeholder": {
+          "StoreName": "Please enter a name."
+        },
+        "Button": {
+          "Confirm": "Confirm"          
+        },
+        "Message": {
+          "StoreExist": "You have already created a store with the same name.",
+          "StoreNameEmpty": "Input cannot be empty",
+          "LenOverRule": "Length exceeds 10 characters"
+        }
+      }
+    }
+  },
+  "DashboardPage": {
+    "HeaderTitle": "Cash Claw - ",
+    "Chart": {
+      "Revenue": "Revenue",
+      "Profit": "Profit",
+      "Today": "Today's",
+      "EditStore": "Edit Store",
+      "PrizeWinCount": "Shipment Volume",
+      "CoinExchanged": "Amount Exchanged"
+    },
+    "Tabs": {
+      "Claw": "Claw machine",
+      "Coin": "Coin changer"
+    },
+    "ClawTabList":{
+      "Header": {
+        "PcbName": "Machine",
+        "AveragePrizeWinCount": "Average Revenue per Product",
+        "Revenue": "Revenue",
+        "PrizeWinCount": "Shipment Volume"
+      },
+      "Item": {
+        "CashboxAmount": "Cashbox Total",
+        "CumulativeAmount": "Unshipped Accumulated Amount",
+        "AccountInquiry": "Account Inquiry",
+        "ReplenishCoins": "Remote Coin Refill",
+        "MoreOperation": "More Actions"
+      }
+    },
+    "CoinTabList":{
+      "Header": {
+        "PcbName": "Machine",
+        "ExchangedCount": "Amount Exchanged",
+        "ExchangedRemaining": "Coins exchanged/Remaining coins"
+      },
+      "Item": {
+        "AccountInquiry": "Account Inquiry",
+        "SecurityStatus": "Disable security system",
+        "ReplenishCoins": "Remote coin refund",
+        "MoreOperation": "More Actions"
+      }
+    },
+    "Modal":{
+      "AddNewMachine":{
+        "Title":{
+          "Default":"Add Machine",
+          "QRCode":"Scan QR Code"
+        },
+        "Placeholder":{
+          "MachineName":"Please enter a name",
+          "QRCode":"Enter the serial number or scan the QR code"
+        },
+        "Button":{
+          "Confirm":"Confirm",
+          "GoBack":"Back"
+        }
+      },
+      "BatchModal":{
+        "Title":{
+          "Default":"Batch Operations",
+          "Claw":"Batch Coin Refill",
+          "Coin":"Batch Coin Refund"
+        },
+        "Selected": "{count} machines selected",
+        "Step1":
+        {
+          "Content":"Please select the machine you want to operate on",
+          "SearchPlaceholder":"Search for machine name",
+          "Button":{
+            "CheckAll":"Select All ",
+            "UncheckAll":"Deselect All"
+          }
+        },
+        "Step3":{
+          "Content":{
+            "Claw":"請確認是否對所選的機台進行補幣？",
+            "Coin":"請確認是否對所選的機台進行退幣？"
+          },
+          "CountLabel": {
+            "Claw":"累保金額",
+            "Coin":"已兌換量"
+          }
+        },
+        "Button":{
+          "Confirm":"Confirm",
+          "Cancel":"Cancel"
+        }
+      },
+      "ClawStoreFilter": {
+        "Title": "Set Filter Criteria",
+        "Item": {
+          "Start": "Start Time ",
+          "End": "End Time"
+        },
+        "Placeholder": {
+          "Search": "Machine"
+        },
+        "DropDown": {
+          "GroupDefaultName": "Custom Classification",
+          "GoodsDefaultName": "Product"
+        },
+        "Button": {
+          "Confirm": "Confirm",
+          "Cancel": "Cancel"
+        }
+      },
+      "CoinStoreFilter": {
+        "Title": "Set Filter Criteria",
+        "Item": {
+          "Start": "Start Time",
+          "End": "End Time"
+        },
+        "Placeholder": {
+          "Search": "Machine"
+        },
+        "DropDown": {
+          "GroupDefaultName": "Custom Classification"
+        },
+        "Button": {
+          "Confirm": "Confirm",
+          "Cancel": "Cancel"
+        }
+      },
+      "ReplenishCoins":{
+        "Title":{
+          "Claw":"Remote coin refill",
+          "Coin":"Remote coin refund"
+        },
+        "Content":"Please select quantity",
+        "Button":{
+          "Confirm":"Confirm",
+          "Cancel":"Cancel"
+        }
+      },
+      "EditMachine":{
+        "Title":"Edit Machine Name",
+        "Button":{
+          "Confirm":"Confirm"
+        }
+      },
+      "RemoteUnlock":{
+        "Title":"Remote Unlock",
+        "Content":"Please select remote unlock duration in seconds",
+        "Button":{
+          "Confirm":"Confirm",
+          "Cancel":"Cancel"
+        }
+      },
+      "ErrorReset":{
+        "Title":"Remote Fault Clearance",
+        "Content":"Are you sure to confirm remote fault clearance?",
+        "Button":{
+          "Confirm":"Confirm",
+          "Cancel":"Cancel"
+        }
+      },
+      "SecurityStatus":{
+        "Title":"Security System Status",
+        "Content":"Are you sure to disable the security system?",
+        "Button":{
+          "Confirm":"Confirm",
+          "Cancel":"Cancel"
+        }
+      },
+      "OtherActions":{
+        "Title":"More Actions",
+        "IdNumberLabel":"Machine ID",
+        "EditMachineLabel":"Edit Machine Name",
+        "ChangeProductLabel":"Change Product",
+        "RemoteUnlockLabel":"Remote Unlock",
+        "ErrorResetLabel":"Remote Fault Clearance"
+      },
+      "ChangeProduct":{
+        "Title":"Change Product",
+        "SearchPlaceholder":"Search for Product Name",
+        "Button":{
+          "Confirm": "Confirm"
+        }
+      },
+      "UpdateStore": {
+        "Title": "編輯店家",
+        "Placeholder": {
+          "StoreName": "請輸入名稱",
+          "WifiSSID": "請輸入WIFI名稱",
+          "WifiPassword": "請輸入WIFI密碼"
+        },
+        "Button": {
+          "Confirm": "Confirm"
+        },
+        "Message": {
+          "StoreNameRequired": "店家名稱不得為空"
+        }
+      }
+    },
+    "MachineAction":{
+      "Restock": "Batch Coin Refill",
+      "Withdraw": "Batch Coin Refund",
+      "Lock": "Security system disable",
+      "Unlock": "Remote Unlock",
+      "ErrorReset": "Remote Fault Clearance",
+      "M1Reset": "機械錶1重置",
+      "M2Reset": "機械錶2重置"
+    },
+    "Button":{
+      "BatchForClawMachine":"Batch Coin Refill",
+      "BatchForCoinMachine":"Batch Coin Refund"
+    }
+  },
+  "AccountInquiryPage": {
+    "Tabs": {
+      "AccountInquiry": "Account Inquiry",
+      "ProductRecord": "Product Records",
+      "EventRecord": "Event Records"
+    },
+    "Chart": {
+      "Claw":{
+        "RevenueSummary": "Period Total Revenue",
+        "PrizeWinCount": "Shipment Volume",
+        "AveragePrizeWinCount": "Average Revenue per Product",
+        "Profit": "Profit "
+      },
+      "Coin": {
+        "RevenueSummary": "Coin Exchange Volume for the Period",
+        "CoinExchanged": "Coins exchanged",
+        "CoinRemaining": "Remaining coins"
+      }
+    },
+    "BarLineChart": {
+      "Claw": {
+        "Label": {
+          "Revenue": "Revenue",
+          "PrizeWinCount": "Shipment Volume"
+        }
+      },
+      "Coin": {
+        "Label": {
+          "ExchangeCount": "Amount Exchanged"
+        }
+      },
+      "Week": "Week {week}"
+    },
+    "Modal": {
+      "Filter": {
+        "Title": "Set Filter Criteria",
+        "Item": {
+          "Start": "Start Time",
+          "End": "End Time"
+        },
+        "Button": {
+          "Confirm": "Confirm",
+          "Cancel": "Cancel"
+        }
+      }
+    },
+    "ContentHeader":{
+      "Date": "Date",
+      "PrizeWinCount": "Shipment Volume",
+      "Revenue": "Revenue",
+      "ExchangeCount": "Amount Exchanged"
+    },
+    "SwitchLabel": "Display Type：Chart",
+    "WeekTitle": "Week {date}",
+    "EventRecord":{
+      "ConnectionStatus": "Connection Status",
+      "Dispatch": "Eye Shipment",
+      "CashBoxCollection": "Cash Box Collection",
+      "CoinRefillEvent": "Coin Refill Event",
+      "CoinDispenseEvent": "出幣事件",
+      "CoinReturnEvent": "退幣事件",
+      "InventoryReport": "庫存回報",
+      "StatusReport": "狀態回報"
+    },
+    "ListType":{
+      "Day": "Daily Report",
+      "Week": "Weekly Report",
+      "Month": "Monthly Report"
+    }
+  },
+  "LoginPage": {
+    "Login": {
+      "TabLabel": "Log In",
+      "TextMessage": "Welcome Back",
+      "UserId": "Email Address",
+      "Password": "Password",
+      "RememberMe": "Remember Me",
+      "ForgotPassword": "Forgot Password",
+      "Submit": "Log In",
+      "LoginSuccess": "Login successfully...",
+      "LoginFailed": "Login Failed",
+
+      "LoginValidateMessages": "Please fill out the form"
+    },
+    "Register": {
+      "TabLabel": "Register",
+      "TextMessage": "Welcome to Join",
+      "UserId": "Email Address",
+      "Validate": "Validate",
+      "Submit": "Submit",
+      "RegisterSuccess": "Register success",
+      "RegisterFailed": "Register Failed",
+      "RegisterValidateMessages": "Please fill out the form"
+    },
+    "ForgotPassword": {
+      "Title": "Forgot Password",
+      "UserId": "Email Address",
+      "Submit": "Submit"
+    },
+    "OtherText": {
+      "UseOtherMethods": "Log in with Other Methods",
+      "HasNoAccount": "Don't have an account?",
+      "AlreadyHasAccount": "Already have an account?",
+      "ToggleToRegister": "Sign Up",
+      "ToggleToLogin": "Log in"
+    },
+    "ValidateMessage": {
+      "Required": "Required",
+      "ConfirmPasswordError": "Passwords do not match. Please re-enter."
+    }
+  },
+  "SignUpPage": {
+    "HeadingText": "Register",
+    "SignUp": {
+      "UserId": "Email Address",
+      "Password": "Password",
+      "VerifyPassword": "Confirm Password",
+      "UserInfo": "Full Name",
+      "Submit": "Submit"
+    }
+  },
+  "MessagePage": {
+    "Tab": {
+      "System": "System Messages",
+      "Operation": "Business Messages"
+    },
+    "TabList": {
+      "Header": {
+        "MachineName": "Machine",
+        "EventName": "event.content",
+        "Date": "Time"
+      },
+      "NoData": "No Data"
+    },
+    "Message": {
+      "Close": "Disable Notifications "
+    }
+  },
+  "ProfilePage": {
+    "HeaderTitle": "Personal Information",
+    "EditableContainer": {
+      "UserNameField": {
+        "Title": "ID"
+      },
+      "PasswordField": {
+        "Title": "Password",
+        "Placeholder": "Password Not Set",
+        "ChangeButton": "Change "
+      }
+    },
+    "Modal": {
+      "UserNameField": {
+        "Title": "Modify Personal Information",
+        "Button": "Confirm"
+      },
+      "PasswordField": {
+        "Title": "Change Password",
+        "NewPassword": "New Password",
+        "ConfirmPassword": "Confirm Password",
+        "Button": "Change"
+      }
+    }
+  },
+  "MemberPage":{
+    "HeaderTitle": "Member Management",
+    "IsVisible":{
+      "CheckboxLabel":"Stealth Mode",
+      "HintText":"Members with a lower level cannot see you"
+    },
+    "Message":{
+      "IsSelfAccount":"Cannot access your own account.",
+      "CanNotAccess":"Cannot access accounts with a higher or equal level."
+    }
+  },
+  "AddMemberPage": {
+    "HeaderTitle": "Invite New Members",
+    "Placeholder": {
+      "SelectStore": "Please select a store"
+    },
+    "Button":{
+      "CreateAddMemberLink":"Generate Invitation Link"
+    }
+  },
+  "MemberInfoPage": {
+    "HeaderTitle": "Member Information",
+    "Button":{
+      "Update": "Change",
+      "Delete": "Remove Member"
+    },
+    "Message":{
+      "UpdateSuccess":"Change Success",
+      "DeleteSuccess":"Remove Member Success"
+    },
+    "PermissionContainer":{
+      "Title":"Access Control",
+      "WarningMsg":"Due to the permission level of the selected store, there are no available levels to set. Please switch to another store."
+    },
+    "ContentSettingContainer":{
+      "Title":"Access Content Settings",
+      "SettingLabel":{
+        "ForbiddenPcbs":"Restrict Visibility of Certain Machines",
+        "IsGoodsManagement":"Product Management Permissions",
+        "IsSpecial":"Special Products Visible",
+        "IsInvisibleToThisUser":"Blocked: Cannot see you in the member list anymore."
+      }
+    },
+    "Modal":{
+      "DeleteMember":{
+        "Title": "Remove Member",
+        "Content": "Please confirm if you want to remove this member from the store?",
+        "Button":{
+          "Confirm": "Confirm",
+          "Cancel": "Cancel"
+        }
+      }
+    }
+  },
+  "InviteLinkPage": {
+    "HeaderTitle": "",
+    "QRCodeHint":"邀請碼時效一天，只能提供一人使用。",
+    "TextHint":"邀請您加入雲端掌櫃，請點選下方連結接受邀請。",
+    "Button":{
+      "Copy":"Copy",
+      "Return":"Back"
+    }
+  },
+  "GroupEditPage": {
+    "HeaderTitle": "Edit Custom Classification",
+    "MachineType": {
+      "Claw": "Claw machine",
+      "Coin": "Coin changer"
+    },
+    "Button": {
+      "Confirm": "Confirm",
+      "Cancel": "Cancel"
+    },
+    "Message": {
+      "NoGroupId": "Uncategorized groups cannot edit their name"
+    },
+    "Modal": {
+      "MoreOperation": {
+        "Title": "More Actions",
+        "Edit": "Edit Custom Classification Name",
+        "Delete": "Remove Custom Classification"
+      },
+      "AddEditGroup": {
+        "Title": {
+          "Edit": "Edit Custom Classification Name",
+          "Add": "Add Custom Classification"
+        },
+        "Placeholder": {
+          "GroupName": "Please enter a name."
+        },
+        "Button": {
+          "Confirm": "Confirm"
+        },
+        "Message": {
+          "Empty": "Input cannot be empty",
+          "LengthOverRule": "Length exceeds 10 characters"
+        }
+      },
+      "DeleteGroup": {
+        "Title": "Remove Custom Classification",
+        "Content": {
+          "First": "Are you sure you want to remove this custom classification?",
+          "Second": "It will be moved to the unclassified section."
+        },
+        "Button": {
+          "Confirm": "Confirm",
+          "Cancel": "Cancel"
+        }
+      }
+    }
+  },
+  "ProductPage": {
+    "HeaderTitle": "Product Management",
+    "Placeholder": {
+      "Search": "Search product name"
+    },
+    "TabList":{
+      "Header": {
+        "ProductName": "Product",
+        "ProductMark": "Mark(Special)",
+        "ProductCost": "Cost price",
+        "ProductOperation": "More Actions"
+      },
+      "Item": {
+        "IsSpecial": "Special"
+      }
+    },
+    "Modal": {
+      "MoreOperation": {
+        "Title": "More Actions",
+        "Edit": "Edit product",
+        "InfoChart": "Product operation data",
+        "Delete": "Remove product"
+      },
+      "AddEditGoods": {
+        "Title": {
+          "Edit": "Edit product",
+          "Add": "Add product"
+        },
+        "Placeholder": {
+          "GoodsName": "Please enter a name",
+          "GoodsCost": "Please enter the product cost",
+          "MerchantAllowList": "Store selection"
+        },
+        "Content": {
+          "Title": "Types of products",
+          "IsSpecial": "Special products",
+          "IsNormal": "Regular products"
+        },
+        "Button": {
+          "Confirm": "Confirm"
+        }
+      },
+      "DeleteGoods": {
+        "Title": "Remove product",
+        "Content": "Are you sure you want to remove this Product?",
+        "Button": {
+          "Confirm": "Confirm",
+          "Cancel": "Cancel"
+        }
+      }
+    }
+  },
+  "ProductInfoChartPage": {
+    "Title": "Product operation data",
+    "Chart": {
+      "Tab": {
+        "Revenue": "Revenue",
+        "Profit": "Profit"
+      },
+      "Today": "Today's",
+      "PrizeWinCount": "Shipment Volume"
+    },
+    "TabList": {
+      "Header": {
+        "Device": "Machine",
+        "ShipmentAmount": "Average Revenue per Product",
+        "Revenue": "Revenue",
+        "Shipment": "Shipment"
+      }
+    }
   }
 }

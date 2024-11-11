@@ -1,7 +1,9 @@
-import type { RouteLocationNormalized } from 'vue-router';
+import type { RouteLocationNormalized } from 'vue-router'
 import { createRouter, createWebHistory } from 'vue-router'
 
-import { layoutMiddleware } from '@/router/middlewares/layoutMiddleware'
+import { authMiddleware } from '@/router/middlewares/auth.middleware'
+import { layoutMiddleware } from '@/router/middlewares/layout.middleware'
+import { memberJoinMiddleware } from '@/router/middlewares/memberJoin.middleware'
 
 import IndexPage from '@/views/IndexPage.vue'
 
@@ -12,6 +14,24 @@ const routes = [
     component: IndexPage,
     meta: {
       layout: 'LayoutDefault',
+      middleware: [authMiddleware, layoutMiddleware]
+    }
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('@/views/LoginPage.vue'),
+    meta: {
+      layout: 'LayoutBlank',
+      middleware: [authMiddleware, layoutMiddleware]
+    }
+  },
+  {
+    path: '/validation',
+    name: 'Validation',
+    component: () => import('@/views/ValidationPage.vue'),
+    meta: {
+      layout: 'LayoutBlank',
       middleware: [layoutMiddleware]
     }
   },
@@ -21,7 +41,106 @@ const routes = [
     component: () => import('@/views/DashboardPage.vue'),
     meta: {
       layout: 'LayoutDefault',
-      middleware: [layoutMiddleware]
+      middleware: [authMiddleware, layoutMiddleware]
+    }
+  },
+  {
+    path: '/account-inquiry/:machineType/:pcbId',
+    name: 'AccountInquiry',
+    component: () => import('@/views/DashboardAccountInquiryPage.vue'),
+    meta: {
+      layout: 'LayoutDefault',
+      middleware: [authMiddleware, layoutMiddleware]
+    }
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: () => import('@/views/ProfilePage.vue'),
+    meta: {
+      layout: 'LayoutDefault',
+      middleware: [authMiddleware, layoutMiddleware]
+    }
+  },
+  {
+    path: '/member',
+    name: 'Member',
+    component: () => import('@/views/MemberPage.vue'),
+    meta: {
+      layout: 'LayoutDefault',
+      middleware: [authMiddleware, layoutMiddleware]
+    }
+  },
+  {
+    path: '/member-info/:storeId/:userId',
+    name: 'MemberInfo',
+    component: () => import('@/views/MemberInfoPage.vue'),
+    meta: {
+      layout: 'LayoutDefault',
+      middleware: [authMiddleware, layoutMiddleware]
+    }
+  },
+  {
+    path: '/add-member',
+    name: 'AddMember',
+    component: () => import('@/views/AddMemberPage.vue'),
+    meta: {
+      layout: 'LayoutDefault',
+      middleware: [authMiddleware, layoutMiddleware]
+    }
+  },
+  {
+    path: '/invite-link',
+    name: 'InviteLink',
+    component: () => import('@/views/InviteLinkPage.vue'),
+    meta: {
+      layout: 'LayoutDefault',
+      middleware: [authMiddleware, layoutMiddleware]
+    }
+  },
+  {
+    path: '/member-join',
+    name: 'MemberJoin',
+    component: () => import('@/views/MemberJoinPage.vue'),
+    meta: {
+      layout: 'LayoutBlank',
+      middleware: [memberJoinMiddleware, layoutMiddleware]
+    }
+  },
+  {
+    path: '/group-edit',
+    name: 'GroupEdit',
+    component: () => import('@/views/GroupEditPage.vue'),
+    meta: {
+      layout: 'LayoutDefault',
+      middleware: [authMiddleware, layoutMiddleware]
+    }
+  },
+  {
+    path: '/product',
+    name: 'Product',
+    component: () => import('@/views/ProductPage.vue'),
+    meta: {
+      layout: 'LayoutDefault',
+      middleware: [authMiddleware, layoutMiddleware]
+    }
+  },
+  {
+    path: '/productInfoChart/:goodsId',
+    name: 'ProductInfoChart',
+    component: () => import('@/views/ProductInfoChartPage.vue'),
+    meta: {
+      layout: 'LayoutDefault',
+      middleware: [authMiddleware, layoutMiddleware]
+    }
+  },
+  {
+    path: '/message',
+    name: 'Message',
+    component: () => import('@/views/MessagePage.vue'),
+    meta: {
+      layout: 'LayoutDefault',
+      middleware: [authMiddleware, layoutMiddleware]
     }
   }
 ]
@@ -32,15 +151,13 @@ const scrollBehavior = (
   savedPosition: any
 ) => {
   if (savedPosition) {
-    return savedPosition;
+    return savedPosition
   } else {
-    return { top: 0 };
+    return { top: 0 }
   }
-};
-
+}
 
 export const createAppRouter = () => {
-
   const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes,
@@ -49,35 +166,32 @@ export const createAppRouter = () => {
 
   // 設置middleware
   router.beforeEach((to, from, next) => {
-
     if (!to.meta.middleware) {
       // 沒有設定middleware，允許路由繼續
       return next()
     }
 
-    const middleware = Array.isArray(to.meta.middleware)
-      ? to.meta.middleware
-      : [to.meta.middleware];
-    console.log("middleware", middleware);
-    const context = { to, from, next };
-    let idx = 0; // 初始化中間件索引
+    const middleware = Array.isArray(to.meta.middleware) ? to.meta.middleware : [to.meta.middleware]
+
+    const context = { to, from, next }
+    let idx = 0 // 初始化中間件索引
 
     // 定義執行中間件的函數
     const run = () => {
       if (idx < middleware.length) {
-        const mw = middleware[idx]; // 獲取當前中間件
+        const mw = middleware[idx] // 獲取當前中間件
         mw({
           ...context,
           next: () => {
-            idx++; // 移動到下一個中間件
-            run(); // 繼續執行下一個中間件
+            idx++ // 移動到下一個中間件
+            run() // 繼續執行下一個中間件
           }
-        });
+        })
       } else {
-        next(); // 所有中間件執行完畢，繼續路由導航
+        next() // 所有中間件執行完畢，繼續路由導航
       }
-    };
-    run(); // 開始執行中間件
+    }
+    run() // 開始執行中間件
   })
 
   return { router }

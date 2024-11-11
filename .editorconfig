@@ -1,0 +1,14 @@
+root = true
+
+# 所有文件
+[*]
+charset = utf-8 # 設置文件字符集為 utf-8
+end_of_line = lf # 控制换行類型(lf | cr | crlf)
+indent_style = space # 縮排風格
+indent_size = 2
+insert_final_newline = true # 在文件末尾插入新行
+
+# md 文件
+[*.md]
+max_line_length = off # 關閉最大行長度限制
+trim_trailing_whitespace = false # 關閉末尾空格

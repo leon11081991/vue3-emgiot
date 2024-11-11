@@ -1,20 +1,30 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { createAppRouter } from '@/router/index'
+import { storagePlugin } from '@/stores/storage-plugin'
 import App from './App.vue'
 
 import i18n from '@/plugins/i18n'
 import versionPlugin from '@/plugins/version'
+import 'virtual:svg-icons-register'
+import { Quasar, QDate } from 'quasar'
+import quasarLang from 'quasar/lang/zh-TW'
 
 import '@/assets/normalize.css'
 
 const { router } = createAppRouter()
 const pinia = createPinia()
+pinia.use(storagePlugin)
+
 const app = createApp(App)
 
 app.use(pinia)
 app.use(router)
 app.use(i18n)
 app.use(versionPlugin)
+app.use(Quasar, {
+  components: { QDate },
+  lang: quasarLang
+})
 
 app.mount('#app')
