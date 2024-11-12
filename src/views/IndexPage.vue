@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // import
-import type { StoreInfoStorageDataType } from '@/models/types/store.types'
+import type { StoreInfoStorageDataType, BaseWifiInfoReqType } from '@/models/types/store.types'
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AvatarDisplay from '@/components/Base/AvatarDisplay.vue'
@@ -48,13 +48,17 @@ const fnRefreshData = () => {
 }
 
 // async/await function
-const fnDispatchRecordStore = async (storeId: string, storeName: string) => {
+const fnDispatchRecordStore = async (
+  storeId: string,
+  storeName: string,
+  wifiInfo: BaseWifiInfoReqType[]
+) => {
   const dispatchStatus = await dispatchRecordCurrentStore(storeId)
   if (dispatchStatus) {
-    localStorage.setItem('storeName', storeName)
     UtilCommon.setLocalStorage<StoreInfoStorageDataType>('store-info', {
       storeId,
-      storeName
+      storeName,
+      wifiInfo
     })
 
     router.push(targetPath)
@@ -88,7 +92,7 @@ fetchStoresListInfo()
         :key="listItem.storeId"
         v-for="listItem in storeLists"
         class="merchant-list-item"
-        @click="fnDispatchRecordStore(listItem.storeId, listItem.storeName)"
+        @click="fnDispatchRecordStore(listItem.storeId, listItem.storeName, listItem.wifiInfo)"
       >
         <AvatarDisplay
           size="lg"
