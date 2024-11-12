@@ -605,7 +605,7 @@
         "Placeholder": {
           "GoodsName": "請輸入名稱",
           "GoodsCost": "請輸入商品成本",
-          "MerchantAllowList": "商家勾選"
+          "MerchantAllowList": "授權商家勾選"
         },
         "Content": {
           "Title": "商品種類",
