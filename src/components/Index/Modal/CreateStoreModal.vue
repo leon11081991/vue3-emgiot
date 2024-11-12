@@ -3,6 +3,7 @@ import { useI18n } from 'vue-i18n'
 import { ref, computed } from 'vue'
 import { useFetchStore } from '@/composables/useFetchStore'
 import { useMessage } from '@/composables/useMessage'
+import { useDebounce } from '@/composables/useDebounce'
 import type { BaseCreateStoreReqType } from '@/models/types/store.types'
 
 const props = defineProps<{
@@ -21,7 +22,11 @@ const { t: $t } = useI18n()
 const { createNewStore } = useFetchStore()
 const { openMessage } = useMessage()
 
+/* 非響應式變數 */
 const storeNameMaxLen = 10
+
+/* ref 變數 */
+const isButtonLoading = ref(false)
 const storeName = ref('')
 
 const storeModalDataRest = () => {
@@ -45,7 +50,9 @@ const updateStoreValue = (e: Event) => {
   storeName.value = value
 }
 
-const fnCreateNewStore = async () => {
+const fnCreateNewStore = useDebounce(async () => {
+  isButtonLoading.value = true
+
   if (storeName.value.trim() === '') {
     openMessage('error', $t('HomePage.Modal.CreateStore.Message.StoreNameEmpty'))
     return
@@ -68,7 +75,9 @@ const fnCreateNewStore = async () => {
   } else {
     isStoreNameExisted.value = true
   }
-}
+
+  isButtonLoading.value = false
+}, 500)
 </script>
 
 <template>
@@ -105,6 +114,7 @@ const fnCreateNewStore = async () => {
       <a-button
         class="confirm-btn"
         type="primary"
+        :loading="isButtonLoading"
         @click="fnCreateNewStore"
       >
         {{ '確認' }}
