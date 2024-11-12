@@ -1,6 +1,6 @@
 type CustomerId = string // 集團編號
 
-type BaseWifiInfoReqType = {
+export type BaseWifiInfoReqType = {
   wifiSSID: string
   wifiPassword: string
 }
@@ -27,6 +27,7 @@ type BaseStoresTotalResType = {
 export type StoreInfoStorageDataType = {
   storeId: string
   storeName: string
+  wifiInfo: BaseWifiInfoReqType[]
 }
 
 export type StoresListInfoResType = {

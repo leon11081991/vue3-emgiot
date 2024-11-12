@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import type { StoreInfoStorageDataType, BaseWifiInfoReqType } from '@/models/types/store.types'
 import { ref, computed, onMounted } from 'vue'
 import type { BaseCreateStoreReqType } from '@/models/types/store.types'
 import { useHeader } from '@/composables/useHeader'
 import { useFetchStore } from '@/composables/useFetchStore'
 import { useMessage } from '@/composables/useMessage'
 import { useI18n } from 'vue-i18n'
+import { UtilCommon } from '@/utils/utilCommon'
 
 const props = defineProps<{
   modalVisible: boolean
@@ -21,16 +23,18 @@ const { updateStore } = useFetchStore()
 const { openMessage } = useMessage()
 
 const storeNameMaxLen = 10
-const storeName = ref('')
-const wifiInfo = ref({
-  wifiSSID: '',
-  wifiPassword: ''
+const storeName = ref<string>(
+  UtilCommon.getLocalStorage<StoreInfoStorageDataType>('store-info')?.storeName || ''
+)
+const wifiInfo = ref<BaseWifiInfoReqType>({
+  wifiSSID:
+    UtilCommon.getLocalStorage<StoreInfoStorageDataType>('store-info')?.wifiInfo[0]?.wifiSSID || '',
+  wifiPassword:
+    UtilCommon.getLocalStorage<StoreInfoStorageDataType>('store-info')?.wifiInfo[0]?.wifiPassword ||
+    ''
 })
 
 const storeModalDataRest = () => {
-  storeName.value = ''
-  wifiInfo.value.wifiSSID = ''
-  wifiInfo.value.wifiPassword = ''
   isStoreNameExisted.value = false
 }
 
@@ -71,13 +75,12 @@ const fnUpdateStoreInfo = async () => {
   const res = await updateStore(params)
 
   if (res) {
-    const keyword = $t('Common.Store')
-    const lastChar = storeName.value[storeName.value.length - 1]
-    const isStoreKeywordExist = lastChar.includes(storeName.value)
-    const newName = isStoreKeywordExist ? storeName.value : storeName.value + keyword
-
-    localStorage.setItem('storeName', newName)
-    updateHeaderTitle($t('DashboardPage.HeaderTitle') + newName) // 設定動態 header title
+    UtilCommon.setLocalStorage<StoreInfoStorageDataType>('store-info', {
+      storeId: UtilCommon.getLocalStorage<StoreInfoStorageDataType>('store-info')?.storeId || '',
+      storeName: storeName.value,
+      wifiInfo: [wifiInfo.value]
+    })
+    updateHeaderTitle($t('DashboardPage.HeaderTitle') + storeName.value) // 設定動態 header title
     closeModal()
   } else {
     isStoreNameExisted.value = true
@@ -85,7 +88,8 @@ const fnUpdateStoreInfo = async () => {
 }
 
 onMounted(() => {
-  const storeName = localStorage.getItem('storeName')
+  const storeName =
+    UtilCommon.getLocalStorage<StoreInfoStorageDataType>('store-info')?.storeName || ''
   updateHeaderTitle($t('DashboardPage.HeaderTitle') + storeName)
 })
 </script>
