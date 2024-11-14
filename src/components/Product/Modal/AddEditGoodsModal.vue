@@ -134,7 +134,11 @@ watchEffect(() => {
     goodsNameInput.value = props.goodsInfo.goodsName
     goodsCost.value = props.goodsInfo.cost
     isSpecial.value = props.goodsInfo.isSpecial
-    merchantAllowList.value = props.goodsInfo.forbiddenStores
+
+    const AllowListObj = merchantOptions.value.filter(
+      (store) => !props.goodsInfo.forbiddenStores.includes(store.value)
+    )
+    merchantAllowList.value = AllowListObj.map((store) => store.value)
   } else if (props.type === 'add') {
     resetGoodsFields()
   }
