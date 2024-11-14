@@ -620,6 +620,10 @@
         },
         "Button": {
           "Confirm": "Confirm"
+        },
+        "Message": {
+          "Empty": "Input cannot be empty",
+          "LenOverRule": "Length exceeds 50 characters"
         }
       },
       "DeleteGoods": {

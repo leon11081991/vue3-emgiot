@@ -7,6 +7,7 @@ import type { BaseGoodsResType } from '@/models/types/dropdown.type'
 import type { SelectProps } from 'ant-design-vue'
 import { useFetchStore } from '@/composables/useFetchStore'
 import { useGoods } from '@/composables/useGoods'
+import { useMessage } from '@/composables/useMessage'
 
 /* type */
 type GoodsProps = {
@@ -29,6 +30,7 @@ const { t: $t } = useI18n()
 /* store 相關 */
 const { storesListInfo, fetchStoresListInfo } = useFetchStore()
 const { dispatchEditGoods, dispatchAddGoods } = useGoods()
+const { openMessage } = useMessage()
 
 /* 非響應式變數 */
 const goodsNameInputMaxLen = 50
@@ -91,6 +93,16 @@ const handleDropdownVisibleChange = (open: boolean) => {
 }
 
 const fnHandleGoods = async (type: string) => {
+  if (goodsNameInput.value.trim() === '') {
+    openMessage('error', $t('ProductPage.Modal.AddEditGoods.Message.Empty'))
+    return
+  }
+
+  if (isGoodsNameLenOverRule.value) {
+    openMessage('error', $t('ProductPage.Modal.AddEditGoods.Message.LenOverRule'))
+    return
+  }
+
   const data = {
     goodsName: goodsNameInput.value,
     cost: goodsCost.value ?? 0,
