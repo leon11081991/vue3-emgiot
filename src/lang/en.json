@@ -9,7 +9,13 @@
     "ValidateFail": "Verification failed, please check if the URL is correct.",
     "UserNotVerified":"User not verified.",
     "UpdateUserInfoFail": "Please use a non-numeric character to start the username.",
-    "ChangePasswordFail": "Password change failed."
+    "ChangePasswordFail": "Password change failed.",
+    "Validation":{
+      "Email": "Invalid email format",
+      "Password": "Password must be 8-12 characters with uppercase, lowercase, and numbers",
+      "Phone": "Invalid phone number format",
+      "NotFound": "Matching format not found"
+    }
   },
   "Common": {
     "AppName": "Cash Claw",
