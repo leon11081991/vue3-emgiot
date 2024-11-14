@@ -39,7 +39,7 @@ const size = ref<SelectProps['size']>('large')
 const merchantAllowList = ref<string[]>([])
 const isDropdownOpen = ref(false)
 const goodsNameInput = ref('')
-const goodsCost = ref(0)
+const goodsCost = ref<number | null>(null)
 const isSpecial = ref<boolean>(false)
 
 /* computed */
@@ -93,7 +93,7 @@ const handleDropdownVisibleChange = (open: boolean) => {
 const fnHandleGoods = async (type: string) => {
   const data = {
     goodsName: goodsNameInput.value,
-    cost: goodsCost.value,
+    cost: goodsCost.value ?? 0,
     forbiddenStores: merchantNotAllowList.value,
     isSpecial: isSpecial.value
   }
@@ -110,7 +110,7 @@ const fnHandleGoods = async (type: string) => {
 
 const resetGoodsFields = () => {
   goodsNameInput.value = ''
-  goodsCost.value = 0
+  goodsCost.value = null
   isSpecial.value = false
   merchantAllowList.value = []
 }
