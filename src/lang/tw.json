@@ -281,8 +281,8 @@
         "Title": "編輯店家",
         "Placeholder": {
           "StoreName": "請輸入名稱",
-          "WifiSSID": "請輸入WIFI名稱",
-          "WifiPassword": "請輸入WIFI密碼"
+          "Empty": "輸入不得為空",
+          "WifiFormatRemindText": "請正確輸入，以確保資料傳輸順暢"
         },
         "Button": {
           "Confirm": "確認"
