@@ -67,6 +67,7 @@ const onClickCheckAll = <T extends ClawOperationsInfoResType | CoinOperationsInf
   options: T[],
   checkedList: string[]
 ): void => {
+  checkedList.splice(0, checkedList.length) // 初始清空
   options.forEach((item) => {
     checkedList.push(item.pcbId)
   })
