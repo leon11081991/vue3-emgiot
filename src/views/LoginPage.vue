@@ -247,13 +247,13 @@ onMounted(() => {
                     class="password-visible"
                     v-if="x"
                   >
-                    <BaseSvgIcon iconName="eye-off" />
+                    <BaseSvgIcon iconName="eye-on" />
                   </div>
                   <div
                     class="password-invisible"
                     v-else
                   >
-                    <BaseSvgIcon iconName="eye-on" />
+                    <BaseSvgIcon iconName="eye-off" />
                   </div>
                 </template>
               </a-input-password>
@@ -400,13 +400,13 @@ onMounted(() => {
                     class="password-visible"
                     v-if="x"
                   >
-                    <BaseSvgIcon iconName="eye-off" />
+                    <BaseSvgIcon iconName="eye-on" />
                   </div>
                   <div
                     class="password-invisible"
                     v-else
                   >
-                    <BaseSvgIcon iconName="eye-on" />
+                    <BaseSvgIcon iconName="eye-off" />
                   </div>
                 </template>
               </a-input-password>
@@ -440,13 +440,13 @@ onMounted(() => {
                     class="password-visible"
                     v-if="x"
                   >
-                    <BaseSvgIcon iconName="eye-off" />
+                    <BaseSvgIcon iconName="eye-on" />
                   </div>
                   <div
                     class="password-invisible"
                     v-else
                   >
-                    <BaseSvgIcon iconName="eye-on" />
+                    <BaseSvgIcon iconName="eye-off" />
                   </div>
                 </template>
               </a-input-password>
