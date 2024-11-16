@@ -68,6 +68,11 @@ const fnUpdateStoreInfo = async () => {
     return
   }
 
+  if (wifiInfo.value.wifiSSID.trim() === '' || wifiInfo.value.wifiPassword.trim() === '') {
+    openMessage('error', $t('DashboardPage.Modal.UpdateStore.Placeholder.Empty'))
+    return
+  }
+
   const params: BaseCreateStoreReqType = {
     storeName: storeName.value,
     wifiInfo: wifiInfo.value.wifiSSID && wifiInfo.value.wifiPassword ? [wifiInfo.value] : []
@@ -138,6 +143,9 @@ onMounted(() => {
         @keyup.enter="fnUpdateStoreInfo"
       >
       </a-input>
+      <span class="wifiFormatHint">
+        {{ $t('DashboardPage.Modal.UpdateStore.Placeholder.WifiFormatRemindText') }}
+      </span>
     </div>
 
     <template #footer>
@@ -199,5 +207,9 @@ onMounted(() => {
   .confirm-btn {
     width: 100%;
   }
+}
+
+.wifiFormatHint {
+  padding-left: 1rem;
 }
 </style>
