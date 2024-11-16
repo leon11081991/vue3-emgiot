@@ -56,7 +56,9 @@ export const useGroup = () => {
   /* 新增機台自訂分類 */
   const fnAddGroupList = async (params: string) => {
     try {
-      const { result, isSuccess, message, resultCode } = await api.group.addGroup(params)
+      const { result, isSuccess, message, resultCode } = await api.group.addGroup(
+        isNaN(+params) ? params : `"${params}"`
+      )
 
       if (!isSuccess) {
         openMessage('error', `${resultCode} - ${message}`)
