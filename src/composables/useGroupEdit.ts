@@ -57,7 +57,7 @@ export const useGroup = () => {
   const fnAddGroupList = async (params: string) => {
     try {
       const { result, isSuccess, message, resultCode } = await api.group.addGroup(
-        isNaN(+params) ? params : `"${params}"`
+        JSON.stringify(params)
       )
 
       if (!isSuccess) {
