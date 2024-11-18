@@ -9,14 +9,12 @@ const props = withDefaults(
   defineProps<{
     name: string
     charNum?: number
-    isGoogleMember?: boolean
     googleAvatarUrl?: string
     size?: 'sm' | 'md' | 'lg'
   }>(),
   {
     name: '',
     charNum: 1,
-    isGoogleMember: false,
     size: 'md'
   }
 )
@@ -40,12 +38,13 @@ const avatarSize = computed(() => {
       return 24
   }
 })
+const isGoogleMember = computed<boolean>(() => !!props.googleAvatarUrl)
 </script>
 
 <template>
   <div class="avatar-container">
     <a-avatar
-      v-if="props.isGoogleMember"
+      v-if="isGoogleMember"
       :src="props.googleAvatarUrl"
       :size="avatarSize"
     ></a-avatar>

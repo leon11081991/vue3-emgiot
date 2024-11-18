@@ -17,10 +17,10 @@ const axiosInstance = axios.create({
 /** 處理請求發送前 */
 const beforeRequest = (config: InternalAxiosRequestConfig) => {
   const { token } = useUserStore()
-  const { login } = LoginEnum
+  const { login, googleLogIn } = LoginEnum
   const { signIn, validate, forgotPassword } = SignUpEnum
 
-  const isAuthApi = [login, signIn, validate, forgotPassword].some((apiPath) =>
+  const isAuthApi = [login, googleLogIn, signIn, validate, forgotPassword].some((apiPath) =>
     config.url?.includes(apiPath)
   )
 

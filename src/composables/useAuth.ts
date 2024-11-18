@@ -1,15 +1,13 @@
 import type {
   LoginReqType,
   LoginDataType,
-  // GoogleLoginReqType,
   SignUpReqType,
   ForgotPasswordReqType
-  // PasswordChangeReqType,
-  // AccountDisableReqType
 } from '@/models/types/auth.types'
 import { useI18n } from 'vue-i18n'
 import { useMessage } from '@/composables/useMessage'
 import { useNotification } from '@/composables/useNotification'
+import { useGoogleAuth } from '@/composables/useGoogleAuth'
 import { api } from '@/services'
 import { useUserStore } from '@/stores/user.stores'
 import { UtilCommon } from '@/utils/utilCommon'
@@ -20,6 +18,7 @@ export const useAuth = () => {
   const { t: $t } = useI18n()
   const { openMessage } = useMessage()
   const { openNotification } = useNotification()
+  const { initializeThirdPartyStorage } = useGoogleAuth()
   const userStore = useUserStore()
 
   /** 存儲登入資訊 */
@@ -169,6 +168,7 @@ export const useAuth = () => {
 
       userStore.initLoginState()
       UtilCommon.removeLocalStorage('store-info')
+      initializeThirdPartyStorage()
       return openMessage('success', $t('Common.Result.LogoutSuccess'), {}, () => {
         UtilCommon.goPage('/login')
       })

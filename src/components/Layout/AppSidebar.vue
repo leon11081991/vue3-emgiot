@@ -34,7 +34,10 @@ const { width } = useDeviceWidth()
 
     <div class="user-info">
       <div class="user-container">
-        <AvatarDisplay :name="userStore.userInfo.name" />
+        <AvatarDisplay
+          :name="userStore.userInfo.name"
+          :google-avatar-url="userStore.userInfo.photoUrl"
+        />
         <div class="user-wrap">
           <h5 class="user-name">{{ userStore.userInfo.name }}</h5>
           <div class="user-level">

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { CallbackTypes } from 'vue3-google-login'
 import type {
   LoginDataType,
   SignUpDataType,
@@ -17,6 +18,9 @@ import { useModal } from '@/composables/useModal'
 import { useValidator } from '@/composables/useValidator'
 import { useMessage } from '@/composables/useMessage'
 import { UtilCommon } from '@/utils/utilCommon'
+import { useGoogleAuth } from '@/composables/useGoogleAuth'
+
+const { loginWithGoogle } = useGoogleAuth()
 
 type TabKey = 'login' | 'register'
 type ButtonFieldType = 'login' | 'register' | 'forgotPassword'
@@ -165,7 +169,16 @@ const onForgotPasswordFinish = (values: ForgotPasswordReqType) => {
     })
 }
 
-// lifecycle hooks
+const handleGoogleVerify = (credential: string) => {
+  loginWithGoogle(credential).then((resp) => {
+    if (!resp) return
+    openMessage('success', $t('Common.Result.LoginSuccess'), {}, () => {
+      router.push({ name: 'Home' })
+    })
+  })
+}
+
+/* lifecycle hooks */
 onMounted(() => {
   const rememberMeData = loadLoginInfo()
   if (!rememberMeData) return
@@ -300,21 +313,10 @@ onMounted(() => {
           <!-- Third Party Login -->
           <div class="third-party-login-container">
             <GoogleButton
-              :icon-name="'logo-google'"
-              :text="'使用 Google 登入'"
+              :text="$t('LoginPage.Login.Button.Google')"
+              @google-verify="handleGoogleVerify"
             />
-            <!-- <a-button
-              class="third-party-btn"
-              type="third-party"
-            >
-              <template #icon>
-                <BaseSvgIcon
-                  iconName="logo-google"
-                  size="lg"
-                />
-              </template>
-              <span class="text">使用 Google 登入</span>
-            </a-button> -->
+
             <a-button
               class="third-party-btn"
               type="third-party"
@@ -325,7 +327,7 @@ onMounted(() => {
                   size="lg"
                 />
               </template>
-              <span class="text">使用 Apple 登入</span>
+              <span class="text">{{ $t('LoginPage.Login.Button.Apple') }}</span>
             </a-button>
           </div>
 
