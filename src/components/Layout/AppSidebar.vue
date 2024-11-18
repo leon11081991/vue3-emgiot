@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import MaskOverlay from '@/components/Base/MaskOverlay.vue'
 import AvatarDisplay from '@/components/Base/AvatarDisplay.vue'
@@ -12,6 +13,7 @@ import { navigationList } from '@/constants/common/sidebar.const'
 import { widthMapping } from '@/constants/mappings/width.mapping'
 
 const { t: $t } = useI18n()
+const route = useRoute()
 const commonStore = useCommonStore()
 const userStore = useUserStore()
 const { sidebarRef, handleCloseSidebar } = useSidebar()
@@ -37,7 +39,10 @@ const { width } = useDeviceWidth()
         <AvatarDisplay :name="userStore.userInfo.name" />
         <div class="user-wrap">
           <h5 class="user-name">{{ userStore.userInfo.name }}</h5>
-          <div class="user-level">
+          <div
+            v-if="route.name !== 'Home'"
+            class="user-level"
+          >
             <BaseSvgIcon :iconName="`level-${userStore.userInfo.roleOrder}`" />
             <span class="user-level-text">
               {{ $t(`Common.Level`, { level: userStore.userInfo.roleOrder }) }}</span
