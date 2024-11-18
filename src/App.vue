@@ -159,7 +159,7 @@ const route = useRoute()
     background-color: $--color-white;
     border: 1px solid $--color-gray-400;
     color: $--color-primary;
-    padding-block: 0.25rem;
+    padding: 0;
 
     &:hover {
       box-shadow: $--box-shadow-light;

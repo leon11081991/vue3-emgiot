@@ -10,8 +10,7 @@ export type LoginDataType = {
 }
 
 export type GoogleLoginReqType = {
-  userAccount: string
-  accessToken: string
+  credential: string // 憑證
 }
 
 export type SignUpReqType = LoginReqType & {

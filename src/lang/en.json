@@ -389,8 +389,11 @@
       "Submit": "Log In",
       "LoginSuccess": "Login successfully...",
       "LoginFailed": "Login Failed",
-
-      "LoginValidateMessages": "Please fill out the form"
+      "LoginValidateMessages": "Please fill out the form",
+      "Button": {
+        "Google": "Log in with Google",
+        "Apple": "Log in with Apple"
+      }
     },
     "Register": {
       "TabLabel": "Register",

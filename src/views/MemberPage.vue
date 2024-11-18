@@ -110,6 +110,7 @@ onMounted(async () => {
                 <AvatarDisplay
                   size="md"
                   :name="member.userName"
+                  :google-avatar-url="member.photoUrl"
                 />
                 <div class="member-wrap">
                   <div class="member-container">

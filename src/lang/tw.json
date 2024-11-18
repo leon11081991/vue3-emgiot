@@ -389,8 +389,11 @@
       "Submit": "登入",
       "LoginSuccess": "登入成功",
       "LoginFailed": "登入失敗",
-
-      "LoginValidateMessages": "請填寫"
+      "LoginValidateMessages": "請填寫",
+      "Button": {
+        "Google": "使用 Google 登入",
+        "Apple": "使用 Apple 登入"
+      }
     },
     "Register": {
       "TabLabel": "註冊",
