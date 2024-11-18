@@ -85,11 +85,11 @@ const { formatDate, today } = useDate()
 const chartData = computed<ChartData<'bar'>>(() => {
   const data = props.data
   return {
-    labels: data.map((item) => formatDate(item.date, 'YYYY-MM-DD')),
+    labels: data?.map((item) => formatDate(item.date, 'YYYY-MM-DD')),
     datasets: [
       {
-        data: data.map((item) => item.revenue),
-        backgroundColor: data.map((item) => {
+        data: data?.map((item) => item.revenue),
+        backgroundColor: data?.map((item) => {
           const nowDate = formatDate(item.date, 'YYYY-MM-DD')
           return nowDate === today() ? barTargetColor : barDefaultColor
         }),
