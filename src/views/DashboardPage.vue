@@ -362,7 +362,7 @@ onMounted(async () => {
     endDate: endDate.value
   })
 
-  listData.value = clawOperationsInfo.value.data
+  listData.value = clawOperationsInfo.value.data || []
 })
 </script>
 
