@@ -43,6 +43,7 @@ const isDropdownOpen = ref(false)
 const goodsNameInput = ref('')
 const goodsCost = ref<number | null>(null)
 const isSpecial = ref<boolean>(false)
+const apiDebounce = ref<boolean>(false)
 
 /* computed */
 const modalTitle = computed(() =>
@@ -81,7 +82,11 @@ const updateGoodsName = (e: Event) => {
 }
 
 const updateGoodsCost = (e: Event) => {
-  goodsCost.value = +(e.target as HTMLInputElement).value
+  const value = (e.target as HTMLInputElement).value
+  if (value.length > 0 && Number(value) === 0) {
+    ;(e.target as HTMLInputElement).value = '0'
+  }
+  goodsCost.value = +value
 }
 
 const closeModal = () => {
@@ -93,6 +98,12 @@ const handleDropdownVisibleChange = (open: boolean) => {
 }
 
 const fnHandleGoods = async (type: string) => {
+  if (!apiDebounce.value) {
+    apiDebounce.value = true
+  } else {
+    return
+  }
+
   if (goodsNameInput.value.trim() === '') {
     openMessage('error', $t('ProductPage.Modal.AddEditGoods.Message.Empty'))
     return
@@ -117,6 +128,7 @@ const fnHandleGoods = async (type: string) => {
   if (res) {
     emit('goods:refresh')
   }
+  apiDebounce.value = false
   closeModal()
 }
 
@@ -178,6 +190,7 @@ fetchStoresListInfo()
     </div>
     <div class="action-container">
       <a-input
+        type="number"
         class="cost-input"
         :value="goodsCost"
         :size="size"
