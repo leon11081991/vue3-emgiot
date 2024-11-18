@@ -29,12 +29,12 @@ const { t: $t } = useI18n()
 /* 非響應式變數 */
 const { today, calculateDate, getDaysInTwoMonths, getThreeMonthsAgo } = useDate()
 
-const DAYS_IN_WEEK = 6
-const TODAY = 0
+const DAYS_IN_WEEK = 7
+const TODAY = 1
 const dateRangePickerConfig = {
   今日: TODAY,
-  二日: 1,
-  三日: 2,
+  二日: 2,
+  三日: 3,
   一週: DAYS_IN_WEEK,
   一個月: getDaysInTwoMonths()
 }

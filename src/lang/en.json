@@ -9,7 +9,13 @@
     "ValidateFail": "Verification failed, please check if the URL is correct.",
     "UserNotVerified":"User not verified.",
     "UpdateUserInfoFail": "Please use a non-numeric character to start the username.",
-    "ChangePasswordFail": "Password change failed."
+    "ChangePasswordFail": "Password change failed.",
+    "Validation":{
+      "Email": "Invalid email format",
+      "Password": "Password must be 8-12 characters with uppercase, lowercase, and numbers",
+      "Phone": "Invalid phone number format",
+      "NotFound": "Matching format not found"
+    }
   },
   "Common": {
     "AppName": "Cash Claw",
@@ -275,8 +281,10 @@
         "Title": "編輯店家",
         "Placeholder": {
           "StoreName": "請輸入名稱",
-          "WifiSSID": "請輸入WIFI名稱",
-          "WifiPassword": "請輸入WIFI密碼"
+          "WifiSSID": "Please enter the WiFi name",
+          "WifiPassword": "Please enter the WiFi password",
+          "Empty": "Input cannot be empty",
+          "WifiFormatRemindText": "Enter the information correctly for smooth processing."
         },
         "Button": {
           "Confirm": "Confirm"
@@ -614,6 +622,10 @@
         },
         "Button": {
           "Confirm": "Confirm"
+        },
+        "Message": {
+          "Empty": "Input cannot be empty",
+          "LenOverRule": "Length exceeds 50 characters"
         }
       },
       "DeleteGoods": {

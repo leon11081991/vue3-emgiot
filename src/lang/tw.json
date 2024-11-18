@@ -9,7 +9,13 @@
     "ValidateFail": "驗證失敗，請確認網址是否正確。",
     "UserNotVerified":"使用者未驗證。",
     "UpdateUserInfoFail": "請以非數字的字元作為使用者名稱開頭。",
-    "ChangePasswordFail": "密碼變更失敗"
+    "ChangePasswordFail": "密碼變更失敗",
+    "Validation":{
+      "Email": "信箱格式不正確",
+      "Password": "密碼需為8-12位大小寫英文與數字混合",
+      "Phone": "手機格式不正確",
+      "NotFound": "找不到相應格式"
+    }
   },
   "Common": {
     "AppName": "雲端掌櫃",
@@ -276,7 +282,9 @@
         "Placeholder": {
           "StoreName": "請輸入名稱",
           "WifiSSID": "請輸入WIFI名稱",
-          "WifiPassword": "請輸入WIFI密碼"
+          "WifiPassword": "請輸入WIFI密碼",
+          "Empty": "輸入不得為空",
+          "WifiFormatRemindText": "請正確輸入，以確保資料傳輸順暢"
         },
         "Button": {
           "Confirm": "確認"
@@ -605,7 +613,7 @@
         "Placeholder": {
           "GoodsName": "請輸入名稱",
           "GoodsCost": "請輸入商品成本",
-          "MerchantAllowList": "商家勾選"
+          "MerchantAllowList": "授權商家勾選"
         },
         "Content": {
           "Title": "商品種類",
@@ -614,6 +622,10 @@
         },
         "Button": {
           "Confirm": "確認"
+        },
+        "Message": {
+          "Empty": "輸入不得為空",
+          "LenOverRule": "長度超過50個字"
         }
       },
       "DeleteGoods": {
