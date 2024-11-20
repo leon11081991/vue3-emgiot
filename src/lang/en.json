@@ -438,7 +438,7 @@
       "UserId": "Email Address",
       "Password": "Password",
       "VerifyPassword": "Confirm Password",
-      "UserInfo": "Full Name",
+      "UserInfo": "Name",
       "Submit": "Submit"
     }
   },
