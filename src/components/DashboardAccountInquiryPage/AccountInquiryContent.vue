@@ -168,7 +168,14 @@ watchEffect(() => {
         v-model:value="isTypeChart"
         :icon-name="'chart-btn'"
       />
-      <span class="switch-label">{{ $t('AccountInquiryPage.SwitchLabel') }}</span>
+      <p class="switch-label">
+        {{ $t('AccountInquiryPage.SwitchLabel') }}
+        <span>{{
+          isTypeChart
+            ? $t('AccountInquiryPage.DataType.Chart')
+            : $t('AccountInquiryPage.DataType.List')
+        }}</span>
+      </p>
     </div>
 
     <template v-if="isTypeChart">
