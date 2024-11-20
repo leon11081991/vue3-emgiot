@@ -1,11 +1,13 @@
 import type { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios'
 import type { ApiResponseModel } from '@/utils/api/models'
 import axios from 'axios'
+import { api } from '@/services'
 import { env } from '@/env'
 import { getI18nTranslate } from '@/utils/i18nUtils'
 import { errorCodeHandler, unauthorizedHandler } from '@/utils/api/error-handler'
 import { useMessage } from '@/composables/useMessage'
 import { useUserStore } from '@/stores/user.stores'
+import { UtilCommon } from '@/utils/utilCommon'
 import { LoginEnum, SignUpEnum } from '@/constants/enums/api/auth.enums'
 
 /** 創建實例 */
@@ -41,6 +43,17 @@ const requestFailed = (error: AxiosError) => {
 const responseSuccess = (response: AxiosResponse) => {
   if (!response.data.isSuccess) {
     return response.data
+  }
+
+  // 如果 response.data.resultCode=1002,則強制登出並跳轉到登入頁面
+  if (response.data.resultCode === 1002) {
+    api.auth.logout().then(() => {
+      useUserStore().initLoginState()
+      UtilCommon.removeLocalStorage('store-info')
+      UtilCommon.removeLocalStorage('from-third-party-id')
+      UtilCommon.removeLocalStorage('from-third-party-type')
+      UtilCommon.goPage('/login')
+    })
   }
 
   return response.data
