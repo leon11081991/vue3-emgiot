@@ -360,7 +360,11 @@
       "Revenue": "Revenue",
       "ExchangeCount": "Amount Exchanged"
     },
-    "SwitchLabel": "Display Type：Chart",
+    "SwitchLabel": "Display Type：",
+    "DataType":{
+      "Chart": "Chart",
+      "List": "Table"
+    },
     "WeekTitle": "Week {date}",
     "EventRecord":{
       "ConnectionStatus": "Connection Status",
