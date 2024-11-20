@@ -420,6 +420,16 @@
     "ValidateMessage": {
       "Required": "Required",
       "ConfirmPasswordError": "Passwords do not match. Please re-enter."
+    },
+    "Modal":{
+      "Logout": {
+        "Title": "Logout",
+        "Content": "Have you confirmed logging out of your account?",
+        "Button": {
+          "Confirm": "Confirm",
+          "Cancel": "Cancel"
+        }
+      }
     }
   },
   "SignUpPage": {

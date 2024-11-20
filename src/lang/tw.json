@@ -420,6 +420,16 @@
     "ValidateMessage": {
       "Required": "必填",
       "ConfirmPasswordError": "與密碼未一致，請重新輸入"
+    },
+    "Modal":{
+      "Logout": {
+        "Title": "登出",
+        "Content": "請確定是否登出帳號?",
+        "Button": {
+          "Confirm": "確認",
+          "Cancel": "取消"
+        }
+      }
     }
   },
   "SignUpPage": {
