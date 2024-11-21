@@ -46,8 +46,8 @@ const { operationChart, fetchOperationClawChart, fetchOperationCoinChart } = use
 
 // Helper function to filter data within date range
 function getEntriesWithinDateRange(data: any[], startDate: string, endDate: string) {
-  const start = new Date(props.isInitialChart ? today() : startDate)
-  const end = new Date(props.isInitialChart ? today() : endDate)
+  const start = new Date(startDate)
+  const end = new Date(endDate)
 
   return data.filter((entry) => {
     const entryDate = new Date(formatDate(entry.date, 'YYYY-MM-DD'))
@@ -188,6 +188,7 @@ fetchOperationCoinChart({
                 color="white"
               />
             </div>
+            <!-- 這裡 -->
             <div class="data">{{ coinExchangedTotal }}</div>
           </div>
         </div>
