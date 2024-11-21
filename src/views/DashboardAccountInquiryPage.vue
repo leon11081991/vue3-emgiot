@@ -142,14 +142,33 @@ const revenueCardData = computed(() => {
 })
 
 /* functions */
-const fnResetData = (data?: { startDate: string; endDate: string }) => {
+const fnResetData = async (data?: { startDate: string; endDate: string }) => {
   startDate.value = data?.startDate || initialStartDate
   endDate.value = data?.endDate || initialEndDate
 
   if (!data) {
     resetKey.value += 1
   }
-  getMachineOperationsDetail(machineType)
+
+  await getMachineOperationsDetail(machineType)
+
+  if (selectedTab.value === 'eventRecord') {
+    isLoading.value = true
+    fnGetMachineEventRecord(
+      {
+        pcbId,
+        startDate: startDate.value,
+        endDate: endDate.value
+      },
+      machineType
+    )
+      .then(() => {
+        listData.value = machineEventRecords.value.data
+      })
+      .finally(() => {
+        isLoading.value = false
+      })
+  }
 }
 
 const getMachineOperationsDetail = async (machineType: MachineType) => {
@@ -179,10 +198,8 @@ const getMachineOperationsDetail = async (machineType: MachineType) => {
 }
 
 const handleToggleTab = async (tab: AccountInquiryTabType, machineType: MachineType) => {
-  console.log('handleToggleTab', tab)
   isLoading.value = true
   if (tab === 'accountInquiry') {
-    console.log('handleToggleTab accountInquiry')
     getMachineOperationsDetail(machineType)
 
     return
