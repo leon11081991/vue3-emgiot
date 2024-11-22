@@ -179,7 +179,7 @@ fetchTotalOperationChart()
     .chart {
       width: 100%;
       aspect-ratio: 2 / 1;
-      flex: 8;
+      flex: 6;
     }
     .chartData-container {
       flex: 2;
