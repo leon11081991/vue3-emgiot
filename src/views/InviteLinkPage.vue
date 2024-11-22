@@ -59,6 +59,16 @@ onMounted(() => {
       </div>
 
       <div class="text-container">
+        <p class="hint">
+          {{ `${$t('InviteLinkPage.TextHint')}` }}
+        </p>
+        <p class="hint">
+          {{ `${baseUrl}/member-join?inviteKeyring=${query}` }}
+        </p>
+      </div>
+
+      <!-- 此段比較貼近使用者UX -->
+      <!-- <div class="text-container">
         <p class="hint">{{ $t('InviteLinkPage.TextHint') }}</p>
         <a
           class="invite-link"
@@ -66,12 +76,14 @@ onMounted(() => {
           :href="`${baseUrl}/member-join?inviteKeyring=${query}`"
           >{{ `${baseUrl}/member-join?inviteKeyring=${query}` }}</a
         >
-      </div>
+      </div> -->
 
       <a-button
         type="primary"
         size="large"
-        @click="copy(`${baseUrl}/member-join?inviteKeyring=${query}`)"
+        @click="
+          copy(`${$t('InviteLinkPage.TextHint')}${baseUrl}/member-join?inviteKeyring=${query}`)
+        "
       >
         {{ $t('InviteLinkPage.Button.Copy') }}
       </a-button>
