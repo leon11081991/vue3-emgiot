@@ -55,11 +55,13 @@ const fnCreateNewStore = useDebounce(async () => {
 
   if (storeName.value.trim() === '') {
     openMessage('error', $t('HomePage.Modal.CreateStore.Message.StoreNameEmpty'))
+    isButtonLoading.value = false
     return
   }
 
   if (isStoreNameLenOverRule.value) {
     openMessage('error', $t('HomePage.Modal.CreateStore.Message.LenOverRule'))
+    isButtonLoading.value = false
     return
   }
 
@@ -117,7 +119,7 @@ const fnCreateNewStore = useDebounce(async () => {
         :loading="isButtonLoading"
         @click="fnCreateNewStore"
       >
-        {{ '確認' }}
+        {{ $t('HomePage.Modal.CreateStore.Button.Confirm') }}
       </a-button>
     </template>
   </a-modal>
