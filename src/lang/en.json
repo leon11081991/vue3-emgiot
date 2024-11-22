@@ -192,6 +192,13 @@
           "Start": "Start Time ",
           "End": "End Time"
         },
+        "DatePicker":{
+          "Today":"Today",
+          "TwoDays": "2 Days",
+          "ThreeDays": "3 Days",
+          "OneWeek": "1 Week",
+          "OneMonth": "1 Month"
+        },
         "Placeholder": {
           "Search": "Machine"
         },
@@ -209,6 +216,13 @@
         "Item": {
           "Start": "Start Time",
           "End": "End Time"
+        },
+        "DatePicker":{
+          "Today":"Today",
+          "TwoDays": "2 Days",
+          "ThreeDays": "3 Days",
+          "OneWeek": "1 Week",
+          "OneMonth": "1 Month"
         },
         "Placeholder": {
           "Search": "Machine"
