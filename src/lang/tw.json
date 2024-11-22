@@ -192,6 +192,13 @@
           "Start": "開始時間",
           "End": "結束時間"
         },
+        "DatePicker":{
+          "Today":"今日",
+          "TwoDays": "二日",
+          "ThreeDays": "三日",
+          "OneWeek": "一週",
+          "OneMonth": "一個月"
+        },
         "Placeholder": {
           "Search": "機台"
         },
@@ -209,6 +216,13 @@
         "Item": {
           "Start": "開始時間",
           "End": "結束時間"
+        },
+        "DatePicker":{
+          "Today":"今日",
+          "TwoDays": "二日",
+          "ThreeDays": "三日",
+          "OneWeek": "一週",
+          "OneMonth": "一個月"
         },
         "Placeholder": {
           "Search": "機台"

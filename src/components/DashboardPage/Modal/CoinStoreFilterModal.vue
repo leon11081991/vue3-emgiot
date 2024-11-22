@@ -18,6 +18,7 @@ import '@quasar/extras/material-icons/material-icons.css'
 /* type */
 type PickerType = 'start' | 'end' | 'range'
 type SelectType = 'group'
+type DatePickerKeysType = (typeof DatePickerKeys)[keyof typeof DatePickerKeys]
 
 /* Props (defineProps) */
 const props = defineProps<{
@@ -41,12 +42,19 @@ const { groupsDDLList, fetchGroupsDDLList } = useDropdown()
 
 const DAYS_IN_WEEK = 7
 const TODAY = 1
-const dateRangePickerConfig = {
-  今日: TODAY,
-  二日: 2,
-  三日: 3,
-  一週: DAYS_IN_WEEK,
-  一個月: getDaysInTwoMonths()
+const DatePickerKeys = {
+  Today: $t('DashboardPage.Modal.CoinStoreFilter.DatePicker.Today'),
+  TwoDays: $t('DashboardPage.Modal.CoinStoreFilter.DatePicker.TwoDays'),
+  ThreeDays: $t('DashboardPage.Modal.CoinStoreFilter.DatePicker.ThreeDays'),
+  OneWeek: $t('DashboardPage.Modal.CoinStoreFilter.DatePicker.OneWeek'),
+  OneMonth: $t('DashboardPage.Modal.CoinStoreFilter.DatePicker.OneMonth')
+} as const
+const dateRangePickerConfig: Record<DatePickerKeysType, number> = {
+  [DatePickerKeys.Today]: TODAY,
+  [DatePickerKeys.TwoDays]: 2,
+  [DatePickerKeys.ThreeDays]: 3,
+  [DatePickerKeys.OneWeek]: DAYS_IN_WEEK,
+  [DatePickerKeys.OneMonth]: getDaysInTwoMonths()
 }
 const groupDefaultName = $t('DashboardPage.Modal.CoinStoreFilter.DropDown.GroupDefaultName')
 let resetGroupNameCount = 0
@@ -140,6 +148,9 @@ const toggleDatePicker = (type: PickerType) => {
 
 const setRangePicker = (label: keyof typeof dateRangePickerConfig) => {
   rangePickerActiveItem.value = label
+  if (label === $t('DashboardPage.Modal.CoinStoreFilter.DatePicker.Today')) {
+    endDate.value = today()
+  }
   if (endDate.value) {
     startDate.value = calculateDate(endDate.value, 'backward', dateRangePickerConfig[label])
   }
