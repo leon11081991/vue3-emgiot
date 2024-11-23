@@ -362,7 +362,7 @@ onMounted(async () => {
     endDate: endDate.value
   })
 
-  listData.value = clawOperationsInfo.value.data
+  listData.value = clawOperationsInfo.value.data || []
 })
 </script>
 
@@ -466,6 +466,7 @@ onMounted(async () => {
     v-if="isModalVisible.addNewMachine"
     :modal-visible="modalVisible"
     @close="closeModal"
+    @refresh="handleToggleTab(selectedTab)"
   />
 
   <BatchModal

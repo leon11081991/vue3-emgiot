@@ -70,7 +70,6 @@ const checkButtonDisabled = (field: ModalType): boolean => {
 
   if (field === 'password') {
     // 修改密碼: 新密碼和確認密碼都沒有錯誤訊息且皆有輸入
-
     const { password: errorPassword, confirmPassword: errorConfirmPassword } = modalErrorMsg.value
     const { password: newPassword, confirmPassword: newConfirmPassword } = newUserData.value
 
@@ -87,6 +86,13 @@ const checkButtonDisabled = (field: ModalType): boolean => {
 // handle functions
 const handleOpenModal = (field: ModalType): void => {
   openModal(() => changeModalField(field))
+}
+
+const handleCancelClick = (): void => {
+  newUserData.value.username = ''
+  newUserData.value.password = ''
+  newUserData.value.confirmPassword = ''
+  closeModal()
 }
 
 const handleConfirmClick = (field: ModalType): void => {
@@ -125,6 +131,7 @@ const handleConfirmClick = (field: ModalType): void => {
       <div class="display-container">
         <AvatarDisplay
           :name="userStore.userInfo.name"
+          :google-avatar-url="userStore.userInfo.photoUrl"
           size="lg"
         />
         <div class="user-name-container">
@@ -188,6 +195,7 @@ const handleConfirmClick = (field: ModalType): void => {
     v-model:open="modalVisible"
     class="profile-modal primary"
     :centered="true"
+    @cancel="handleCancelClick"
   >
     <template #title>
       <div class="modal-header modal-header-primary">
@@ -231,13 +239,13 @@ const handleConfirmClick = (field: ModalType): void => {
                 class="password-visible"
                 v-if="v"
               >
-                <BaseSvgIcon iconName="eye-off" />
+                <BaseSvgIcon iconName="eye-on" />
               </div>
               <div
                 class="password-invisible"
                 v-else
               >
-                <BaseSvgIcon iconName="eye-on" />
+                <BaseSvgIcon iconName="eye-off" />
               </div>
             </template>
           </a-input-password>
@@ -269,13 +277,13 @@ const handleConfirmClick = (field: ModalType): void => {
                 class="password-visible"
                 v-if="x"
               >
-                <BaseSvgIcon iconName="eye-off" />
+                <BaseSvgIcon iconName="eye-on" />
               </div>
               <div
                 class="password-invisible"
                 v-else
               >
-                <BaseSvgIcon iconName="eye-on" />
+                <BaseSvgIcon iconName="eye-off" />
               </div>
             </template>
           </a-input-password>

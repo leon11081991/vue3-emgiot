@@ -3,9 +3,11 @@ import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
+  BarController,
   BarElement,
-  PointElement,
+  LineController,
   LineElement,
+  PointElement,
   Title,
   Tooltip,
   Legend
@@ -24,14 +26,15 @@ import type {
 ChartJS.register(
   CategoryScale,
   LinearScale,
+  BarController,
   BarElement,
-  PointElement,
+  LineController,
   LineElement,
+  PointElement,
   Title,
   Tooltip,
   Legend
 )
-
 type ChartRecordType =
   | BaseClawRecordType
   | BaseCoinRecordType

@@ -2,36 +2,24 @@ import { ref } from 'vue'
 import { ValidationTypeEnums } from '@/constants/enums/validator.enums'
 import { UtilCommon } from '@/utils/utilCommon'
 import { useI18n } from 'vue-i18n'
+import { getI18nTranslate } from '@/utils/i18nUtils'
 
 /** 驗證格式規則 */
 const validationRules = [
   {
     key: ValidationTypeEnums.Email,
     value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-    errorMessage: '信箱格式不正確'
+    errorMessage: getI18nTranslate('ErrorMessage.Validation.Email')
   },
   {
     key: ValidationTypeEnums.Password,
-    value: /^[A-Za-z0-9]{6,}$/,
-    errorMessage: '密碼需為6位以上字母或數字'
-    // TODO: 正式需更換為下列規則
-    // value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,16}$/,
-    // errorMessage: '密碼需為8-16位英文數字混和密碼'
+    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,12}$/,
+    errorMessage: getI18nTranslate('ErrorMessage.Validation.Password')
   },
   {
     key: ValidationTypeEnums.Phone,
     value: /^09\d{8}$/,
-    errorMessage: '手機格式不正確'
-  },
-  {
-    key: ValidationTypeEnums.Name,
-    value: /^[\s\S]{2,16}$/,
-    errorMessage: '請輸入2~16個字'
-  },
-  {
-    key: ValidationTypeEnums.VerificationCode,
-    value: /^[\s\S]+$/,
-    errorMessage: '請輸入簡訊驗證碼'
+    errorMessage: getI18nTranslate('ErrorMessage.Validation.Phone')
   }
 ]
 
@@ -50,7 +38,7 @@ export const useValidator = () => {
     const rule = validationRules.find((item) => item.key === type)
 
     if (!rule) {
-      validateErrorMessage.value = '找不到相應格式'
+      validateErrorMessage.value = $t('ErrorMessage.Validation.NotFound')
       return false
     }
 

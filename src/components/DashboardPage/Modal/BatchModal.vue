@@ -67,6 +67,7 @@ const onClickCheckAll = <T extends ClawOperationsInfoResType | CoinOperationsInf
   options: T[],
   checkedList: string[]
 ): void => {
+  checkedList.splice(0, checkedList.length) // 初始清空
   options.forEach((item) => {
     checkedList.push(item.pcbId)
   })
@@ -280,7 +281,7 @@ const handleBatchAction = (pcbList: string[], count: number) => {
                 </span>
                 <span>⭢</span>
                 <span class="updated-num">
-                  {{ getDynamicAmount(selectedTab, props.listData, item.pcbId) + count }}
+                  {{ getDynamicAmount(selectedTab, props.listData, item.pcbId) + count * 10 }}
                 </span>
               </div>
             </div>

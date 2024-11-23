@@ -12,7 +12,7 @@ export const memberJoinMiddleware = ({
   from: RouteLocationNormalized
   next: NavigationGuardNext
 }) => {
-  console.log('[memberJoinMiddleware]', to, from)
+  // console.log('[memberJoinMiddleware]', to, from)
 
   const userStore = useUserStore()
   const token = userStore.token
@@ -20,7 +20,7 @@ export const memberJoinMiddleware = ({
   const tokenValid = checkTokenValidity(token) // 檢查token是否有效
 
   const inviteKeyring = UtilCommon.getQueryParam('inviteKeyring')
-  console.log('inviteKeyring', inviteKeyring)
+  // console.log('inviteKeyring', inviteKeyring)
 
   /** 處理邏輯
    * 1. 檢查是否有無token
@@ -30,7 +30,7 @@ export const memberJoinMiddleware = ({
    */
 
   if (!token || !tokenValid) {
-    console.log('token無效，導至登入頁')
+    // console.log('token無效，導至登入頁')
     userStore.initLoginState()
     UtilCommon.removeLocalStorage('storage-user')
     UtilCommon.removeLocalStorage('store-info')

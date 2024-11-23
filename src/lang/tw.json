@@ -9,7 +9,13 @@
     "ValidateFail": "驗證失敗，請確認網址是否正確。",
     "UserNotVerified":"使用者未驗證。",
     "UpdateUserInfoFail": "請以非數字的字元作為使用者名稱開頭。",
-    "ChangePasswordFail": "密碼變更失敗"
+    "ChangePasswordFail": "密碼變更失敗",
+    "Validation":{
+      "Email": "信箱格式不正確",
+      "Password": "密碼需為8-12位大小寫英文與數字混合",
+      "Phone": "手機格式不正確",
+      "NotFound": "找不到相應格式"
+    }
   },
   "Common": {
     "AppName": "雲端掌櫃",
@@ -186,6 +192,13 @@
           "Start": "開始時間",
           "End": "結束時間"
         },
+        "DatePicker":{
+          "Today":"今日",
+          "TwoDays": "二日",
+          "ThreeDays": "三日",
+          "OneWeek": "一週",
+          "OneMonth": "一個月"
+        },
         "Placeholder": {
           "Search": "機台"
         },
@@ -203,6 +216,13 @@
         "Item": {
           "Start": "開始時間",
           "End": "結束時間"
+        },
+        "DatePicker":{
+          "Today":"今日",
+          "TwoDays": "二日",
+          "ThreeDays": "三日",
+          "OneWeek": "一週",
+          "OneMonth": "一個月"
         },
         "Placeholder": {
           "Search": "機台"
@@ -276,7 +296,9 @@
         "Placeholder": {
           "StoreName": "請輸入名稱",
           "WifiSSID": "請輸入WIFI名稱",
-          "WifiPassword": "請輸入WIFI密碼"
+          "WifiPassword": "請輸入WIFI密碼",
+          "Empty": "輸入不得為空",
+          "WifiFormatRemindText": "請正確輸入，以確保資料傳輸順暢"
         },
         "Button": {
           "Confirm": "確認"
@@ -352,7 +374,11 @@
       "Revenue": "營收",
       "ExchangeCount": "兌幣量"
     },
-    "SwitchLabel": "顯示類型：圖表",
+    "SwitchLabel": "顯示類型：",
+    "DataType":{
+      "Chart": "圖表",
+      "List": "表格"
+    },
     "WeekTitle": "第 {date} 週",
     "EventRecord":{
       "ConnectionStatus": "連線狀態",
@@ -381,8 +407,11 @@
       "Submit": "登入",
       "LoginSuccess": "登入成功",
       "LoginFailed": "登入失敗",
-
-      "LoginValidateMessages": "請填寫"
+      "LoginValidateMessages": "請填寫",
+      "Button": {
+        "Google": "使用 Google 登入",
+        "Apple": "使用 Apple 登入"
+      }
     },
     "Register": {
       "TabLabel": "註冊",
@@ -409,6 +438,16 @@
     "ValidateMessage": {
       "Required": "必填",
       "ConfirmPasswordError": "與密碼未一致，請重新輸入"
+    },
+    "Modal":{
+      "Logout": {
+        "Title": "登出",
+        "Content": "請確定是否登出帳號?",
+        "Button": {
+          "Confirm": "確認",
+          "Cancel": "取消"
+        }
+      }
     }
   },
   "SignUpPage": {
@@ -417,7 +456,7 @@
       "UserId": "電子信箱",
       "Password": "密碼",
       "VerifyPassword": "確認密碼",
-      "UserInfo": "真實姓名",
+      "UserInfo": "暱稱",
       "Submit": "送出"
     }
   },
@@ -605,7 +644,7 @@
         "Placeholder": {
           "GoodsName": "請輸入名稱",
           "GoodsCost": "請輸入商品成本",
-          "MerchantAllowList": "商家勾選"
+          "MerchantAllowList": "授權商家勾選"
         },
         "Content": {
           "Title": "商品種類",
@@ -614,6 +653,10 @@
         },
         "Button": {
           "Confirm": "確認"
+        },
+        "Message": {
+          "Empty": "輸入不得為空",
+          "LenOverRule": "長度超過50個字"
         }
       },
       "DeleteGoods": {

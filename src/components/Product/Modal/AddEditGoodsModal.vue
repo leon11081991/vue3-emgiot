@@ -7,6 +7,7 @@ import type { BaseGoodsResType } from '@/models/types/dropdown.type'
 import type { SelectProps } from 'ant-design-vue'
 import { useFetchStore } from '@/composables/useFetchStore'
 import { useGoods } from '@/composables/useGoods'
+import { useMessage } from '@/composables/useMessage'
 
 /* type */
 type GoodsProps = {
@@ -29,6 +30,7 @@ const { t: $t } = useI18n()
 /* store 相關 */
 const { storesListInfo, fetchStoresListInfo } = useFetchStore()
 const { dispatchEditGoods, dispatchAddGoods } = useGoods()
+const { openMessage } = useMessage()
 
 /* 非響應式變數 */
 const goodsNameInputMaxLen = 50
@@ -39,8 +41,9 @@ const size = ref<SelectProps['size']>('large')
 const merchantAllowList = ref<string[]>([])
 const isDropdownOpen = ref(false)
 const goodsNameInput = ref('')
-const goodsCost = ref(0)
+const goodsCost = ref<number | null>(null)
 const isSpecial = ref<boolean>(false)
+const apiDebounce = ref<boolean>(false)
 
 /* computed */
 const modalTitle = computed(() =>
@@ -79,7 +82,11 @@ const updateGoodsName = (e: Event) => {
 }
 
 const updateGoodsCost = (e: Event) => {
-  goodsCost.value = +(e.target as HTMLInputElement).value
+  const value = (e.target as HTMLInputElement).value
+  if (value.length > 0 && Number(value) === 0) {
+    ;(e.target as HTMLInputElement).value = '0'
+  }
+  goodsCost.value = +value
 }
 
 const closeModal = () => {
@@ -91,9 +98,25 @@ const handleDropdownVisibleChange = (open: boolean) => {
 }
 
 const fnHandleGoods = async (type: string) => {
+  if (!apiDebounce.value) {
+    apiDebounce.value = true
+  } else {
+    return
+  }
+
+  if (goodsNameInput.value.trim() === '') {
+    openMessage('error', $t('ProductPage.Modal.AddEditGoods.Message.Empty'))
+    return
+  }
+
+  if (isGoodsNameLenOverRule.value) {
+    openMessage('error', $t('ProductPage.Modal.AddEditGoods.Message.LenOverRule'))
+    return
+  }
+
   const data = {
     goodsName: goodsNameInput.value,
-    cost: goodsCost.value,
+    cost: goodsCost.value ?? 0,
     forbiddenStores: merchantNotAllowList.value,
     isSpecial: isSpecial.value
   }
@@ -105,12 +128,13 @@ const fnHandleGoods = async (type: string) => {
   if (res) {
     emit('goods:refresh')
   }
+  apiDebounce.value = false
   closeModal()
 }
 
 const resetGoodsFields = () => {
   goodsNameInput.value = ''
-  goodsCost.value = 0
+  goodsCost.value = null
   isSpecial.value = false
   merchantAllowList.value = []
 }
@@ -122,7 +146,11 @@ watchEffect(() => {
     goodsNameInput.value = props.goodsInfo.goodsName
     goodsCost.value = props.goodsInfo.cost
     isSpecial.value = props.goodsInfo.isSpecial
-    merchantAllowList.value = props.goodsInfo.forbiddenStores
+
+    const AllowListObj = merchantOptions.value.filter(
+      (store) => !props.goodsInfo.forbiddenStores.includes(store.value)
+    )
+    merchantAllowList.value = AllowListObj.map((store) => store.value)
   } else if (props.type === 'add') {
     resetGoodsFields()
   }
@@ -162,6 +190,7 @@ fetchStoresListInfo()
     </div>
     <div class="action-container">
       <a-input
+        type="number"
         class="cost-input"
         :value="goodsCost"
         :size="size"

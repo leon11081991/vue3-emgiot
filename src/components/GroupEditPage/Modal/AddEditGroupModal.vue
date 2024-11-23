@@ -99,9 +99,6 @@ watchEffect(() => {
   if (!props.modalVisible) return
   if (props.type === 'edit') {
     groupName.value = props.groupInfo.groupName || ''
-    // goodsCost.value = props.goodsInfo.cost
-    // isSpecial.value = props.goodsInfo.isSpecial
-    // merchantAllowList.value = props.goodsInfo.forbiddenStores
   } else if (props.type === 'add') {
     resetGroupFields()
   }

@@ -18,6 +18,7 @@ import '@quasar/extras/material-icons/material-icons.css'
 /* type */
 type PickerType = 'start' | 'end' | 'range'
 type SelectType = 'group' | 'goods'
+type DatePickerKeysType = (typeof DatePickerKeys)[keyof typeof DatePickerKeys]
 
 /* Props (defineProps) */
 const props = defineProps<{
@@ -39,14 +40,21 @@ const { t: $t } = useI18n()
 const { today, calculateDate, getDaysInTwoMonths, getThreeMonthsAgo } = useDate()
 const { groupsDDLList, goodsList, fetchGroupsDDLList, fetchGoodsList } = useDropdown()
 
-const DAYS_IN_WEEK = 6
-const TODAY = 0
-const dateRangePickerConfig = {
-  今日: TODAY,
-  二日: 1,
-  三日: 2,
-  一週: DAYS_IN_WEEK,
-  一個月: getDaysInTwoMonths()
+const DAYS_IN_WEEK = 7
+const TODAY = 1
+const DatePickerKeys = {
+  Today: $t('DashboardPage.Modal.ClawStoreFilter.DatePicker.Today'),
+  TwoDays: $t('DashboardPage.Modal.ClawStoreFilter.DatePicker.TwoDays'),
+  ThreeDays: $t('DashboardPage.Modal.ClawStoreFilter.DatePicker.ThreeDays'),
+  OneWeek: $t('DashboardPage.Modal.ClawStoreFilter.DatePicker.OneWeek'),
+  OneMonth: $t('DashboardPage.Modal.ClawStoreFilter.DatePicker.OneMonth')
+} as const
+const dateRangePickerConfig: Record<DatePickerKeysType, number> = {
+  [DatePickerKeys.Today]: TODAY,
+  [DatePickerKeys.TwoDays]: 2,
+  [DatePickerKeys.ThreeDays]: 3,
+  [DatePickerKeys.OneWeek]: DAYS_IN_WEEK,
+  [DatePickerKeys.OneMonth]: getDaysInTwoMonths()
 }
 const groupDefaultName = $t('DashboardPage.Modal.ClawStoreFilter.DropDown.GroupDefaultName')
 const goodsDefaultName = $t('DashboardPage.Modal.ClawStoreFilter.DropDown.GoodsDefaultName')
@@ -59,7 +67,7 @@ const startDate = ref<string | null>(today())
 const endDate = ref<string | null>(today())
 const rangeDate = ref<{ from: string; to: string } | string>({ from: '', to: '' })
 const tempRangeDate = ref({ from: '', to: '' })
-const rangePickerActiveItem = ref('今日')
+const rangePickerActiveItem = ref($t('DashboardPage.Modal.ClawStoreFilter.DatePicker.Today'))
 
 const groupsDDLFilter = ref('')
 const groupName = ref(groupDefaultName)
@@ -146,7 +154,12 @@ const toggleDatePicker = (type: PickerType) => {
 
 const setRangePicker = (label: keyof typeof dateRangePickerConfig) => {
   rangePickerActiveItem.value = label
+
+  if (label === $t('DashboardPage.Modal.ClawStoreFilter.DatePicker.Today')) {
+    endDate.value = today()
+  }
   if (endDate.value) {
+    console.log('endDate', endDate.value)
     startDate.value = calculateDate(endDate.value, 'backward', dateRangePickerConfig[label])
   }
 }

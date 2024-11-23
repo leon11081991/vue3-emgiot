@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
+import { ref } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import MaskOverlay from '@/components/Base/MaskOverlay.vue'
 import AvatarDisplay from '@/components/Base/AvatarDisplay.vue'
@@ -12,11 +14,20 @@ import { navigationList } from '@/constants/common/sidebar.const'
 import { widthMapping } from '@/constants/mappings/width.mapping'
 
 const { t: $t } = useI18n()
+const route = useRoute()
 const commonStore = useCommonStore()
 const userStore = useUserStore()
 const { sidebarRef, handleCloseSidebar } = useSidebar()
 const { fnLogOut } = useAuth()
 const { width } = useDeviceWidth()
+
+const isLogoutModalOpen = ref(false)
+const isButtonLoading = ref(false)
+
+const handleLogout = () => {
+  commonStore.isSidebarOpen = false
+  isLogoutModalOpen.value = true
+}
 </script>
 
 <template>
@@ -34,10 +45,16 @@ const { width } = useDeviceWidth()
 
     <div class="user-info">
       <div class="user-container">
-        <AvatarDisplay :name="userStore.userInfo.name" />
+        <AvatarDisplay
+          :name="userStore.userInfo.name"
+          :google-avatar-url="userStore.userInfo.photoUrl"
+        />
         <div class="user-wrap">
           <h5 class="user-name">{{ userStore.userInfo.name }}</h5>
-          <div class="user-level">
+          <div
+            v-if="route.name !== 'Home'"
+            class="user-level"
+          >
             <BaseSvgIcon :iconName="`level-${userStore.userInfo.roleOrder}`" />
             <span class="user-level-text">
               {{ $t(`Common.Level`, { level: userStore.userInfo.roleOrder }) }}</span
@@ -80,7 +97,7 @@ const { width } = useDeviceWidth()
       <a-button
         type="primary"
         class="logout-btn"
-        @click="fnLogOut()"
+        @click="handleLogout"
       >
         {{ $t('Common.Logout') }}
       </a-button>
@@ -93,6 +110,42 @@ const { width } = useDeviceWidth()
       @click="handleCloseSidebar"
     />
   </transition>
+
+  <a-modal
+    v-model:open="isLogoutModalOpen"
+    class="logout-modal primary"
+  >
+    <template #title>
+      <div class="modal-header modal-header-primary">
+        <span class="modal-title">{{ $t('LoginPage.Modal.Logout.Title') }}</span>
+      </div>
+    </template>
+
+    <div class="logout-modal-content">
+      <p>{{ $t('LoginPage.Modal.Logout.Content') }}</p>
+    </div>
+
+    <template #footer>
+      <div class="button-group">
+        <a-button
+          type="primary"
+          size="large"
+          :loading="isButtonLoading"
+          @click="fnLogOut"
+        >
+          {{ $t('LoginPage.Modal.Logout.Button.Confirm') }}
+        </a-button>
+        <a-button
+          type="primary"
+          size="large"
+          ghost
+          @click="isLogoutModalOpen = false"
+        >
+          {{ $t('LoginPage.Modal.Logout.Button.Cancel') }}
+        </a-button>
+      </div>
+    </template>
+  </a-modal>
 </template>
 
 <style lang="scss" scoped>
@@ -239,6 +292,23 @@ aside.sidebar {
 
     .logout-btn {
       width: 100%;
+    }
+  }
+}
+
+.logout-modal {
+  .logout-modal-content {
+    margin-block: 2rem;
+    font-size: 1rem;
+    text-align: center;
+    color: $--color-gray-600;
+  }
+
+  .button-group {
+    display: flex;
+
+    & > button {
+      flex: 1;
     }
   }
 }

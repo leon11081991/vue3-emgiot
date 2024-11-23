@@ -95,10 +95,10 @@ const { formatDate, today } = useDate()
 const chartData = computed<ChartData<'bar'>>(() => {
   const data = props.data[chartKey[props.type]]
   return {
-    labels: data.map((item) => formatDate(item.date, 'YYYY-MM-DD')),
+    labels: data?.map((item) => formatDate(item.date, 'YYYY-MM-DD')),
     datasets: [
       {
-        data: data.map((item) => {
+        data: data?.map((item) => {
           if (props.type === 'coin') {
             return (item as CoinMachineResType).coinExchanged
           } else if (props.type === 'claw') {
@@ -106,7 +106,7 @@ const chartData = computed<ChartData<'bar'>>(() => {
           }
           return (item as ClawMachineResType).revenue
         }),
-        backgroundColor: data.map((item) => {
+        backgroundColor: data?.map((item) => {
           const nowDate = formatDate(item.date, 'YYYY-MM-DD')
           return nowDate === today() ? barTargetColor : barDefaultColor
         }),

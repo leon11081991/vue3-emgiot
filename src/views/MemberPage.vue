@@ -49,9 +49,19 @@ const checkIfCanAccess = (
   goToMemberInfo(storeId, targetId)
 }
 
-const changeVisibility = useDebounce((visibility: boolean, storeId: string, userId: string) => {
-  fnHideIdentity({ storeId, isVisible: visibility })
-}, 300)
+const changeVisibility = useDebounce(
+  async (visibility: boolean, storeId: string, userId: string) => {
+    await fnHideIdentity({ storeId, isVisible: visibility })
+    const store = storeMembers.value.data.find((store) => store.storeId === storeId)
+    if (store) {
+      const member = store.members.find((member) => member.userId === userId)
+      if (member) {
+        member.isVisible = visibility // 更新資料
+      }
+    }
+  },
+  300
+)
 
 onMounted(async () => {
   await fetchStoreMembers()
@@ -110,6 +120,7 @@ onMounted(async () => {
                 <AvatarDisplay
                   size="md"
                   :name="member.userName"
+                  :google-avatar-url="member.photoUrl"
                 />
                 <div class="member-wrap">
                   <div class="member-container">
@@ -126,11 +137,11 @@ onMounted(async () => {
                     @click.stop
                   >
                     <a-checkbox
-                      v-model:checked="member.isVisible"
+                      :checked="!member.isVisible"
                       @change="
                         (e: Event) =>
                           changeVisibility(
-                            (e.target as HTMLInputElement).checked,
+                            !(e.target as HTMLInputElement).checked,
                             store.storeId,
                             member.userId
                           )

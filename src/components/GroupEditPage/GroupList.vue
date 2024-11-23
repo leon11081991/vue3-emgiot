@@ -38,14 +38,7 @@ const coinMachineCount = computed(
 )
 
 /* function */
-function onUpdate() {
-  emit('update:groupList', {
-    groupId: props.list.groupId || '',
-    pcbs: pcbs.value
-  })
-}
-
-function onAdd() {
+function fnUpdateGroupList() {
   emit('update:groupList', {
     groupId: props.list.groupId || '',
     pcbs: pcbs.value
@@ -152,8 +145,9 @@ watchEffect(() => {
           :animation="150"
           ghostClass="ghost"
           group="people"
-          @update="onUpdate"
-          @add="onAdd"
+          @update="fnUpdateGroupList"
+          @remove="fnUpdateGroupList"
+          @add="fnUpdateGroupList"
         >
           <div
             v-for="item in pcbs"
