@@ -173,8 +173,8 @@
         },
         "Step3":{
           "Content":{
-            "Claw":"請確認是否對所選的機台進行補幣？",
-            "Coin":"請確認是否對所選的機台進行退幣？"
+            "Claw":"Please confirm whether to refill coins for the selected machine?",
+            "Coin":"Please confirm whether to issue a refund for the selected machine?"
           },
           "CountLabel": {
             "Claw":"累保金額",
@@ -292,9 +292,9 @@
         }
       },
       "UpdateStore": {
-        "Title": "編輯店家",
+        "Title": "Edit Store",
         "Placeholder": {
-          "StoreName": "請輸入名稱",
+          "StoreName": "Please enter store name",
           "WifiSSID": "Please enter the WiFi name",
           "WifiPassword": "Please enter the WiFi password",
           "Empty": "Input cannot be empty",
@@ -304,7 +304,7 @@
           "Confirm": "Confirm"
         },
         "Message": {
-          "StoreNameRequired": "店家名稱不得為空"
+          "StoreNameRequired": "Cannot be empty"
         }
       }
     },
@@ -385,10 +385,10 @@
       "Dispatch": "Eye Shipment",
       "CashBoxCollection": "Cash Box Collection",
       "CoinRefillEvent": "Coin Refill Event",
-      "CoinDispenseEvent": "出幣事件",
-      "CoinReturnEvent": "退幣事件",
-      "InventoryReport": "庫存回報",
-      "StatusReport": "狀態回報"
+      "CoinDispenseEvent": "Coin Dispensing Event",
+      "CoinReturnEvent": "Coin Refund Event",
+      "InventoryReport": "Remaining coins Report",
+      "StatusReport": "Status Report"
     },
     "ListType":{
       "Day": "Daily Report",
@@ -558,11 +558,11 @@
   },
   "InviteLinkPage": {
     "HeaderTitle": "",
-    "QRCodeHint":"邀請碼時效一天，只能提供一人使用。",
-    "TextHint":"邀請您加入雲端掌櫃，請點選下方連結接受邀請。",
+    "QRCodeHint":"Invitation code is valid for one day and can be used by one person.",
+    "TextHint":"You're invited to join Cash Claw! Please click the link below to accept the invitation.",
     "Button":{
-      "Copy":"Copy",
-      "Return":"Back"
+      "Copy":"Copy Link",
+      "Return":"Go Back"
     }
   },
   "GroupEditPage": {
