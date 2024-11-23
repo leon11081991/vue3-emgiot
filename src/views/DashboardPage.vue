@@ -466,6 +466,7 @@ onMounted(async () => {
     v-if="isModalVisible.addNewMachine"
     :modal-visible="modalVisible"
     @close="closeModal"
+    @refresh="handleToggleTab(selectedTab)"
   />
 
   <BatchModal

@@ -25,6 +25,7 @@ const props = defineProps<{
 
 /* defineEmits */
 const emit = defineEmits<{
+  (e: 'refresh'): void
   (e: 'close'): void
 }>()
 
@@ -93,6 +94,7 @@ const onFinish = (values: BindingPcbDataType) => {
   fnBindingPcb(values)
     .then((resp) => {
       if (!resp) return
+      emit('refresh')
       closeModal()
     })
     .finally(() => {
