@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { useRoute } from 'vue-router'
 import { ref } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import MaskOverlay from '@/components/Base/MaskOverlay.vue'
@@ -14,7 +13,6 @@ import { navigationList } from '@/constants/common/sidebar.const'
 import { widthMapping } from '@/constants/mappings/width.mapping'
 
 const { t: $t } = useI18n()
-const route = useRoute()
 const commonStore = useCommonStore()
 const userStore = useUserStore()
 const { sidebarRef, handleCloseSidebar } = useSidebar()
@@ -51,15 +49,13 @@ const handleLogout = () => {
         />
         <div class="user-wrap">
           <h5 class="user-name">{{ userStore.userInfo.name }}</h5>
-          <div
-            v-if="route.name !== 'Home'"
-            class="user-level"
-          >
+          <!-- issue43：完全不顯示等級 -->
+          <!-- <div class="user-level">
             <BaseSvgIcon :iconName="`level-${userStore.userInfo.roleOrder}`" />
             <span class="user-level-text">
               {{ $t(`Common.Level`, { level: userStore.userInfo.roleOrder }) }}</span
             >
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="message-container">
