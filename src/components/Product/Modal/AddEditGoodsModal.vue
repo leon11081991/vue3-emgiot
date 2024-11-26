@@ -33,7 +33,7 @@ const { dispatchEditGoods, dispatchAddGoods } = useGoods()
 const { openMessage } = useMessage()
 
 /* 非響應式變數 */
-const goodsNameInputMaxLen = 50
+const maxLength = 50
 const showArrow = true
 
 /* ref 變數 */
@@ -60,7 +60,7 @@ const customIcon = computed(() => {
   })
 })
 
-const isGoodsNameLenOverRule = computed(() => goodsNameInput.value.length > goodsNameInputMaxLen)
+const isGoodsNameLenOverRule = computed(() => goodsNameInput.value.length > maxLength)
 
 const merchantOptions = computed(() => {
   return (
@@ -179,6 +179,7 @@ fetchStoresListInfo()
         :value="goodsNameInput"
         :size="size"
         :placeholder="$t('ProductPage.Modal.AddEditGoods.Placeholder.GoodsName')"
+        :maxLength="maxLength"
         @change="updateGoodsName"
       />
     </div>
@@ -186,7 +187,7 @@ fetchStoresListInfo()
       class="name-input_count"
       :class="{ error: isGoodsNameLenOverRule }"
     >
-      {{ goodsNameInput.length }} / {{ goodsNameInputMaxLen }}
+      {{ goodsNameInput.length }} / {{ maxLength }}
     </div>
     <div class="action-container">
       <a-input

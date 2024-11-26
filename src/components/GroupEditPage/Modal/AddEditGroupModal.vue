@@ -22,12 +22,12 @@ const { openMessage } = useMessage()
 const { fnAddGroupList, fnUpdateGroupList } = useGroup()
 
 /* 非響應式變數 */
-const groupNameMaxLen = 10
+const maxLength = 10
 
 /* 響應式變數 */
 const groupName = ref('')
 const isGroupNameExisted = ref(false)
-const isGroupNameLenOverRule = computed(() => +groupName.value.length > groupNameMaxLen)
+const isGroupNameLenOverRule = computed(() => +groupName.value.length > maxLength)
 const groupExistMessage = computed(() => (isGroupNameExisted.value ? '你已建立過相同群組' : ''))
 
 /* computed */
@@ -124,6 +124,7 @@ watchEffect(() => {
         :class="{ error: isGroupNameLenOverRule || isGroupNameExisted }"
         :placeholder="$t('GroupEditPage.Modal.AddEditGroup.Placeholder.GroupName')"
         @change="updateGroupValue"
+        :maxLength="maxLength"
       >
       </a-input>
       <div
@@ -131,7 +132,7 @@ watchEffect(() => {
         :class="{ error: isGroupNameLenOverRule || isGroupNameExisted }"
       >
         <span>{{ groupExistMessage }}</span>
-        <span class="ml-auto">{{ groupName.length }} / {{ groupNameMaxLen }}</span>
+        <span class="ml-auto">{{ groupName.length }} / {{ maxLength }}</span>
       </div>
     </div>
 
