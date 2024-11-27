@@ -205,6 +205,7 @@ fetchStoresListInfo()
       <a-input
         type="number"
         class="cost-input"
+        :min="0"
         :value="goodsCost"
         :size="size"
         :placeholder="$t('ProductPage.Modal.AddEditGoods.Placeholder.GoodsCost')"
