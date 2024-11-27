@@ -34,6 +34,7 @@ const { openMessage } = useMessage()
 
 /* 非響應式變數 */
 const maxLength = 50
+const minCost = 1
 const showArrow = true
 
 /* ref 變數 */
@@ -98,14 +99,13 @@ const handleDropdownVisibleChange = (open: boolean) => {
 }
 
 const fnHandleGoods = async (type: string) => {
-  if (!apiDebounce.value) {
-    apiDebounce.value = true
-  } else {
+  if (goodsNameInput.value.trim() === '') {
+    openMessage('error', $t('ProductPage.Modal.AddEditGoods.Message.Empty'))
     return
   }
 
-  if (goodsNameInput.value.trim() === '') {
-    openMessage('error', $t('ProductPage.Modal.AddEditGoods.Message.Empty'))
+  if (!goodsCost.value) {
+    openMessage('error', $t('ProductPage.Modal.AddEditGoods.Placeholder.GoodsCost'))
     return
   }
 
@@ -120,6 +120,18 @@ const fnHandleGoods = async (type: string) => {
     forbiddenStores: merchantNotAllowList.value,
     isSpecial: isSpecial.value
   }
+
+  if (!apiDebounce.value) {
+    apiDebounce.value = true
+  } else {
+    setTimeout(() => {
+      if (apiDebounce.value) {
+        apiDebounce.value = false
+      }
+    }, 3000)
+    return
+  }
+
   const res =
     type === 'edit'
       ? await dispatchEditGoods({ ...data, goodsId: props.goodsInfo.goodsId })
@@ -196,6 +208,7 @@ fetchStoresListInfo()
         :value="goodsCost"
         :size="size"
         :placeholder="$t('ProductPage.Modal.AddEditGoods.Placeholder.GoodsCost')"
+        :min="minCost"
         @change="updateGoodsCost"
       />
     </div>
