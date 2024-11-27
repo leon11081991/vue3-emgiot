@@ -78,7 +78,12 @@ const updateValue = (value: string[]) => {
                     class="doughnut-chart"
                     type="circle"
                     strokeColor="var(--color-secondary)"
-                    :percent="UtilCommon.getPercentage(item?.coinExchanged, item?.coinRemaining)"
+                    :percent="
+                      UtilCommon.getPercentage(
+                        item?.coinExchanged,
+                        item?.coinRemaining + item?.coinExchanged || 0
+                      )
+                    "
                     :size="40"
                   />
                 </span>
