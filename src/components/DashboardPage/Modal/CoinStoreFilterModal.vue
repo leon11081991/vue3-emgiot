@@ -96,6 +96,14 @@ const isRangeDateSelected = computed(() =>
     : rangeDate.value
 )
 
+const selectedGroupId = computed(() => {
+  if (groupsDDLList?.value.data && groupName.value && groupName.value !== groupDefaultName) {
+    const group = groupsDDLList.value.data.find((item) => item.groupName === groupName.value)
+    return group ? group.groupId : ''
+  }
+  return ''
+})
+
 /* function */
 const optionsConfig = (date: string) => {
   const current = new Date(date)
@@ -140,7 +148,8 @@ const filterCoinDashboardData = () => {
     startDate: startDate.value || '',
     endDate: endDate.value || '',
     groupsDDLFilter: groupsDDLFilter.value || '',
-    groupName: groupName.value === groupDefaultName ? '' : groupName.value || ''
+    groupName: groupName.value === groupDefaultName ? '' : groupName.value || '',
+    pcbGroupId: selectedGroupId.value || ''
   })
   closeModal()
 }

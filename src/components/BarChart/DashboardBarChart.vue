@@ -17,6 +17,9 @@ const props = defineProps<{
   startDate: string
   endDate: string
   isInitialChart: boolean
+  pcbName?: string
+  pcbGroupId?: string
+  goodsId?: string
 }>()
 
 /* defineEmit */
@@ -97,15 +100,30 @@ const emitUpdateStoreWifiInfo = () => {
   emit('update:storeInfo')
 }
 
-/* lifecycle hooks */
-fetchOperationClawChart({
-  startDate: props.startDate,
-  endDate: props.endDate
-})
-fetchOperationCoinChart({
-  startDate: props.startDate,
-  endDate: props.endDate
-})
+if (props.type === 'claw') {
+  fetchOperationClawChart({
+    startDate: props.startDate,
+    endDate: props.endDate,
+    pcbName: props.pcbName,
+    pcbGroupId: props.pcbGroupId,
+    goodsId: props.goodsId
+  })
+  fetchOperationCoinChart({
+    startDate: props.startDate,
+    endDate: props.endDate
+  })
+} else if (props.type === 'coin') {
+  fetchOperationClawChart({
+    startDate: props.startDate,
+    endDate: props.endDate
+  })
+  fetchOperationCoinChart({
+    startDate: props.startDate,
+    endDate: props.endDate,
+    pcbName: props.pcbName,
+    pcbGroupId: props.pcbGroupId
+  })
+}
 </script>
 
 <template>
