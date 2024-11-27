@@ -108,18 +108,6 @@ onMounted(async () => {
               v-for="member in store.members"
               :key="member.userId"
             >
-              <!-- <li
-                class="content-item"
-                @click.prevent="
-                  checkIfCanAccess(
-                    member.roleOrder,
-                    userStore.userInfo.roleOrder,
-                    store.storeId,
-                    member.userId,
-                    userStore.userInfo.userId
-                  )
-                "
-              > -->
               <li
                 class="content-item"
                 @click.prevent="
