@@ -10,6 +10,7 @@ import '@quasar/extras/material-icons/material-icons.css'
 
 /* type */
 type PickerType = 'start' | 'end' | 'range'
+type DatePickerKeysType = (typeof DatePickerKeys)[keyof typeof DatePickerKeys]
 
 /* Props (defineProps) */
 const props = defineProps<{
@@ -31,12 +32,19 @@ const { today, formatDate, calculateDate, getDaysInTwoMonths, getThreeMonthsAgo 
 
 const DAYS_IN_WEEK = 7
 const TODAY = 1
-const dateRangePickerConfig = {
-  今日: TODAY,
-  二日: 2,
-  三日: 3,
-  一週: DAYS_IN_WEEK,
-  一個月: getDaysInTwoMonths()
+const DatePickerKeys = {
+  Today: $t('AccountInquiryPage.Modal.Filter.DatePicker.Today'),
+  TwoDays: $t('AccountInquiryPage.Modal.Filter.DatePicker.TwoDays'),
+  ThreeDays: $t('AccountInquiryPage.Modal.Filter.DatePicker.ThreeDays'),
+  OneWeek: $t('AccountInquiryPage.Modal.Filter.DatePicker.OneWeek'),
+  OneMonth: $t('AccountInquiryPage.Modal.Filter.DatePicker.OneMonth')
+} as const
+const dateRangePickerConfig: Record<DatePickerKeysType, number> = {
+  [DatePickerKeys.Today]: TODAY,
+  [DatePickerKeys.TwoDays]: 2,
+  [DatePickerKeys.ThreeDays]: 3,
+  [DatePickerKeys.OneWeek]: DAYS_IN_WEEK,
+  [DatePickerKeys.OneMonth]: getDaysInTwoMonths()
 }
 
 /* ref 變數 */
@@ -44,7 +52,7 @@ const startDate = ref<string | null>(today())
 const endDate = ref<string | null>(today())
 const rangeDate = ref<{ from: string; to: string } | string>({ from: '', to: '' })
 const tempRangeDate = ref({ from: '', to: '' })
-const rangePickerActiveItem = ref('今日')
+const rangePickerActiveItem = ref($t('AccountInquiryPage.Modal.ClawStoreFilter.DatePicker.Today'))
 
 const groupsDDLFilter = ref('')
 const picker = ref({
@@ -129,6 +137,10 @@ const toggleDatePicker = (type: PickerType) => {
 
 const setRangePicker = (label: keyof typeof dateRangePickerConfig) => {
   rangePickerActiveItem.value = label
+
+  if (label === $t('AccountInquiryPage.Modal.Filter.DatePicker.Today')) {
+    endDate.value = today()
+  }
   if (endDate.value) {
     startDate.value = calculateDate(endDate.value, 'backward', dateRangePickerConfig[label])
   }
@@ -316,14 +328,14 @@ onBeforeUnmount(() => {
           type="primary"
           @click="filterClawDashboardData"
         >
-          確認
+          {{ $t('AccountInquiryPage.Modal.Filter.Button.Confirm') }}
         </a-button>
         <a-button
           class="cancel-btn btn"
           type="outlined"
           @click="closeModal"
         >
-          取消
+          {{ $t('AccountInquiryPage.Modal.Filter.Button.Cancel') }}
         </a-button>
       </div>
     </template>
