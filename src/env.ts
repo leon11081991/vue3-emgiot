@@ -7,6 +7,10 @@ if (!apiBaseUrl) {
   throw new Error('Missing VITE_API_BASE_URL')
 }
 
+if (!googleClientId) {
+  throw new Error('Missing VITE_GOOGLE_CLIENT_ID')
+}
+
 export const env = {
   apiBaseUrl,
   apiVersion,

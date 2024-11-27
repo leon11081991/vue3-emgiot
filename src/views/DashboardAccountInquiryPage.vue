@@ -51,6 +51,7 @@ type EventRecordTabCompType = DefineComponent<
 const { t: $t } = useI18n()
 /* route */
 const route = useRoute()
+const pcbId = route.params.pcbId as string
 /* composables */
 const { updateHeaderTitle } = useHeader()
 const { storeName } = useDashboard()
@@ -73,7 +74,6 @@ const startDate = ref(initialStartDate)
 
 /* 非響應式變數 */
 const machineType: MachineType = route.params.machineType as MachineType
-const pcbId = route.params.pcbId as string
 
 /* 子組件 ref */
 const tabComps: Record<

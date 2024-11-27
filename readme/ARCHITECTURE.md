@@ -1,6 +1,7 @@
 # 基本專案規範
 
-## 專案架構(待調整)
+
+## 1.專案架構
 
 各資料夾中容易有重複的檔案名稱，因此子資料夾中的檔案，附檔名前請再加上所在資料夾的前綴。
 
@@ -11,17 +12,17 @@
 ├── .vscode                  # 統一開發人員 VS Code 套件及設定檔
 │   ├── extensions.json      # 編輯器套件推薦配置
 │   ├── settings.json        # 編輯器設定
-│   └── xxx.code-snippets    # 自定義的程式碼模板
+│   └── vue.code-snippets    # 自定義的vue程式碼模板
 │
 ├── public                   # 靜態資源
-│   ├── images               # 共用圖片
-│   ├── sounds               # 共用音效
-│   └── ...
+│   └── favicon.ico          # 網站圖示
 │
 ├── readme                   # 其他專案說明
 ├── src                      # 開發資源
 │   ├── assets               # 共用資源
 │   │   ├── icons            # 專案icon
+│   │   │    └── xxx.svg     # svg圖檔
+│   │   │ 
 │   │   ├── scss             # 專案scss檔 
 │   │   │    ├── _animation.scss  # 動畫樣式
 │   │   │    ├── _mixin.scss      # scss mixin
@@ -36,12 +37,12 @@
 │   ├── composables          # 共用 Vue 組合式函數
 │   │
 │   ├── constants            # 共用常數
-│   │   ├── common 
-│   │   ├── configs 
+│   │   ├── common           # 共用常數
+│   │   ├── configs          # 設定常數
 │   │   ├── enums            # 共用枚舉
 │   │   ├── initials         # 初始常數
 │   │   ├── mappings         # 映射常數
-│   │   └── ...              # 其他常數
+│   │   └── ...              # 其他頁面常數
 │   │
 │   ├── lang                 # 共用語言包
 │   │   ├── en.json          # 英語語言包
@@ -52,7 +53,7 @@
 │   │   └── LayoutDefault.vue # 基本佈局
 │   │
 │   ├── models               # 共用型別
-│   │   ├── interfaces       # 共用介面（未來再區分api相關與一般）
+│   │   ├── interfaces       # 共用介面
 │   │   └── types            # 共用型別定義
 │   │
 │   ├── plugins              # 插件
