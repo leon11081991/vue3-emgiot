@@ -22,7 +22,7 @@ const { updateHeaderTitle } = useHeader()
 const { updateStore } = useFetchStore()
 const { openMessage } = useMessage()
 
-const storeNameMaxLen = 10
+const maxLength = 10
 const storeName = ref<string>(
   UtilCommon.getLocalStorage<StoreInfoStorageDataType>('store-info')?.storeName || ''
 )
@@ -44,7 +44,7 @@ const closeModal = () => {
 }
 
 const isStoreNameExisted = ref(false)
-const isStoreNameLenOverRule = computed(() => +storeName.value.length > storeNameMaxLen)
+const isStoreNameLenOverRule = computed(() => +storeName.value.length > maxLength)
 const storeExistMessage = computed(() => (isStoreNameExisted.value ? '你已建立過相同名稱店家' : ''))
 
 const updateStoreValue = (e: Event) => {
@@ -118,6 +118,7 @@ onMounted(() => {
         :class="{ error: isStoreNameLenOverRule || isStoreNameExisted }"
         :placeholder="$t('DashboardPage.Modal.UpdateStore.Placeholder.StoreName')"
         @change="updateStoreValue"
+        :maxLength="maxLength"
       >
       </a-input>
       <div
@@ -125,7 +126,7 @@ onMounted(() => {
         :class="{ error: isStoreNameLenOverRule || isStoreNameExisted }"
       >
         <span>{{ storeExistMessage }}</span>
-        <span class="ml-auto">{{ storeName.length }} / {{ storeNameMaxLen }}</span>
+        <span class="ml-auto">{{ storeName.length }} / {{ maxLength }}</span>
       </div>
       <a-input
         class="createStore-input"

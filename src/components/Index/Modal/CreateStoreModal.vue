@@ -23,7 +23,7 @@ const { createNewStore } = useFetchStore()
 const { openMessage } = useMessage()
 
 /* 非響應式變數 */
-const storeNameMaxLen = 10
+const maxLength = 10
 
 /* ref 變數 */
 const isButtonLoading = ref(false)
@@ -40,7 +40,7 @@ const closeModal = () => {
 }
 
 const isStoreNameExisted = ref(false)
-const isStoreNameLenOverRule = computed(() => +storeName.value.length > storeNameMaxLen)
+const isStoreNameLenOverRule = computed(() => +storeName.value.length > maxLength)
 const storeExistMessage = computed(() =>
   isStoreNameExisted.value ? $t('HomePage.Modal.CreateStore.Message.StoreExist') : ''
 )
@@ -100,6 +100,7 @@ const fnCreateNewStore = useDebounce(async () => {
         :value="storeName"
         :class="{ error: isStoreNameLenOverRule || isStoreNameExisted }"
         :placeholder="$t('HomePage.Modal.CreateStore.Placeholder.StoreName')"
+        :maxLength="maxLength"
         @change="updateStoreValue"
       >
       </a-input>
@@ -108,7 +109,7 @@ const fnCreateNewStore = useDebounce(async () => {
         :class="{ error: isStoreNameLenOverRule || isStoreNameExisted }"
       >
         <span>{{ storeExistMessage }}</span>
-        <span class="ml-auto">{{ storeName.length }} / {{ storeNameMaxLen }}</span>
+        <span class="ml-auto">{{ storeName.length }} / {{ maxLength }}</span>
       </div>
     </div>
 
