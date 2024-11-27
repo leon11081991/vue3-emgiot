@@ -234,6 +234,7 @@ const updateValue = (value: string[]) => {
         flex-direction: row;
         align-items: center;
         gap: 0.5rem;
+        margin: 0 auto;
       }
     }
   }
