@@ -4,7 +4,7 @@ export type StoreMemberResType = {
   members: MemberType[]
 }
 
-type MemberType = {
+export type MemberType = {
   userId: string
   userName: string
   roleId: string

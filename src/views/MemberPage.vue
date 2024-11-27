@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { MemberType } from '@/models/types/storeMember.types'
 import { Empty } from 'ant-design-vue'
 import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -28,16 +29,18 @@ const isSelfAccount = (targetId: string, userId: string) => {
 const goToMemberInfo = (storeId: string, userId: string) => {
   router.push({ name: 'MemberInfo', params: { storeId, userId } })
 }
-
 const checkIfCanAccess = (
+  memberList: MemberType[],
+  userId: string,
   targetRoleOrder: number,
-  userRoleOrder: number,
   storeId: string,
-  targetId: string,
-  userId: string
+  targetId: string
 ) => {
+  const user = memberList.find((member) => member.userId === userId)
+  if (!user) return
+
   // 目標等級小於使用者等級，才可以訪問；並且不是自己的帳號才可以訪問
-  const canAccess = targetRoleOrder > userRoleOrder
+  const canAccess = targetRoleOrder > user.roleOrder
 
   if (isSelfAccount(targetId, userId)) {
     return openMessage('warning', $t('MemberPage.Message.IsSelfAccount'))
@@ -109,11 +112,11 @@ onMounted(async () => {
                 class="content-item"
                 @click.prevent="
                   checkIfCanAccess(
+                    store.members,
+                    userStore.userInfo.userId,
                     member.roleOrder,
-                    userStore.userInfo.roleOrder,
                     store.storeId,
-                    member.userId,
-                    userStore.userInfo.userId
+                    member.userId
                   )
                 "
               >
