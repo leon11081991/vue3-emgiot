@@ -66,6 +66,8 @@ export type RefreshClawDashboardType = {
   groupsDDLFilter: string
   groupName: string
   goodsName: string
+  pcbGroupId: string
+  goodsId: string
 }
 
 export type RefreshCoinDashboardType = {
@@ -73,12 +75,18 @@ export type RefreshCoinDashboardType = {
   endDate: string
   groupsDDLFilter: string
   groupName: string
+  pcbGroupId: string
 }
 
 export type SelectedGroupAndGoodsType = {
   groupName: string
   goodsName: string
   groupsDDLFilter: string
+}
+
+export type SelectedGroupAndGoodsIdType = {
+  pcbGroupId: string
+  goodsId: string
 }
 
 export type SelectedGroupType = {

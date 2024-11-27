@@ -12,7 +12,8 @@ import type {
   RefreshCoinDashboardType,
   SelectedGroupAndGoodsType,
   SelectedGroupType,
-  SelectedGroupAndGoodsRemoveType
+  SelectedGroupAndGoodsRemoveType,
+  SelectedGroupAndGoodsIdType
 } from '@/models/types/dashboard.types'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import SegmentedTab from '@/components/Base/SegmentedTab.vue'
@@ -128,6 +129,10 @@ const selectedGroupAndGoods = ref<SelectedGroupAndGoodsType>({
   goodsName: '',
   groupsDDLFilter: ''
 })
+const selectedGroupAndGoodsId = ref<SelectedGroupAndGoodsIdType>({
+  pcbGroupId: '',
+  goodsId: ''
+})
 const selectedGroup = ref<SelectedGroupType>({
   groupName: '',
   groupsDDLFilter: ''
@@ -180,7 +185,6 @@ const handleOpenModal = (type: DashboardModalType, machineType?: 0 | 1): void =>
 }
 
 const handleGoToAccountInquiry = (machineType: DashboardTabType, pcbId: string): void => {
-  console.log('handleGoToAccountInquiry', pcbId)
   router.push({
     name: 'AccountInquiry',
     params: { machineType, pcbId }
@@ -304,6 +308,8 @@ const fnRefreshClawDashboard = (data: RefreshClawDashboardType) => {
     goodsName: data.goodsName,
     groupsDDLFilter: data.groupsDDLFilter
   }
+  selectedGroupAndGoodsId.value.goodsId = data.goodsId
+  selectedGroupAndGoodsId.value.pcbGroupId = data.pcbGroupId
 
   isInitialChart.value = false
   fnResetClawData(data)
@@ -316,6 +322,7 @@ const fnRefreshCoinDashboard = (data: RefreshCoinDashboardType) => {
     groupName: data.groupName,
     groupsDDLFilter: data.groupsDDLFilter
   }
+  selectedGroupAndGoodsId.value.pcbGroupId = data.pcbGroupId
 
   isInitialChart.value = false
   fnResetCoinData(data)
@@ -328,12 +335,21 @@ const fnRemoveClawFilteredTag = (key: string) => {
   selectedGroupAndGoods.value[typedKey] = ''
   removeSelected.value[typedKey] += 1
 
+  if (typedKey === 'groupName') {
+    selectedGroupAndGoodsId.value.pcbGroupId = ''
+  }
+  if (typedKey === 'goodsName') {
+    selectedGroupAndGoodsId.value.goodsId = ''
+  }
+
   fnRefreshClawDashboard({
     startDate: startDate.value,
     endDate: endDate.value,
     groupsDDLFilter: selectedGroupAndGoods.value.groupsDDLFilter,
     groupName: selectedGroupAndGoods.value.groupName,
-    goodsName: selectedGroupAndGoods.value.goodsName
+    goodsName: selectedGroupAndGoods.value.goodsName,
+    pcbGroupId: selectedGroupAndGoodsId.value.pcbGroupId,
+    goodsId: selectedGroupAndGoodsId.value.goodsId
   })
 }
 
@@ -342,11 +358,16 @@ const fnRemoveCoinFilteredTag = (key: string) => {
   selectedGroup.value[typedKey] = ''
   removeSelected.value[typedKey] += 1
 
+  if (typedKey === 'groupName') {
+    selectedGroupAndGoodsId.value.pcbGroupId = ''
+  }
+
   fnRefreshCoinDashboard({
     startDate: startDate.value,
     endDate: endDate.value,
     groupsDDLFilter: selectedGroup.value.groupsDDLFilter,
-    groupName: selectedGroup.value.groupName
+    groupName: selectedGroup.value.groupName,
+    pcbGroupId: selectedGroupAndGoodsId.value.pcbGroupId
   })
 }
 
@@ -375,6 +396,9 @@ onMounted(async () => {
       :startDate="startDate"
       :endDate="endDate"
       :isInitialChart="isInitialChart"
+      :pcbName="selectedGroupAndGoods.groupsDDLFilter || selectedGroup.groupsDDLFilter"
+      :pcbGroupId="selectedGroupAndGoodsId.pcbGroupId"
+      :goodsId="selectedGroupAndGoodsId.goodsId"
       @update:storeInfo="fnUpdateStoreInfo"
     />
 

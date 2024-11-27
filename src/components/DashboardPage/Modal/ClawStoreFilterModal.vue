@@ -100,6 +100,22 @@ const isRangeDateSelected = computed(() =>
     : rangeDate.value
 )
 
+const selectedGroupId = computed(() => {
+  if (groupsDDLList?.value.data && groupName.value && groupName.value !== groupDefaultName) {
+    const group = groupsDDLList.value.data.find((item) => item.groupName === groupName.value)
+    return group ? group.groupId : ''
+  }
+  return ''
+})
+
+const selectedGoodsId = computed(() => {
+  if (goodsList?.value.data && goodsName.value && goodsName.value !== goodsDefaultName) {
+    const goods = goodsList.value.data.find((item) => item.goodsName === goodsName.value)
+    return goods ? goods.goodsId : ''
+  }
+  return ''
+})
+
 /* function */
 const optionsConfig = (date: string) => {
   const current = new Date(date)
@@ -141,13 +157,17 @@ const closeModal = () => {
 
 const filterClawDashboardData = () => {
   isConfirmFilterCondition.value = true
+
   emit('refresh:clawStoreDashboard', {
     startDate: startDate.value || '',
     endDate: endDate.value || '',
     groupsDDLFilter: groupsDDLFilter.value || '',
     groupName: groupName.value === groupDefaultName ? '' : groupName.value || '',
-    goodsName: goodsName.value === goodsDefaultName ? '' : goodsName.value || ''
+    goodsName: goodsName.value === goodsDefaultName ? '' : goodsName.value || '',
+    pcbGroupId: selectedGroupId.value || '',
+    goodsId: selectedGoodsId.value || ''
   })
+
   closeModal()
 }
 
