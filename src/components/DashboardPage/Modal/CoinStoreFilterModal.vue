@@ -65,7 +65,7 @@ const startDate = ref<string | null>(today())
 const endDate = ref<string | null>(today())
 const rangeDate = ref<{ from: string; to: string } | string>({ from: '', to: '' })
 const tempRangeDate = ref({ from: '', to: '' })
-const rangePickerActiveItem = ref('今日')
+const rangePickerActiveItem = ref($t('DashboardPage.Modal.CoinStoreFilter.DatePicker.Today'))
 
 const groupsDDLFilter = ref('')
 const groupName = ref(groupDefaultName)

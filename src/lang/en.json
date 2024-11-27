@@ -362,6 +362,13 @@
           "Start": "Start Time",
           "End": "End Time"
         },
+        "DatePicker":{
+          "Today":"Today",
+          "TwoDays": "2 Days",
+          "ThreeDays": "3 Days",
+          "OneWeek": "1 Week",
+          "OneMonth": "1 Month"
+        },
         "Button": {
           "Confirm": "Confirm",
           "Cancel": "Cancel"

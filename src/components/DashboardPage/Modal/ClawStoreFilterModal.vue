@@ -176,7 +176,6 @@ const setRangePicker = (label: keyof typeof dateRangePickerConfig) => {
     endDate.value = today()
   }
   if (endDate.value) {
-    console.log('endDate', endDate.value)
     startDate.value = calculateDate(endDate.value, 'backward', dateRangePickerConfig[label])
   }
 }
