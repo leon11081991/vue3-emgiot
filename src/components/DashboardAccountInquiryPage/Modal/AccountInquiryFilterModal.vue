@@ -27,7 +27,7 @@ const emit = defineEmits<{
 const { t: $t } = useI18n()
 
 /* 非響應式變數 */
-const { today, calculateDate, getDaysInTwoMonths, getThreeMonthsAgo } = useDate()
+const { today, formatDate, calculateDate, getDaysInTwoMonths, getThreeMonthsAgo } = useDate()
 
 const DAYS_IN_WEEK = 7
 const TODAY = 1
@@ -66,6 +66,23 @@ const isRangeDateSelected = computed(() =>
 /* function */
 const optionsConfig = (date: string) => {
   const current = new Date(date)
+  return current >= new Date(getThreeMonthsAgo()) && current <= new Date(today())
+}
+
+const optionsConfigStart = (date: string) => {
+  const current = new Date(date)
+  return current >= new Date(getThreeMonthsAgo()) && current <= new Date(today())
+}
+
+const optionsConfigEnd = (date: string) => {
+  const current = new Date(formatDate(date, 'YYYY-MM-DD'))
+  if (startDate.value) {
+    return (
+      current >= new Date(getThreeMonthsAgo()) &&
+      current <= new Date(today()) &&
+      current >= new Date(startDate.value)
+    )
+  }
   return current >= new Date(getThreeMonthsAgo()) && current <= new Date(today())
 }
 
@@ -186,7 +203,7 @@ onBeforeUnmount(() => {
           <transition name="fade">
             <q-date
               v-show="picker.start"
-              :options="optionsConfig"
+              :options="optionsConfigStart"
               mask="YYYY-MM-DD"
               class="datePickerCom startDateCom"
               v-model="startDate"
@@ -213,7 +230,7 @@ onBeforeUnmount(() => {
           <transition name="fade">
             <q-date
               v-show="picker.end"
-              :options="optionsConfig"
+              :options="optionsConfigEnd"
               mask="YYYY-MM-DD"
               class="datePickerCom endDateCom"
               v-model="endDate"
