@@ -37,9 +37,9 @@ const updateKey = ref(0)
 // computed
 const storeLists = computed(() => {
   const keyword = searchInfo.value.keyword.trim()
-  return keyword
-    ? storesListInfo.value.data?.stores.filter((item) => item.storeName.includes(keyword))
-    : storesListInfo.value.data?.stores
+  const stores = storesListInfo.value.data?.stores || []
+
+  return keyword ? stores.filter((item) => item.storeName.includes(keyword)) : stores
 })
 
 // function
