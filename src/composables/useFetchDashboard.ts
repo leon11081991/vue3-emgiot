@@ -1,7 +1,7 @@
 import type { MachineType } from '@/models/types/machine.types'
 import type {
-  ClawOperationsInfoResType,
-  CoinOperationsInfoResType,
+  ClawOperationsInfoDataType,
+  CoinOperationsInfoDataType,
   GetClawOperationsInfoReqType,
   GetCoinOperationsInfoReqType,
   GetOperationChartReqType,
@@ -27,7 +27,6 @@ export const useFetchDashboard = () => {
   const { t: $t } = useI18n()
   const { openMessage } = useMessage()
 
-  // TODO: 待優化
   /** 店家運營圖表 */
   const operationChart = ref<{
     data: OperationChartResType
@@ -48,7 +47,8 @@ export const useFetchDashboard = () => {
 
   /** 選物機運營清單 */
   const clawOperationsInfo = ref<{
-    data: ClawOperationsInfoResType[]
+    // data: ClawOperationsInfoResType[]
+    data: ClawOperationsInfoDataType[]
     isLoading: boolean
   }>({
     data: [],
@@ -57,7 +57,8 @@ export const useFetchDashboard = () => {
 
   /** 兌幣機運營清單 */
   const coinOperationsInfo = ref<{
-    data: CoinOperationsInfoResType[]
+    // data: CoinOperationsInfoResType[]
+    data: CoinOperationsInfoDataType[]
     isLoading: boolean
   }>({
     data: [],
@@ -146,7 +147,7 @@ export const useFetchDashboard = () => {
         return
       }
 
-      clawOperationsInfo.value.data = result
+      clawOperationsInfo.value.data = DashboardDto.FormattedClawOperationsInfoData(result)
     } catch (e) {
       catchErrorHandler(e)
     } finally {
@@ -165,7 +166,7 @@ export const useFetchDashboard = () => {
         return
       }
 
-      coinOperationsInfo.value.data = result
+      coinOperationsInfo.value.data = DashboardDto.FormattedCoinOperationsInfoData(result)
     } catch (e) {
       catchErrorHandler(e)
     } finally {

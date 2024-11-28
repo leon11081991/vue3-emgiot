@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { MachineType } from '@/models/types/machine.types'
-import type { ClawOperationsInfoResType } from '@/models/types/dashboard.types'
+import type { ClawOperationsInfoDataType } from '@/models/types/dashboard.types'
 import type { DashboardModalType } from '@/models/types/modal.types'
 import { useI18n } from 'vue-i18n'
 import { ref, withDefaults } from 'vue'
@@ -10,7 +10,7 @@ import { UtilCommon } from '@/utils/utilCommon'
 const props = withDefaults(
   defineProps<{
     activeKey: string[]
-    data: ClawOperationsInfoResType[]
+    data: ClawOperationsInfoDataType[]
   }>(),
   {
     activeKey: () => [],
@@ -61,7 +61,7 @@ const updateValue = (value: string[]) => {
         <a-collapse-panel
           class="list-collapse-panel"
           v-for="item in data"
-          :key="`${item?.pcbId}+${UtilCommon.generateUUID()}`"
+          :key="item?.uuid"
           @change="updateValue"
         >
           <template #header>
