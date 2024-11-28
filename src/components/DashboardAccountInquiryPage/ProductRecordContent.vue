@@ -27,7 +27,8 @@ const displayCount = ref<number>(3)
 
 /* computed */
 const records = computed(() => {
-  return props.data?.slice(0, displayCount.value)
+  const data = Array.isArray(props.data) ? props.data : [] // 確保是陣列
+  return data.slice(0, displayCount.value)
 })
 
 /* functions */
