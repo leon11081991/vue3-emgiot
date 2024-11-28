@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { MachineType } from '@/models/types/machine.types'
-import type { CoinOperationsInfoResType } from '@/models/types/dashboard.types'
+import type { CoinOperationsInfoDataType } from '@/models/types/dashboard.types'
 import type { DashboardModalType } from '@/models/types/modal.types'
 import { ref } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
@@ -9,7 +9,7 @@ import { UtilCommon } from '@/utils/utilCommon'
 const props = withDefaults(
   defineProps<{
     activeKey: string[]
-    data: CoinOperationsInfoResType[]
+    data: CoinOperationsInfoDataType[]
   }>(),
   {
     activeKey: () => [],
@@ -57,7 +57,7 @@ const updateValue = (value: string[]) => {
         <a-collapse-panel
           class="list-collapse-panel"
           v-for="item in data"
-          :key="`${item?.pcbId}+${UtilCommon.generateUUID()}`"
+          :key="item?.uuid"
           @change="updateValue"
         >
           <template #header>

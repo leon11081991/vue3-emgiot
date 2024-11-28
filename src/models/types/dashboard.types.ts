@@ -50,12 +50,20 @@ export type ClawOperationsInfoResType = BaseOperationsInfoResType & {
   cumulativeAmount: number // 累保金額
 }
 
+export type ClawOperationsInfoDataType = ClawOperationsInfoResType & {
+  uuid: string // uuid唯一識別碼
+}
+
 export type GetCoinOperationsInfoReqType = BaseOperationsInfoReqType
 
 export type CoinOperationsInfoResType = BaseOperationsInfoResType & {
   exchangedCount: number // 兌幣量
   coinExchanged: number // 已兌
   coinRemaining: number // 剩餘
+}
+
+export type CoinOperationsInfoDataType = CoinOperationsInfoResType & {
+  uuid: string // uuid唯一識別碼
 }
 
 export type PropsBarChartType = 'claw' | 'coin'

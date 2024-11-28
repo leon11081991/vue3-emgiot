@@ -6,8 +6,8 @@ import type { StoreInfoStorageDataType } from '@/models/types/store.types'
 import type { DashboardModalType } from '@/models/types/modal.types'
 import type {
   DashboardTabType,
-  ClawOperationsInfoResType,
-  CoinOperationsInfoResType,
+  ClawOperationsInfoDataType,
+  CoinOperationsInfoDataType,
   RefreshClawDashboardType,
   RefreshCoinDashboardType,
   SelectedGroupAndGoodsType,
@@ -47,12 +47,12 @@ import { UtilCommon } from '@/utils/utilCommon'
 
 /* type */
 type ClawTabCompType = DefineComponent<
-  { activeKey: string[]; data: ClawOperationsInfoResType[] },
+  { activeKey: string[]; data: ClawOperationsInfoDataType[] },
   {},
   any
 >
 type CoinTabCompType = DefineComponent<
-  { activeKey: string[]; data: CoinOperationsInfoResType[] },
+  { activeKey: string[]; data: CoinOperationsInfoDataType[] },
   {},
   any
 >
@@ -110,7 +110,7 @@ const storeId = ref<string>(
   UtilCommon.getLocalStorage<StoreInfoStorageDataType>('store-info')?.storeId || ''
 )
 const batchCheckedList = ref<string[]>([])
-const listData = ref<ClawOperationsInfoResType[] | CoinOperationsInfoResType[]>([])
+const listData = ref<ClawOperationsInfoDataType[] | CoinOperationsInfoDataType[]>([])
 
 const updateKey = ref(0)
 const resetKey = ref(0)
