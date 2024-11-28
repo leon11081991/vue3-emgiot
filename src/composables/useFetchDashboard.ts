@@ -47,7 +47,6 @@ export const useFetchDashboard = () => {
 
   /** 選物機運營清單 */
   const clawOperationsInfo = ref<{
-    // data: ClawOperationsInfoResType[]
     data: ClawOperationsInfoDataType[]
     isLoading: boolean
   }>({
@@ -57,7 +56,6 @@ export const useFetchDashboard = () => {
 
   /** 兌幣機運營清單 */
   const coinOperationsInfo = ref<{
-    // data: CoinOperationsInfoResType[]
     data: CoinOperationsInfoDataType[]
     isLoading: boolean
   }>({
