@@ -89,4 +89,9 @@ export class UtilCommon {
 
     return param
   }
+
+  /** 產生 UUID */
+  static generateUUID() {
+    return `${Date.now()}-${Math.random().toString(16).slice(2)}`
+  }
 }

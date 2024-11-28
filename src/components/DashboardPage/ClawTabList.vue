@@ -61,7 +61,7 @@ const updateValue = (value: string[]) => {
         <a-collapse-panel
           class="list-collapse-panel"
           v-for="item in data"
-          :key="item?.pcbId"
+          :key="`${item?.pcbId}+${UtilCommon.generateUUID()}`"
           @change="updateValue"
         >
           <template #header>
