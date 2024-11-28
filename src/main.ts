@@ -32,4 +32,5 @@ app.use(Quasar, {
   lang: useLocale() === 'tw' ? langTw : langEn
 })
 
+app.config.warnHandler = () => null
 app.mount('#app')
