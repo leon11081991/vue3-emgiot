@@ -9,6 +9,7 @@ import { catchErrorHandler } from '@/utils/api/error-handler'
 import { BindingPcbDto } from '@/utils/api/dto/pcbRegister.dto'
 import { getI18nTranslate } from '@/utils/i18nUtils'
 
+/** 處理機台相關 api 資料邏輯 */
 export const useFetchPcbRegister = () => {
   const { openMessage } = useMessage()
 

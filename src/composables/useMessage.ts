@@ -1,5 +1,6 @@
 import { message } from 'ant-design-vue'
 
+/** 處理提示訊息通知框 */
 export const useMessage = () => {
   /** 開啟訊息通知 */
   const openMessage = (

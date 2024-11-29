@@ -9,6 +9,7 @@ import { api } from '@/services'
 import { useMessage } from '@/composables/useMessage'
 import { catchErrorHandler } from '@/utils/api/error-handler'
 
+/** message 頁面相關邏輯，包含api方法處理 */
 export const useMessagePage = () => {
   const { openMessage } = useMessage()
 

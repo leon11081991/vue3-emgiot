@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 
+/** modal 相關邏輯 */
 export const useModal = () => {
   const modalVisible = ref<boolean>(false) // modal 是否顯示
 
