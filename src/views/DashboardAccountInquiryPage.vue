@@ -150,24 +150,19 @@ const fnResetData = async (data?: { startDate: string; endDate: string }) => {
     resetKey.value += 1
   }
 
-  await getMachineOperationsDetail(machineType)
+  if (selectedTab.value === 'accountInquiry') {
+    getMachineOperationsDetail(machineType)
+    return
+  }
+
+  if (selectedTab.value === 'productRecord') {
+    handleProductRecord()
+    return
+  }
 
   if (selectedTab.value === 'eventRecord') {
-    isLoading.value = true
-    fnGetMachineEventRecord(
-      {
-        pcbId,
-        startDate: startDate.value,
-        endDate: endDate.value
-      },
-      machineType
-    )
-      .then(() => {
-        listData.value = machineEventRecords.value.data
-      })
-      .finally(() => {
-        isLoading.value = false
-      })
+    handleEventRecord()
+    return
   }
 }
 
@@ -197,39 +192,46 @@ const getMachineOperationsDetail = async (machineType: MachineType) => {
   }
 }
 
+const handleProductRecord = async () => {
+  isLoading.value = true
+  await fnGetClawGoodsRecord({
+    pcbId,
+    startDate: startDate.value,
+    endDate: endDate.value
+  })
+  listData.value = clawGoodsRecords.value.data
+  isLoading.value = clawGoodsRecords.value.isLoading
+}
+
+const handleEventRecord = async () => {
+  isLoading.value = true
+  await fnGetMachineEventRecord(
+    {
+      pcbId,
+      startDate: startDate.value,
+      endDate: endDate.value
+    },
+    machineType
+  )
+  listData.value = machineEventRecords.value.data
+  isLoading.value = machineEventRecords.value.isLoading
+}
+
 const handleToggleTab = async (tab: AccountInquiryTabType, machineType: MachineType) => {
   isLoading.value = true
+
   if (tab === 'accountInquiry') {
     getMachineOperationsDetail(machineType)
-
     return
   }
 
   if (tab === 'productRecord') {
-    await fnGetClawGoodsRecord({
-      pcbId,
-      startDate: startDate.value,
-      endDate: endDate.value
-    })
-    console.log('clawGoodsRecords.value.data', clawGoodsRecords.value.data)
-    listData.value = clawGoodsRecords.value.data
-    isLoading.value = clawGoodsRecords.value.isLoading
-
+    handleProductRecord()
     return
   }
 
   if (tab === 'eventRecord') {
-    await fnGetMachineEventRecord(
-      {
-        pcbId,
-        startDate: startDate.value,
-        endDate: endDate.value
-      },
-      machineType
-    )
-    listData.value = machineEventRecords.value.data
-    isLoading.value = machineEventRecords.value.isLoading
-
+    handleEventRecord()
     return
   }
 }
