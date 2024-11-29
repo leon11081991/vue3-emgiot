@@ -210,18 +210,23 @@ const handleToggleTab = async (
       startDate: startDate.value,
       endDate: endDate.value
     })
-
     listData.value = clawOperationsInfo.value.data
-    if (groupsDDLFilter) {
-      listData.value = listData.value.filter((item) => item.pcbName.includes(groupsDDLFilter))
+    if (groupsDDLFilter || selectedGroupAndGoods.value.groupsDDLFilter) {
+      listData.value = listData.value.filter((item) =>
+        item.pcbName.includes(groupsDDLFilter || selectedGroupAndGoods.value.groupsDDLFilter)
+      )
     }
 
-    if (groupName) {
-      listData.value = listData.value.filter((item) => item.pcbGroupName.includes(groupName))
+    if (groupName || selectedGroupAndGoods.value.groupName) {
+      listData.value = listData.value.filter((item) =>
+        item.pcbGroupName.includes(groupName || selectedGroupAndGoods.value.groupName)
+      )
     }
 
-    if (goodsName) {
-      listData.value = listData.value.filter((item) => item.goodsName.includes(goodsName))
+    if (goodsName || selectedGroupAndGoods.value.goodsName) {
+      listData.value = listData.value.filter((item) =>
+        item.goodsName.includes(goodsName || selectedGroupAndGoods.value.goodsName)
+      )
     }
 
     return
