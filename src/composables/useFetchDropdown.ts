@@ -12,7 +12,7 @@ import { useMessage } from '@/composables/useMessage'
 import { catchErrorHandler } from '@/utils/api/error-handler'
 import { DropdownDto } from '@/utils/api/dto/dropdown.dto'
 
-export const useDropdown = () => {
+export const useFetchDropdown = () => {
   const { openMessage } = useMessage()
 
   // 可用機台群組

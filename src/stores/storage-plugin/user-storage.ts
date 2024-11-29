@@ -21,7 +21,6 @@ export const useUserStorage = (context: PiniaPluginContext) => {
 
   // 存儲狀態：根據裝置監聽對應的事件
   window.addEventListener(eventName, () => {
-    console.log('addEventListener', eventName)
     saveState()
   })
 

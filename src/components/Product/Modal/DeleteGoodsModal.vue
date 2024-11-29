@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { useGoods } from '@/composables/useGoods'
+import { useFetchGoods } from '@/composables/useFetchGoods'
 
 const props = defineProps<{
   modalVisible: boolean
@@ -13,7 +13,7 @@ const emit = defineEmits<{
 }>()
 
 const { t: $t } = useI18n()
-const { dispatchDeleteGoods } = useGoods()
+const { dispatchDeleteGoods } = useFetchGoods()
 
 const closeModal = () => {
   emit('close')

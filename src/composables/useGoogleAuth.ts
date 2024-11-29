@@ -6,6 +6,7 @@ import { catchErrorHandler } from '@/utils/api/error-handler'
 import { UtilCommon } from '@/utils/utilCommon'
 import { errorMessagesMapping } from '@/constants/mappings/errorMessages.mapping'
 
+/** Google 登入 */
 export const useGoogleAuth = () => {
   const { t: $t } = useI18n()
   const { openNotification } = useNotification()

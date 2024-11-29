@@ -3,6 +3,7 @@ import { notification, Result, Button } from 'ant-design-vue'
 import { h } from 'vue'
 import { getI18nTranslate } from '@/utils/i18nUtils'
 
+/** 通知彈窗相關邏輯 */
 export const useNotification = () => {
   /** 關閉通知 */
   const closeNotification = () => {

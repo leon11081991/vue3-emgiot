@@ -2,6 +2,7 @@ import { ref } from 'vue'
 import { useClickOutside } from '@/composables/useClickOutside'
 import { useCommonStore } from '@/stores/common.stores'
 
+/** sidebar 相關邏輯 */
 export const useSidebar = () => {
   const commonStore = useCommonStore()
 

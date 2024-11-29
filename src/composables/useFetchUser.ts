@@ -7,6 +7,7 @@ import { catchErrorHandler } from '@/utils/api/error-handler'
 import { UtilCommon } from '@/utils/utilCommon'
 import { getI18nTranslate } from '@/utils/i18nUtils'
 
+/** 處理使用者 api 資料邏輯 */
 export const useFetchUser = () => {
   const userStore = useUserStore()
   const { getDataFromToken } = useToken()

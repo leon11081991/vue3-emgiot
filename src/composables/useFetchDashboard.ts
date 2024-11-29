@@ -23,6 +23,7 @@ import { catchErrorHandler } from '@/utils/api/error-handler'
 import { DashboardDto } from '@/utils/api/dto/dashboard.dto'
 import { machineActionMapping } from '@/constants/mappings/dashboard.mapping'
 
+/** 處理dashboard頁面中資料的 api 資料邏輯 */
 export const useFetchDashboard = () => {
   const { t: $t } = useI18n()
   const { openMessage } = useMessage()

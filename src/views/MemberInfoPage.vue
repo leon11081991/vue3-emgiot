@@ -10,7 +10,7 @@ import PermissionContainer from '@/components/MemberPage/PermissionContainer.vue
 import ContentSettingContainer from '@/components/MemberPage/ContentSettingContainer.vue'
 import { useFetchStoreMember } from '@/composables/useFetchStoreMember'
 import { useModal } from '@/composables/useModal'
-import { useDropdown } from '@/composables/useDropdown'
+import { useFetchDropdown } from '@/composables/useFetchDropdown'
 import { useStoreMember } from '@/composables/useStoreMember'
 import { useDebounce } from '@/composables/useDebounce'
 
@@ -24,7 +24,7 @@ const { t: $t } = useI18n()
 const { storeMemberInfo, fetchStoreMemberInfo, fnUpdateStoreMemberInfo, fnDeleteStoreMember } =
   useFetchStoreMember()
 const { modalVisible, openModal, closeModal } = useModal()
-const { pcbsList, userRoleInStoreList, fetchPcbsList, fetchUserRoleInStore } = useDropdown()
+const { pcbsList, userRoleInStoreList, fetchPcbsList, fetchUserRoleInStore } = useFetchDropdown()
 const { changePermissionSetting, updateMemberData } = useStoreMember()
 
 // Refs

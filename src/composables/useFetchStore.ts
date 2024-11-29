@@ -8,6 +8,7 @@ import { api } from '@/services'
 import { useMessage } from '@/composables/useMessage'
 import { catchErrorHandler } from '@/utils/api/error-handler'
 
+/** 處理首頁店家相關 api 資料邏輯 */
 export const useFetchStore = () => {
   const { openMessage } = useMessage()
 

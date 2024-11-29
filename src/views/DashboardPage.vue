@@ -39,9 +39,9 @@ import { useRouter } from 'vue-router'
 import { useHeader } from '@/composables/useHeader'
 import { useDate } from '@/composables/useDate'
 import { useFetchDashboard } from '@/composables/useFetchDashboard'
-import { useDashboard } from '@/composables/useDashboard'
+import { useDashboardPage } from '@/composables/useDashboardPage'
 import { useModal } from '@/composables/useModal'
-import { useDropdown } from '@/composables/useDropdown'
+import { useFetchDropdown } from '@/composables/useFetchDropdown'
 import { createDashboardTabs } from '@/constants/dashboard.const'
 import { UtilCommon } from '@/utils/utilCommon'
 
@@ -64,9 +64,9 @@ const { updateHeaderTitle } = useHeader()
 const { today, calculateDate } = useDate()
 const { clawOperationsInfo, coinOperationsInfo, fetchClawOperationsInfo, fetchCoinOperationsInfo } =
   useFetchDashboard()
-const { storeName } = useDashboard()
+const { storeName } = useDashboardPage()
 const { modalVisible, openModal, closeModal } = useModal()
-const { pcbsList, fetchPcbsList } = useDropdown()
+const { pcbsList, fetchPcbsList } = useFetchDropdown()
 
 /* 子組件 ref */
 const tabComps: Record<DashboardTabType, ClawTabCompType | CoinTabCompType> = {

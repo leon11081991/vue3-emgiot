@@ -9,7 +9,8 @@ import { api } from '@/services'
 import { useMessage } from '@/composables/useMessage'
 import { catchErrorHandler } from '@/utils/api/error-handler'
 
-export const useGoods = () => {
+/** 處理商品 api 資料邏輯 */
+export const useFetchGoods = () => {
   const { openMessage } = useMessage()
 
   const productListInfo = ref<{

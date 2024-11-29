@@ -7,7 +7,7 @@ import ProductInfoBarChart from '@/components/BarChart/ProductInfoBarChart.vue'
 import ProductInfoListItem from '@/components/Product/ProductInfoListItem.vue'
 import UpdateRecord from '@/components/DashboardPage/UpdateRecord.vue'
 import { useHeader } from '@/composables/useHeader'
-import { useGoods } from '@/composables/useGoods'
+import { useFetchGoods } from '@/composables/useFetchGoods'
 
 /* store */
 const { t: $t } = useI18n()
@@ -16,7 +16,7 @@ const { updateHeaderTitle } = useHeader()
 
 /* 非響應式數據 */
 const title = $t('ProductInfoChartPage.Title')
-const { productListInfo, fnGetProductOperationInfo } = useGoods()
+const { productListInfo, fnGetProductOperationInfo } = useFetchGoods()
 
 /* ref 變數 */
 const updateKey = ref(0)

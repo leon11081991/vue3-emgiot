@@ -3,6 +3,7 @@ import dayjs from 'dayjs'
 type FormatDateType = 'YYYY-MM-DD' | 'YYYY-MM' | 'MM-DD' | 'YYYY/MM/DD' | 'YYYY/MM' | 'MM/DD' | 'MM'
 type Direction = 'forward' | 'backward'
 
+/** 處理日期相關資訊 */
 export const useDate = () => {
   // Get the current date using dayjs
   const date = dayjs()

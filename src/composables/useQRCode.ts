@@ -1,6 +1,7 @@
 import type { DetectedCode } from '@/models/interfaces/qrCode.interface'
 import { ref } from 'vue'
 
+/** 處理偵測 QRCode */
 export const useQRCode = () => {
   type TrackType = 'outline' | 'centered text' | 'bounding box'
 

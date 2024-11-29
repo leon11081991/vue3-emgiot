@@ -23,6 +23,7 @@ const validationRules = [
   }
 ]
 
+/** 驗證格式相關邏輯 */
 export type ValidatorReturnType = {
   success: boolean
   errorMessage: string

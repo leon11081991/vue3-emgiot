@@ -14,6 +14,7 @@ import { UtilCommon } from '@/utils/utilCommon'
 import { catchErrorHandler } from '@/utils/api/error-handler'
 import { errorMessagesMapping } from '@/constants/mappings/errorMessages.mapping'
 
+/** 處理登入、註冊相關 */
 export const useAuth = () => {
   const { t: $t } = useI18n()
   const { openMessage } = useMessage()

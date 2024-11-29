@@ -1,6 +1,7 @@
 import type { JwtDecodeData } from '@/models/interfaces/token.interface'
 import { type JwtPayload, jwtDecode } from 'jwt-decode'
 
+/** 處理 token 相關邏輯 */
 export const useToken = () => {
   /** 解碼token */
   const _decodeToken = (token: string): JwtPayload | null => {

@@ -17,6 +17,7 @@ import { getI18nTranslate } from '@/utils/i18nUtils'
 const { openMessage } = useMessage()
 const { openNotification } = useNotification()
 
+/** 處理成員相關 api 資料邏輯 */
 export const useFetchStoreMember = () => {
   /** 店家成員清單 */
   const storeMembers = ref<{

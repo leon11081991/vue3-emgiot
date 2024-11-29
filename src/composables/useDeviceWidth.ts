@@ -2,6 +2,7 @@ import type { widthType } from '@/models/types/mapping.types'
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { widthMapping } from '@/constants/mappings/width.mapping'
 
+/** 處理裝置寬度 */
 export const useDeviceWidth = () => {
   const width = ref<number>(window.innerWidth)
 
