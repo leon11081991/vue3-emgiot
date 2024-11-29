@@ -3,7 +3,7 @@ import type { BasePcbGroupResType } from '@/models/types/group.types'
 import { useI18n } from 'vue-i18n'
 import { ref, computed, watchEffect } from 'vue'
 import { useMessage } from '@/composables/useMessage'
-import { useGroup } from '@/composables/useGroupEdit'
+import { useFetchGroupList } from '@/composables/useFetchGroupList'
 
 const props = defineProps<{
   modalVisible: boolean
@@ -19,7 +19,7 @@ const emit = defineEmits<{
 // store 相關
 const { t: $t } = useI18n()
 const { openMessage } = useMessage()
-const { fnAddGroupList, fnUpdateGroupList } = useGroup()
+const { fnAddGroupList, fnUpdateGroupList } = useFetchGroupList()
 
 /* 非響應式變數 */
 const maxLength = 10

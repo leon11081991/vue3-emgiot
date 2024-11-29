@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { useGroup } from '@/composables/useGroupEdit'
+import { useFetchGroupList } from '@/composables/useFetchGroupList'
 
 const props = defineProps<{
   modalVisible: boolean
@@ -14,7 +14,7 @@ const emit = defineEmits<{
 
 const { t: $t } = useI18n()
 
-const { fnDeleteGroupList } = useGroup()
+const { fnDeleteGroupList } = useFetchGroupList()
 
 const closeModal = () => {
   emit('close')

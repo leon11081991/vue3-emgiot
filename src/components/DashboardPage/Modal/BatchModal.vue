@@ -8,7 +8,7 @@ import { ref, computed } from 'vue'
 import SearchInput from '@/components/Base/SearchInput.vue'
 import ReplenishCoinsModalContent from '@/components/DashboardPage/Modal/ReplenishCoinsModalContent.vue'
 import { useFetchDashboard } from '@/composables/useFetchDashboard'
-import { useDashboard } from '@/composables/useDashboard'
+import { useDashboardPage } from '@/composables/useDashboardPage'
 import { UtilCommon } from '@/utils/utilCommon'
 import { getI18nTranslate } from '@/utils/i18nUtils'
 
@@ -19,7 +19,7 @@ type AmountMapping = {
 
 const { t: $t } = useI18n()
 const { fnUpdateMachineAction } = useFetchDashboard()
-const { findItemData } = useDashboard()
+const { findItemData } = useDashboardPage()
 
 const props = defineProps<{
   modalVisible: boolean

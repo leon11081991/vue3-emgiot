@@ -8,7 +8,7 @@ import { useI18n } from 'vue-i18n'
 import { ref, computed, onMounted, onBeforeUnmount, h, watchEffect } from 'vue'
 import { CaretDownOutlined } from '@ant-design/icons-vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
-import { useDropdown } from '@/composables/useDropdown'
+import { useFetchDropdown } from '@/composables/useFetchDropdown'
 import { QDate } from 'quasar'
 import { useDate } from '@/composables/useDate'
 
@@ -38,7 +38,7 @@ const { t: $t } = useI18n()
 
 /* 非響應式變數 */
 const { today, formatDate, calculateDate, getDaysInTwoMonths, getThreeMonthsAgo } = useDate()
-const { groupsDDLList, fetchGroupsDDLList } = useDropdown()
+const { groupsDDLList, fetchGroupsDDLList } = useFetchDropdown()
 
 const DAYS_IN_WEEK = 7
 const TODAY = 1

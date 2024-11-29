@@ -19,7 +19,7 @@ import AccountInquiryContent from '@/components/DashboardAccountInquiryPage/Acco
 import AccountInquiryFilterModal from '@/components/DashboardAccountInquiryPage/Modal/AccountInquiryFilterModal.vue'
 import { useModal } from '@/composables/useModal'
 import { useHeader } from '@/composables/useHeader'
-import { useDashboard } from '@/composables/useDashboard'
+import { useDashboardPage } from '@/composables/useDashboardPage'
 import { useFetchDashboard } from '@/composables/useFetchDashboard'
 import { useDate } from '@/composables/useDate'
 import { createAccountInquiryTabs } from '@/constants/dashboard.const'
@@ -54,7 +54,7 @@ const route = useRoute()
 const pcbId = route.params.pcbId as string
 /* composables */
 const { updateHeaderTitle } = useHeader()
-const { storeName } = useDashboard()
+const { storeName } = useDashboardPage()
 const {
   clawOperationsDetailRecords,
   coinOperationsDetailRecords,

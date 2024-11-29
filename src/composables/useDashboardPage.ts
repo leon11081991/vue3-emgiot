@@ -6,7 +6,8 @@ import type { StoreInfoStorageDataType } from '@/models/types/store.types'
 import { computed } from 'vue'
 import { UtilCommon } from '@/utils/utilCommon'
 
-export const useDashboard = () => {
+/** dashboard 頁面共用方法 */
+export const useDashboardPage = () => {
   const storeName = computed(() => {
     const name = UtilCommon.getLocalStorage<StoreInfoStorageDataType>('store-info')?.storeName
     return name ?? ''

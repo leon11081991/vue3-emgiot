@@ -5,7 +5,7 @@ import { ref, computed } from 'vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import ProductInfoBaseBarChart from './ProductInfoBaseBarChart.vue'
 import { useDate } from '@/composables/useDate'
-import { useGoods } from '@/composables/useGoods'
+import { useFetchGoods } from '@/composables/useFetchGoods'
 
 /* type */
 type OperationDataKey = 'revenue' | 'prizeWinCount' | 'profit'
@@ -24,7 +24,7 @@ const TABS = {
   REVENUE: 'revenue',
   PROFIT: 'profit'
 }
-const { productListInfoChart, fnGetProductOperationInfoChart } = useGoods()
+const { productListInfoChart, fnGetProductOperationInfoChart } = useFetchGoods()
 
 /* ref 變數 */
 const nowTopic = ref(TABS.REVENUE)

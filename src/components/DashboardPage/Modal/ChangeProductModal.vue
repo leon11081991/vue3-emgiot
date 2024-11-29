@@ -8,13 +8,13 @@ import { useI18n } from 'vue-i18n'
 import { ref, computed, onMounted } from 'vue'
 import BaseLoading from '@/components/Base/BaseLoading.vue'
 import SearchInput from '@/components/Base/SearchInput.vue'
-import { useDropdown } from '@/composables/useDropdown'
-import { useDashboard } from '@/composables/useDashboard'
+import { useFetchDropdown } from '@/composables/useFetchDropdown'
+import { useDashboardPage } from '@/composables/useDashboardPage'
 import { useFetchPcbRegister } from '@/composables/useFetchPcbRegister'
 
 const { t: $t } = useI18n()
-const { goodsDDLList, fetchGoodsDDLList } = useDropdown()
-const { findItemData } = useDashboard()
+const { goodsDDLList, fetchGoodsDDLList } = useFetchDropdown()
+const { findItemData } = useDashboardPage()
 const { fnUpdateGoods } = useFetchPcbRegister()
 
 const props = defineProps<{

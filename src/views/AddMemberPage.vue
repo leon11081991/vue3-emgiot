@@ -11,7 +11,7 @@ import PermissionContainer from '@/components/MemberPage/PermissionContainer.vue
 import ContentSettingContainer from '@/components/MemberPage/ContentSettingContainer.vue'
 import { useStoreMember } from '@/composables/useStoreMember'
 import { useFetchStoreMember } from '@/composables/useFetchStoreMember'
-import { useDropdown } from '@/composables/useDropdown'
+import { useFetchDropdown } from '@/composables/useFetchDropdown'
 
 /* router */
 const router = useRouter()
@@ -29,7 +29,7 @@ const {
   fetchPcbsList,
   fetchUserRoleInStore,
   fetchStoresList
-} = useDropdown()
+} = useFetchDropdown()
 
 /* ref 變數 */
 const isButtonLoading = ref<boolean>(false)

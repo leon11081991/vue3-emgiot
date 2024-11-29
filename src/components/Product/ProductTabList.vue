@@ -8,7 +8,7 @@ import MoreOperationModal from '@/components/Product/Modal/MoreOperationModal.vu
 import AddEditGoodsModal from '@/components/Product/Modal/AddEditGoodsModal.vue'
 import DeleteGoodsModal from '@/components/Product/Modal/DeleteGoodsModal.vue'
 import { useModal } from '@/composables/useModal'
-import { useDropdown } from '@/composables/useDropdown'
+import { useFetchDropdown } from '@/composables/useFetchDropdown'
 
 /* defineProps */
 const props = defineProps<{
@@ -20,7 +20,7 @@ const router = useRouter()
 
 /* store 相關 */
 const { modalVisible, openModal, closeModal } = useModal()
-const { goodsList, fetchGoodsList } = useDropdown()
+const { goodsList, fetchGoodsList } = useFetchDropdown()
 
 /* 非響應式變數 */
 const ProductInfoChart_link = '/productInfoChart'

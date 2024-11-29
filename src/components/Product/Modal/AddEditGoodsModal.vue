@@ -6,7 +6,7 @@ import { CaretDownOutlined } from '@ant-design/icons-vue'
 import type { BaseGoodsResType } from '@/models/types/dropdown.type'
 import type { SelectProps } from 'ant-design-vue'
 import { useFetchStore } from '@/composables/useFetchStore'
-import { useGoods } from '@/composables/useGoods'
+import { useFetchGoods } from '@/composables/useFetchGoods'
 import { useMessage } from '@/composables/useMessage'
 
 /* type */
@@ -29,7 +29,7 @@ const { t: $t } = useI18n()
 
 /* store 相關 */
 const { storesListInfo, fetchStoresListInfo } = useFetchStore()
-const { dispatchEditGoods, dispatchAddGoods } = useGoods()
+const { dispatchEditGoods, dispatchAddGoods } = useFetchGoods()
 const { openMessage } = useMessage()
 
 /* 非響應式變數 */

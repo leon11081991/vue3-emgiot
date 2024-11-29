@@ -14,14 +14,14 @@ import DeleteGroupModal from '@/components/GroupEditPage/Modal/DeleteGroupModal.
 import FloatButton from '@/components/Base/FloatButton.vue'
 import { useModal } from '@/composables/useModal'
 import { useHeader } from '@/composables/useHeader'
-import { useGroup } from '@/composables/useGroupEdit'
+import { useFetchGroupList } from '@/composables/useFetchGroupList'
 import { useMessage } from '@/composables/useMessage'
 
 const { t: $t } = useI18n()
 const { modalVisible, openModal, closeModal } = useModal()
 const { openMessage } = useMessage()
 const { updateHeaderTitle } = useHeader()
-const { groupList, fnGetGroupList, fnReArrangeGroupList } = useGroup()
+const { groupList, fnGetGroupList, fnReArrangeGroupList } = useFetchGroupList()
 
 /* 非響應式數據 */
 const headerTitle = $t('GroupEditPage.HeaderTitle')
