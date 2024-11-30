@@ -14,7 +14,7 @@ export class DashboardDto {
     content: ClawOperationsInfoResType[]
   ): ClawOperationsInfoDataType[] {
     /** 資料中增加uuid */
-    return content.map((item) => {
+    return content?.map((item) => {
       return {
         ...item,
         uuid: UtilCommon.generateUUID()
@@ -27,7 +27,7 @@ export class DashboardDto {
     content: CoinOperationsInfoResType[]
   ): CoinOperationsInfoDataType[] {
     /** 資料中增加uuid */
-    return content.map((item) => {
+    return content?.map((item) => {
       return {
         ...item,
         uuid: UtilCommon.generateUUID()

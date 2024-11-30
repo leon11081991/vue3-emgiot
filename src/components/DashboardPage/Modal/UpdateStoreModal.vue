@@ -41,6 +41,16 @@ const storeModalDataRest = () => {
 const closeModal = () => {
   storeModalDataRest()
   emit('close')
+  setTimeout(() => {
+    storeName.value =
+      UtilCommon.getLocalStorage<StoreInfoStorageDataType>('store-info')?.storeName || ''
+    wifiInfo.value.wifiSSID =
+      UtilCommon.getLocalStorage<StoreInfoStorageDataType>('store-info')?.wifiInfo[0]?.wifiSSID ||
+      ''
+    wifiInfo.value.wifiPassword =
+      UtilCommon.getLocalStorage<StoreInfoStorageDataType>('store-info')?.wifiInfo[0]
+        ?.wifiPassword || ''
+  }, 300)
 }
 
 const isStoreNameExisted = ref(false)
