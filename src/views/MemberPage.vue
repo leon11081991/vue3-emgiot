@@ -22,6 +22,19 @@ const { openMessage } = useMessage()
 // refs
 const activeKey = ref([])
 
+const showHideIdentity = (targetRoleOrder: number, targetId: string, userId: string): boolean => {
+  if (isLevelHigherThan(targetRoleOrder) && isSelfAccount(targetId, userId)) {
+    return true
+  }
+  return false
+}
+
+const isLevelHigherThan = (targetRoleOrder: number): boolean => {
+  // 等級依序為 1、2、3，1為最高等級
+  // 等級權限必須大於等級三為真
+  return targetRoleOrder < 3
+}
+
 const isSelfAccount = (targetId: string, userId: string) => {
   return targetId === userId
 }
@@ -133,9 +146,10 @@ onMounted(async () => {
                       {{ $t(`Common.Level`, { level: member.roleOrder }) }}
                     </div>
                   </div>
-
                   <div
-                    v-if="isSelfAccount(member.userId, userStore.userInfo.userId)"
+                    v-if="
+                      showHideIdentity(member.roleOrder, member.userId, userStore.userInfo.userId)
+                    "
                     class="isVisible-container"
                     @click.stop
                   >
