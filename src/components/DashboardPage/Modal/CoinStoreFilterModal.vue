@@ -174,9 +174,8 @@ const toggleDatePicker = (type: PickerType) => {
 
 const setRangePicker = (label: keyof typeof dateRangePickerConfig) => {
   rangePickerActiveItem.value = label
-  if (label === $t('DashboardPage.Modal.CoinStoreFilter.DatePicker.Today')) {
-    endDate.value = today()
-  }
+  endDate.value = today()
+
   if (endDate.value) {
     startDate.value = calculateDate(endDate.value, 'backward', dateRangePickerConfig[label])
   }
