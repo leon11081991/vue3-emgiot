@@ -36,19 +36,42 @@ const iconMapping =
 
 // ref 變數
 const selectedEvent = ref<string[]>([])
+const uniqueData = computed(() => {
+  const map = new Map()
+  props.data?.forEach((item) => {
+    if (!map.has(item.eventCode)) {
+      map.set(item.eventCode, item)
+    }
+  })
+  return Array.from(map.values())
+})
 const records = computed(() => {
   if (selectedEvent.value.length === 0) {
     // 如果沒有選擇任何事件類別，預設為全部顯示
-    return props.data
+    return uniqueData.value
   }
 
-  return props.data.filter((item) => {
-    return selectedEvent.value.some((eventKey) => {
+  return uniqueData.value.filter((item) =>
+    selectedEvent.value.some((eventKey) => {
+      console.log('eventKey', eventKey)
       const eventCodes = EVENT_RECORD_MAPPING[eventKey]
       return eventCodes && eventCodes.includes(item.eventCode)
     })
-  })
+  )
 })
+// const records = computed(() => {
+//   if (selectedEvent.value.length === 0) {
+//     return props.data
+//   }
+//   const uniqueData = [...new Set(props.data)]
+//   return uniqueData.filter((item) =>
+//     selectedEvent.value.some((eventKey) => {
+//       console.log('eventKey', eventKey)
+//       const eventCodes = EVENT_RECORD_MAPPING[eventKey]
+//       return eventCodes && eventCodes.includes(item.eventCode)
+//     })
+//   )
+// })
 </script>
 
 <template>
