@@ -53,25 +53,11 @@ const records = computed(() => {
 
   return uniqueData.value.filter((item) =>
     selectedEvent.value.some((eventKey) => {
-      console.log('eventKey', eventKey)
       const eventCodes = EVENT_RECORD_MAPPING[eventKey]
       return eventCodes && eventCodes.includes(item.eventCode)
     })
   )
 })
-// const records = computed(() => {
-//   if (selectedEvent.value.length === 0) {
-//     return props.data
-//   }
-//   const uniqueData = [...new Set(props.data)]
-//   return uniqueData.filter((item) =>
-//     selectedEvent.value.some((eventKey) => {
-//       console.log('eventKey', eventKey)
-//       const eventCodes = EVENT_RECORD_MAPPING[eventKey]
-//       return eventCodes && eventCodes.includes(item.eventCode)
-//     })
-//   )
-// })
 </script>
 
 <template>
