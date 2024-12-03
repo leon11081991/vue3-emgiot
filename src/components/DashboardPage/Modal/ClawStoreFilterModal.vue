@@ -191,10 +191,8 @@ const toggleDatePicker = (type: PickerType) => {
 
 const setRangePicker = (label: keyof typeof dateRangePickerConfig) => {
   rangePickerActiveItem.value = label
+  endDate.value = today()
 
-  if (label === $t('DashboardPage.Modal.ClawStoreFilter.DatePicker.Today')) {
-    endDate.value = today()
-  }
   if (endDate.value) {
     startDate.value = calculateDate(endDate.value, 'backward', dateRangePickerConfig[label])
   }

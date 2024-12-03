@@ -52,7 +52,7 @@ const startDate = ref<string | null>(today())
 const endDate = ref<string | null>(today())
 const rangeDate = ref<{ from: string; to: string } | string>({ from: '', to: '' })
 const tempRangeDate = ref({ from: '', to: '' })
-const rangePickerActiveItem = ref($t('AccountInquiryPage.Modal.ClawStoreFilter.DatePicker.Today'))
+const rangePickerActiveItem = ref($t('AccountInquiryPage.Modal.Filter.DatePicker.Today'))
 
 const groupsDDLFilter = ref('')
 const picker = ref({
@@ -137,10 +137,8 @@ const toggleDatePicker = (type: PickerType) => {
 
 const setRangePicker = (label: keyof typeof dateRangePickerConfig) => {
   rangePickerActiveItem.value = label
+  endDate.value = today()
 
-  if (label === $t('AccountInquiryPage.Modal.Filter.DatePicker.Today')) {
-    endDate.value = today()
-  }
   if (endDate.value) {
     startDate.value = calculateDate(endDate.value, 'backward', dateRangePickerConfig[label])
   }
