@@ -114,6 +114,10 @@ const getDynamicAmount = <T extends 'claw' | 'coin'>(
   return 0
 }
 
+const renderCountByTab = (selectedTab: 'claw' | 'coin'): number => {
+  return selectedTab === 'claw' ? count.value * 10 : count.value
+}
+
 const handleModalTitle = (modalStep: number, selectedTab: 'claw' | 'coin') => {
   let title = getI18nTranslate('DashboardPage.Modal.BatchModal.Title.Default')
   if (modalStep === 2) {
@@ -281,7 +285,10 @@ const handleBatchAction = (pcbList: string[], count: number) => {
                 </span>
                 <span>⭢</span>
                 <span class="updated-num">
-                  {{ getDynamicAmount(selectedTab, props.listData, item.pcbId) + count * 10 }}
+                  {{
+                    getDynamicAmount(selectedTab, props.listData, item.pcbId) +
+                    renderCountByTab(selectedTab)
+                  }}
                 </span>
               </div>
             </div>
