@@ -677,18 +677,19 @@
     }
   },
   "ProductInfoChartPage": {
-    "Title": "商品營運數據圖表",
+    "Title": "商品營運數據",
     "Chart": {
       "Tab": {
         "Revenue": "營收",
         "Profit": "盈餘"
       },
       "Today": "今日",
-      "PrizeWinCount": "出貨成本"
+      "PrizeWinCount": "出貨",
+      "Profit": "盈餘"
     },
     "TabList": {
       "Header": {
-        "Device": "裝置",
+        "Device": "機台",
         "ShipmentAmount": "平均出貨金額",
         "Revenue": "營收",
         "Shipment": "出貨"

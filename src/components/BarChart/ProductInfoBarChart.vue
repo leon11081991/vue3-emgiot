@@ -101,6 +101,14 @@ fnGetProductOperationInfoChart(props.goodsId)
         <div class="chartData-container">
           <div class="data-title">
             <div class="title">
+              {{ $t('ProductInfoChartPage.Chart.Profit') }}
+              <BaseSvgIcon
+                iconName="dropdown"
+                color="white"
+              />
+            </div>
+            <div class="data">${{ profit }}</div>
+            <div class="title">
               {{ $t('ProductInfoChartPage.Chart.PrizeWinCount') }}
               <BaseSvgIcon
                 iconName="dropdown"
