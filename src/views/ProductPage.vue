@@ -52,10 +52,10 @@ const fnHandleAddGoods = () => {
 <style lang="scss" scoped>
 .search-input {
   &.ant-input-affix-wrapper {
-    background-color: $--background-color-base;
+    background-color: $--color-gray-300;
 
     :deep(.ant-input) {
-      background-color: $--background-color-base;
+      background-color: $--color-gray-300;
     }
   }
 }

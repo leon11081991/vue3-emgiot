@@ -117,9 +117,10 @@ fetchGoodsList()
             </a-skeleton>
             <template #actions>
               <a
+                class="load-more"
                 key="list-loadmore-more"
                 @click="fnOpenOperationModal('more', item)"
-                >...</a
+                >· · ·</a
               >
             </template>
           </a-list-item>
@@ -194,6 +195,11 @@ fetchGoodsList()
 
   .list-item {
     text-align: center;
+    color: $--color-primary;
+  }
+
+  .load-more {
+    color: $--color-primary;
   }
 }
 </style>

@@ -9,6 +9,7 @@
   --color-error: #f56c6c;
 
   --color-white: #ffffff;
+  --color-yellow: #F2C927;
 
   --color-gray-600: #898989;
   --color-gray-500: #c4c4c4;
@@ -18,12 +19,12 @@
   --color-transparent: rgba(0, 0, 0, 0);
   --header-height: 60px;
 
-  --bar-default-color: #84bfff;
+  --bar-default-color: #FFEDAD;
   --bar-target-color: #c89600;
   --bg-revenue-color: #a39ecb;
 
   //quasar variable
-  --q-primary: #1976d2;
+  --q-primary: #1fa29a;
   --q-secondary: #26a69a;
   --q-accent: #9c27b0;
   --q-positive: #21ba45;
@@ -97,7 +98,7 @@ $--sidebar-height: 100dvh;
 $--sidebar-width: 300px;
 
 $--header-bg-color: $--background-color-base;
-$--sidebar-bg-color: $--background-color-base;
+$--sidebar-bg-color: $--color-tertiary;
 $--page-bg-color: $--background-color-base;
 
 $--header-z-index: 100;

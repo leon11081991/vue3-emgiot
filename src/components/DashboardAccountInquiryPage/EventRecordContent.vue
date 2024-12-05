@@ -36,28 +36,61 @@ const iconMapping =
 
 // ref 變數
 const selectedEvent = ref<string[]>([])
-const uniqueData = computed(() => {
-  const map = new Map()
-  props.data?.forEach((item) => {
-    if (!map.has(item.date)) {
-      map.set(item.date, item)
-    }
-  })
-  return Array.from(map.values())
-})
+// const uniqueData = computed(() => {
+//   const map = new Map()
+//   props.data?.forEach((item) => {
+//     if (!map.has(item.date)) {
+//       map.set(item.date, item)
+//     }
+//   })
+//   return Array.from(map.values())
+// })
+// const records = computed(() => {
+//   if (selectedEvent.value.length === 0) {
+//     // 如果沒有選擇任何事件類別，預設為全部顯示
+//     return uniqueData.value
+//   }
+
+//   return uniqueData.value.filter((item) =>
+//     selectedEvent.value.some((eventKey) => {
+//       const eventCodes = EVENT_RECORD_MAPPING[eventKey]
+//       return eventCodes && eventCodes.includes(item.eventCode)
+//     })
+//   )
+// })
 const records = computed(() => {
   if (selectedEvent.value.length === 0) {
     // 如果沒有選擇任何事件類別，預設為全部顯示
-    return uniqueData.value
+    return props.data
   }
 
-  return uniqueData.value.filter((item) =>
-    selectedEvent.value.some((eventKey) => {
+  return props.data.filter((item) => {
+    console.log('item', item)
+    selectedEvent.value.map((eventKey) => {
       const eventCodes = EVENT_RECORD_MAPPING[eventKey]
       return eventCodes && eventCodes.includes(item.eventCode)
     })
-  )
+    // selectedEvent.value.some((eventKey) => {
+    //   const eventCodes = EVENT_RECORD_MAPPING[eventKey]
+    //   return eventCodes && eventCodes.includes(item.eventCode)
+    // })
+  })
 })
+
+const handleEventChange = (value: string) => {
+  // 使用 Set 確保高效操作和避免重複元素
+  const eventSet = new Set(selectedEvent.value)
+
+  // 根據是否存在切換狀態
+  if (eventSet.has(value)) {
+    eventSet.delete(value)
+  } else {
+    eventSet.add(value)
+  }
+
+  // 更新選擇的事件值
+  selectedEvent.value = Array.from(eventSet)
+}
 </script>
 
 <template>
@@ -68,11 +101,17 @@ const records = computed(() => {
         v-for="option in options"
         :key="option.label"
       >
-        <input
+        <!-- <input
           type="checkbox"
           name="event type"
           :value="option.value"
           v-model="selectedEvent"
+        /> -->
+        <input
+          type="checkbox"
+          name="event type"
+          :value="option.value"
+          @change="handleEventChange(option.value)"
         />
         <span>{{ option.label }}</span>
       </label>

@@ -114,7 +114,7 @@ fetchStoresListInfo()
 <style lang="scss" scoped>
 .search-merchant-container {
   height: 3rem;
-  border: 2px solid $--color-border;
+  border: 1px solid $--color-gray-500;
   border-radius: 6px;
   position: relative;
   display: flex;
@@ -131,7 +131,11 @@ fetchStoresListInfo()
     border: none;
     outline: none;
     font-size: 1.2rem;
-    background-color: rgba(0, 0, 0, 0);
+    background-color: $--color-gray-300;
+
+    &::placeholder {
+      color: $--color-gray-600;
+    }
   }
 }
 .place-holder {
