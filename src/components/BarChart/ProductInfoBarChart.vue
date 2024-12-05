@@ -136,10 +136,14 @@ fnGetProductOperationInfoChart(props.goodsId)
     user-select: none;
     text-align: center;
     cursor: pointer;
-    color: $--color-white;
+    color: $--color-targetTab-bg;
     background-color: $--color-Tab-bg;
+    border: 2px solid $--color-targetTab-bg;
+    border-bottom: none;
+
     &.active {
       background-color: $--color-targetTab-bg;
+      color: $--color-white;
     }
     @media screen and (max-width: 430px) {
       flex: 1;

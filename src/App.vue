@@ -191,10 +191,10 @@ const route = useRoute()
   &-primary {
     .ant-float-btn-body {
       @include base-transition;
-      background-color: $--color-primary;
+      background-color: $--color-danger;
 
       &:hover {
-        background-color: $--color-primary--hover;
+        background-color: darken($--color-danger, 10%);
       }
     }
   }
