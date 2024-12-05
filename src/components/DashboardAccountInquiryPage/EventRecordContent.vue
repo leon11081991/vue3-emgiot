@@ -39,8 +39,8 @@ const selectedEvent = ref<string[]>([])
 const uniqueData = computed(() => {
   const map = new Map()
   props.data?.forEach((item) => {
-    if (!map.has(item.eventCode)) {
-      map.set(item.eventCode, item)
+    if (!map.has(item.date)) {
+      map.set(item.date, item)
     }
   })
   return Array.from(map.values())
