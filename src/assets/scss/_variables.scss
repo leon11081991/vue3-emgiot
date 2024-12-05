@@ -1,7 +1,7 @@
 :root {
   --color-primary: #1fa29a;
   --color-secondary: #00b450;
-  --color-tertiary: #0E7778;
+  --color-tertiary: #107778;
 
   --color-success: #67c23a;
   --color-warning: #e6a23c;
@@ -46,7 +46,7 @@ $--color-secondary: #00b450;
 $--color-secondary-light: #75b7b8;
 $--color-secondary--hover: darken($--color-secondary, 5%);
 
-$--color-tertiary: #0E7778;
+$--color-tertiary: #107778;
 $--color-tertiary--light--hover: darken($--color-tertiary, 10%);
 $--color-tertiary--light--disabled: rgba($--color-tertiary, 0.5);
 
@@ -76,8 +76,8 @@ $--background-color-base: $--color-white;
 $--color-border: #c8c8c8;
 
 /* BarChart組件顏色  */
-$--color-targetTab-bg: #473c96;
-$--color-Tab-bg: #2cb450;
+$--color-targetTab-bg: #107778;
+$--color-Tab-bg: $--color-white;
 $--color-update-time: #969696;
 
 $--font-size-base: 16px;

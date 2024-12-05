@@ -97,7 +97,7 @@ watchEffect(() => {
           <BaseSvgIcon
             iconName="list"
             size="lg"
-            :color="type === NotificationEnumType.OPERATION ? 'white' : 'primary'"
+            :color="type === NotificationEnumType.OPERATION ? 'white' : 'tertiary'"
           />
           {{ $t('MessagePage.Tab.Operation') }}
         </div>
@@ -132,8 +132,8 @@ watchEffect(() => {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: $--color-primary;
-    border: 3px solid $--color-primary;
+    color: $--color-tertiary;
+    border: 3px solid $--color-tertiary;
     border-radius: 6px;
     user-select: none;
     cursor: pointer;
@@ -147,7 +147,7 @@ watchEffect(() => {
     }
     &.active {
       color: $--color-white;
-      background-color: $--color-primary;
+      background-color: $--color-tertiary;
     }
   }
 

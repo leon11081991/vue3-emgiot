@@ -141,10 +141,14 @@ fetchTotalOperationChart()
     letter-spacing: 3px;
     user-select: none;
     cursor: pointer;
-    color: $--color-white;
+    color: $--color-targetTab-bg;
     background-color: $--color-Tab-bg;
+    border: 2px solid $--color-targetTab-bg;
+    border-bottom: none;
+
     &.active {
       background-color: $--color-targetTab-bg;
+      color: $--color-white;
     }
   }
 }
