@@ -13,6 +13,7 @@ import {
   COIN_EVENT_RECORD_MAPPING,
   COIN_EVENT_TYPE_ICON_MAPPING
 } from '@/constants/mappings/eventRecord.mapping'
+import { useDebouncedRef } from '@/composables/useDebouncedRef'
 import { useDebounce } from '@/composables/useDebounce'
 
 /* defineProps */
@@ -37,57 +38,28 @@ const iconMapping =
   props.machineType === 'claw' ? CLAW_EVENT_TYPE_ICON_MAPPING : COIN_EVENT_TYPE_ICON_MAPPING
 
 // ref 變數
-const selectedEvent = ref<string[]>([])
-// const uniqueData = computed(() => {
-//   const map = new Map()
-//   props.data?.forEach((item) => {
-//     if (!map.has(item.date)) {
-//       map.set(item.date, item)
-//     }
-//   })
-//   return Array.from(map.values())
-// })
-// const records = computed(() => {
-//   if (selectedEvent.value.length === 0) {
-//     // 如果沒有選擇任何事件類別，預設為全部顯示
-//     return uniqueData.value
-//   }
+const selectedEvent = useDebouncedRef<string[]>([], 300)
 
-//   return uniqueData.value.filter((item) =>
-//     selectedEvent.value.some((eventKey) => {
-//       const eventCodes = EVENT_RECORD_MAPPING[eventKey]
-//       return eventCodes && eventCodes.includes(item.eventCode)
-//     })
-//   )
-// })
 const records = computed(() => {
-  console.log('records')
   if (selectedEvent.value.length === 0) {
     // 如果沒有選擇任何事件類別，預設為全部顯示
     return props.data
   }
   return props.data.filter((item) =>
     selectedEvent.value.some((eventKey) => {
-      console.log('eventKey', eventKey)
       const MAPPING =
         props.machineType === 'claw' ? CLAW_EVENT_RECORD_MAPPING : COIN_EVENT_RECORD_MAPPING
       const eventCodes = MAPPING[eventKey]
-      console.log('eventCodes', eventCodes)
       return eventCodes && eventCodes.includes(item.eventCode)
     })
   )
 })
 
 const handleEventChange = useDebounce((value: string) => {
-  console.log('handleEventChange')
   // 使用 Set 確保高效操作和避免重複元素
   const eventSet = new Set(selectedEvent.value)
   // 根據是否存在切換狀態
-  if (eventSet.has(value)) {
-    eventSet.delete(value)
-  } else {
-    eventSet.add(value)
-  }
+  eventSet.has(value) ? eventSet.delete(value) : eventSet.add(value)
   // 更新選擇的事件值
   selectedEvent.value = Array.from(eventSet)
 })
@@ -105,6 +77,7 @@ const handleEventChange = useDebounce((value: string) => {
           type="checkbox"
           name="event type"
           :value="option.value"
+          :checked="selectedEvent.includes(option.value)"
           @change="handleEventChange(option.value)"
         />
         <span>{{ option.label }}</span>
