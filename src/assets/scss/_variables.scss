@@ -1,7 +1,7 @@
 :root {
   --color-primary: #1fa29a;
   --color-secondary: #00b450;
-  --color-tertiary: #0E7778;
+  --color-tertiary: #107778;
 
   --color-success: #67c23a;
   --color-warning: #e6a23c;
@@ -9,6 +9,7 @@
   --color-error: #f56c6c;
 
   --color-white: #ffffff;
+  --color-yellow: #F2C927;
 
   --color-gray-600: #898989;
   --color-gray-500: #c4c4c4;
@@ -18,12 +19,12 @@
   --color-transparent: rgba(0, 0, 0, 0);
   --header-height: 60px;
 
-  --bar-default-color: #84bfff;
+  --bar-default-color: #FFEDAD;
   --bar-target-color: #c89600;
   --bg-revenue-color: #a39ecb;
 
   //quasar variable
-  --q-primary: #1976d2;
+  --q-primary: #1fa29a;
   --q-secondary: #26a69a;
   --q-accent: #9c27b0;
   --q-positive: #21ba45;
@@ -46,7 +47,7 @@ $--color-secondary: #00b450;
 $--color-secondary-light: #75b7b8;
 $--color-secondary--hover: darken($--color-secondary, 5%);
 
-$--color-tertiary: #0E7778;
+$--color-tertiary: #107778;
 $--color-tertiary--light--hover: darken($--color-tertiary, 10%);
 $--color-tertiary--light--disabled: rgba($--color-tertiary, 0.5);
 
@@ -76,8 +77,8 @@ $--background-color-base: $--color-white;
 $--color-border: #c8c8c8;
 
 /* BarChart組件顏色  */
-$--color-targetTab-bg: #473c96;
-$--color-Tab-bg: #2cb450;
+$--color-targetTab-bg: #107778;
+$--color-Tab-bg: $--color-white;
 $--color-update-time: #969696;
 
 $--font-size-base: 16px;
@@ -97,7 +98,7 @@ $--sidebar-height: 100dvh;
 $--sidebar-width: 300px;
 
 $--header-bg-color: $--background-color-base;
-$--sidebar-bg-color: $--background-color-base;
+$--sidebar-bg-color: $--color-tertiary;
 $--page-bg-color: $--background-color-base;
 
 $--header-z-index: 100;

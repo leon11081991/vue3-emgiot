@@ -221,6 +221,6 @@ onMounted(() => {
 }
 
 .wifiFormatHint {
-  color: $--color-danger;
+  color: $--color-gray-700;
 }
 </style>

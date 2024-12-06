@@ -57,7 +57,7 @@ const chartDataConfig = computed<ChartDataset<'bar' | 'line', number[]>[]>(() =>
         type: 'bar',
         label: $t('AccountInquiryPage.BarLineChart.Claw.Label.Revenue'),
         data: props.list?.map((item) => ('revenue' in item ? (item.revenue ?? 0) : 0)),
-        backgroundColor: 'rgba(132, 191, 255, 0.5)',
+        backgroundColor: 'rgb(117,183,184,0.8)',
         borderRadius: 5,
         yAxisID: 'y'
       },
@@ -65,9 +65,9 @@ const chartDataConfig = computed<ChartDataset<'bar' | 'line', number[]>[]>(() =>
         type: 'line',
         label: $t('AccountInquiryPage.BarLineChart.Claw.Label.PrizeWinCount'),
         data: props.list?.map((item) => ('prizeWinCount' in item ? (item.prizeWinCount ?? 0) : 0)),
-        borderColor: 'rgba(53, 188, 103, 0.5)',
+        borderColor: 'rgb(236,205,75,0.8)',
         borderWidth: 2,
-        pointBackgroundColor: 'rgba(53, 188, 103, 0.5)',
+        pointBackgroundColor: 'rgb(236,205,75,0.8)',
         yAxisID: 'y1'
       }
     ]
@@ -77,7 +77,7 @@ const chartDataConfig = computed<ChartDataset<'bar' | 'line', number[]>[]>(() =>
         type: 'bar',
         label: $t('AccountInquiryPage.BarLineChart.Coin.Label.ExchangeCount'),
         data: props.list?.map((item) => ('exchangeCount' in item ? (item.exchangeCount ?? 0) : 0)),
-        backgroundColor: 'rgba(132, 191, 255, 0.5)',
+        backgroundColor: 'rgb(117,183,184,0.8)',
         borderRadius: 5,
         yAxisID: 'y'
       }

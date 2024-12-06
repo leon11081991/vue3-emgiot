@@ -38,7 +38,10 @@ const handleLogout = () => {
       class="close"
       @click="handleCloseSidebar"
     >
-      <BaseSvgIcon iconName="cross" />
+      <BaseSvgIcon
+        iconName="cross"
+        color="white"
+      />
     </div>
 
     <div class="user-info">
@@ -64,7 +67,10 @@ const handleLogout = () => {
           class="message-link"
           @click="handleCloseSidebar"
         >
-          <BaseSvgIcon iconName="bell-on" />
+          <BaseSvgIcon
+            iconName="bell-on"
+            color="white"
+          />
         </RouterLink>
       </div>
     </div>
@@ -82,7 +88,10 @@ const handleLogout = () => {
             class="nav-link"
             @click="handleCloseSidebar"
           >
-            <BaseSvgIcon :iconName="item.iconName" />
+            <BaseSvgIcon
+              :iconName="item.iconName"
+              color="white"
+            />
             <div class="nav-link-label">{{ item.label }}</div>
           </RouterLink>
         </li>
@@ -91,7 +100,6 @@ const handleLogout = () => {
 
     <div class="logout">
       <a-button
-        type="primary"
         class="logout-btn"
         @click="handleLogout"
       >
@@ -210,7 +218,7 @@ aside.sidebar {
     .user-name {
       @include ellipsisText;
       margin: 0;
-      color: $--color-primary;
+      color: $--color-white;
       font-size: 1rem;
     }
     .user-level {
@@ -255,11 +263,11 @@ aside.sidebar {
     padding-block: 0.5rem;
     padding-left: 0.5rem;
     text-decoration: none;
-    color: $--color-gray-700;
+    color: $--color-white;
     border-radius: $--border-radius-base;
 
     &:hover {
-      color: $--color-gray-900;
+      color: $--color-white;
       background-color: rgba(#000000, 0.1);
     }
   }
@@ -288,6 +296,13 @@ aside.sidebar {
 
     .logout-btn {
       width: 100%;
+      border-radius: $--border-radius-middle;
+      border: 1px solid $--color-white;
+      background-color: transparent;
+
+      &:hover {
+        background-color: rgba(#000000, 0.1);
+      }
     }
   }
 }

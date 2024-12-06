@@ -129,11 +129,13 @@ const handleConfirmClick = (field: ModalType): void => {
   <div class="profile-page">
     <div class="profile-content">
       <div class="display-container">
-        <AvatarDisplay
-          :name="userStore.userInfo.name"
-          :google-avatar-url="userStore.userInfo.photoUrl"
-          size="lg"
-        />
+        <div class="avatar-display-container">
+          <AvatarDisplay
+            :name="userStore.userInfo.name"
+            :google-avatar-url="userStore.userInfo.photoUrl"
+            size="lg"
+          />
+        </div>
         <div class="user-name-container">
           <p class="user-name-display">{{ userStore.userInfo.name }}</p>
           <div
@@ -318,6 +320,11 @@ const handleConfirmClick = (field: ModalType): void => {
   flex-direction: column;
   align-items: center;
   gap: 0.75rem;
+
+  .avatar-display-container {
+    border-radius: 50%;
+    border: 4px solid $--color-primary;
+  }
 
   .user-name-container {
     display: flex;
