@@ -77,7 +77,7 @@ const updateValue = (value: string[]) => {
                   <a-progress
                     class="doughnut-chart"
                     type="circle"
-                    strokeColor="var(--color-secondary)"
+                    strokeColor="var(--color-yellow)"
                     :percent="
                       UtilCommon.getPercentage(
                         item?.coinExchanged,

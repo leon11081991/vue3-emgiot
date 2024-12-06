@@ -73,7 +73,7 @@ const records = computed(() => {
           name="event type"
           :value="option.value"
           v-model="selectedEvent"
-        />
+        /> 
         <span>{{ option.label }}</span>
       </label>
     </div>
