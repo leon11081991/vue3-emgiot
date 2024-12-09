@@ -1,8 +1,8 @@
 <script setup lang="ts">
 /* import */
 import type { MachineType } from '@/models/types/machine.types'
-import type { MachineEventRecordsResType } from '@/models/types/machine.types'
-import { computed, ref } from 'vue'
+import type { MachineEventRecordsDataType } from '@/models/types/machine.types'
+import { computed } from 'vue'
 import BaseLoading from '@/components/Base/BaseLoading.vue'
 import BaseSvgIcon from '@/components/Base/SvgIcon.vue'
 import { useDate } from '@/composables/useDate'
@@ -19,7 +19,8 @@ import { useDebounce } from '@/composables/useDebounce'
 /* defineProps */
 const props = withDefaults(
   defineProps<{
-    data: MachineEventRecordsResType
+    // data: MachineEventRecordsResType
+    data: MachineEventRecordsDataType[]
     isLoading: boolean
     machineType: MachineType
   }>(),
@@ -96,7 +97,7 @@ const handleEventChange = useDebounce((value: string) => {
       >
         <li
           v-for="record in records"
-          :key="`${record?.event}+${record?.eventLog}`"
+          :key="record.uuid"
           class="event-item"
         >
           <BaseSvgIcon

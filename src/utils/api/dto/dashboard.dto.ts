@@ -6,6 +6,10 @@ import type {
   UpdateMachineActionDataType,
   UpdateMachineActionReqType
 } from '@/models/types/dashboard.types'
+import type {
+  MachineEventRecordsResType,
+  MachineEventRecordsDataType
+} from '@/models/types/machine.types'
 import { UtilCommon } from '@/utils/utilCommon'
 
 export class DashboardDto {
@@ -62,5 +66,18 @@ export class DashboardDto {
     }
 
     return toReturn
+  }
+
+  /** 轉換格式為 MachineEventRecordDataType */
+  static FormattedMachineEventRecordData(
+    content: MachineEventRecordsResType
+  ): MachineEventRecordsDataType[] {
+    /** 資料中增加uuid */
+    return content?.map((item) => {
+      return {
+        ...item,
+        uuid: UtilCommon.generateUUID()
+      }
+    })
   }
 }

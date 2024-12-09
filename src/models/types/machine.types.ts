@@ -57,6 +57,10 @@ type BaseMachineEventRecordResType = {
 
 export type MachineEventRecordsResType = BaseMachineEventRecordResType[]
 
+export type MachineEventRecordsDataType = BaseMachineEventRecordResType & {
+  uuid: string
+}
+
 export type clawMachineCardType = {
   pcbName: string
   totalRevenue: number

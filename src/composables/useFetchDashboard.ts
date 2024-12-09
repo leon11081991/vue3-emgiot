@@ -13,7 +13,8 @@ import type {
   ClawOperationsDetailResType,
   CoinOperationsDetailResType,
   GetClawGoodsRecordResType,
-  MachineEventRecordsResType
+  MachineEventRecordsResType,
+  MachineEventRecordsDataType
 } from '@/models/types/machine.types'
 import { ref } from 'vue'
 import { api } from '@/services'
@@ -93,7 +94,7 @@ export const useFetchDashboard = () => {
 
   /** 事件紀錄清單 */
   const machineEventRecords = ref<{
-    data: MachineEventRecordsResType
+    data: MachineEventRecordsDataType[]
     isLoading: boolean
   }>({
     data: [],
@@ -278,7 +279,7 @@ export const useFetchDashboard = () => {
         return
       }
 
-      machineEventRecords.value.data = result ?? []
+      machineEventRecords.value.data = DashboardDto.FormattedMachineEventRecordData(result) ?? []
     } catch (e) {
       catchErrorHandler(e)
     } finally {
