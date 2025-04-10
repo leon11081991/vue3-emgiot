@@ -10,17 +10,9 @@
 
 [(舊版)雲端掌櫃](https://cm.alfaloop.com/Dashboard)
 
-| Account     | Password     |
-|-------------|--------------|
-| 0935471701  | squirrel0303 |
-
 ***UI FLOW***
 
 [UI Flow chart](https://overflow.io/s/KH44MLMA/?node=e76d6eb6)
-
-| Password    |
-|-------------|
-| Egm123Team  |
 
 ### 安裝依賴套件與依賴文檔
 
